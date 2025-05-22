@@ -12,3 +12,4 @@ class Persona(Base):
     fechaNacimiento = Column(Date, nullable=False)
 
     empleados = relationship("Empleado", back_populates="persona")
+    cliente = relationship("Cliente", back_populates="persona")
