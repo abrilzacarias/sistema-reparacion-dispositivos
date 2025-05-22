@@ -8,6 +8,7 @@ class Cliente(Base):
     idCliente= Column(Integer, primary_key=True, index=True)
     estadoCliente = Column(String(45), nullable=False)
     observaciones = Column(Date, nullable=True)
-
+    idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
+    
     persona = relationship("Persona", back_populates="cliente")
     
