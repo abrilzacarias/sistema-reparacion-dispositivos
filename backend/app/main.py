@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app import models, database
-from app.routers import persona, auth
+from app.routers import persona, auth, repuesto, marcaDispositivo
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=database.engine)
@@ -21,5 +21,7 @@ app.add_middleware(
 )
 
 app.include_router(persona.router)
+app.include_router(repuesto.router)
+app.include_router(marcaDispositivo.router)
 app.include_router(auth.router)
 
