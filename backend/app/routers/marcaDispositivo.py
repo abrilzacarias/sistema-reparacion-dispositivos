@@ -33,3 +33,16 @@ def update_marca(idMarcaDispositivo: int, marca: schemas.MarcaDispositivoUpdate,
     if not db_marca:
         raise HTTPException(status_code=404, detail="Marca no encontrada")
     return db_marca
+
+@router.delete("/{idMarcaDispositivo}", summary="Eliminar una marca")
+def delete_marca(idMarcaDispositivo: int, db: Session = Depends(get_db)):
+    try:
+        marca = services.delete_marca_dispositivo(db, idMarcaDispositivo)
+        if not marca:
+            raise HTTPException(status_code=404, detail="Marca no encontrada")
+        return {"mensaje": "Marca eliminada correctamente"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+from fastapi import HTTPException
+

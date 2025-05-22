@@ -29,3 +29,17 @@ def update_marca_dispositivo(db: Session, id_marca: int, marca_update: schemas.M
     db.commit()
     db.refresh(db_marca)
     return db_marca
+
+def delete_marca_dispositivo(db: Session, id_marca: int):
+    db_marca = get_marca_dispositivo(db, id_marca)
+    if not db_marca:
+        return None
+
+    # Verificamos si tiene repuestos asociados
+    if db_marca.repuestos and len(db_marca.repuestos) > 0:
+        raise ValueError("No se puede eliminar la marca porque tiene repuestos asociados.")
+
+    # Si no tiene, se puede eliminar
+    db.delete(db_marca)
+    db.commit()
+    return db_marca
