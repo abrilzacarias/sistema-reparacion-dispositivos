@@ -13,7 +13,7 @@ export function DashboardLayout() {
   const user = userString ? JSON.parse(userString) : { name: "Administrador" }
 
   return (
-    <div className={`flex h-screen ${darkMode ? "bg-[#0f172a] text-white" : "bg-gray-50 text-gray-800"}`}>
+    <div className={`flex h-screen bg-background`}>
       <Sidebar />
 
       <div className="flex-1 flex flex-col overflow-hidden">

@@ -8,7 +8,7 @@ import EmpleadoPage from "./pages/empleado/EmpleadoPage"
 
 function App() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-red-500 dark:bg-gray-900">
       <Routes>
         <Route path="/" element={<LoginPage />} />
 
