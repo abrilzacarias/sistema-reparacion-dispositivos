@@ -1,10 +1,14 @@
-// components/molecules/SidebarMenuItem.jsx
 import { SidebarButton } from "../atoms/SidebarButton";
+import { cloneElement } from "react";
 
 const SidebarMenuItem = ({ icon, label, path, color, bg }) => {
+  const iconWithProps = cloneElement(icon, {
+    className: "w-5 h-5 " + (icon.props.className || ""),
+  });
+
   return (
     <SidebarButton
-      icon={icon}
+      icon={() => iconWithProps}
       label={label}
       to={path}
       color={color}
@@ -14,3 +18,4 @@ const SidebarMenuItem = ({ icon, label, path, color, bg }) => {
 };
 
 export default SidebarMenuItem;
+  
