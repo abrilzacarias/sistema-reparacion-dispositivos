@@ -13,14 +13,6 @@ DB_NAME = os.getenv("DB_NAME")
 
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-print("DB_USER:", DB_USER)
-print("DB_PASSWORD:", DB_PASSWORD)
-print("DB_HOST:", DB_HOST)
-print("DB_PORT:", DB_PORT)
-print("DB_NAME:", DB_NAME)
-print("DATABASE_URL:", DATABASE_URL)
-
-
 def get_db():
     db = SessionLocal()
     try:

@@ -6,7 +6,7 @@ def get_persona(db: Session, idPersona: int):
     return db.query(Persona).filter(Persona.idPersona == idPersona).first()
 
 def get_personas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Persona).offset(skip).limit(limit).all()
+    return db.query(Persona)
 
 def create_persona(db: Session, persona: PersonaCreate):
     db_persona = Persona(**persona.dict())
