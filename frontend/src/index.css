@@ -10,10 +10,10 @@
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
 
-    --background: 250 250 250; /* RGB sin rgb() */
-    --foreground: 3 35 76;
+    --background: 255 255 255; /* RGB sin rgb() */
+    --foreground: 1 14 29;
     --card: 255 255 255;
-    --card-foreground: 3 35 76;
+    --card-foreground: 15 28 42;
     --popover: 255 255 255;
     --popover-foreground: 3 35 76;
     --primary: 3 35 76;
@@ -31,18 +31,18 @@
     --warning-foreground: 255 255 255;
     --success: 16 185 129;
     --success-foreground: 255 255 255;
-    --info: 59 130 246;
+    --info: 15 28 42;
     --info-foreground: 255 255 255;
 
-    --chart-1: 59 130 246;
+    --chart-1: 15 28 42;
     --chart-2: 16 185 129;
     --chart-3: 99 102 241;
     --chart-4: 245 158 11;
     --chart-5: 239 68 68;
 
     --sidebar: 255 255 255;
-    --sidebar-foreground: 3 35 76;
-    --sidebar-primary: 3 35 76;
+    --sidebar-foreground: 15 28 42;
+    --sidebar-primary: 15 28 42;
     --sidebar-primary-foreground: 255 255 255;
     --sidebar-accent: 240 249 255;
     --sidebar-accent-foreground: 3 35 76;
@@ -57,8 +57,10 @@
 
 .dark {
   --background: 1 14 29; 
+  --backgroundbar: 15 28 42;
   --foreground: 255 255 255;
   --card: 15 28 42;
+  --back: 1 14 29;
   --card-foreground: 255 255 255;
   --popover: 15 28 42;
   --popover-foreground: 255 255 255;
@@ -97,7 +99,7 @@
   --sidebar-accent: 15 28 42;
   --sidebar-accent-foreground: 255 255 255;
   --sidebar-border: 255 255 255;
-  --sidebar-ring: 59 130 246;
+  --sidebar-ring: 15 28 42;
 }
 
 @layer base {

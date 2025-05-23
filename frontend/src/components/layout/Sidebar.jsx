@@ -1,11 +1,21 @@
-"use client"
-
 import { useState } from "react"
-import { Link, useLocation } from "react-router-dom"
-import { LogOut, Settings } from "lucide-react"
-import { LayoutGrid, Stethoscope, Users, UserCircle, Wrench, UserRound, Package, BarChart3 } from "lucide-react"
+import { useLocation, Link } from "react-router-dom"
+import {
+  LayoutGrid,
+  Stethoscope,
+  Users,
+  UserCircle,
+  Wrench,
+  UserRound,
+  Package,
+  BarChart3,
+  LogOut,
+  Settings,
+} from "lucide-react"
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAppContext } from "../../hooks/useAppContext"
+import SidebarMenuItem from "@/components/molecules/SidebarMenuItem"
 
 export function Sidebar() {
   const location = useLocation()
@@ -13,11 +23,8 @@ export function Sidebar() {
   const [role, setRole] = useState("Administrador")
 
   const handleLogout = () => {
-    // Limpiar localStorage
     localStorage.removeItem("token")
     localStorage.removeItem("user")
-
-    // Actualizar estado de autenticación
     setIsAuthenticated(false)
   }
 
@@ -41,7 +48,7 @@ export function Sidebar() {
       }`}
     >
       {/* Logo */}
-      <div className={`p-4 flex ${sidebarExpanded ? "justify-center" : "justify-center"}`}>
+      <div className={`p-4 flex justify-center`}>
         <div className="relative h-10 w-10">
           <div className="absolute inset-0 bg-sidebar-primary rounded-md transform rotate-6"></div>
           <div className="absolute inset-0 bg-sidebar-primary rounded-md transform -rotate-3 flex items-center justify-center">
@@ -53,9 +60,9 @@ export function Sidebar() {
       {/* Selector de rol - solo visible cuando está expandido */}
       {sidebarExpanded && (
         <div className="px-4 py-2">
-          <p className={`text-sm mb-1 text-sidebar-foreground/70`}>Cambiar de rol</p>
+          <p className="text-sm mb-1 text-sidebar-foreground/70">Cambiar de rol</p>
           <Select value={role} onValueChange={setRole}>
-            <SelectTrigger className={`w-full bg-sidebar border-sidebar-border text-sidebar-foreground`}>
+            <SelectTrigger className="w-full bg-sidebar border-sidebar-border text-sidebar-foreground">
               <SelectValue placeholder="Seleccionar rol" />
             </SelectTrigger>
             <SelectContent>
@@ -67,42 +74,41 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* Menú de navegación */}
+      {/* Menú de navegación usando SidebarMenuItem (molécula) */}
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
-          {menuItems.map((item) => (
-            <li key={item.path}>
-              <Link
-                to={item.path}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
-                  location.pathname === item.path
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                } ${!sidebarExpanded && "justify-center"}`}
-                title={!sidebarExpanded ? item.label : ""}
-              >
-                {item.icon}
-                {sidebarExpanded && <span>{item.label}</span>}
-              </Link>
-            </li>
-          ))}
+          {menuItems.map(({ path, label, icon }) => {
+            const isActive = location.pathname === path
+            return (
+              <li key={path}>
+                <SidebarMenuItem
+                  icon={icon}
+                  label={sidebarExpanded ? label : ""}
+                  path={path}
+                  color={
+                    isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground hover:text-sidebar-accent-foreground"
+                  }
+                  bg={
+                    isActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
+                  }
+                />
+              </li>
+            )
+          })}
         </ul>
       </nav>
 
       {/* Pie del sidebar */}
-      <div className={`p-4 border-t border-sidebar-border`}>
+      <div className="p-4 border-t border-sidebar-border">
         <ul className="space-y-1">
           <li>
-            <Link
-              to="/configuracion"
-              className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors 
-              text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
-              ${!sidebarExpanded && "justify-center"}`}
-              title={!sidebarExpanded ? "Configuración" : ""}
-            >
-              <Settings className="h-5 w-5" />
-              {sidebarExpanded && <span>Configuración</span>}
-            </Link>
+            <SidebarMenuItem
+              icon={<Settings className="h-5 w-5" />}
+              label={sidebarExpanded ? "Configuración" : ""}
+              path="/configuracion"
+              color="text-sidebar-foreground hover:text-sidebar-accent-foreground"
+              bg="hover:bg-sidebar-accent"
+            />
           </li>
           <li>
             <button
