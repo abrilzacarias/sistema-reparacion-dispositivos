@@ -35,6 +35,15 @@ CREATE TABLE `asignacionUsuarioPermisos` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `asignacionUsuarioPermisos`
+--
+
+LOCK TABLES `asignacionUsuarioPermisos` WRITE;
+/*!40000 ALTER TABLE `asignacionUsuarioPermisos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `asignacionUsuarioPermisos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cliente`
 --
 
@@ -42,15 +51,25 @@ DROP TABLE IF EXISTS `cliente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cliente` (
-  `idCliente` int NOT NULL,
+  `idCliente` int NOT NULL AUTO_INCREMENT,
   `estadoCliente` varchar(45) NOT NULL COMMENT 'Un campo para saber si el cliente estÃ¡ activo o inactivo',
   `observaciones` varchar(255) DEFAULT NULL,
   `idPersona` int NOT NULL,
   PRIMARY KEY (`idCliente`),
   KEY `fk_cliente_persona1_idx` (`idPersona`),
   CONSTRAINT `fk_cliente_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cliente`
+--
+
+LOCK TABLES `cliente` WRITE;
+/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
+INSERT INTO `cliente` VALUES (9,'Activo','2025-06-21',1),(10,'Activo','2025-05-21',2);
+/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `contacto`
@@ -73,6 +92,15 @@ CREATE TABLE `contacto` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `contacto`
+--
+
+LOCK TABLES `contacto` WRITE;
+/*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `detalleDiagnostico`
 --
 
@@ -91,6 +119,15 @@ CREATE TABLE `detalleDiagnostico` (
   CONSTRAINT `fk_detalleDiagnostico_tipoDispositivoSegunPreguntas1` FOREIGN KEY (`idTipoDispositivoSegunPregunta`) REFERENCES `tipoDispositivoSegunPregunta` (`idTipoDispositivoSegunPregunta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `detalleDiagnostico`
+--
+
+LOCK TABLES `detalleDiagnostico` WRITE;
+/*!40000 ALTER TABLE `detalleDiagnostico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `detalleDiagnostico` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `detalleReparacion`
@@ -119,6 +156,15 @@ CREATE TABLE `detalleReparacion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `detalleReparacion`
+--
+
+LOCK TABLES `detalleReparacion` WRITE;
+/*!40000 ALTER TABLE `detalleReparacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `detalleReparacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `diagnostico`
 --
 
@@ -137,6 +183,15 @@ CREATE TABLE `diagnostico` (
   CONSTRAINT `fk_diagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `diagnostico`
+--
+
+LOCK TABLES `diagnostico` WRITE;
+/*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `dispositivo`
@@ -161,6 +216,15 @@ CREATE TABLE `dispositivo` (
   CONSTRAINT `fk_dispositivo_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dispositivo`
+--
+
+LOCK TABLES `dispositivo` WRITE;
+/*!40000 ALTER TABLE `dispositivo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dispositivo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `domicilio`
@@ -190,6 +254,15 @@ CREATE TABLE `domicilio` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `domicilio`
+--
+
+LOCK TABLES `domicilio` WRITE;
+/*!40000 ALTER TABLE `domicilio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `domicilio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `empleado`
 --
 
@@ -215,6 +288,15 @@ CREATE TABLE `empleado` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `empleado`
+--
+
+LOCK TABLES `empleado` WRITE;
+/*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+/*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `estadoReparacion`
 --
 
@@ -229,6 +311,15 @@ CREATE TABLE `estadoReparacion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `estadoReparacion`
+--
+
+LOCK TABLES `estadoReparacion` WRITE;
+/*!40000 ALTER TABLE `estadoReparacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `estadoReparacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `funcionSistema`
 --
 
@@ -241,6 +332,15 @@ CREATE TABLE `funcionSistema` (
   PRIMARY KEY (`idfuncionSistema`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `funcionSistema`
+--
+
+LOCK TABLES `funcionSistema` WRITE;
+/*!40000 ALTER TABLE `funcionSistema` DISABLE KEYS */;
+/*!40000 ALTER TABLE `funcionSistema` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `historialAsignacionDiagnostico`
@@ -264,6 +364,15 @@ CREATE TABLE `historialAsignacionDiagnostico` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `historialAsignacionDiagnostico`
+--
+
+LOCK TABLES `historialAsignacionDiagnostico` WRITE;
+/*!40000 ALTER TABLE `historialAsignacionDiagnostico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `historialAsignacionDiagnostico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `historialAsignacionReparacion`
 --
 
@@ -285,6 +394,15 @@ CREATE TABLE `historialAsignacionReparacion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `historialAsignacionReparacion`
+--
+
+LOCK TABLES `historialAsignacionReparacion` WRITE;
+/*!40000 ALTER TABLE `historialAsignacionReparacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `historialAsignacionReparacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `marcaDispositivo`
 --
 
@@ -297,6 +415,15 @@ CREATE TABLE `marcaDispositivo` (
   PRIMARY KEY (`idMarcaDispositivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `marcaDispositivo`
+--
+
+LOCK TABLES `marcaDispositivo` WRITE;
+/*!40000 ALTER TABLE `marcaDispositivo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `marcaDispositivo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `moduloFuncionSistema`
@@ -319,6 +446,15 @@ CREATE TABLE `moduloFuncionSistema` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `moduloFuncionSistema`
+--
+
+LOCK TABLES `moduloFuncionSistema` WRITE;
+/*!40000 ALTER TABLE `moduloFuncionSistema` DISABLE KEYS */;
+/*!40000 ALTER TABLE `moduloFuncionSistema` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `moduloSistema`
 --
 
@@ -333,6 +469,15 @@ CREATE TABLE `moduloSistema` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `moduloSistema`
+--
+
+LOCK TABLES `moduloSistema` WRITE;
+/*!40000 ALTER TABLE `moduloSistema` DISABLE KEYS */;
+/*!40000 ALTER TABLE `moduloSistema` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `perfil`
 --
 
@@ -345,6 +490,15 @@ CREATE TABLE `perfil` (
   PRIMARY KEY (`idPerfil`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `perfil`
+--
+
+LOCK TABLES `perfil` WRITE;
+/*!40000 ALTER TABLE `perfil` DISABLE KEYS */;
+/*!40000 ALTER TABLE `perfil` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `permisoPerfil`
@@ -367,6 +521,15 @@ CREATE TABLE `permisoPerfil` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `permisoPerfil`
+--
+
+LOCK TABLES `permisoPerfil` WRITE;
+/*!40000 ALTER TABLE `permisoPerfil` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permisoPerfil` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `persona`
 --
 
@@ -380,8 +543,18 @@ CREATE TABLE `persona` (
   `apellido` varchar(45) NOT NULL,
   `fechaNacimiento` date NOT NULL,
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `persona`
+--
+
+LOCK TABLES `persona` WRITE;
+/*!40000 ALTER TABLE `persona` DISABLE KEYS */;
+INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21'),(2,'20-12345678-9','Juan','Pérez','1990-05-21');
+/*!40000 ALTER TABLE `persona` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `preguntaDiagnostico`
@@ -402,6 +575,15 @@ CREATE TABLE `preguntaDiagnostico` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `preguntaDiagnostico`
+--
+
+LOCK TABLES `preguntaDiagnostico` WRITE;
+/*!40000 ALTER TABLE `preguntaDiagnostico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `preguntaDiagnostico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `puestoLaboral`
 --
 
@@ -414,6 +596,15 @@ CREATE TABLE `puestoLaboral` (
   PRIMARY KEY (`idpuestoLaboral`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `puestoLaboral`
+--
+
+LOCK TABLES `puestoLaboral` WRITE;
+/*!40000 ALTER TABLE `puestoLaboral` DISABLE KEYS */;
+/*!40000 ALTER TABLE `puestoLaboral` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `reparacion`
@@ -442,6 +633,15 @@ CREATE TABLE `reparacion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `reparacion`
+--
+
+LOCK TABLES `reparacion` WRITE;
+/*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `repuesto`
 --
 
@@ -462,6 +662,15 @@ CREATE TABLE `repuesto` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `repuesto`
+--
+
+LOCK TABLES `repuesto` WRITE;
+/*!40000 ALTER TABLE `repuesto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `repuesto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tipoContacto`
 --
 
@@ -474,6 +683,15 @@ CREATE TABLE `tipoContacto` (
   PRIMARY KEY (`idtipoContacto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipoContacto`
+--
+
+LOCK TABLES `tipoContacto` WRITE;
+/*!40000 ALTER TABLE `tipoContacto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoContacto` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tipoDatoPreguntaDiagnostico`
@@ -490,6 +708,15 @@ CREATE TABLE `tipoDatoPreguntaDiagnostico` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tipoDatoPreguntaDiagnostico`
+--
+
+LOCK TABLES `tipoDatoPreguntaDiagnostico` WRITE;
+/*!40000 ALTER TABLE `tipoDatoPreguntaDiagnostico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoDatoPreguntaDiagnostico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tipoDispositivo`
 --
 
@@ -502,6 +729,15 @@ CREATE TABLE `tipoDispositivo` (
   PRIMARY KEY (`idTipoDispositivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipoDispositivo`
+--
+
+LOCK TABLES `tipoDispositivo` WRITE;
+/*!40000 ALTER TABLE `tipoDispositivo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoDispositivo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tipoDispositivoSegunPregunta`
@@ -523,6 +759,15 @@ CREATE TABLE `tipoDispositivoSegunPregunta` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tipoDispositivoSegunPregunta`
+--
+
+LOCK TABLES `tipoDispositivoSegunPregunta` WRITE;
+/*!40000 ALTER TABLE `tipoDispositivoSegunPregunta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoDispositivoSegunPregunta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tipoDomicilio`
 --
 
@@ -530,11 +775,20 @@ DROP TABLE IF EXISTS `tipoDomicilio`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoDomicilio` (
-  `idtipoDomicilio` int NOT NULL,
+  `idtipoDomicilio` int NOT NULL AUTO_INCREMENT,
   `descripciontipoDomicilio` varchar(45) NOT NULL,
   PRIMARY KEY (`idtipoDomicilio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipoDomicilio`
+--
+
+LOCK TABLES `tipoDomicilio` WRITE;
+/*!40000 ALTER TABLE `tipoDomicilio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoDomicilio` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tipoReparacion`
@@ -551,6 +805,15 @@ CREATE TABLE `tipoReparacion` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tipoReparacion`
+--
+
+LOCK TABLES `tipoReparacion` WRITE;
+/*!40000 ALTER TABLE `tipoReparacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoReparacion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuario`
 --
 
@@ -565,6 +828,16 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (`idUsuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com');
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -575,4 +848,4 @@ CREATE TABLE `usuario` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-21 22:33:01
+-- Dump completed on 2025-05-22 21:29:10
