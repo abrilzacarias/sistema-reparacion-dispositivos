@@ -4,6 +4,7 @@ import { ProtectedRoute } from "./ProtectedRoute"
 import { DashboardLayout } from "./components/layout/DashboardLayout"
 import LoginPage from "./pages/login/LoginPage"
 import { Dashboard } from "./pages/admin/Dashboard"
+import EmpleadoPage from "./pages/empleado/EmpleadoPage"
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
           <Route path="/reparaciones" element={<ReparacionesPage />} /> */}
           {/* Puedes añadir más rutas aquí y todas usarán el mismo layout */}
           <Route path="/roles" element={<div>Página de Roles</div>} />
-          <Route path="/empleados" element={<div>Página de Empleados</div>} />
+          <Route path="/empleados" element={<EmpleadoPage />} />
           <Route path="/clientes" element={<div>Página de Clientes</div>} />
           <Route path="/repuestos" element={<div>Página de Repuestos</div>} />
           <Route path="/gastos" element={<div>Página de Gastos Operativos</div>} />

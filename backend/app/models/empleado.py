@@ -5,7 +5,7 @@ from app.database import Base
 class Empleado(Base):
     __tablename__ = "empleado"
 
-    idEmpleado = Column(Integer, primary_key=True, index=True)
+    idEmpleado = Column(Integer, primary_key=True, index=True, autoincrement=True)
     fechaContratacion = Column(Date, nullable=False)
     fechaFinalizacion = Column(Date, nullable=True)
     estadoLaboral = Column(String(45), nullable=True)
