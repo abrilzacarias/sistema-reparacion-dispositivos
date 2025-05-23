@@ -9,11 +9,16 @@ def get_clientes(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Cliente).offset(skip).limit(limit).all()
 
 def create_cliente(db: Session, cliente: ClienteCreate):
-    db_cliente = Cliente(**cliente.dict())
-    db.add(db_cliente)
-    db.commit()
-    db.refresh(db_cliente)
-    return db_cliente
+    try:
+        db_cliente = Cliente(**cliente.dict())
+        db.add(db_cliente)
+        db.commit()
+        db.refresh(db_cliente)
+        return db_cliente
+    except Exception as e:
+        db.rollback()
+        print("Error al crear cliente:", e)
+        raise
 
 def update_cliente(db: Session, idCliente: int, cliente: ClienteUpdate):
     db_cliente = get_cliente(db, idCliente)
