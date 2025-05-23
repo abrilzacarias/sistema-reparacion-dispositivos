@@ -1,6 +1,9 @@
 import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL
 
+//TODO IMPLEMENTAR EL TOKEN EN EL HEADER DE LAS PETICIONES
+export const token = localStorage.getItem("token")
+
 async function loginUser(email, password) {
   const params = new URLSearchParams()
   params.append("username", email)
