@@ -9,3 +9,7 @@ from .puestoLaboral import PuestoLaboral
 from .usuario import Usuario
 from .repuesto import Repuesto
 from .marcaDispositivo import MarcaDispositivo
+from .cliente import Cliente
+from .domicilio import Domicilio
+from .tipoDomicilio import TipoDomicilio
+
