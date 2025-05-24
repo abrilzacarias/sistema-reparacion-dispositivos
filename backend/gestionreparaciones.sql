@@ -273,7 +273,6 @@ CREATE TABLE `empleado` (
   `idEmpleado` int NOT NULL AUTO_INCREMENT,
   `fechaContratacion` date NOT NULL,
   `fechaFinalizacion` date DEFAULT NULL,
-  `estadoLaboral` varchar(45) DEFAULT NULL COMMENT 'El estado laboral generalmente se refiere a la situaciÃ³n o condiciÃ³n en la que se encuentra un empleado o persona en relaciÃ³n con su empleo. Este tÃ©rmino se usa comÃºnmente para indicar si una persona estÃ¡ activa en su puesto de trabajo, si estÃ¡ de baja, si estÃ¡ en vacaciones, si ha renunciado, etc.\n\nAlgunos ejemplos de valores que podrÃ­a tener el campo estadoLaboral en una base de datos son:\n\n\nActivo: El empleado estÃ¡ trabajando actualmente.\n\n\nInactivo: El empleado ya no trabaja en la empresa (por ejemplo, por renuncia o despido).\n\n\nEn licencia: El empleado estÃ¡ temporalmente ausente por motivos como licencia mÃ©dica, vacaciones, etc.\n\n\nSuspensiÃ³n: El empleado estÃ¡ suspendido temporalmente de sus labores.\n\n\nVacaciones: El empleado estÃ¡ disfrutando de su periodo vacacional.\n\n\nDe baja: El empleado ha dejado de trabajar en la empresa, por ejemplo, por jubilaciÃ³n o finalizaciÃ³n de contrato.',
   `idpuestoLaboral` int NOT NULL,
   `idPersona` int NOT NULL,
   `idUsuario` int NOT NULL,
@@ -878,4 +877,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-24 10:13:48
+-- Dump completed on 2025-05-24 10:38:27
