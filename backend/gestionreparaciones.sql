@@ -18,7 +18,6 @@
 --
 -- Table structure for table `asignacionUsuarioPermisos`
 --
-USE gestionreparaciones; 
 
 DROP TABLE IF EXISTS `asignacionUsuarioPermisos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -53,7 +52,6 @@ DROP TABLE IF EXISTS `cliente`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cliente` (
   `idCliente` int NOT NULL AUTO_INCREMENT,
-  `estadoCliente` varchar(45) NOT NULL COMMENT 'Un campo para saber si el cliente estÃ¡ activo o inactivo',
   `observaciones` varchar(255) DEFAULT NULL,
   `idPersona` int NOT NULL,
   PRIMARY KEY (`idCliente`),
@@ -68,7 +66,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (9,'Activo','2025-06-21',1),(10,'Activo','2025-05-21',2);
+INSERT INTO `cliente` VALUES (9,'2025-06-21',1),(10,'2025-05-21',2);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,6 +206,7 @@ CREATE TABLE `dispositivo` (
   `idMarcaDispositivo` int NOT NULL,
   `idTipoDispositivo` int NOT NULL,
   `idCliente` int NOT NULL,
+  `estadoDispositivo` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idDispositivo`),
   KEY `fk_dispositivo_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_dispositivo_tipoDispositivo1_idx` (`idTipoDispositivo`),
@@ -413,6 +412,7 @@ DROP TABLE IF EXISTS `marcaDispositivo`;
 CREATE TABLE `marcaDispositivo` (
   `idMarcaDispositivo` int NOT NULL AUTO_INCREMENT,
   `descripcionMarcaDispositivo` varchar(45) NOT NULL,
+  `estadoMarcaDispositivo` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idMarcaDispositivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -543,6 +543,7 @@ CREATE TABLE `persona` (
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
   `fechaNacimiento` date NOT NULL,
+  `estadoPersona` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -553,7 +554,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21'),(2,'20-12345678-9','Juan','Pérez','1990-05-21');
+INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -656,9 +657,13 @@ CREATE TABLE `repuesto` (
   `precio` decimal(10,0) NOT NULL,
   `cantidadRepuesto` int NOT NULL,
   `idMarcaDispositivo` int NOT NULL,
+  `idTipoRepuesto` int NOT NULL,
+  `estadoRepuesto` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idRepuesto`),
   KEY `fk_repuestos_marca1_idx` (`idMarcaDispositivo`),
-  CONSTRAINT `fk_repuestos_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`)
+  KEY `fk_respuestos_tipoRepuesto1_idx` (`idTipoRepuesto`),
+  CONSTRAINT `fk_repuestos_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`),
+  CONSTRAINT `fk_respuestos_tipoRepuesto1` FOREIGN KEY (`idTipoRepuesto`) REFERENCES `tipoRepuesto` (`idTipoRepuesto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -815,6 +820,29 @@ LOCK TABLES `tipoReparacion` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tipoRepuesto`
+--
+
+DROP TABLE IF EXISTS `tipoRepuesto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tipoRepuesto` (
+  `idTipoRepuesto` int NOT NULL,
+  `descripcionTipoRespuesto` varchar(80) NOT NULL,
+  PRIMARY KEY (`idTipoRepuesto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipoRepuesto`
+--
+
+LOCK TABLES `tipoRepuesto` WRITE;
+/*!40000 ALTER TABLE `tipoRepuesto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoRepuesto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuario`
 --
 
@@ -849,4 +877,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-21 22:33:01
+-- Dump completed on 2025-05-24  9:55:27
