@@ -148,17 +148,23 @@ Para el desarrollo de este proyecto se utilizó:
 </p>
 
 <h3 id="💻-pasos-seguir">💻 Pasos a Seguir</h2>
+Descarga:
 
 - **Git**
 - **Node.js**
 - **Docker Destop**
 - **Python**
+
 // Comandos
+
 Asegurate de no estar usando el puerto 3306. Luego realiza:
+
 - docker-compose up --build
 - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 - npm install
+
 Los .env.example, hacer una copia y borrar el .example
+
 - npm run dev
 
 ---
