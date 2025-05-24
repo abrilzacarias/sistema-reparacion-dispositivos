@@ -13,7 +13,7 @@ export const fetchPaginated = async ({
   await delay(300)
 
   const res = await fetch(
-    `${API_URL}/${endpoint}/?page=${pageParam}&page_size=${pageSize}`,
+    `${API_URL}/${endpoint}/?page=${pageParam}&size=${pageSize}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

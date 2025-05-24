@@ -3,17 +3,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.services.repuesto import get_repuestos_by_marca
-
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 from app.schemas import repuesto as schemas
 from app.services import repuesto as services
 from app.database import get_db
 
 router = APIRouter(prefix="/repuestos", tags=["Repuestos"])
 
-# Obtener todos los repuestos (sin información de marca para evitar sobrecarga)
-@router.get("/", response_model=List[schemas.RepuestoWithMarca], summary="Obtener lista de repuestos")
-def read_repuestos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return services.get_repuestos(db, skip, limit)
+@router.get("/", response_model=Page[schemas.RepuestoWithMarca], summary="Obtener lista de repuestos")
+def read_repuestos(db: Session = Depends(get_db)):
+    return paginate(services.get_repuestos(db))
 
 # Obtener repuesto específico CON información de marca
 @router.get("/{idRepuesto}", response_model=schemas.RepuestoWithMarca, summary="Obtener repuesto por id con información de marca")

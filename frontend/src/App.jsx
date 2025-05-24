@@ -5,6 +5,7 @@ import { DashboardLayout } from "./components/layout/DashboardLayout"
 import LoginPage from "./pages/login/LoginPage"
 import { Dashboard } from "./pages/admin/Dashboard"
 import EmpleadoPage from "./pages/empleado/EmpleadoPage"
+import RepuestosPage from "./pages/repuestos/RepuestosPage"
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
           <Route path="/roles" element={<div>Página de Roles</div>} />
           <Route path="/empleados" element={<EmpleadoPage />} />
           <Route path="/clientes" element={<div>Página de Clientes</div>} />
-          <Route path="/repuestos" element={<div>Página de Repuestos</div>} />
+          <Route path="/repuestos" element={<RepuestosPage />} />
           <Route path="/gastos" element={<div>Página de Gastos Operativos</div>} />
           <Route path="/configuracion" element={<div>Página de Configuración</div>} />
         </Route>

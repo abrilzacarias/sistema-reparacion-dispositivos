@@ -2,11 +2,8 @@ from sqlalchemy.orm import Session, selectinload
 from app.models import repuesto as models
 from app.schemas import repuesto as schemas
 
-def get_repuestos(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Repuesto).options(
-        selectinload(models.Repuesto.marca)
-    ).offset(skip).limit(limit).all()
-
+def get_repuestos(db: Session):
+    return db.query(models.Repuesto).options(selectinload(models.Repuesto.marca))
 
 def get_repuesto(db: Session, idRepuesto: int):
     return db.query(models.Repuesto).filter(
