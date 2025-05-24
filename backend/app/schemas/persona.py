@@ -6,6 +6,7 @@ class PersonaBase(BaseModel):
     nombre: str = Field(..., example="Juan")
     apellido: str = Field(..., example="Pérez")
     fechaNacimiento: date = Field(..., example="1990-05-21")
+    #estadoPersona: int = Field(..., example=1)  # <-- acá lo agregás
 
 class PersonaCreate(PersonaBase):
     pass
@@ -15,6 +16,7 @@ class PersonaUpdate(PersonaBase):
 
 class PersonaOut(PersonaBase):
     idPersona: int
+    estadoPersona: int  # ← Agregá esta línea
 
     class Config:
         orm_mode = True
