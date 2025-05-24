@@ -5,6 +5,7 @@ from typing import List
 from app.schemas import cliente as schemas
 from app.services import cliente as services
 from app.database import get_db
+from app.services import persona as persona_service  # importás el servicio de persona
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
@@ -30,3 +31,13 @@ def update_cliente(idCliente: int, cliente: schemas.ClienteUpdate, db: Session =
     if db_cliente is None:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     return db_cliente
+
+@router.delete("/{idCliente}", status_code=status.HTTP_204_NO_CONTENT, summary="Dar de baja (inhabilitar) un cliente")
+def delete_cliente(idCliente: int, db: Session = Depends(get_db)):
+    cliente = services.get_cliente(db, idCliente)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+    
+    success = persona_service.delete_persona(db, cliente.idPersona)
+    if not success:
+        raise HTTPException(status_code=404, detail="Persona asociada no encontrada o ya dada de baja")

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -10,6 +10,8 @@ class Persona(Base):
     nombre = Column(String(45), nullable=False)
     apellido = Column(String(45), nullable=False)
     fechaNacimiento = Column(Date, nullable=False)
+    estadoPersona = Column(Boolean, nullable=False, default=True)
+    
 
     empleados = relationship("Empleado", back_populates="persona")
     cliente = relationship("Cliente", back_populates="persona")

@@ -33,3 +33,9 @@ def update_persona(idPersona: int, persona: schemas.PersonaUpdate, db: Session =
     if db_persona is None:
         raise HTTPException(status_code=404, detail="Persona no encontrada")
     return db_persona
+
+@router.delete("/{idPersona}", status_code=status.HTTP_204_NO_CONTENT, summary="Dar de baja (inhabilitar) una persona")
+def delete_persona(idPersona: int, db: Session = Depends(get_db)):
+    success = persona_service.delete_persona(db, idPersona)
+    if not success:
+        raise HTTPException(status_code=404, detail="Persona no encontrada")

@@ -15,8 +15,7 @@ class PersonaOut(PersonaBase):
         orm_mode = True
 
 class ClienteBase(BaseModel):
-    estadoCliente: str = Field(..., example="Activo")
-    observaciones: Optional[date] = Field(None, example="2025-05-21")
+    observaciones: Optional[str] = None
     idPersona: int
 
 class ClienteCreate(ClienteBase):
