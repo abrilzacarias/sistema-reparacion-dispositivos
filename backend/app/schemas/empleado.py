@@ -9,7 +9,6 @@ from app.schemas.puestoLaboral import PuestoLaboralOut
 class EmpleadoBase(BaseModel):
     fechaContratacion: date
     fechaFinalizacion: Optional[date] = None
-    estadoLaboral: Optional[str] = None
     idPersona: int
     idUsuario: int
     idpuestoLaboral: int
@@ -20,7 +19,6 @@ class EmpleadoCreate(EmpleadoBase):
 class EmpleadoUpdate(BaseModel):
     fechaContratacion: Optional[date] = None
     fechaFinalizacion: Optional[date] = None
-    estadoLaboral: Optional[str] = None
     idPersona: Optional[int] = None
     idUsuario: Optional[int] = None
     idpuestoLaboral: Optional[int] = None

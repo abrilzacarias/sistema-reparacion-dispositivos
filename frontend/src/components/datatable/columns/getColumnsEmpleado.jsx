@@ -32,8 +32,8 @@ export const getColEmpleados = ({ refetch }) => {
     },
     {
       header: "Estado Laboral",
-      accessorKey: "estadoLaboral",
-      cell: ({ row }) => <div>{row.original?.estadoLaboral}</div>,
+      accessorKey: "persona.estadoPersona",
+      cell: ({ row }) => <div>{row.original?.persona.estadoPersona}</div>,
     },
     {
       header: "Contratación",

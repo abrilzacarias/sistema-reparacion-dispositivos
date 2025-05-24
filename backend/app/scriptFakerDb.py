@@ -56,7 +56,8 @@ for _ in range(10):
         cuit=fake.unique.random_number(digits=11),
         nombre=fake.first_name(),
         apellido=fake.last_name(),
-        fechaNacimiento=fake.date_of_birth(minimum_age=18, maximum_age=60)
+        fechaNacimiento=fake.date_of_birth(minimum_age=18, maximum_age=60),
+        estadoPersona=random.choice([True, False])
     )
     db.add(persona)
     personas.append(persona)
@@ -84,7 +85,6 @@ for i in range(10):
     empleado = Empleado(
         fechaContratacion=fake.date_between(start_date='-2y', end_date='today'),
         fechaFinalizacion=None if random.choice([True, False]) else fake.date_between(start_date='-1y', end_date='today'),
-        estadoLaboral=random.choice(["Activo", "Inactivo"]),
         persona=personas[i],
         usuario=usuarios[i],
         puesto=puestos[i % len(puestos)]
@@ -93,21 +93,33 @@ for i in range(10):
 
 # Crear Marcas de Dispositivo
 marcas = []
-for desc in ["Samsung", "LG", "Apple"]:
+for desc in ["Samsung", "LG", "Apple", "Xiaomi", "Huawei", "Motorola"]:
     marca = MarcaDispositivo(descripcionMarcaDispositivo=desc)
     db.add(marca)
     marcas.append(marca)
 
+#TODO DESCOMENTAR ESTO CUANDO SE CREE TIPO REPUESTO
+""" tipos_repuesto = []
+for nombre in ["Pantalla", "Batería", "Placa Madre"]:
+    tipo = TipoRepuesto(nombreTipoRepuesto=nombre)
+    db.add(tipo)
+    tipos_repuesto.append(tipo)
+
+db.commit()  # Importante para que tengan ID antes de usarlos
+
 # Crear Repuestos
 for _ in range(10):
+    tipo = random.choice(tipos_repuesto)
     repuesto = Repuesto(
         nombreRepuesto=fake.word().capitalize(),
-        tipoRepuesto=random.choice(["Pantalla", "Batería", "Placa Madre"]),
+        tipoRepuesto=tipo.nombreTipoRepuesto,
         precio=round(random.uniform(1000, 50000), 2),
         cantidadRepuesto=random.randint(1, 100),
-        marca=marcas[random.randint(0, len(marcas) - 1)]
+        marca=marcas[random.randint(0, len(marcas) - 1)],
+        tipo=tipo  
     )
-    db.add(repuesto)
+    db.add(repuesto) """
+
 
 # Guardar todo
 db.commit()

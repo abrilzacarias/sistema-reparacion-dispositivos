@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -283,7 +283,7 @@ CREATE TABLE `empleado` (
   CONSTRAINT `fk_empleado_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_empleado_puestoLaboral1` FOREIGN KEY (`idpuestoLaboral`) REFERENCES `puestoLaboral` (`idpuestoLaboral`),
   CONSTRAINT `fk_empleado_usuario1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,6 +292,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES (11,'2024-11-09','2024-12-15',4,33,13),(12,'2023-11-16','2024-10-12',5,34,14),(13,'2025-02-20','2024-06-11',6,35,15),(14,'2025-01-21',NULL,4,36,16),(15,'2023-07-06','2024-09-25',5,37,17),(16,'2023-10-29',NULL,6,38,18),(17,'2025-04-22','2025-02-26',4,39,19),(18,'2023-10-03',NULL,5,40,20),(19,'2024-05-13','2025-03-15',6,41,21),(20,'2025-02-04',NULL,4,42,22);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -411,9 +412,9 @@ DROP TABLE IF EXISTS `marcaDispositivo`;
 CREATE TABLE `marcaDispositivo` (
   `idMarcaDispositivo` int NOT NULL AUTO_INCREMENT,
   `descripcionMarcaDispositivo` varchar(45) NOT NULL,
-  `estadoMarcaDispositivo` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
+  `estadoMarcaDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idMarcaDispositivo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,6 +423,7 @@ CREATE TABLE `marcaDispositivo` (
 
 LOCK TABLES `marcaDispositivo` WRITE;
 /*!40000 ALTER TABLE `marcaDispositivo` DISABLE KEYS */;
+INSERT INTO `marcaDispositivo` VALUES (4,'Samsung',1),(5,'LG',1),(6,'Apple',1),(7,'Xiaomi',1),(8,'Huawei',1),(9,'Motorola',1);
 /*!40000 ALTER TABLE `marcaDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -510,7 +512,7 @@ DROP TABLE IF EXISTS `permisoPerfil`;
 CREATE TABLE `permisoPerfil` (
   `idpermisoPerfil` int NOT NULL AUTO_INCREMENT,
   `idPerfil` int NOT NULL,
-  `estadoPermisoPerfil` tinyint NOT NULL,
+  `estadoPermisoPerfil` tinyint NOT NULL DEFAULT '1',
   `idmoduloFuncionSistema` int NOT NULL,
   PRIMARY KEY (`idpermisoPerfil`),
   KEY `fk_permisosDePerfiles_perfiles1_idx` (`idPerfil`),
@@ -542,9 +544,9 @@ CREATE TABLE `persona` (
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
   `fechaNacimiento` date NOT NULL,
-  `estadoPersona` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
+  `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -553,7 +555,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0);
+INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',1),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',1),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -594,9 +596,9 @@ DROP TABLE IF EXISTS `puestoLaboral`;
 CREATE TABLE `puestoLaboral` (
   `idpuestoLaboral` int NOT NULL AUTO_INCREMENT,
   `nombrepuestoLaboral` varchar(45) NOT NULL,
-  `estadoPuestoLaboral` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
+  `estadoPuestoLaboral` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idpuestoLaboral`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -605,6 +607,7 @@ CREATE TABLE `puestoLaboral` (
 
 LOCK TABLES `puestoLaboral` WRITE;
 /*!40000 ALTER TABLE `puestoLaboral` DISABLE KEYS */;
+INSERT INTO `puestoLaboral` VALUES (4,'Técnico',1),(5,'Administrador',1),(6,'Vendedor',1);
 /*!40000 ALTER TABLE `puestoLaboral` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -658,7 +661,7 @@ CREATE TABLE `repuesto` (
   `cantidadRepuesto` int NOT NULL,
   `idMarcaDispositivo` int NOT NULL,
   `idTipoRepuesto` int NOT NULL,
-  `estadoRepuesto` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
+  `estadoRepuesto` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idRepuesto`),
   KEY `fk_repuestos_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_respuestos_tipoRepuesto1_idx` (`idTipoRepuesto`),
@@ -855,7 +858,7 @@ CREATE TABLE `usuario` (
   `password` varchar(500) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -864,7 +867,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com');
+INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com'),(13,'aguedamarquez','hashed_password','evilla@example.org'),(14,'castelloprudencio','hashed_password','rayairene@example.com'),(15,'paulapenalver','hashed_password','gilabertjorge@example.org'),(16,'ynavarrete','hashed_password','ayusoagapito@example.org'),(17,'emiliapaz','hashed_password','jose00@example.org'),(18,'malemany','hashed_password','rocamorasabina@example.com'),(19,'lealinigo','hashed_password','jimena57@example.net'),(20,'pugagabriel','hashed_password','aguilabenigno@example.org'),(21,'dborrego','hashed_password','calixta67@example.com'),(22,'usimo','hashed_password','agustinagaliano@example.net');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -877,4 +880,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-24 10:38:27
+-- Dump completed on 2025-05-24 18:12:03

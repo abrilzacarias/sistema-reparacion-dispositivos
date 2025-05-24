@@ -28,7 +28,7 @@ const EmpleadoCard = ({ empleado }) => {
     Activo: "default",
     Inactivo: "destructive",
     Suspendido: "secondary",
-  }[empleado?.estadoLaboral] || "outline"
+  }[empleado.persona?.estadoPersona] || "outline"
 
   return (
     <motion.div
@@ -58,7 +58,7 @@ const EmpleadoCard = ({ empleado }) => {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Estado laboral:</span>
             <Badge variant={estadoColor}>
-              {empleado?.estadoLaboral || "No especificado"}
+              {empleado?.persona?.estadoPersona || "No especificado"}
             </Badge>
           </div>
 

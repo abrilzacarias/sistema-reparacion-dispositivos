@@ -8,7 +8,6 @@ class Empleado(Base):
     idEmpleado = Column(Integer, primary_key=True, index=True, autoincrement=True)
     fechaContratacion = Column(Date, nullable=False)
     fechaFinalizacion = Column(Date, nullable=True)
-    estadoLaboral = Column(String(45), nullable=True)
 
     idpuestoLaboral = Column(Integer, ForeignKey("puestoLaboral.idpuestoLaboral"), nullable=False)
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
