@@ -36,7 +36,6 @@ export function Sidebar() {
     { path: "/reparaciones", label: "Reparaciones", icon: <Wrench className="h-5 w-5" /> },
     { path: "/clientes", label: "Clientes", icon: <UserRound className="h-5 w-5" /> },
     { path: "/repuestos", label: "Repuestos", icon: <Package className="h-5 w-5" /> },
-    { path: "/gastos", label: "Gastos Operativos", icon: <BarChart3 className="h-5 w-5" /> },
   ]
 
   return (
