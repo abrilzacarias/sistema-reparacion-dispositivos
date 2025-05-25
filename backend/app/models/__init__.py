@@ -13,3 +13,7 @@ from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
 
+from .diagnostico import Diagnostico
+from .dispositivo import Dispositivo
+from .tipoDispositivo import TipoDispositivo
+
