@@ -7,6 +7,9 @@ class Cliente(Base):
 
     idCliente = Column(Integer, primary_key=True, index=True, autoincrement=True)
     observaciones = Column(Text, nullable=True)  # ← Tipo cambiado a Text
+    
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
     
     persona = relationship("Persona", back_populates="cliente")
+    
+    dispositivo = relationship("Dispositivo", back_populates="cliente")

@@ -9,3 +9,5 @@ class MarcaDispositivo(Base):
     descripcionMarcaDispositivo = Column(String(45), nullable=False)
 
     repuestos = relationship("Repuesto", back_populates="marca")
+
+    dispositivo = relationship("Dispositivo", back_populates="marcaDispositivo")

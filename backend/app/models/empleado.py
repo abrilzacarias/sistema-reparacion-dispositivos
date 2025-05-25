@@ -17,3 +17,4 @@ class Empleado(Base):
     puesto = relationship("PuestoLaboral", back_populates="empleados")
     persona = relationship("Persona", back_populates="empleados")
     usuario = relationship("Usuario", back_populates="empleados")
+    diagnosticos = relationship("Diagnostico", back_populates="empleado")

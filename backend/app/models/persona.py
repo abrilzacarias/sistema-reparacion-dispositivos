@@ -9,10 +9,8 @@ class Persona(Base):
     cuit = Column(String(45), unique=True, nullable=False)
     nombre = Column(String(45), nullable=False)
     apellido = Column(String(45), nullable=False)
-    fechaNacimiento = Column(Date, nullable=False)
-    estadoPersona = Column(Boolean, nullable=False, default=True)
-    
+    fechaNacimiento = Column(Date, nullable=False)    
 
-    empleados = relationship("Empleado", back_populates="persona")
+    empleado = relationship("Empleado", back_populates="persona")
     cliente = relationship("Cliente", back_populates="persona")
     domicilio = relationship("Domicilio", back_populates="persona")
