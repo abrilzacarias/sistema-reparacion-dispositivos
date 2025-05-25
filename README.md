@@ -160,6 +160,8 @@ Descarga:
 Asegurate de no estar usando el puerto 3306. Luego realiza:
 
 - docker-compose up --build
+cd frontend
+- npm init -y
 - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 - npm install
 
