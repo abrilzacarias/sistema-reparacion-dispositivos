@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app import models, database
-from app.routers import persona, auth, cliente, repuesto, marcaDispositivo, empleado, domicilio, tipoDomicilio
+from app.routers import persona, auth, cliente, repuesto, marcaDispositivo, empleado, domicilio, tipoDomicilio, diagnostico
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from app.routers import puestoLaboral
@@ -31,6 +31,6 @@ app.include_router(puestoLaboral.router)
 app.include_router(cliente.router)
 app.include_router(domicilio.router)
 app.include_router(tipoDomicilio.router)
-# app.include_router(diagnostico.router)
+app.include_router(diagnostico.router)
 
 add_pagination(app)
