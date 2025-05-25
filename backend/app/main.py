@@ -31,5 +31,6 @@ app.include_router(puestoLaboral.router)
 app.include_router(cliente.router)
 app.include_router(domicilio.router)
 app.include_router(tipoDomicilio.router)
+# app.include_router(diagnostico.router)
 
 add_pagination(app)

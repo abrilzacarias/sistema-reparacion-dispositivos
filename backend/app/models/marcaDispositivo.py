@@ -8,4 +8,6 @@ class MarcaDispositivo(Base):
     idMarcaDispositivo = Column(Integer, primary_key=True, index=True, autoincrement=True)
     descripcionMarcaDispositivo = Column(String(45), nullable=False)
 
+    # Envia a Repuesto, Dispositivo
     repuestos = relationship("Repuesto", back_populates="marca")
+    dispositivo = relationship("Dispositivo", back_populates="marcaDispositivo")

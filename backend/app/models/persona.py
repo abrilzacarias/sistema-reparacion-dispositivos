@@ -12,7 +12,7 @@ class Persona(Base):
     fechaNacimiento = Column(Date, nullable=False)
     estadoPersona = Column(Boolean, nullable=False, default=True)
     
-
+    # Envia a Empleado, Cliente, Domicilio
     empleados = relationship("Empleado", back_populates="persona")
     cliente = relationship("Cliente", back_populates="persona")
     domicilio = relationship("Domicilio", back_populates="persona")
