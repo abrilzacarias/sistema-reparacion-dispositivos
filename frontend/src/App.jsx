@@ -6,6 +6,7 @@ import LoginPage from "./pages/login/LoginPage"
 import { Dashboard } from "./pages/admin/Dashboard"
 import EmpleadoPage from "./pages/empleado/EmpleadoPage"
 import RepuestosPage from "./pages/repuestos/RepuestosPage"
+import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         >
           {/* Todas estas rutas heredarán el layout con sidebar y topbar */}
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/diagnostico" element={<DiagnosticoPage />} />
+          <Route path="/diagnosticos" element={<DiagnosticoPage />} />
+          {/* 
           <Route path="/reparaciones" element={<ReparacionesPage />} /> */}
           {/* Puedes añadir más rutas aquí y todas usarán el mismo layout */}
           <Route path="/roles" element={<div>Página de Roles</div>} />
