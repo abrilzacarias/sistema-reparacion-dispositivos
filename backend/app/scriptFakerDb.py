@@ -6,9 +6,9 @@ from faker import Faker
 import random
 
 # para CORRER
-# docker exec -it fastapi sh                             
-# cd /app
-# python -m app.scriptFakerDb
+    # docker exec -it fastapi sh                             
+    # cd /app
+    # python -m app.scriptFakerDb
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 load_dotenv(os.path.join(basedir, '.env'))
 
@@ -30,24 +30,9 @@ SessionLocal = sessionmaker(bind=engine)
 db = SessionLocal()
 
 # Importar modelos después de configurar db
-from app.models import Persona, Usuario, Empleado, PuestoLaboral, MarcaDispositivo, Repuesto
+from app.models import Persona, Usuario, Empleado, PuestoLaboral, MarcaDispositivo, Repuesto, Cliente, Dispositivo, TipoDispositivo, Diagnostico
 
 fake = Faker("es_ES")
-
-# Ejemplo para crear personas
-personas = []
-for _ in range(10):
-    persona = Persona(
-        cuit=fake.unique.random_number(digits=11),
-        nombre=fake.first_name(),
-        apellido=fake.last_name(),
-        fechaNacimiento=fake.date_of_birth(minimum_age=18, maximum_age=60)
-    )
-    db.add(persona)
-    personas.append(persona)
-
-db.commit()
-db.close()
 
 # Crear Personas
 personas = []
@@ -81,6 +66,7 @@ for nombre in ["Técnico", "Administrador", "Vendedor"]:
     puestos.append(puesto)
 
 # Crear Empleados
+empleados = []
 for i in range(10):
     empleado = Empleado(
         fechaContratacion=fake.date_between(start_date='-2y', end_date='today'),
@@ -90,16 +76,55 @@ for i in range(10):
         puesto=puestos[i % len(puestos)]
     )
     db.add(empleado)
+    empleados.append(empleado)
 
 # Crear Marcas de Dispositivo
 marcas = []
-for desc in ["Samsung", "LG", "Apple", "Xiaomi", "Huawei", "Motorola"]:
+for desc in ["Samsung", "LG", "Apple", "Xiaomi", "Huawei", "Motorola", "Sony"]:
     marca = MarcaDispositivo(descripcionMarcaDispositivo=desc)
     db.add(marca)
     marcas.append(marca)
 
-#TODO DESCOMENTAR ESTO CUANDO SE CREE TIPO REPUESTO
-""" tipos_repuesto = []
+# Crear Tipos de Dispositivo
+tipos_dispositivo = []
+for nombre in ["Celular", "Tablet", "Notebook", "Smartwatch"]:
+    tipo = TipoDispositivo(nombreTipoDispositivo=nombre)
+    db.add(tipo)
+    tipos_dispositivo.append(tipo)
+
+# Crear Clientes y Dispositivos asociados
+clientes = []
+dispositivos = []
+for i in range(10):
+    cliente = Cliente(
+        observaciones=fake.sentence(),
+        persona=personas[i]
+    )
+    db.add(cliente)
+    clientes.append(cliente)
+
+    dispositivo = Dispositivo(
+        descripcionDispositivo=fake.text(max_nb_chars=40),
+        modeloDispositivo=fake.word().capitalize(),
+        marcaDispositivo=random.choice(marcas),
+        tipoDispositivo=random.choice(tipos_dispositivo),
+        cliente=cliente
+    )
+    db.add(dispositivo)
+    dispositivos.append(dispositivo)
+    
+db.commit() 
+# Crear Diagnósticos
+for i in range(10):
+    diagnostico = Diagnostico(
+        fechaDiagnostico=fake.date_between(start_date='-1y', end_date='today'),
+        dispositivo=dispositivos[i],
+        idEmpleado=random.choice(empleados).idEmpleado
+    )
+    db.add(diagnostico)
+""" 
+# Crear Tipos de Repuesto
+tipos_repuesto = []
 for nombre in ["Pantalla", "Batería", "Placa Madre"]:
     tipo = TipoRepuesto(nombreTipoRepuesto=nombre)
     db.add(tipo)
@@ -118,9 +143,8 @@ for _ in range(10):
         marca=marcas[random.randint(0, len(marcas) - 1)],
         tipo=tipo  
     )
-    db.add(repuesto) """
-
-
-# Guardar todo
+    db.add(repuesto)
+ """
+# Guardar todo    
 db.commit()
 db.close()

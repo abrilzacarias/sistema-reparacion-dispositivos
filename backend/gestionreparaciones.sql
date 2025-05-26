@@ -78,7 +78,7 @@ DROP TABLE IF EXISTS `contacto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `contacto` (
-  `idContacto` int NOT NULL,
+  `idContacto` int NOT NULL AUTO_INCREMENT,
   `descripciÃ³nContacto` varchar(45) NOT NULL,
   `idtipoContacto` int NOT NULL,
   `idPersona` int NOT NULL,
@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS `detalleDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleDiagnostico` (
-  `idDetalleDiagnostico` int NOT NULL,
+  `idDetalleDiagnostico` int NOT NULL AUTO_INCREMENT,
   `valorDiagnostico` varchar(150) NOT NULL,
   `idDiagnostico` int NOT NULL,
   `idTipoDispositivoSegunPregunta` varchar(45) NOT NULL,
@@ -136,7 +136,7 @@ DROP TABLE IF EXISTS `detalleReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleReparacion` (
-  `idDetalleReparacion` int NOT NULL,
+  `idDetalleReparacion` int NOT NULL AUTO_INCREMENT,
   `montoTotalDetalleReparacion` decimal(10,0) NOT NULL,
   `manoObra` decimal(10,0) NOT NULL,
   `precioRepuesto` decimal(10,0) NOT NULL,
@@ -171,7 +171,7 @@ DROP TABLE IF EXISTS `diagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `diagnostico` (
-  `idDiagnostico` int NOT NULL,
+  `idDiagnostico` int NOT NULL AUTO_INCREMENT,
   `fechaDiagnostico` date NOT NULL,
   `idDispositivo` int NOT NULL,
   `idEmpleado` int NOT NULL,
@@ -200,13 +200,13 @@ DROP TABLE IF EXISTS `dispositivo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dispositivo` (
-  `idDispositivo` int NOT NULL,
+  `idDispositivo` int NOT NULL AUTO_INCREMENT,
   `descripcionDispositivo` varchar(80) NOT NULL,
   `modeloDispositivo` varchar(45) NOT NULL,
   `idMarcaDispositivo` int NOT NULL,
   `idTipoDispositivo` int NOT NULL,
   `idCliente` int NOT NULL,
-  `estadoDispositivo` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
+  `estadoDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idDispositivo`),
   KEY `fk_dispositivo_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_dispositivo_tipoDispositivo1_idx` (`idTipoDispositivo`),
@@ -304,7 +304,7 @@ DROP TABLE IF EXISTS `estadoReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `estadoReparacion` (
-  `idEstadoReparacion` int NOT NULL,
+  `idEstadoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionEstadoReparacion` varchar(70) NOT NULL,
   PRIMARY KEY (`idEstadoReparacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -350,7 +350,7 @@ DROP TABLE IF EXISTS `historialAsignacionDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historialAsignacionDiagnostico` (
-  `idHistorialAsignacionDiagnostico` int NOT NULL,
+  `idHistorialAsignacionDiagnostico` int NOT NULL AUTO_INCREMENT,
   `fechaInicioAsignacionDiagnostico` date NOT NULL,
   `fechaFinAsignacionDiagnostico` date DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
@@ -380,7 +380,7 @@ DROP TABLE IF EXISTS `historialAsignacionReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historialAsignacionReparacion` (
-  `idHistorialAsignacionReparacion` int NOT NULL,
+  `idHistorialAsignacionReparacion` int NOT NULL AUTO_INCREMENT,
   `fechaInicioAsignacionReparacion` date NOT NULL,
   `fechaFinAsignacionReparacion` date DEFAULT NULL,
   `idReparacion` int NOT NULL,
@@ -567,7 +567,7 @@ DROP TABLE IF EXISTS `preguntaDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `preguntaDiagnostico` (
-  `idPreguntaDiagnostico` int NOT NULL COMMENT 'preguntasDiagnostico  (define las "preguntas" o Ã­tems para el diagnostico segun dispositivo)\nEs la tabla que define quÃ© cosas se le deben preguntar o revisar a un dispositivo cuando llega al local para hacerle un diagnÃ³stico.\nEstas preguntas son parametrizables, lo que significa que el administrador puede crearlas, modificarlas o asignarlas a distintos tipos de dispositivos, sin tocar la base de datos.\nâ€¢	idPreguntasDiagnostico (PK)\nâ€¢	descripcionPregunta (Ej: Â¿Prende?, Â¿EstÃ¡ mojado?, Â¿Tiene cargador?...)\nâ€¢	tipoDatoPregunta (Ej: boolean, texto, nÃºmero, opciÃ³n mÃºltiple)',
+  `idPreguntaDiagnostico` int NOT NULL AUTO_INCREMENT COMMENT 'preguntasDiagnostico  (define las "preguntas" o Ã­tems para el diagnostico segun dispositivo)\nEs la tabla que define quÃ© cosas se le deben preguntar o revisar a un dispositivo cuando llega al local para hacerle un diagnÃ³stico.\nEstas preguntas son parametrizables, lo que significa que el administrador puede crearlas, modificarlas o asignarlas a distintos tipos de dispositivos, sin tocar la base de datos.\nâ€¢	idPreguntasDiagnostico (PK)\nâ€¢	descripcionPregunta (Ej: Â¿Prende?, Â¿EstÃ¡ mojado?, Â¿Tiene cargador?...)\nâ€¢	tipoDatoPregunta (Ej: boolean, texto, nÃºmero, opciÃ³n mÃºltiple)',
   `descripcionPreguntaDiagnostico` varchar(90) NOT NULL,
   `idTipoDatoPreguntaDiagnostico` int NOT NULL,
   `opcionesPregunta` json DEFAULT NULL COMMENT '4	Â¿QuÃ© tan sucio estÃ¡?	opcion	["Limpio", "Sucio", "Muy sucio"]',
@@ -619,7 +619,7 @@ DROP TABLE IF EXISTS `reparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reparacion` (
-  `idReparacion` int NOT NULL,
+  `idReparacion` int NOT NULL AUTO_INCREMENT,
   `numeroReparacion` int NOT NULL,
   `idEstadoReparacion` int NOT NULL,
   `fechaIngreso` date NOT NULL,
@@ -687,7 +687,7 @@ DROP TABLE IF EXISTS `tipoContacto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoContacto` (
-  `idtipoContacto` int NOT NULL,
+  `idtipoContacto` int NOT NULL AUTO_INCREMENT,
   `descripciÃ³ntipoContacto` varchar(45) NOT NULL,
   PRIMARY KEY (`idtipoContacto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -710,7 +710,7 @@ DROP TABLE IF EXISTS `tipoDatoPreguntaDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoDatoPreguntaDiagnostico` (
-  `idTipoDatoPreguntaDiagnostico` int NOT NULL,
+  `idTipoDatoPreguntaDiagnostico` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoDatoPreguntaDiagnostico` varchar(45) NOT NULL COMMENT '(ej: "texto", "nÃºmero", "opciÃ³n", etc.)',
   PRIMARY KEY (`idTipoDatoPreguntaDiagnostico`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -733,7 +733,7 @@ DROP TABLE IF EXISTS `tipoDispositivo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoDispositivo` (
-  `idTipoDispositivo` int NOT NULL,
+  `idTipoDispositivo` int NOT NULL AUTO_INCREMENT,
   `nombreTipoDispositivo` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoDispositivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -807,7 +807,7 @@ DROP TABLE IF EXISTS `tipoReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoReparacion` (
-  `idTipoReparacion` int NOT NULL,
+  `idTipoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoReparacion` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoReparacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -830,7 +830,7 @@ DROP TABLE IF EXISTS `tipoRepuesto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoRepuesto` (
-  `idTipoRepuesto` int NOT NULL,
+  `idTipoRepuesto` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoRespuesto` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoRepuesto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
