@@ -3,7 +3,10 @@ from app import models
 from app.schemas import marcaDispositivo as schemas
 
 def get_marca_dispositivos(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.MarcaDispositivo).offset(skip).limit(limit).all()
+    return db.query(models.MarcaDispositivo).filter(
+        models.MarcaDispositivo.estadoMarcaDispositivo == True
+    ).offset(skip).limit(limit).all()
+
 
 def get_marca_dispositivo(db: Session, id_marca: int):
     return db.query(models.MarcaDispositivo).filter(
@@ -35,11 +38,13 @@ def delete_marca_dispositivo(db: Session, id_marca: int):
     if not db_marca:
         return None
 
-    # Verificamos si tiene repuestos asociados
-    if db_marca.repuestos and len(db_marca.repuestos) > 0:
-        raise ValueError("No se puede eliminar la marca porque tiene repuestos asociados.")
+    # Verificamos si tiene repuestos activos asociados
+    if any(repuesto.estadoRepuesto for repuesto in db_marca.repuestos):
+        raise ValueError("No se puede eliminar la marca porque tiene repuestos activos asociados.")
 
-    # Si no tiene, se puede eliminar
-    db.delete(db_marca)
+    # Eliminación lógica
+    db_marca.estadoMarcaDispositivo = False
     db.commit()
+    db.refresh(db_marca)
     return db_marca
+

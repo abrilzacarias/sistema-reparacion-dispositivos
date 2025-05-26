@@ -18,7 +18,7 @@
 --
 -- Table structure for table `asignacionUsuarioPermisos`
 --
-
+USE gestionreparaciones
 DROP TABLE IF EXISTS `asignacionUsuarioPermisos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -656,7 +656,6 @@ DROP TABLE IF EXISTS `repuesto`;
 CREATE TABLE `repuesto` (
   `idRepuesto` int NOT NULL AUTO_INCREMENT,
   `nombreRepuesto` varchar(80) NOT NULL,
-  `tipoRepuesto` varchar(80) NOT NULL,
   `precio` decimal(10,0) NOT NULL,
   `cantidadRepuesto` int NOT NULL,
   `idMarcaDispositivo` int NOT NULL,
@@ -830,7 +829,7 @@ DROP TABLE IF EXISTS `tipoRepuesto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoRepuesto` (
-  `idTipoRepuesto` int NOT NULL,
+  `idTipoRepuesto` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoRespuesto` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoRepuesto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
