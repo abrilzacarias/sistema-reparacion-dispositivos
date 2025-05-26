@@ -56,11 +56,32 @@ class DispositivoSchema(BaseModel):
     class Config:
         orm_mode = True
 
-
 # VAMO Diagnóstico
 class DiagnosticoSchema(BaseModel):
     idDiagnostico: int
     fechaDiagnostico: date
+    dispositivo: DispositivoSchema
+    empleado: EmpleadoSchema
+
+    class Config:
+        orm_mode = True
+
+# Schemas para Diagnóstico
+class DiagnosticoBase(BaseModel):
+    fechaDiagnostico: date
+    idDispositivo: int
+    idEmpleado: int
+
+class DiagnosticoCreate(DiagnosticoBase):
+    pass
+
+class DiagnosticoUpdate(BaseModel):
+    fechaDiagnostico: Optional[date] = None
+    idDispositivo: Optional[int] = None
+    idEmpleado: Optional[int] = None
+
+class DiagnosticoSchema(DiagnosticoBase):
+    idDiagnostico: int
     dispositivo: DispositivoSchema
     empleado: EmpleadoSchema
 

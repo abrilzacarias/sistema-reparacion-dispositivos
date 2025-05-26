@@ -13,4 +13,4 @@ class Diagnostico(Base):
     dispositivo = relationship("Dispositivo", back_populates="diagnosticos")
 
     idEmpleado = Column(Integer, ForeignKey('empleado.idEmpleado'), nullable=False)
-    empleados = relationship("Empleado", back_populates="diagnosticos")
+    empleado = relationship("Empleado", back_populates="diagnosticos")

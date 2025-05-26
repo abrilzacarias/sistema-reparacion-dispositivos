@@ -30,7 +30,7 @@ export function Sidebar() {
 
   const menuItems = [
     { path: "/dashboard", label: "Inicio", icon: <LayoutGrid className="h-5 w-5" /> },
-    { path: "/diagnostico", label: "Diagnóstico", icon: <Stethoscope className="h-5 w-5" /> },
+    { path: "/diagnosticos", label: "Diagnóstico", icon: <Stethoscope className="h-5 w-5" /> },
     { path: "/roles", label: "Roles", icon: <Users className="h-5 w-5" /> },
     { path: "/empleados", label: "Empleados", icon: <UserCircle className="h-5 w-5" /> },
     { path: "/reparaciones", label: "Reparaciones", icon: <Wrench className="h-5 w-5" /> },

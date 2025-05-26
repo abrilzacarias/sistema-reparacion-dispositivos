@@ -20,5 +20,5 @@ class Empleado(Base):
     usuario = relationship("Usuario", back_populates="empleados")
     
     # Envia a Diagnostico
-    diagnosticos = relationship("Diagnostico", back_populates="empleados")
+    diagnosticos = relationship("Diagnostico", back_populates="empleado")
 
