@@ -12,6 +12,8 @@ from .marcaDispositivo import MarcaDispositivo
 from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
+from .perfil import Perfil
+
 
 from .diagnostico import Diagnostico
 from .dispositivo import Dispositivo

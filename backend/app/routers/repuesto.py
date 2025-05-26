@@ -11,12 +11,12 @@ from app.database import get_db
 
 router = APIRouter(prefix="/repuestos", tags=["Repuestos"])
 
-@router.get("/", response_model=Page[schemas.RepuestoWithMarca], summary="Obtener lista de repuestos")
+@router.get("/", response_model=Page[schemas.RepuestoWithMarcaTipo], summary="Obtener lista de repuestos")
 def read_repuestos(db: Session = Depends(get_db)):
     return paginate(services.get_repuestos(db))
 
 # Obtener repuesto específico CON información de marca
-@router.get("/{idRepuesto}", response_model=schemas.RepuestoWithMarca, summary="Obtener repuesto por id con información de marca")
+@router.get("/{idRepuesto}", response_model=schemas.RepuestoWithMarcaTipo, summary="Obtener repuesto por id con información de marca")
 def read_repuesto(idRepuesto: int, db: Session = Depends(get_db)):
     repuesto = services.get_repuesto(db, idRepuesto)
     if repuesto is None:

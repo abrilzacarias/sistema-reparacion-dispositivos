@@ -2,13 +2,15 @@
 from pydantic import BaseModel, Field
 from decimal import Decimal
 from typing import Optional
+from app.schemas.tipoRepuesto import TipoRepuestoOut  # importá esto
 
 class RepuestoBase(BaseModel):
     nombreRepuesto: str = Field(..., example="Pantalla LCD")
-    tipoRepuesto: str = Field(..., example="Pantalla")
     precio: Decimal = Field(..., example=2500.50)
     cantidadRepuesto: int = Field(..., example=10)
     idMarcaDispositivo: int = Field(..., example=1)
+    idTipoRepuesto: int = Field(..., example=2)
+    estadoRepuesto: Optional[bool] = Field(default=True)
 
 class RepuestoCreate(RepuestoBase):
     pass
@@ -16,14 +18,12 @@ class RepuestoCreate(RepuestoBase):
 class RepuestoUpdate(RepuestoBase):
     pass
 
-# Schema básico sin referencias circulares
 class RepuestoOut(RepuestoBase):
     idRepuesto: int
 
     class Config:
         from_attributes = True
 
-# Schema para mostrar marca básica (sin repuestos)
 class MarcaDispositivoBasic(BaseModel):
     idMarcaDispositivo: int
     descripcionMarcaDispositivo: str
@@ -31,9 +31,11 @@ class MarcaDispositivoBasic(BaseModel):
     class Config:
         from_attributes = True
 
-# Schema para repuesto con información de marca (sin crear ciclo)
-class RepuestoWithMarca(RepuestoOut):
+# Repuesto con datos de Marca y Tipo
+class RepuestoWithMarcaTipo(RepuestoOut):
     marca: Optional[MarcaDispositivoBasic] = None
+    tipoRepuesto: Optional[TipoRepuestoOut] = Field(None, alias="tipo")
 
     class Config:
         from_attributes = True
+        populate_by_name = True
