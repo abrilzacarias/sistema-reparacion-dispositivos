@@ -160,16 +160,25 @@ Descarga:
 Asegurate de no estar usando el puerto 3306. Luego realiza:
 
 - docker-compose up --build
-cd frontend
+  cd frontend
 - npm init -y
 - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 - npm install
+
+<!--
+docker-compose up --build
+cd frontend
+npm init -y
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+npm install
+-->
 
 Los .env.example, hacer una copia y borrar el .example
 
 - npm run dev
 
 ---
+
 <!--
 
 <h2 id="📸-vista-previa">📸 Vista Previa</h2>
@@ -177,9 +186,9 @@ Los .env.example, hacer una copia y borrar el .example
 <p align="center">
   <b>Head</b><br>
   <img src="./VistaPrevia/Easy%20Kinematics%20-%20Head.webp" alt="Head" width="500">
-</p> 
+</p>
 
---- 
+---
 
 -->
 <h2 id="📢-autoras">📢 Autoras</h2>
