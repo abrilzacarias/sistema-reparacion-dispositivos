@@ -15,7 +15,7 @@ from app.services.diagnostico import (
 
 from app.database import get_db
 
-router = APIRouter(prefix="/diagnosticos", tags=["Diagnosticos"])
+router = APIRouter(prefix="/diagnostico", tags=["Diagnostico"])
 
 # GET: Lista de diagnósticos
 @router.get("/", response_model=Page[schemas.DiagnosticoSchema])
