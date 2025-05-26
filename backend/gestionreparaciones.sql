@@ -206,7 +206,7 @@ CREATE TABLE `dispositivo` (
   `idMarcaDispositivo` int NOT NULL,
   `idTipoDispositivo` int NOT NULL,
   `idCliente` int NOT NULL,
-  `estadoDispositivo` tinyint NOT NULL COMMENT 'ACTIVO O INACTIVO',
+  `estadoDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idDispositivo`),
   KEY `fk_dispositivo_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_dispositivo_tipoDispositivo1_idx` (`idTipoDispositivo`),

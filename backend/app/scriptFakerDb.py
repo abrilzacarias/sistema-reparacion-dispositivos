@@ -6,9 +6,9 @@ from faker import Faker
 import random
 
 # para CORRER
-# docker exec -it fastapi sh                             
-# cd /app
-# python -m app.scriptFakerDb
+    # docker exec -it fastapi sh                             
+    # cd /app
+    # python -m app.scriptFakerDb
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 load_dotenv(os.path.join(basedir, '.env'))
 
@@ -86,11 +86,11 @@ for desc in ["Samsung", "LG", "Apple", "Xiaomi", "Huawei", "Motorola", "Sony"]:
     marcas.append(marca)
 
 # Crear Tipos de Dispositivo
-""" tipos_dispositivo = []
+tipos_dispositivo = []
 for nombre in ["Celular", "Tablet", "Notebook", "Smartwatch"]:
     tipo = TipoDispositivo(nombreTipoDispositivo=nombre)
     db.add(tipo)
-    tipos_dispositivo.append(tipo) """
+    tipos_dispositivo.append(tipo)
 
 # Crear Clientes y Dispositivos asociados
 clientes = []
@@ -113,7 +113,7 @@ for i in range(10):
     db.add(dispositivo)
     dispositivos.append(dispositivo)
     
-print(empleado)
+db.commit() 
 # Crear Diagnósticos
 for i in range(10):
     diagnostico = Diagnostico(
