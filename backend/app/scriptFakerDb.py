@@ -133,7 +133,7 @@ for _ in range(10):
     tipo = random.choice(tipos_repuesto)
     repuesto = Repuesto(
         nombreRepuesto=fake.word().capitalize(),
-        tipoRepuesto=tipo.descripcionTipoRepuesto,
+        idTipoRepuesto=tipo.idTipoRepuesto,
         precio=round(random.uniform(1000, 50000), 2),
         cantidadRepuesto=random.randint(1, 100),
         marca=marcas[random.randint(0, len(marcas) - 1)],
