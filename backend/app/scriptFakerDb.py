@@ -6,9 +6,9 @@ from faker import Faker
 import random
 
 # para CORRER
-    # docker exec -it fastapi sh                             
-    # cd /app
-    # python -m app.scriptFakerDb
+# docker exec -it fastapi sh                             
+# cd /app
+# python -m app.scriptFakerDb
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 load_dotenv(os.path.join(basedir, '.env'))
 
@@ -20,21 +20,17 @@ DB_NAME = os.getenv('DB_NAME')
 
 if not all([DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME]):
     raise Exception("Faltan variables de entorno para la base de datos")
-
-# Crear URL para MySQL con pymysql
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-# Crear engine y sesión
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 db = SessionLocal()
 
-# Importar modelos después de configurar db
-from app.models import Persona, Usuario, Empleado, PuestoLaboral, MarcaDispositivo, Repuesto, Cliente, Dispositivo, TipoDispositivo, Diagnostico
+from app.models import Persona, Usuario, Empleado, PuestoLaboral, MarcaDispositivo, Repuesto, Cliente, Dispositivo, TipoDispositivo, Diagnostico, TipoRepuesto
 
 fake = Faker("es_ES")
 
-# Crear Personas
+# Crear Person  as
 personas = []
 for _ in range(10):
     persona = Persona(
@@ -122,29 +118,28 @@ for i in range(10):
         idEmpleado=random.choice(empleados).idEmpleado
     )
     db.add(diagnostico)
-""" 
+
 # Crear Tipos de Repuesto
 tipos_repuesto = []
-for nombre in ["Pantalla", "Batería", "Placa Madre"]:
-    tipo = TipoRepuesto(nombreTipoRepuesto=nombre)
+for nombre in ["Pantalla", "Batería", "Placa Madre", "Cámara", "Carcasa", "Conector de Carga", "Altavoz"]:
+    tipo = TipoRepuesto(descripcionTipoRepuesto=nombre)
     db.add(tipo)
     tipos_repuesto.append(tipo)
 
-db.commit()  # Importante para que tengan ID antes de usarlos
+db.commit() 
 
 # Crear Repuestos
 for _ in range(10):
     tipo = random.choice(tipos_repuesto)
     repuesto = Repuesto(
         nombreRepuesto=fake.word().capitalize(),
-        tipoRepuesto=tipo.nombreTipoRepuesto,
+        tipoRepuesto=tipo.descripcionTipoRepuesto,
         precio=round(random.uniform(1000, 50000), 2),
         cantidadRepuesto=random.randint(1, 100),
         marca=marcas[random.randint(0, len(marcas) - 1)],
         tipo=tipo  
     )
     db.add(repuesto)
- """
-# Guardar todo    
+
 db.commit()
 db.close()

@@ -24,8 +24,8 @@ const DiagnosticosPage = () => {
     hasNextPage,
     total: totalDiagnosticos,
   } = usePaginatedQuery({
-    key: "diagnosticos",
-    endpoint: "diagnosticos",
+    key: "diagnostico",
+    endpoint: "diagnostico",
     pageSize: 10,
   });
 
