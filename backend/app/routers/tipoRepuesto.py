@@ -4,13 +4,15 @@ from typing import List
 from app.database import get_db
 from app.schemas import tipoRepuesto as schemas
 from app.models import tipoRepuesto as models
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 router = APIRouter(prefix="/tipos-repuesto", tags=["Tipos de Repuesto"])
 
 # Obtener todos los tipos de repuesto
-@router.get("/", response_model=List[schemas.TipoRepuestoOut], summary="Listar todos los tipos de repuesto")
+@router.get("/", response_model=Page[schemas.TipoRepuestoOut], summary="Listar todos los tipos de repuesto")
 def read_tipos_repuesto(db: Session = Depends(get_db)):
-    return db.query(models.TipoRepuesto).all()
+    return paginate(db.query(models.TipoRepuesto))
 
 # Obtener tipo de repuesto por ID
 @router.get("/{idTipoRepuesto}", response_model=schemas.TipoRepuestoOut, summary="Obtener tipo de repuesto por ID")

@@ -38,7 +38,7 @@ const ModalFormTemplate = forwardRef(
         <Credenza open={open} onOpenChange={setOpen}>
           <CredenzaContent>
               <CredenzaHeader>
-                <CredenzaTitle className="text-aqua-700  mb-3">
+                <CredenzaTitle className="text-primary mb-2">
                   {props.title}
                 </CredenzaTitle>
                 <CredenzaDescription>{props.description}</CredenzaDescription>

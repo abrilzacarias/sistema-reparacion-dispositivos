@@ -1,8 +1,6 @@
-"use client"
-
 import { Bell, Menu, X, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useAppContext } from "../../hooks/useAppContext"
+import { useAppContext } from "../../../hooks/useAppContext"
 
 export function TopBar({ userName = "Administrador" }) {
   const { darkMode, toggleDarkMode, sidebarExpanded, toggleSidebar } = useAppContext()

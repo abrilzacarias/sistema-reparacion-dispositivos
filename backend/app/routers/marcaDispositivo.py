@@ -1,7 +1,8 @@
-# app/routers/marcaDispositivo.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.schemas import marcaDispositivo as schemas
 from app.services import marcaDispositivo as services
@@ -10,9 +11,9 @@ from app.database import get_db
 router = APIRouter(prefix="/marcas", tags=["Marcas de Dispositivos"])
 
 # Obtener todas las marcas (sin repuestos para evitar sobrecarga)
-@router.get("/", response_model=List[schemas.MarcaDispositivoOut], summary="Obtener todas las marcas")
-def read_marcas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return services.get_marca_dispositivos(db, skip=skip, limit=limit)
+@router.get("/", response_model=Page[schemas.MarcaDispositivoOut], summary="Obtener todas las marcas")
+def read_marcas(db: Session = Depends(get_db)):
+    return paginate(services.get_marca_dispositivos(db))
 
 # Obtener marca específica CON sus repuestos
 @router.get("/{idMarcaDispositivo}", response_model=schemas.MarcaDispositivoWithRepuestos, summary="Obtener una marca por ID con sus repuestos")
