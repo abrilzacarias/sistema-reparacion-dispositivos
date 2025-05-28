@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom"
 import App from "./App"
 import "./index.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ToastProvider } from "./context/ToastContext"
+import { AppContextProvider } from "./context/AppContextProvider"
 
 const router = {
   future: {
@@ -15,10 +17,14 @@ const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
-      <React.StrictMode>
-      <BrowserRouter future={router}>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>,
+    <AppContextProvider>
+      <ToastProvider>
+        <React.StrictMode>
+          <BrowserRouter future={router}>
+            <App />
+          </BrowserRouter>
+        </React.StrictMode>,
+      </ToastProvider>
+    </AppContextProvider>
   </QueryClientProvider>
 )

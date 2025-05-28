@@ -1,22 +1,21 @@
-# app/routers/repuesto.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from app.services.repuesto import get_repuestos_by_marca
-
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 from app.schemas import repuesto as schemas
 from app.services import repuesto as services
 from app.database import get_db
 
 router = APIRouter(prefix="/repuestos", tags=["Repuestos"])
 
-# Obtener todos los repuestos (sin información de marca para evitar sobrecarga)
-@router.get("/", response_model=List[schemas.RepuestoWithMarca], summary="Obtener lista de repuestos")
-def read_repuestos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return services.get_repuestos(db, skip, limit)
+@router.get("/", response_model=Page[schemas.RepuestoWithMarcaTipo], summary="Obtener lista de repuestos")
+def read_repuestos(db: Session = Depends(get_db)):
+    return paginate(services.get_repuestos(db))
 
 # Obtener repuesto específico CON información de marca
-@router.get("/{idRepuesto}", response_model=schemas.RepuestoWithMarca, summary="Obtener repuesto por id con información de marca")
+@router.get("/{idRepuesto}", response_model=schemas.RepuestoWithMarcaTipo, summary="Obtener repuesto por id con información de marca")
 def read_repuesto(idRepuesto: int, db: Session = Depends(get_db)):
     repuesto = services.get_repuesto(db, idRepuesto)
     if repuesto is None:
@@ -24,11 +23,9 @@ def read_repuesto(idRepuesto: int, db: Session = Depends(get_db)):
     return repuesto
 
 # Obtener repuestos por marca (útil para filtrar)
-@router.get("/marca/{idMarcaDispositivo}", response_model=List[schemas.RepuestoOut], summary="Obtener repuestos por marca")
-def read_repuestos_by_marca(idMarcaDispositivo: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return services.get_repuestos_by_marca(db, idMarcaDispositivo, skip, limit)
-
-
+@router.get("/marca/{idMarcaDispositivo}", response_model=Page[schemas.RepuestoOut], summary="Obtener repuestos por marca")
+def read_repuestos_by_marca(idMarcaDispositivo: int, db: Session = Depends(get_db)):
+    return paginate(services.get_repuestos_by_marca(db, idMarcaDispositivo))
 
 @router.post("/", response_model=schemas.RepuestoOut, status_code=status.HTTP_201_CREATED, summary="Crear un nuevo repuesto")
 def create_repuesto(repuesto: schemas.RepuestoCreate, db: Session = Depends(get_db)):

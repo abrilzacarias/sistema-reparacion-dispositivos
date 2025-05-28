@@ -22,7 +22,6 @@ class MarcaDispositivoOut(MarcaDispositivoBase):
 class RepuestoBasic(BaseModel):
     idRepuesto: int
     nombreRepuesto: str
-    tipoRepuesto: str
     precio: float
     cantidadRepuesto: int
     idMarcaDispositivo: int

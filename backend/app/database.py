@@ -21,6 +21,10 @@ def get_db():
         db.close()
 
 engine = create_engine(DATABASE_URL)
+
+# Esto permite que me conecte a la base de datos
+# conn=engine.connect() 
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

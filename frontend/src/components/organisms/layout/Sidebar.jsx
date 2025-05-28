@@ -1,21 +1,20 @@
-import { useState } from "react"
-import { useLocation, Link } from "react-router-dom"
 import {
   LayoutGrid,
-  Stethoscope,
-  Users,
-  UserCircle,
-  Wrench,
-  UserRound,
-  Package,
-  BarChart3,
   LogOut,
+  Package,
   Settings,
+  Stethoscope,
+  UserCircle,
+  UserRound,
+  Users,
+  Wrench
 } from "lucide-react"
-
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAppContext } from "../../hooks/useAppContext"
+import { useState } from "react"
+import { useLocation } from "react-router-dom"
+ 
 import SidebarMenuItem from "@/components/molecules/SidebarMenuItem"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useAppContext } from "../../../hooks/useAppContext"
 
 export function Sidebar() {
   const location = useLocation()
@@ -30,13 +29,12 @@ export function Sidebar() {
 
   const menuItems = [
     { path: "/dashboard", label: "Inicio", icon: <LayoutGrid className="h-5 w-5" /> },
-    { path: "/diagnostico", label: "Diagnóstico", icon: <Stethoscope className="h-5 w-5" /> },
+    { path: "/diagnosticos", label: "Diagnóstico", icon: <Stethoscope className="h-5 w-5" /> },
     { path: "/roles", label: "Roles", icon: <Users className="h-5 w-5" /> },
     { path: "/empleados", label: "Empleados", icon: <UserCircle className="h-5 w-5" /> },
     { path: "/reparaciones", label: "Reparaciones", icon: <Wrench className="h-5 w-5" /> },
     { path: "/clientes", label: "Clientes", icon: <UserRound className="h-5 w-5" /> },
     { path: "/repuestos", label: "Repuestos", icon: <Package className="h-5 w-5" /> },
-    { path: "/gastos", label: "Gastos Operativos", icon: <BarChart3 className="h-5 w-5" /> },
   ]
 
   return (

@@ -1,14 +1,11 @@
-"use client"
-
 import { Outlet } from "react-router-dom"
 import { Sidebar } from "./Sidebar"
 import { TopBar } from "./TopBar"
-import { useAppContext } from "../../hooks/useAppContext"
+import { useAppContext } from "../../../hooks/useAppContext"
 
 export function DashboardLayout() {
   const { darkMode } = useAppContext()
 
-  // Obtener información del usuario del localStorage
   const userString = localStorage.getItem("user")
   const user = userString ? JSON.parse(userString) : { name: "Administrador" }
 

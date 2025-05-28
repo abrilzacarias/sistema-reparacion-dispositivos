@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -18,8 +18,7 @@
 --
 -- Table structure for table `asignacionUsuarioPermisos`
 --
-USE gestionreparaciones; 
-
+USE gestionreparaciones
 DROP TABLE IF EXISTS `asignacionUsuarioPermisos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -53,7 +52,6 @@ DROP TABLE IF EXISTS `cliente`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cliente` (
   `idCliente` int NOT NULL AUTO_INCREMENT,
-  `estadoCliente` varchar(45) NOT NULL COMMENT 'Un campo para saber si el cliente estÃ¡ activo o inactivo',
   `observaciones` varchar(255) DEFAULT NULL,
   `idPersona` int NOT NULL,
   PRIMARY KEY (`idCliente`),
@@ -68,7 +66,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (9,'Activo','2025-06-21',1),(10,'Activo','2025-05-21',2);
+INSERT INTO `cliente` VALUES (9,'2025-06-21',1),(10,'2025-05-21',2);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,7 +78,7 @@ DROP TABLE IF EXISTS `contacto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `contacto` (
-  `idContacto` int NOT NULL,
+  `idContacto` int NOT NULL AUTO_INCREMENT,
   `descripciÃ³nContacto` varchar(45) NOT NULL,
   `idtipoContacto` int NOT NULL,
   `idPersona` int NOT NULL,
@@ -109,7 +107,7 @@ DROP TABLE IF EXISTS `detalleDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleDiagnostico` (
-  `idDetalleDiagnostico` int NOT NULL,
+  `idDetalleDiagnostico` int NOT NULL AUTO_INCREMENT,
   `valorDiagnostico` varchar(150) NOT NULL,
   `idDiagnostico` int NOT NULL,
   `idTipoDispositivoSegunPregunta` varchar(45) NOT NULL,
@@ -138,7 +136,7 @@ DROP TABLE IF EXISTS `detalleReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleReparacion` (
-  `idDetalleReparacion` int NOT NULL,
+  `idDetalleReparacion` int NOT NULL AUTO_INCREMENT,
   `montoTotalDetalleReparacion` decimal(10,0) NOT NULL,
   `manoObra` decimal(10,0) NOT NULL,
   `precioRepuesto` decimal(10,0) NOT NULL,
@@ -173,7 +171,7 @@ DROP TABLE IF EXISTS `diagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `diagnostico` (
-  `idDiagnostico` int NOT NULL,
+  `idDiagnostico` int NOT NULL AUTO_INCREMENT,
   `fechaDiagnostico` date NOT NULL,
   `idDispositivo` int NOT NULL,
   `idEmpleado` int NOT NULL,
@@ -202,12 +200,13 @@ DROP TABLE IF EXISTS `dispositivo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dispositivo` (
-  `idDispositivo` int NOT NULL,
+  `idDispositivo` int NOT NULL AUTO_INCREMENT,
   `descripcionDispositivo` varchar(80) NOT NULL,
   `modeloDispositivo` varchar(45) NOT NULL,
   `idMarcaDispositivo` int NOT NULL,
   `idTipoDispositivo` int NOT NULL,
   `idCliente` int NOT NULL,
+  `estadoDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idDispositivo`),
   KEY `fk_dispositivo_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_dispositivo_tipoDispositivo1_idx` (`idTipoDispositivo`),
@@ -271,10 +270,9 @@ DROP TABLE IF EXISTS `empleado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `empleado` (
-  `idEmpleado` int NOT NULL,
+  `idEmpleado` int NOT NULL AUTO_INCREMENT,
   `fechaContratacion` date NOT NULL,
   `fechaFinalizacion` date DEFAULT NULL,
-  `estadoLaboral` varchar(45) DEFAULT NULL COMMENT 'El estado laboral generalmente se refiere a la situaciÃ³n o condiciÃ³n en la que se encuentra un empleado o persona en relaciÃ³n con su empleo. Este tÃ©rmino se usa comÃºnmente para indicar si una persona estÃ¡ activa en su puesto de trabajo, si estÃ¡ de baja, si estÃ¡ en vacaciones, si ha renunciado, etc.\n\nAlgunos ejemplos de valores que podrÃ­a tener el campo estadoLaboral en una base de datos son:\n\n\nActivo: El empleado estÃ¡ trabajando actualmente.\n\n\nInactivo: El empleado ya no trabaja en la empresa (por ejemplo, por renuncia o despido).\n\n\nEn licencia: El empleado estÃ¡ temporalmente ausente por motivos como licencia mÃ©dica, vacaciones, etc.\n\n\nSuspensiÃ³n: El empleado estÃ¡ suspendido temporalmente de sus labores.\n\n\nVacaciones: El empleado estÃ¡ disfrutando de su periodo vacacional.\n\n\nDe baja: El empleado ha dejado de trabajar en la empresa, por ejemplo, por jubilaciÃ³n o finalizaciÃ³n de contrato.',
   `idpuestoLaboral` int NOT NULL,
   `idPersona` int NOT NULL,
   `idUsuario` int NOT NULL,
@@ -285,7 +283,7 @@ CREATE TABLE `empleado` (
   CONSTRAINT `fk_empleado_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_empleado_puestoLaboral1` FOREIGN KEY (`idpuestoLaboral`) REFERENCES `puestoLaboral` (`idpuestoLaboral`),
   CONSTRAINT `fk_empleado_usuario1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -294,6 +292,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
+INSERT INTO `empleado` VALUES (11,'2024-11-09','2024-12-15',4,33,13),(12,'2023-11-16','2024-10-12',5,34,14),(13,'2025-02-20','2024-06-11',6,35,15),(14,'2025-01-21',NULL,4,36,16),(15,'2023-07-06','2024-09-25',5,37,17),(16,'2023-10-29',NULL,6,38,18),(17,'2025-04-22','2025-02-26',4,39,19),(18,'2023-10-03',NULL,5,40,20),(19,'2024-05-13','2025-03-15',6,41,21),(20,'2025-02-04',NULL,4,42,22);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -305,7 +304,7 @@ DROP TABLE IF EXISTS `estadoReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `estadoReparacion` (
-  `idEstadoReparacion` int NOT NULL,
+  `idEstadoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionEstadoReparacion` varchar(70) NOT NULL,
   PRIMARY KEY (`idEstadoReparacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -351,7 +350,7 @@ DROP TABLE IF EXISTS `historialAsignacionDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historialAsignacionDiagnostico` (
-  `idHistorialAsignacionDiagnostico` int NOT NULL,
+  `idHistorialAsignacionDiagnostico` int NOT NULL AUTO_INCREMENT,
   `fechaInicioAsignacionDiagnostico` date NOT NULL,
   `fechaFinAsignacionDiagnostico` date DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
@@ -381,7 +380,7 @@ DROP TABLE IF EXISTS `historialAsignacionReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historialAsignacionReparacion` (
-  `idHistorialAsignacionReparacion` int NOT NULL,
+  `idHistorialAsignacionReparacion` int NOT NULL AUTO_INCREMENT,
   `fechaInicioAsignacionReparacion` date NOT NULL,
   `fechaFinAsignacionReparacion` date DEFAULT NULL,
   `idReparacion` int NOT NULL,
@@ -412,10 +411,10 @@ DROP TABLE IF EXISTS `marcaDispositivo`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `marcaDispositivo` (
   `idMarcaDispositivo` int NOT NULL AUTO_INCREMENT,
-  `idMarcaDispositivo` int NOT NULL AUTO_INCREMENT,
   `descripcionMarcaDispositivo` varchar(45) NOT NULL,
+  `estadoMarcaDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idMarcaDispositivo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,6 +423,7 @@ CREATE TABLE `marcaDispositivo` (
 
 LOCK TABLES `marcaDispositivo` WRITE;
 /*!40000 ALTER TABLE `marcaDispositivo` DISABLE KEYS */;
+INSERT INTO `marcaDispositivo` VALUES (4,'Samsung',1),(5,'LG',1),(6,'Apple',1),(7,'Xiaomi',1),(8,'Huawei',1),(9,'Motorola',1);
 /*!40000 ALTER TABLE `marcaDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -512,7 +512,7 @@ DROP TABLE IF EXISTS `permisoPerfil`;
 CREATE TABLE `permisoPerfil` (
   `idpermisoPerfil` int NOT NULL AUTO_INCREMENT,
   `idPerfil` int NOT NULL,
-  `estadoPermisoPerfil` tinyint NOT NULL,
+  `estadoPermisoPerfil` tinyint NOT NULL DEFAULT '1',
   `idmoduloFuncionSistema` int NOT NULL,
   PRIMARY KEY (`idpermisoPerfil`),
   KEY `fk_permisosDePerfiles_perfiles1_idx` (`idPerfil`),
@@ -544,8 +544,9 @@ CREATE TABLE `persona` (
   `nombre` varchar(45) NOT NULL,
   `apellido` varchar(45) NOT NULL,
   `fechaNacimiento` date NOT NULL,
+  `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -554,7 +555,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21'),(2,'20-12345678-9','Juan','Pérez','1990-05-21');
+INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',1),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',1),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -566,7 +567,7 @@ DROP TABLE IF EXISTS `preguntaDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `preguntaDiagnostico` (
-  `idPreguntaDiagnostico` int NOT NULL COMMENT 'preguntasDiagnostico  (define las "preguntas" o Ã­tems para el diagnostico segun dispositivo)\nEs la tabla que define quÃ© cosas se le deben preguntar o revisar a un dispositivo cuando llega al local para hacerle un diagnÃ³stico.\nEstas preguntas son parametrizables, lo que significa que el administrador puede crearlas, modificarlas o asignarlas a distintos tipos de dispositivos, sin tocar la base de datos.\nâ€¢	idPreguntasDiagnostico (PK)\nâ€¢	descripcionPregunta (Ej: Â¿Prende?, Â¿EstÃ¡ mojado?, Â¿Tiene cargador?...)\nâ€¢	tipoDatoPregunta (Ej: boolean, texto, nÃºmero, opciÃ³n mÃºltiple)',
+  `idPreguntaDiagnostico` int NOT NULL AUTO_INCREMENT COMMENT 'preguntasDiagnostico  (define las "preguntas" o Ã­tems para el diagnostico segun dispositivo)\nEs la tabla que define quÃ© cosas se le deben preguntar o revisar a un dispositivo cuando llega al local para hacerle un diagnÃ³stico.\nEstas preguntas son parametrizables, lo que significa que el administrador puede crearlas, modificarlas o asignarlas a distintos tipos de dispositivos, sin tocar la base de datos.\nâ€¢	idPreguntasDiagnostico (PK)\nâ€¢	descripcionPregunta (Ej: Â¿Prende?, Â¿EstÃ¡ mojado?, Â¿Tiene cargador?...)\nâ€¢	tipoDatoPregunta (Ej: boolean, texto, nÃºmero, opciÃ³n mÃºltiple)',
   `descripcionPreguntaDiagnostico` varchar(90) NOT NULL,
   `idTipoDatoPreguntaDiagnostico` int NOT NULL,
   `opcionesPregunta` json DEFAULT NULL COMMENT '4	Â¿QuÃ© tan sucio estÃ¡?	opcion	["Limpio", "Sucio", "Muy sucio"]',
@@ -594,9 +595,10 @@ DROP TABLE IF EXISTS `puestoLaboral`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `puestoLaboral` (
   `idpuestoLaboral` int NOT NULL AUTO_INCREMENT,
-  `nombrepuestoLaboral` varchar(45) DEFAULT NULL,
+  `nombrepuestoLaboral` varchar(45) NOT NULL,
+  `estadoPuestoLaboral` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idpuestoLaboral`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -605,6 +607,7 @@ CREATE TABLE `puestoLaboral` (
 
 LOCK TABLES `puestoLaboral` WRITE;
 /*!40000 ALTER TABLE `puestoLaboral` DISABLE KEYS */;
+INSERT INTO `puestoLaboral` VALUES (4,'Técnico',1),(5,'Administrador',1),(6,'Vendedor',1);
 /*!40000 ALTER TABLE `puestoLaboral` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -616,7 +619,7 @@ DROP TABLE IF EXISTS `reparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reparacion` (
-  `idReparacion` int NOT NULL,
+  `idReparacion` int NOT NULL AUTO_INCREMENT,
   `numeroReparacion` int NOT NULL,
   `idEstadoReparacion` int NOT NULL,
   `fechaIngreso` date NOT NULL,
@@ -653,13 +656,16 @@ DROP TABLE IF EXISTS `repuesto`;
 CREATE TABLE `repuesto` (
   `idRepuesto` int NOT NULL AUTO_INCREMENT,
   `nombreRepuesto` varchar(80) NOT NULL,
-  `tipoRepuesto` varchar(80) NOT NULL,
   `precio` decimal(10,0) NOT NULL,
   `cantidadRepuesto` int NOT NULL,
   `idMarcaDispositivo` int NOT NULL,
+  `idTipoRepuesto` int NOT NULL,
+  `estadoRepuesto` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idRepuesto`),
   KEY `fk_repuestos_marca1_idx` (`idMarcaDispositivo`),
-  CONSTRAINT `fk_repuestos_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`)
+  KEY `fk_respuestos_tipoRepuesto1_idx` (`idTipoRepuesto`),
+  CONSTRAINT `fk_repuestos_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`),
+  CONSTRAINT `fk_respuestos_tipoRepuesto1` FOREIGN KEY (`idTipoRepuesto`) REFERENCES `tipoRepuesto` (`idTipoRepuesto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -680,7 +686,7 @@ DROP TABLE IF EXISTS `tipoContacto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoContacto` (
-  `idtipoContacto` int NOT NULL,
+  `idtipoContacto` int NOT NULL AUTO_INCREMENT,
   `descripciÃ³ntipoContacto` varchar(45) NOT NULL,
   PRIMARY KEY (`idtipoContacto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -703,7 +709,7 @@ DROP TABLE IF EXISTS `tipoDatoPreguntaDiagnostico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoDatoPreguntaDiagnostico` (
-  `idTipoDatoPreguntaDiagnostico` int NOT NULL,
+  `idTipoDatoPreguntaDiagnostico` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoDatoPreguntaDiagnostico` varchar(45) NOT NULL COMMENT '(ej: "texto", "nÃºmero", "opciÃ³n", etc.)',
   PRIMARY KEY (`idTipoDatoPreguntaDiagnostico`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -726,7 +732,7 @@ DROP TABLE IF EXISTS `tipoDispositivo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoDispositivo` (
-  `idTipoDispositivo` int NOT NULL,
+  `idTipoDispositivo` int NOT NULL AUTO_INCREMENT,
   `nombreTipoDispositivo` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoDispositivo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -800,7 +806,7 @@ DROP TABLE IF EXISTS `tipoReparacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoReparacion` (
-  `idTipoReparacion` int NOT NULL,
+  `idTipoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoReparacion` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoReparacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -816,6 +822,29 @@ LOCK TABLES `tipoReparacion` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tipoRepuesto`
+--
+
+DROP TABLE IF EXISTS `tipoRepuesto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tipoRepuesto` (
+  `idTipoRepuesto` int NOT NULL AUTO_INCREMENT,
+  `descripcionTipoRepuesto` varchar(80) NOT NULL,
+  PRIMARY KEY (`idTipoRepuesto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tipoRepuesto`
+--
+
+LOCK TABLES `tipoRepuesto` WRITE;
+/*!40000 ALTER TABLE `tipoRepuesto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tipoRepuesto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuario`
 --
 
@@ -828,7 +857,7 @@ CREATE TABLE `usuario` (
   `password` varchar(500) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -837,7 +866,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com');
+INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com'),(13,'aguedamarquez','hashed_password','evilla@example.org'),(14,'castelloprudencio','hashed_password','rayairene@example.com'),(15,'paulapenalver','hashed_password','gilabertjorge@example.org'),(16,'ynavarrete','hashed_password','ayusoagapito@example.org'),(17,'emiliapaz','hashed_password','jose00@example.org'),(18,'malemany','hashed_password','rocamorasabina@example.com'),(19,'lealinigo','hashed_password','jimena57@example.net'),(20,'pugagabriel','hashed_password','aguilabenigno@example.org'),(21,'dborrego','hashed_password','calixta67@example.com'),(22,'usimo','hashed_password','agustinagaliano@example.net');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -850,4 +879,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-21 22:33:01
+-- Dump completed on 2025-05-24 18:12:03

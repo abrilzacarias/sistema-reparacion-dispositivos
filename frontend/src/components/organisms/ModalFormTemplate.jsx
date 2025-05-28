@@ -15,7 +15,7 @@ import { createContext, forwardRef, useState } from "react"
 export const OpenContext = createContext()
 
 const ModalFormTemplate = forwardRef(
-  ({ children,  ...props }, ref) => {
+  ({ children, contentClassName = "",  ...props }, ref) => {
     const [open, setOpen] = useState(false)
 
     const handleOpen = () => {
@@ -36,9 +36,9 @@ const ModalFormTemplate = forwardRef(
           {props.label}
         </Button>
         <Credenza open={open} onOpenChange={setOpen}>
-          <CredenzaContent>
+          <CredenzaContent className={`${contentClassName}`}>
               <CredenzaHeader>
-                <CredenzaTitle className="text-aqua-700  mb-3">
+                <CredenzaTitle className="text-primary mb-2">
                   {props.title}
                 </CredenzaTitle>
                 <CredenzaDescription>{props.description}</CredenzaDescription>

@@ -1,10 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom"
-import { AppContextProvider } from "./context/AppContextProvider"
 import { ProtectedRoute } from "./ProtectedRoute"
-import { DashboardLayout } from "./components/layout/DashboardLayout"
+import { DashboardLayout } from "./components/organisms/layout/DashboardLayout"
 import LoginPage from "./pages/login/LoginPage"
 import { Dashboard } from "./pages/admin/Dashboard"
 import EmpleadoPage from "./pages/empleado/EmpleadoPage"
+import RepuestosPage from "./pages/repuestos/RepuestosPage"
+import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
 
 function App() {
   return (
@@ -21,14 +22,14 @@ function App() {
         >
           {/* Todas estas rutas heredarán el layout con sidebar y topbar */}
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/diagnostico" element={<DiagnosticoPage />} />
+          <Route path="/diagnosticos" element={<DiagnosticoPage />} />
+          {/* 
           <Route path="/reparaciones" element={<ReparacionesPage />} /> */}
           {/* Puedes añadir más rutas aquí y todas usarán el mismo layout */}
           <Route path="/roles" element={<div>Página de Roles</div>} />
           <Route path="/empleados" element={<EmpleadoPage />} />
           <Route path="/clientes" element={<div>Página de Clientes</div>} />
-          <Route path="/repuestos" element={<div>Página de Repuestos</div>} />
-          <Route path="/gastos" element={<div>Página de Gastos Operativos</div>} />
+          <Route path="/repuestos" element={<RepuestosPage />} />
           <Route path="/configuracion" element={<div>Página de Configuración</div>} />
         </Route>
 
@@ -38,12 +39,4 @@ function App() {
   )
 }
 
-function AppWithContext() {
-  return (
-    <AppContextProvider>
-      <App />
-    </AppContextProvider>
-  )
-}
-
-export default AppWithContext
+export default App

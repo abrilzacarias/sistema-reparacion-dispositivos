@@ -8,12 +8,17 @@ class Empleado(Base):
     idEmpleado = Column(Integer, primary_key=True, index=True, autoincrement=True)
     fechaContratacion = Column(Date, nullable=False)
     fechaFinalizacion = Column(Date, nullable=True)
-    estadoLaboral = Column(String(45), nullable=True)
 
+    # Recibe de PuestoLaboral, Persona, Usuario
     idpuestoLaboral = Column(Integer, ForeignKey("puestoLaboral.idpuestoLaboral"), nullable=False)
-    idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
-    idUsuario = Column(Integer, ForeignKey("usuario.idUsuario"), nullable=False)
-
     puesto = relationship("PuestoLaboral", back_populates="empleados")
+    
+    idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
     persona = relationship("Persona", back_populates="empleados")
+    
+    idUsuario = Column(Integer, ForeignKey("usuario.idUsuario"), nullable=False)
     usuario = relationship("Usuario", back_populates="empleados")
+    
+    # Envia a Diagnostico
+    diagnosticos = relationship("Diagnostico", back_populates="empleado")
+

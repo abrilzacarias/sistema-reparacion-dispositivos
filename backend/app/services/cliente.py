@@ -1,12 +1,20 @@
 from sqlalchemy.orm import Session
-from app.models.cliente import Cliente
+from app.models import Cliente, Persona
 from app.schemas.cliente import ClienteCreate, ClienteUpdate
 
 def get_cliente(db: Session, idCliente: int):
     return db.query(Cliente).filter(Cliente.idCliente == idCliente).first()
 
+
 def get_clientes(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Cliente).offset(skip).limit(limit).all()
+    return (
+        db.query(Cliente)
+        .join(Persona, Cliente.idPersona == Persona.idPersona)
+        .filter(Persona.estadoPersona == True)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 def create_cliente(db: Session, cliente: ClienteCreate):
     try:
