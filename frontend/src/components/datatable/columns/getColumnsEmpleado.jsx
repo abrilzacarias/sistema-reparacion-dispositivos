@@ -55,12 +55,16 @@ export const getColEmpleados = ({ refetch }) => {
       cell: function Cell({ row }) {
         return (
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex size-8 p-0 items-center justify-center rounded-md hover:bg-muted data-[state=open]:bg-muted">
-              <Ellipsis className="size-4" aria-hidden="true" />
-              <span className="sr-only">Open menu</span>
+            <DropdownMenuTrigger asChild>
+              <Button
+              variant="ghost"
+              className="flex size-8 p-0 data-[state=open]:bg-muted"
+            >
+              <Ellipsis className="size-4" />
+            </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <DropdownMenuItem className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   title="Detalles del empleado"
                   description="Información completa del empleado seleccionado"

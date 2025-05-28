@@ -48,4 +48,4 @@ def get_repuestos_by_marca(db: Session, id_marca: int, skip: int = 0, limit: int
     ).options(
         selectinload(models.Repuesto.marca),
         selectinload(models.Repuesto.tipo)
-    ).offset(skip).limit(limit).all()
+    )

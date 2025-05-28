@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
 import CrudHeader from "@/components/molecules/CrudHeader";
@@ -6,11 +5,12 @@ import CrudsTemplate from "@/components/molecules/CrudsTemplate";
 import ButtonRefetch from "@/components/atoms/ButtonRefetch";
 import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch";
 import { DataTable } from "@/components/datatable/DataTable";
-import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado";
 import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { getColumnsRepuestos } from "@/components/datatable/columns/getColumnsRepuestos";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 import { Button } from "@/components/ui/button";
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import RepuestosCreateEdit from "./components/RepuestosCreateEdit";
 
 const RepuestosPage = () => {
   const {
@@ -28,40 +28,6 @@ const RepuestosPage = () => {
     endpoint: "repuestos",
     pageSize: 10,
   });
-
-  const [selectedUser, setSelectedUser] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [searchTarget, setSearchTarget] = useState("");
-
-  //PENSAR DEPENDIENDO DE CANTIDAD DE USUARIOS ESTIMADOS TODO
-  /* const {
-    employees: users,
-    totalUsers,
-    isLoading: loadingEmployees,
-    isError: errorEmployees,
-    refetch: refetchEmployees,
-    resetQuery,
-  } = useSearchEmployees({ query: searchTarget }) */
-
-  /*   const handleSearchTarget = (event: React.ChangeEvent<HTMLInputElement>) => {
-    resetQuery()
-    setSelectedUser("")
-    setSearchTarget(event.target.value)
-  } */
-
-  /* const startSearch = () => {
-    if (searchTarget.trim() !== "") {
-      resetQuery()
-      setSelectedUser(
-        totalUsers === 1 ? "1 resultado" : `${totalUsers || "sin"} resultados`
-      )
-      refetchEmployees()
-    }
-  }
-
-  useEffect(() => {
-    resetQuery()
-  }, [searchTarget]) */
 
   if (isError)
     return <ErrorApiRefetch isRefetching={isFetching} refetch={refetch} />;
@@ -94,29 +60,17 @@ const RepuestosPage = () => {
               }}
             />
 
-            {/*               <SearchUsersApi
-                setSelectedUser={setSelectedUser}
-                selectedUser={selectedUser}
-                startSearch={startSearch}
-                userId={userId}
-                data={users}
-                isLoading={loadingEmployees}
-                setUserId={setUserId}
-                error={errorEmployees}
-                handleChage={handleSearchTarget}
-                setSearch={setSearchTarget}
-                search={searchTarget}
-                variant="modalShhet"
-                label="Filtrar empleado por nombre"
-              /> */}
-
-            {/*               {selectedUser?.id && (
-                <EmployeeCreateEdit
-                  refreshEmployees={refetch}
-                  userId={userId}
-                  setSelectedUser={setSelectedUser}
-                />
-              )} */}
+            <ModalFormTemplate
+              title="Agregar Repuesto"
+              description="Complete los campos para agregar un nuevo repuesto."
+              label="Agregar repuesto"
+              variant="default"
+              className="p-2 m-0 cursor-pointer w-full justify-start"
+            >
+              <RepuestosCreateEdit 
+                refreshRepuestos={refetch}
+              />
+            </ModalFormTemplate>
           </div>
         </CrudHeader>
 

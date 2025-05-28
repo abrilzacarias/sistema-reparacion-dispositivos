@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom"
-import { AppContextProvider } from "./context/AppContextProvider"
 import { ProtectedRoute } from "./ProtectedRoute"
-import { DashboardLayout } from "./components/layout/DashboardLayout"
+import { DashboardLayout } from "./components/organisms/layout/DashboardLayout"
 import LoginPage from "./pages/login/LoginPage"
 import { Dashboard } from "./pages/admin/Dashboard"
 import EmpleadoPage from "./pages/empleado/EmpleadoPage"
@@ -40,12 +39,4 @@ function App() {
   )
 }
 
-function AppWithContext() {
-  return (
-    <AppContextProvider>
-      <App />
-    </AppContextProvider>
-  )
-}
-
-export default AppWithContext
+export default App

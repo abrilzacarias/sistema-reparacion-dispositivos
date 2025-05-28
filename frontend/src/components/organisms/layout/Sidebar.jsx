@@ -1,21 +1,20 @@
-import { useState } from "react"
-import { useLocation, Link } from "react-router-dom"
 import {
   LayoutGrid,
-  Stethoscope,
-  Users,
-  UserCircle,
-  Wrench,
-  UserRound,
-  Package,
-  BarChart3,
   LogOut,
+  Package,
   Settings,
+  Stethoscope,
+  UserCircle,
+  UserRound,
+  Users,
+  Wrench
 } from "lucide-react"
-
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAppContext } from "../../hooks/useAppContext"
+import { useState } from "react"
+import { useLocation } from "react-router-dom"
+ 
 import SidebarMenuItem from "@/components/molecules/SidebarMenuItem"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useAppContext } from "../../../hooks/useAppContext"
 
 export function Sidebar() {
   const location = useLocation()

@@ -1,4 +1,3 @@
-# app/routers/repuesto.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -24,11 +23,9 @@ def read_repuesto(idRepuesto: int, db: Session = Depends(get_db)):
     return repuesto
 
 # Obtener repuestos por marca (útil para filtrar)
-@router.get("/marca/{idMarcaDispositivo}", response_model=List[schemas.RepuestoOut], summary="Obtener repuestos por marca")
-def read_repuestos_by_marca(idMarcaDispositivo: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return services.get_repuestos_by_marca(db, idMarcaDispositivo, skip, limit)
-
-
+@router.get("/marca/{idMarcaDispositivo}", response_model=Page[schemas.RepuestoOut], summary="Obtener repuestos por marca")
+def read_repuestos_by_marca(idMarcaDispositivo: int, db: Session = Depends(get_db)):
+    return paginate(services.get_repuestos_by_marca(db, idMarcaDispositivo))
 
 @router.post("/", response_model=schemas.RepuestoOut, status_code=status.HTTP_201_CREATED, summary="Crear un nuevo repuesto")
 def create_repuesto(repuesto: schemas.RepuestoCreate, db: Session = Depends(get_db)):

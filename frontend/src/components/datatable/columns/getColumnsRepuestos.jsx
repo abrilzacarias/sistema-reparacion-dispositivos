@@ -1,4 +1,4 @@
-import { Ellipsis, List } from "lucide-react"
+import { Edit, Ellipsis, List } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import RepuestoCard from "@/components/organisms/RepuestoCard"
+import RepuestosCreateEdit from "@/pages/repuestos/components/RepuestosCreateEdit"
+import { Button } from "@/components/ui/button"
 
 export const getColumnsRepuestos = ({ refetch }) => {
   return [
@@ -19,7 +21,7 @@ export const getColumnsRepuestos = ({ refetch }) => {
     {
       header: "Tipo",
       accessorKey: "tipoRepuesto",
-      cell: ({ row }) => <div>{row.original.tipoRepuesto}</div>,
+      cell: ({ row }) => <div>{row.original.tipo.descripcionTipoRepuesto}</div>,
     },
     {
       header: "Precio ($)",
@@ -43,12 +45,16 @@ export const getColumnsRepuestos = ({ refetch }) => {
       cell: function Cell({ row }) {
         return (
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex size-8 p-0 items-center justify-center rounded-md hover:bg-muted data-[state=open]:bg-muted">
-              <Ellipsis className="size-4" aria-hidden="true" />
-              <span className="sr-only">Abrir menú</span>
+            <DropdownMenuTrigger asChild>
+              <Button
+              variant="ghost"
+              className="flex size-8 p-0 data-[state=open]:bg-muted"
+            >
+              <Ellipsis className="size-4" />
+            </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <DropdownMenuItem className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   title="Detalles del repuesto"
                   description="Información del repuesto seleccionado"
@@ -63,7 +69,22 @@ export const getColumnsRepuestos = ({ refetch }) => {
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={() => console.log("Editar", row.original)}>Editar</DropdownMenuItem>
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                <ModalFormTemplate
+                  title="Editar Repuesto"
+                  description="Modifique los campos necesarios para actualizar el repuesto."
+                  label="Editar"
+                  variant="ghost"
+                  icon={Edit}
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                >
+                  <RepuestosCreateEdit
+                    repuesto={row.original}
+                    refreshRepuestos={refetch}
+                  />
+                </ModalFormTemplate>
+              </DropdownMenuItem>
+              
               <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>Eliminar</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

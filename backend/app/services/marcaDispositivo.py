@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session, selectinload
 from app import models
 from app.schemas import marcaDispositivo as schemas
 
-def get_marca_dispositivos(db: Session, skip: int = 0, limit: int = 100):
+def get_marca_dispositivos(db: Session):
     return db.query(models.MarcaDispositivo).filter(
         models.MarcaDispositivo.estadoMarcaDispositivo == True
-    ).offset(skip).limit(limit).all()
+    )
 
 
 def get_marca_dispositivo(db: Session, id_marca: int):
