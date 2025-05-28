@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import EmpleadoCard from "@/components/organisms/EmpleadoCard"
+import { Button } from "@/components/ui/button";
 
 export const getColEmpleados = ({ refetch }) => {
   return [

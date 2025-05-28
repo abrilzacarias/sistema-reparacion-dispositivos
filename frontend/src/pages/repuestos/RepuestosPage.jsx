@@ -1,16 +1,25 @@
 import { Card, CardContent } from "@/components/ui/card";
 
-import CrudHeader from "@/components/molecules/CrudHeader";
-import CrudsTemplate from "@/components/molecules/CrudsTemplate";
 import ButtonRefetch from "@/components/atoms/ButtonRefetch";
 import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch";
-import { DataTable } from "@/components/datatable/DataTable";
-import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { getColumnsRepuestos } from "@/components/datatable/columns/getColumnsRepuestos";
+import { DataTable } from "@/components/datatable/DataTable";
+import CrudHeader from "@/components/molecules/CrudHeader";
+import CrudsTemplate from "@/components/molecules/CrudsTemplate";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
-import { Button } from "@/components/ui/button";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
+import { Plus, Settings, Wrench } from "lucide-react";
 import RepuestosCreateEdit from "./components/RepuestosCreateEdit";
+import TiposRepuestoModal from "./components/TipoRepuestoModal";
 
 const RepuestosPage = () => {
   const {
@@ -59,18 +68,49 @@ const RepuestosPage = () => {
                 label: "Exportar",
               }}
             />
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                variant="default"
+                className="flex size-8 p-0 data-[state=open]:bg-secondary-foreground "
+              >
+                <Plus className="size-4 text-secondary" />
+              </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-54">
+                <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                  <ModalFormTemplate
+                    icon={Settings}
+                    title="Agregar Repuesto"
+                    description="Complete los campos para agregar un nuevo repuesto."
+                    label="Agregar repuesto"
+                    variant="ghost"
+                    className="p-2 m-0 cursor-pointer w-full justify-start"
+                  >
+                    <RepuestosCreateEdit 
+                      refreshRepuestos={refetch}
+                    />
+                  </ModalFormTemplate>
+                </DropdownMenuItem>
 
-            <ModalFormTemplate
-              title="Agregar Repuesto"
-              description="Complete los campos para agregar un nuevo repuesto."
-              label="Agregar repuesto"
-              variant="default"
-              className="p-2 m-0 cursor-pointer w-full justify-start"
-            >
-              <RepuestosCreateEdit 
-                refreshRepuestos={refetch}
-              />
-            </ModalFormTemplate>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                  <ModalFormTemplate
+                    icon={Wrench}
+                    title="Agregar Tipo de Repuesto"
+                    label="Agregar tipo de repuesto"
+                    variant="ghost"
+                    contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+                    className="p-2 m-0 cursor-pointer w-full justify-start"
+                  >
+                    <TiposRepuestoModal />
+                  </ModalFormTemplate>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+            
           </div>
         </CrudHeader>
 

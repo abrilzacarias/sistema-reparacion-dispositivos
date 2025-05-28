@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import DiagnosticoCard from "@/components/organisms/DiagnosticoCard"; // Necesitarás crear este componente
+import { Button } from "@/components/ui/button";
 
 export const getColumnsDiagnosticos = ({ refetch }) => {
   return [
