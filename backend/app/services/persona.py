@@ -1,12 +1,23 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_, func
 from app.models.persona import Persona
 from app.schemas.persona import PersonaCreate, PersonaUpdate
 
 def get_persona(db: Session, idPersona: int):
     return db.query(Persona).filter(Persona.idPersona == idPersona).first()
 
-def get_personas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Persona).filter(Persona.estadoPersona == 1)
+def get_personas(db: Session, search: str = None):
+    query = db.query(Persona)
+    if search:
+        search = f"%{search.lower()}%"
+        query = query.filter(
+            or_(
+                func.lower(Persona.nombre).like(search),
+                func.lower(Persona.apellido).like(search),
+                func.lower(Persona.cuit).like(search)
+            )
+        )
+    return query
 
 def create_persona(db: Session, persona: PersonaCreate):
     persona_data = persona.dict()

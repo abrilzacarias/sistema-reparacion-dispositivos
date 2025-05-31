@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
 import CrudHeader from "@/components/molecules/CrudHeader"
@@ -8,6 +8,20 @@ import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch"
 import { DataTable } from "@/components/datatable/DataTable"
 import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado"
 import {usePaginatedQuery} from "@/hooks/usePaginatedQuery"
+import { Settings } from "lucide-react"
+import { useSearchPersonas } from "@/hooks/useSearchPersonas"
+import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown"
+import { Button } from "@/components/ui/button"
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
+import SearchPersonas from "@/components/organisms/SearchPersonas"
+import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit"
+import PersonaCreateEdit from "./components/PersonaCreateEdit"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 
 const EmpleadoPage = () => {
   const {
@@ -25,39 +39,40 @@ const EmpleadoPage = () => {
   endpoint: "empleados",
 })
 
-  const [selectedUser, setSelectedUser] = useState("")
-  const [userId, setUserId] = useState(null)
+  const [selectedPersona, setSelectedPersona] = useState("")
+  const [personaId, setPersonaId] = useState(null)
   const [searchTarget, setSearchTarget] = useState("")
-
-  //PENSAR DEPENDIENDO DE CANTIDAD DE USUARIOS ESTIMADOS TODO
-  /* const {
-    employees: users,
-    totalUsers,
-    isLoading: loadingEmployees,
-    isError: errorEmployees,
-    refetch: refetchEmployees,
+  const [activeTab, setActiveTab] = useState("persona")
+  
+  const {
+    personas,
+    totalPersonas,
+    isLoading: loadingPersonas,
+    isError: errorPersonas,
+    refetch: refetchPersonas,
     resetQuery,
-  } = useSearchEmployees({ query: searchTarget }) */
+  } = useSearchPersonas({ query: searchTarget })
 
-/*   const handleSearchTarget = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchTarget = (event) => {
     resetQuery()
-    setSelectedUser("")
+    setSearchTarget("")
+    setSelectedPersona("")
     setSearchTarget(event.target.value)
-  } */
+  }
 
-  /* const startSearch = () => {
+  const startSearch = () => {
     if (searchTarget.trim() !== "") {
       resetQuery()
-      setSelectedUser(
-        totalUsers === 1 ? "1 resultado" : `${totalUsers || "sin"} resultados`
+      setSelectedPersona(
+        totalPersonas === 1 ? "1 resultado" : `${totalPersonas || "sin"} resultados`
       )
-      refetchEmployees()
+      refetchPersonas()
     }
   }
 
   useEffect(() => {
     resetQuery()
-  }, [searchTarget]) */
+  }, [searchTarget])
 
   if (isError)
     return (
@@ -74,30 +89,87 @@ const EmpleadoPage = () => {
           <div className="flex items-center gap-2">
 
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
-
-{/*               <SearchUsersApi
-                setSelectedUser={setSelectedUser}
-                selectedUser={selectedUser}
+            <ExportOptionsDropdown
+              excelComponent={
+                <Button variant="ghost" className="w-full justify-start">
+                  Excel
+                </Button>
+              }
+              pdfComponent={
+                <Button variant="ghost" className="w-full justify-start">
+                  PDF
+                </Button>
+              }
+              formats={{ excel: true, pdf: true }}
+              buttonProps={{
+                variant: "outline",
+                size: "sm",
+                label: "Exportar",
+              }}
+            />
+            
+            
+            <ModalFormTemplate
+              icon={Settings}
+              title="Agregar Empleado"
+              description="Complete los campos para agregar un nuevo empleado."
+              label="Agregar Empleado"
+              variant="default"
+              className="p-2 m-0 cursor-pointer w-full justify-start"
+            >
+              {/* TODO AGREGAR QUE APRETANDO EL ICONOD E BUSCAR BUSQUE TAMBIEN, NO SOLO CON ENTER */}
+              <SearchPersonas
+                setSelectedPersona={setSelectedPersona}
+                selectedPersona={selectedPersona}
                 startSearch={startSearch}
-                userId={userId}
-                data={users}
-                isLoading={loadingEmployees}
-                setUserId={setUserId}
-                error={errorEmployees}
-                handleChage={handleSearchTarget}
+                personaId={personaId}
+                data={personas}
+                isLoading={loadingPersonas}
+                setPersonaId={setPersonaId}
+                error={errorPersonas}
+                handleChange={handleSearchTarget}
                 setSearch={setSearchTarget}
                 search={searchTarget}
-                variant="modalShhet"
-                label="Filtrar empleado por nombre"
-              /> */}
+                variant="modal"
+                label="Filtrar persona por nombre, apellido o CUIT"
+              />
 
-{/*               {selectedUser?.id && (
-                <EmployeeCreateEdit
-                  refreshEmployees={refetch}
-                  userId={userId}
-                  setSelectedUser={setSelectedUser}
-                />
-              )} */}
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className={`mt-4 ${selectedPersona?.idPersona ? "" : "hidden"}`}
+              >
+                <TabsList className="w-full">
+                  <TabsTrigger
+                    value="persona"
+                    className="w-1/2 rounded-md rounded-r-none"
+                  >
+                    Datos de Persona
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="empleado"
+                    className="w-1/2 rounded-md rounded-l-none"
+                  >
+                    Datos de Empleado
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="persona">
+                  <PersonaCreateEdit
+                    persona={selectedPersona}
+                    refreshPersonas={refetchPersonas}
+                    setActiveTab={setActiveTab}
+                  />
+                </TabsContent>
+
+                <TabsContent value="empleado">
+                  <EmpleadoCreateEdit
+                    refreshEmpleados={refetch}
+                    idPersona={personaId}
+                  />
+                </TabsContent>
+              </Tabs>
+            </ModalFormTemplate>
           </div>
         </CrudHeader>
 

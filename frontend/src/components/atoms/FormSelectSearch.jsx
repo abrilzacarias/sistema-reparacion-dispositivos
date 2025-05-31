@@ -38,7 +38,7 @@ const FormSelectSearch = ({
       <Label>{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
-          className="flex items-center outline-none shadow-[0px_1px_90px_rgba(0,0,0,0.2)] justify-between mx-auto"
+          className="flex items-center outline-noney justify-between mx-auto"
           asChild
         >
           <Button variant="outline" role="combobox" aria-expanded={open} className="w-full">
