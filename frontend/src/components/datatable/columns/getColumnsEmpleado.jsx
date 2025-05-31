@@ -65,7 +65,7 @@ export const getColEmpleados = ({ refetch }) => {
             </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem className="w-full flex items-center justify-between">
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   title="Detalles del empleado"
                   description="Información completa del empleado seleccionado"
