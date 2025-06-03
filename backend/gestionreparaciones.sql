@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -18,7 +18,7 @@
 --
 -- Table structure for table `asignacionUsuarioPermisos`
 --
-USE gestionreparaciones
+
 DROP TABLE IF EXISTS `asignacionUsuarioPermisos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS `contacto`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `contacto` (
   `idContacto` int NOT NULL AUTO_INCREMENT,
-  `descripciÃ³nContacto` varchar(45) NOT NULL,
+  `descripcionContacto` varchar(45) NOT NULL,
   `idtipoContacto` int NOT NULL,
   `idPersona` int NOT NULL,
   PRIMARY KEY (`idContacto`),
@@ -87,7 +87,7 @@ CREATE TABLE `contacto` (
   KEY `fk_contacto_personas1_idx` (`idPersona`),
   CONSTRAINT `fk_contacto_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_contacto_tipoContacto1` FOREIGN KEY (`idtipoContacto`) REFERENCES `tipoContacto` (`idtipoContacto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -687,7 +687,7 @@ DROP TABLE IF EXISTS `tipoContacto`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipoContacto` (
   `idtipoContacto` int NOT NULL AUTO_INCREMENT,
-  `descripciÃ³ntipoContacto` varchar(45) NOT NULL,
+  `descripcionTipoContacto` varchar(45) NOT NULL,
   PRIMARY KEY (`idtipoContacto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -879,4 +879,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-24 18:12:03
+-- Dump completed on 2025-06-03 16:13:36

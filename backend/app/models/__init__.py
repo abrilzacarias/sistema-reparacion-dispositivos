@@ -13,6 +13,8 @@ from .marcaDispositivo import MarcaDispositivo
 from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
+from .contacto import Contacto
+from .tipoContacto import TipoContacto
 from .perfil import Perfil
 
 
