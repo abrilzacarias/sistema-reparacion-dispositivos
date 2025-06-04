@@ -3,7 +3,7 @@ from app.models.estadoreparacion import EstadoReparacion
 from app.schemas.estadoReparacion import EstadoReparacionCreate, EstadoReparacionUpdate
 
 def get_all_estado_reparacion(db: Session):
-    return db.query(EstadoReparacion).all()
+    return db.query(EstadoReparacion)
 
 def get_estado_reparacion(db: Session, id_estado: int):
     return db.query(EstadoReparacion).filter(EstadoReparacion.idEstadoReparacion == id_estado).first()

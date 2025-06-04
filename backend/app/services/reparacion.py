@@ -18,8 +18,8 @@ def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
             selectinload(Reparacion.estadoReparacion),
             selectinload(Reparacion.empleado),
             selectinload(Reparacion.diagnostico)
-        )\
-        .offset(skip).limit(limit).all()
+        )
+       
 
 def create_reparacion(db: Session, reparacion: ReparacionCreate):
     db_reparacion = Reparacion(**reparacion.dict())

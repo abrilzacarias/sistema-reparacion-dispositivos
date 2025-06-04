@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.database import get_db
 from app.schemas.reparacion import ReparacionCreate, ReparacionUpdate, ReparacionOut
@@ -8,9 +9,10 @@ from app.services import reparacion as reparacion_service
 
 router = APIRouter(prefix="/reparaciones", tags=["reparaciones"])
 
-@router.get("/", response_model=List[ReparacionOut])
-def read_reparaciones(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return reparacion_service.get_reparaciones(db, skip, limit)
+# ✅ PAGINADO
+@router.get("/", response_model=Page[ReparacionOut])
+def read_reparaciones(db: Session = Depends(get_db)):
+    return paginate(reparacion_service.get_reparaciones(db))
 
 @router.get("/{id}", response_model=ReparacionOut)
 def read_reparacion(id: int, db: Session = Depends(get_db)):

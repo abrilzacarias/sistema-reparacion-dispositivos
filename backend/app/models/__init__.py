@@ -14,7 +14,7 @@ from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
 from .contacto import Contacto
-from .tipoContacto import TipoContacto
+from .tipocontacto import TipoContacto
 from .perfil import Perfil
 
 
