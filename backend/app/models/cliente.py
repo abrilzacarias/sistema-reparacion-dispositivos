@@ -13,4 +13,4 @@ class Cliente(Base):
     persona = relationship("Persona", back_populates="cliente")
 
     # Envia a Dispositivo
-    dispositivo = relationship("Dispositivo", back_populates="cliente")
+    dispositivos = relationship("Dispositivo", back_populates="cliente")

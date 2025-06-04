@@ -5,8 +5,8 @@ from app.database import Base
 class TipoDispositivo(Base):
     __tablename__ = "tipoDispositivo"
 
-    idTipoDispositivo = Column(Integer, primary_key=True, index=True)
+    idTipoDispositivo = Column(Integer, primary_key=True, index=True, autoincrement=True)
     nombreTipoDispositivo = Column(String(80), nullable=False)
 
-    # Envia a Dispositivo
-    dispositivo = relationship("Dispositivo", back_populates="tipoDispositivo")
+    # Relación con dispositivos
+    dispositivos = relationship("Dispositivo", back_populates="tipoDispositivo")

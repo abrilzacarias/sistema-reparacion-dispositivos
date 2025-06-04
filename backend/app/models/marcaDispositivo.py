@@ -11,4 +11,4 @@ class MarcaDispositivo(Base):
 
     # Envia a Repuesto, Dispositivo
     repuestos = relationship("Repuesto", back_populates="marca")
-    dispositivo = relationship("Dispositivo", back_populates="marcaDispositivo")
+    dispositivos = relationship("Dispositivo", back_populates="marcaDispositivo")
