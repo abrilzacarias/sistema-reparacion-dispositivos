@@ -5,7 +5,6 @@ from app.schemas.tipoContacto import TipoContactoOut  # Nombre corregido
 class ContactoBase(BaseModel):
     descripcionContacto: Optional[str]
     idtipoContacto: int
-    idPersona: int
 
 class ContactoCreate(ContactoBase):
     pass

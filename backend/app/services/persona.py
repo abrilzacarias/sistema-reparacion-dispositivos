@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 from app.models.persona import Persona
+from app.models.contacto import Contacto
 from app.schemas.persona import PersonaCreate, PersonaUpdate
 
 def get_persona(db: Session, idPersona: int):
@@ -19,13 +20,19 @@ def get_personas(db: Session, search: str = None):
         )
     return query
 
-def create_persona(db: Session, persona: PersonaCreate):
-    persona_data = persona.dict()
-    persona_data["estadoPersona"] = True  # Forzar estado activo
-    db_persona = Persona(**persona_data)
+def create_persona(db: Session, persona_data: PersonaCreate):
+    data = persona_data.dict()
+    contactos_data = data.pop("contactos", [])
+
+    db_persona = Persona(**data)
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
+
+    for contacto in contactos_data:
+        db_contacto = Contacto(**contacto, idPersona=db_persona.idPersona)
+        db.add(db_contacto)
+    db.commit()
     return db_persona
 
 def update_persona(db: Session, idPersona: int, persona: PersonaUpdate):

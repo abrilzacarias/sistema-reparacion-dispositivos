@@ -16,4 +16,4 @@ class Persona(Base):
     empleados = relationship("Empleado", back_populates="persona")
     cliente = relationship("Cliente", back_populates="persona")
     domicilio = relationship("Domicilio", back_populates="persona")
-    contacto = relationship("Contacto", back_populates="persona")
+    contactos = relationship("Contacto", back_populates="persona")
