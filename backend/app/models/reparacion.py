@@ -26,9 +26,9 @@ class Reparacion(Base):
     idEmpleado = mapped_column(Integer, comment='puede ser que un empleado haga el diagnostico y otro la reparacion')
     fechaEgreso: Mapped[Optional[datetime.date]] = mapped_column(Date)
 
-    diagnostico = relationship('Diagnostico', back_populates='reparacion')
-    empleado = relationship('Empleado', back_populates='reparacion')
-    estadoReparacion = relationship('EstadoReparacion', back_populates='reparacion')
-    detalleReparacion = relationship('DetalleReparacion', back_populates='reparacion')
-    historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparacion')
+    diagnostico = relationship('Diagnostico', back_populates='reparaciones')
+    empleado = relationship('Empleado', back_populates='reparaciones')
+    estadoReparacion = relationship('EstadoReparacion', back_populates='reparaciones')
+    detalleReparacion = relationship('DetalleReparacion', back_populates='reparacion')  # ✅ correcto
+    #historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparaciones')
 

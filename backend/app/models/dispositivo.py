@@ -1,23 +1,24 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Dispositivo(Base):
     __tablename__ = "dispositivo"
 
-    idDispositivo = Column(Integer, primary_key=True, index=True)
+    idDispositivo = Column(Integer, primary_key=True, index=True, autoincrement=True)
     descripcionDispositivo = Column(String(80), nullable=False)
     modeloDispositivo = Column(String(45), nullable=False)
+    estadoDispositivo = Column(Boolean, default=True, nullable=False)  # tinyint(1) en SQL = Boolean en SQLAlchemy
 
-    # Recibe de MarcaDispositivo, TipoDispositivo, Cliente
-    idMarcaDispositivo = Column(Integer, ForeignKey('marcaDispositivo.idMarcaDispositivo'))
-    marcaDispositivo = relationship("MarcaDispositivo", back_populates="dispositivo")
+    # Foreign Keys
+    idMarcaDispositivo = Column(Integer, ForeignKey('marcaDispositivo.idMarcaDispositivo'), nullable=False)
+    idTipoDispositivo = Column(Integer, ForeignKey('tipoDispositivo.idTipoDispositivo'), nullable=False)
+    idCliente = Column(Integer, ForeignKey('cliente.idCliente'), nullable=False)
 
-    idTipoDispositivo = Column(Integer, ForeignKey('tipoDispositivo.idTipoDispositivo'))
-    tipoDispositivo = relationship("TipoDispositivo", back_populates="dispositivo")
+    # Relaciones inversas
+    marcaDispositivo = relationship("MarcaDispositivo", back_populates="dispositivos")
+    tipoDispositivo = relationship("TipoDispositivo", back_populates="dispositivos")
+    cliente = relationship("Cliente", back_populates="dispositivos")
 
-    idCliente = Column(Integer, ForeignKey('cliente.idCliente'))
-    cliente = relationship("Cliente", back_populates="dispositivo")
-
-    # Envia a Diagnostico
-    diagnosticos = relationship("Diagnostico", back_populates="dispositivo") 
+    # Relaciones hacia otros modelos
+    diagnosticos = relationship("Diagnostico", back_populates="dispositivo")
