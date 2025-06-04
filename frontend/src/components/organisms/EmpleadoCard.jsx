@@ -5,6 +5,7 @@ import { User, Calendar, Mail, Phone, MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 
 const EmpleadoCard = ({ empleado }) => {
+  console.log("EmpleadoCard", empleado)
   if (!empleado) {
     return (
       <Card>

@@ -54,7 +54,7 @@ export const getColumnsRepuestos = ({ refetch }) => {
             </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem className="w-full flex items-center justify-between">
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   title="Detalles del repuesto"
                   description="Información del repuesto seleccionado"

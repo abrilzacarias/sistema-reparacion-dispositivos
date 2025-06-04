@@ -3,7 +3,7 @@ from app.models import puestoLaboral as models
 from app.schemas import puestoLaboral as schemas
 
 def get_all_puestos(db: Session):
-    return db.query(models.PuestoLaboral).all()
+    return db.query(models.PuestoLaboral)
 
 def get_puesto(db: Session, idpuestoLaboral: int):
     return db.query(models.PuestoLaboral).filter(models.PuestoLaboral.idpuestoLaboral == idpuestoLaboral).first()

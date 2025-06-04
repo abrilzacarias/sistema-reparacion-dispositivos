@@ -1,9 +1,19 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_, func
 from app.models.empleado import Empleado
 from app.schemas.empleado import EmpleadoCreate, EmpleadoUpdate
 
-def get_empleados(db: Session):
-    return db.query(Empleado)
+def get_empleados(db: Session, search: str = None):
+    query = db.query(Empleado)
+    if search:
+        search = f"%{search.lower()}%"
+        query = query.filter(
+            or_(
+                func.lower(Empleado.nombre).like(search),
+                func.lower(Empleado.apellido).like(search)
+            )
+        )
+    return query
 
 def get_empleado(db: Session, idEmpleado: int):
     return db.query(Empleado).filter(Empleado.idEmpleado == idEmpleado).first()

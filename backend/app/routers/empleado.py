@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -10,8 +10,11 @@ from app.services import empleado as services
 router = APIRouter(prefix="/empleados", tags=["Empleados"])
 
 @router.get("/", response_model=Page[schemas.EmpleadoOut], summary="Obtener lista paginada de empleados")
-def read_empleados(db: Session = Depends(get_db)):
-    empleados = services.get_empleados(db)
+def read_empleados(
+    search: str = Query(None, description="Buscar empleados por nombre o apellido"),
+    db: Session = Depends(get_db)
+):
+    empleados = services.get_empleados(db, search=search)
     return paginate(empleados)
 
 @router.get("/{idEmpleado}", response_model=schemas.EmpleadoOut, summary="Obtener un empleado por ID")

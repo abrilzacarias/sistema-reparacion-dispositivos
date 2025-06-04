@@ -20,7 +20,7 @@ const ButtonDinamicForms = ({ initialData, isLoading, register = false }) => {
   const variant = register ? variants.register : variants.defaultVariants
 
   return (
-    <Button type="submit" variant="custom" className="rounded-full" disabled={isLoading}>
+    <Button type="submit" variant="custom" className="rounded-md" disabled={isLoading}>
       {!isLoading ? (
         initialData ? (
           variant.labelEdit
