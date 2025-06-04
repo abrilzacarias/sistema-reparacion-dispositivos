@@ -10,6 +10,7 @@ class Contacto(Base):
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
 
     tipoContacto = relationship("TipoContacto", back_populates="contacto")
-    persona = relationship("Persona", back_populates="contacto")
+    persona = relationship("Persona", back_populates="contactos")
+
 
 
