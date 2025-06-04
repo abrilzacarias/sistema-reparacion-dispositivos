@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 from app.models.persona import Persona
 from app.models.contacto import Contacto
+from app.models.domicilio import Domicilio
 from app.schemas.persona import PersonaCreate, PersonaUpdate
 
 def get_persona(db: Session, idPersona: int):
@@ -20,19 +21,23 @@ def get_personas(db: Session, search: str = None):
         )
     return query
 
-def create_persona(db: Session, persona_data: PersonaCreate):
-    data = persona_data.dict()
-    contactos_data = data.pop("contactos", [])
+def create_persona(db, persona_in):
+    # persona_in es el Pydantic model con los datos de entrada
+    contactos = [Contacto(**c.dict()) for c in persona_in.contactos]
+    domicilios = [Domicilio(**d.dict()) for d in persona_in.domicilios]
 
-    db_persona = Persona(**data)
+    db_persona = Persona(
+        cuit=persona_in.cuit,
+        nombre=persona_in.nombre,
+        apellido=persona_in.apellido,
+        fechaNacimiento=persona_in.fechaNacimiento,
+        contactos=contactos,
+        domicilios=domicilios,
+    )
+
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
-
-    for contacto in contactos_data:
-        db_contacto = Contacto(**contacto, idPersona=db_persona.idPersona)
-        db.add(db_contacto)
-    db.commit()
     return db_persona
 
 def update_persona(db: Session, idPersona: int, persona: PersonaUpdate):

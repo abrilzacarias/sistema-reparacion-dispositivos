@@ -16,6 +16,6 @@ class Domicilio(Base):
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
 
     tipoDomicilio = relationship("TipoDomicilio", back_populates="domicilio")
-    persona = relationship("Persona", back_populates="domicilio")
+    persona = relationship("Persona", back_populates="domicilios")
 
 
