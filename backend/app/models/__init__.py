@@ -14,11 +14,14 @@ from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
 from .contacto import Contacto
-from .tipoContacto import TipoContacto
+from .tipocontacto import TipoContacto
 from .perfil import Perfil
 
 
 from .diagnostico import Diagnostico
 from .dispositivo import Dispositivo
 from .tipoDispositivo import TipoDispositivo
-
+from .estadoreparacion import EstadoReparacion
+from .tiporeparacion import TipoReparacion
+from .reparacion import Reparacion
+from .detallereparacion import DetalleReparacion

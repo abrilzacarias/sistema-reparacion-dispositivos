@@ -19,7 +19,7 @@ const useFetchAll = (endpoint, dependencies = []) => {
       while (true) {
         const response = await axios.get(`${API_URL}/${endpoint}?page=${currentPage}&size=${pageSize}`)
         const { items, total: totalItems, pages } = response.data
-
+        console.log(`[useFetchAll] Página ${currentPage} recibida:`, items)
         setTotal(totalItems)
         allData = [...allData, ...items]
 

@@ -31,7 +31,11 @@ const FormSelectSearch = ({
   const { data, loading } = useFetchAll(endpoint)
   const [open, setOpen] = useState(false)
 
-  const selectedItem = data?.find((item) => item[valueKey] === value)
+  const getValue = (item) => (typeof valueKey === "function" ? valueKey(item) : item[valueKey]);
+
+  const selectedItem = data?.find((item) => String(getValue(item)) === String(value));
+
+
 
   return (
     <div className="flex gap-2 capitalize flex-col justify-center m-auto">
@@ -43,8 +47,13 @@ const FormSelectSearch = ({
         >
           <Button variant="outline" role="combobox" aria-expanded={open} className="w-full">
             <p className="w-auto text-md">
-              {!selectedItem ? placeholder : selectedItem[displayKey]}
-            </p>
+            {!selectedItem 
+              ? placeholder 
+              : typeof displayKey === "function" 
+                ? displayKey(selectedItem) 
+                : selectedItem[displayKey]}
+          </p>
+
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -66,23 +75,23 @@ const FormSelectSearch = ({
                 ) : (
                   data?.map((item) => (
                     <CommandItem
-                      key={item[valueKey]}
-                      value={item[displayKey]}
-                      onSelect={(e) => {
-                        setValue(item[valueKey])
-                        setTimeout(() => setOpen(false), 100)
-                      }}
-                    >
-                      {item[displayKey]}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          value === item[valueKey]
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
+                key={getValue(item)}
+                value={typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
+                onSelect={(e) => {
+                  setValue(getValue(item));
+                  setTimeout(() => setOpen(false), 100);
+                }}
+              >
+                {typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
+                <Check
+                  className={cn(
+                    "ml-auto",
+                    value === getValue(item)
+                      ? "opacity-100"
+                      : "opacity-0"
+                  )}
+                />
+              </CommandItem>
                   ))
                 )}
               </CommandGroup>

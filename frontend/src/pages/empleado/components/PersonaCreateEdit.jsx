@@ -104,6 +104,20 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab }) => {
         <Input type="date" {...register("fechaNacimiento", { required: "Campo requerido" })} />
         <ErrorMessage message={errors.fechaNacimiento?.message || apiErrors?.fechaNacimiento} />
       </div>
+<div className="space-y-2 col-span-2">
+  <Label>Correo Electrónico</Label>
+  <Input
+    type="email"
+    {...register("correo", {
+      required: "Campo requerido",
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Formato de correo inválido",
+      },
+    })}
+  />
+  <ErrorMessage message={errors.correo?.message || apiErrors?.correo} />
+</div>
 
       {/* TODO FALTAN CONTACTO Y DOMICILIO, PENSAR TEMA CONTACTO POR EMAIL DE USUARIO (CREDENCIAL DE INICIO DE SESION) */}
 

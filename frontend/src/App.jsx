@@ -6,6 +6,7 @@ import { Dashboard } from "./pages/admin/Dashboard"
 import EmpleadoPage from "./pages/empleado/EmpleadoPage"
 import RepuestosPage from "./pages/repuestos/RepuestosPage"
 import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
+import ReparacionesPage from "./pages/reparaciones/ReparacionesPage"
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/clientes" element={<div>Página de Clientes</div>} />
           <Route path="/repuestos" element={<RepuestosPage />} />
           <Route path="/configuracion" element={<div>Página de Configuración</div>} />
+          <Route path="/reparaciones" element={<ReparacionesPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />

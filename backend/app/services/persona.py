@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 from app.models.persona import Persona
+from app.models.contacto import Contacto
+from app.models.domicilio import Domicilio
 from app.schemas.persona import PersonaCreate, PersonaUpdate
 
 def get_persona(db: Session, idPersona: int):
@@ -19,10 +21,20 @@ def get_personas(db: Session, search: str = None):
         )
     return query
 
-def create_persona(db: Session, persona: PersonaCreate):
-    persona_data = persona.dict()
-    persona_data["estadoPersona"] = True  # Forzar estado activo
-    db_persona = Persona(**persona_data)
+def create_persona(db, persona_in):
+    # persona_in es el Pydantic model con los datos de entrada
+    contactos = [Contacto(**c.dict()) for c in persona_in.contactos]
+    domicilios = [Domicilio(**d.dict()) for d in persona_in.domicilios]
+
+    db_persona = Persona(
+        cuit=persona_in.cuit,
+        nombre=persona_in.nombre,
+        apellido=persona_in.apellido,
+        fechaNacimiento=persona_in.fechaNacimiento,
+        contactos=contactos,
+        domicilios=domicilios,
+    )
+
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)

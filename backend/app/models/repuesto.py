@@ -16,4 +16,6 @@ class Repuesto(Base):
 
     marca = relationship("MarcaDispositivo", back_populates="repuestos")
     tipo = relationship("TipoRepuesto", back_populates="repuestos")
+    detalleReparacion = relationship('DetalleReparacion', back_populates='repuesto')
+
 
