@@ -7,7 +7,7 @@ export function TopBar({ userName = "Administrador" }) {
 
   return (
     <div
-      className={`h-16 flex items-center justify-between px-6 ${
+      className={`h-16 flex items-center justify-between px-6 transition-colors duration-300 ${
         darkMode
           ? "bg-backgroundbar border-b border-gray-800 text-white"
           : "bg-white border-b border-gray-200 text-gray-800"
