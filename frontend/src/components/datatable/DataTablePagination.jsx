@@ -74,7 +74,7 @@ export const DataTablePagination = ({
 
           {isError && (
             <p className="text-red-500 truncate overflow-hidden text-ellipsis whitespace-nowrap">
-              Ha habido un error
+              No hay más resultados
             </p>
           )}
         </div>

@@ -39,7 +39,7 @@ export function Sidebar() {
 
   return (
     <div
-      className={`h-screen flex flex-col transition-all duration-300 ${sidebarExpanded ? "w-60" : "w-16"} ${
+      className={`h-screen flex flex-col transition-[width] duration-300 ease-in-out ${sidebarExpanded ? "w-60" : "w-16"} transition-colors duration-300 ${
         darkMode
           ? "bg-sidebar border-r border-sidebar-border text-sidebar-foreground"
           : "bg-sidebar border-r border-sidebar-border text-sidebar-foreground"
