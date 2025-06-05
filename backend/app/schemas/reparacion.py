@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date
 from decimal import Decimal
+from app.schemas.empleado import EmpleadoOut
+from app.schemas.diagnostico import DiagnosticoSchema
 
 class ReparacionBase(BaseModel):
     numeroReparacion: int
@@ -25,17 +27,12 @@ class EstadoReparacionSchema(BaseModel):
     class Config:
         orm_mode = True
 
-class EmpleadoSchema(BaseModel):
-    idEmpleado: int
+
 
     class Config:
         orm_mode = True
 
-class DiagnosticoSchema(BaseModel):
-    idDiagnostico: int
-    fechaDiagnostico: date
-    idDispositivo: int
-    idEmpleado: int
+
 
     class Config:
         orm_mode = True
@@ -44,7 +41,7 @@ class ReparacionOut(ReparacionBase):
     idReparacion: int
     estadoReparacion: EstadoReparacionSchema
     diagnostico: DiagnosticoSchema
-    empleado: EmpleadoSchema
+    empleado: EmpleadoOut
 
     class Config:
         orm_mode = True

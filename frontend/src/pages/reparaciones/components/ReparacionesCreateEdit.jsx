@@ -68,14 +68,27 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
-      <div className="space-y-2 col-span-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
+      <div className="space-y-2">
         <Label>Número de reparación</Label>
         <Input
           type="number"
           {...register("numeroReparacion", { required: "Campo requerido" })}
         />
         <ErrorMessage message={errors.numeroReparacion?.message || apiErrors?.numeroReparacion} />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Monto total</Label>
+        <Input
+          type="number"
+          step="0.01"
+          {...register("montoTotalReparacion", {
+            required: "Campo requerido",
+            min: { value: 0, message: "Debe ser mayor a 0" },
+          })}
+        />
+        <ErrorMessage message={errors.montoTotalReparacion?.message || apiErrors?.montoTotalReparacion} />
       </div>
 
       <div className="space-y-2">
@@ -93,19 +106,6 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
         <ErrorMessage message={errors.fechaEgreso?.message || apiErrors?.fechaEgreso} />
       </div>
 
-      <div className="space-y-2 col-span-2">
-        <Label>Monto total</Label>
-        <Input
-          type="number"
-          step="0.01"
-          {...register("montoTotalReparacion", {
-            required: "Campo requerido",
-            min: { value: 0, message: "Debe ser mayor a 0" },
-          })}
-        />
-        <ErrorMessage message={errors.montoTotalReparacion?.message || apiErrors?.montoTotalReparacion} />
-      </div>
-
       <div className="col-span-2 space-y-2">
         <Controller
           name="idDiagnostico"
@@ -118,7 +118,9 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
               value={field.value}
               setValue={field.onChange}
               placeholder="Seleccione un diagnóstico..."
-              displayKey="descripcionDiagnostico"
+              displayKey={(diagnostico) =>
+                `${diagnostico.dispositivo?.descripcionDispositivo} de ${diagnostico.dispositivo?.cliente?.persona?.nombre || "Sin nombre"}`
+              }
               valueKey="idDiagnostico"
             />
           )}
@@ -126,45 +128,50 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
         <ErrorMessage message={errors.idDiagnostico?.message || apiErrors?.idDiagnostico} />
       </div>
 
-      <div className="col-span-2 space-y-2">
-        <Controller
-          name="idEmpleado"
-          control={control}
-          rules={{ required: "Seleccione un empleado" }}
-          render={({ field }) => (
-            <FormSelectSearch
-              label="Empleado"
-              endpoint="empleados/"
-              value={field.value}
-              setValue={field.onChange}
-              placeholder="Seleccione un empleado..."
-              displayKey={(item) => `${item.nombreEmpleado} ${item.apellidoEmpleado}`}
-              valueKey="idEmpleado"
-            />
-          )}
+      <div className="col-span-2 grid grid-cols-2 gap-4">
+  <div className="space-y-2">
+    <Controller
+      name="idEmpleado"
+      control={control}
+      rules={{ required: "Seleccione un empleado" }}
+      render={({ field }) => (
+        <FormSelectSearch
+          label="Empleado"
+          endpoint="empleados/"
+          value={field.value}
+          setValue={field.onChange}
+          placeholder="Seleccione un empleado..."
+          displayKey={(empleado) =>
+            `${empleado.persona?.nombre || "Sin nombre"} ${empleado.persona?.apellido || "Sin apellido"}`
+          }
+          valueKey="idEmpleado"
         />
-        <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
-      </div>
+      )}
+    />
+    <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+  </div>
 
-      <div className="col-span-2 space-y-2">
-        <Controller
-          name="idEstadoReparacion"
-          control={control}
-          rules={{ required: "Seleccione un estado" }}
-          render={({ field }) => (
-            <FormSelectSearch
-              label="Estado de reparación"
-              endpoint="estado-reparacion/"
-              value={field.value}
-              setValue={field.onChange}
-              placeholder="Seleccione un estado..."
-              displayKey="descripcionEstadoReparacion"
-              valueKey="idEstadoReparacion"
-            />
-          )}
+  <div className="space-y-2">
+    <Controller
+      name="idEstadoReparacion"
+      control={control}
+      rules={{ required: "Seleccione un estado" }}
+      render={({ field }) => (
+        <FormSelectSearch
+          label="Estado de reparación"
+          endpoint="estado-reparacion/"
+          value={field.value}
+          setValue={field.onChange}
+          placeholder="Seleccione un estado..."
+          displayKey="descripcionEstadoReparacion"
+          valueKey="idEstadoReparacion"
         />
-        <ErrorMessage message={errors.idEstadoReparacion?.message || apiErrors?.idEstadoReparacion} />
-      </div>
+      )}
+    />
+    <ErrorMessage message={errors.idEstadoReparacion?.message || apiErrors?.idEstadoReparacion} />
+  </div>
+</div>
+
 
       <div className="col-span-2 flex justify-end mt-3">
         <ButtonDinamicForms initialData={reparacion} isLoading={isLoading} register />
@@ -178,3 +185,4 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
 }
 
 export default ReparacionesCreateEdit
+

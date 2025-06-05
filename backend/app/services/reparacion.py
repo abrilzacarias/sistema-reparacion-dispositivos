@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.reparacion import Reparacion
+from app.models.empleado import Empleado 
 from app.schemas.reparacion import ReparacionCreate, ReparacionUpdate
 from sqlalchemy.orm import selectinload
 
@@ -7,7 +8,7 @@ def get_reparacion(db: Session, id: int):
     return db.query(Reparacion)\
         .options(
             selectinload(Reparacion.estadoReparacion),
-            selectinload(Reparacion.empleado),
+            selectinload(Reparacion.empleado).selectinload(Empleado.persona) ,
             selectinload(Reparacion.diagnostico)
         )\
         .filter(Reparacion.idReparacion == id).first()

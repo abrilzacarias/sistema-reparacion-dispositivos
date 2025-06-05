@@ -45,10 +45,13 @@ export const getColumnsReparaciones = ({ refetch }) => {
     },
     {
       header: "Empleado",
-      accessorKey: "empleado.nombreEmpleado",
-      cell: ({ row }) => (
-        <div>{row.original.empleado?.nombreEmpleado ?? "Sin asignar"}</div>
-      ),
+      accessorKey: "empleado.persona.nombre",
+      cell: ({ row }) => {
+    const persona = row.original.empleado?.persona;
+    const nombre = persona?.nombre || "";
+    const apellido = persona?.apellido || "";
+    return <div>{`${nombre} ${apellido}`.trim() || "Sin asignar"}</div>;
+  },
     },
     {
       id: "actions",
