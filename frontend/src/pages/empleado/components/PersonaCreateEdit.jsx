@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab }) => {
+const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaId, setSelectedPersona }) => {
   const {
     register,
     handleSubmit,
@@ -54,12 +54,24 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab }) => {
 
       const method = persona ? axios.put : axios.post
 
-      await method(endpoint, payload)
+      const response = await method(endpoint, payload)
 
       persona ? ToastMessageEdit() : ToastMessageCreate()
-
       refreshPersonas()
-      setActiveTab("empleado")
+
+      if (persona) {
+        setActiveTab("empleado")
+      } else {
+        const nuevaPersona = response.data
+        setOpen(false)
+
+        if (setSelectedPersona) {
+          setSelectedPersona(nuevaPersona)
+        }
+        if (setPersonaId) {
+          setPersonaId(nuevaPersona.idPersona)
+        }
+      }
     } catch (err) {
       console.error("Error al guardar persona:", err)
       if (err.status === 500) {
@@ -122,12 +134,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab }) => {
       {/* TODO FALTAN CONTACTO Y DOMICILIO, PENSAR TEMA CONTACTO POR EMAIL DE USUARIO (CREDENCIAL DE INICIO DE SESION) */}
 
         <div className="col-span-2 flex justify-end gap-4 mt-3">
+          {(persona) && (
             <Button
                 type="button"
                 onClick={() => setActiveTab("empleado")}
             >
                 Continuar sin actualizar
             </Button>
+          )}
 
             <ButtonDinamicForms
                 initialData={persona}

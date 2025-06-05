@@ -8,7 +8,7 @@ import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch"
 import { DataTable } from "@/components/datatable/DataTable"
 import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado"
 import {usePaginatedQuery} from "@/hooks/usePaginatedQuery"
-import { Settings } from "lucide-react"
+import { PlusCircle, Settings } from "lucide-react"
 import { useSearchPersonas } from "@/hooks/useSearchPersonas"
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown"
 import { Button } from "@/components/ui/button"
@@ -133,6 +133,23 @@ const EmpleadoPage = () => {
                 variant="modal"
                 label="Filtrar persona por nombre, apellido o CUIT"
               />
+
+              {(!selectedPersona) && (
+                <ModalFormTemplate
+                  title="Crear Nueva Persona"
+                  description="Ingrese los datos para crear una nueva persona."
+                  icon={PlusCircle}
+                  label="Crear Persona"
+                  variant="default"
+                  className="border w-[40%] lg:w-[30%] mt-6 rounded-md justify-center flex mx-auto"
+                >
+                  <PersonaCreateEdit
+                    refreshPersonas={refetchPersonas}
+                    setSelectedPersona={setSelectedPersona}
+                    setPersonaId={setPersonaId}
+                  />
+                </ModalFormTemplate>
+              )}
 
               <Tabs
                 value={activeTab}
