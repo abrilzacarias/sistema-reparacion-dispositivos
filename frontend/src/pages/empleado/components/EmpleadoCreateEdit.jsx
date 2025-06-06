@@ -1,13 +1,13 @@
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
-import FormSelectSearch from "@/components/atoms/FormSelectSearch"
 import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMessage"
 import ErrorMessage from "@/components/molecules/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axios from "axios"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
+import PuestoLaboralMultiSelect from "./PuestoLaboralMultiSelect"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -23,7 +23,7 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
       fechaContratacion: empleado?.fechaContratacion || "",
       fechaFinalizacion: empleado?.fechaFinalizacion || "",
       idUsuario: empleado?.usuario?.idUsuario || "",
-      idpuestoLaboral: empleado?.puesto?.idpuestoLaboral || "",
+      idpuestoLaboral: empleado?.puestos?.map((p) => p.idpuestoLaboral) || [], // Cambio para array
     },
   })
 
@@ -63,7 +63,7 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
         fechaContratacion: data.fechaContratacion,
         fechaFinalizacion: data.fechaFinalizacion,
         idUsuario: idUsuario,
-        idpuestoLaboral: data.idpuestoLaboral,
+        puestosLaborales: data.idpuestoLaboral,
         idPersona,
       }
 
@@ -102,8 +102,8 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             <p className="text-sm text-blue-700">
               <strong>AVISO:</strong> Se creará un usuario con el correo electrónico{" "}
-              <span className="font-mono bg-blue-100 px-1 rounded">{personaEmail}</span> y se enviarán las credenciales de acceso
-              por correo.
+              <span className="font-mono bg-blue-100 px-1 rounded">{personaEmail}</span> y se enviarán las credenciales
+              de acceso por correo.
             </p>
           </div>
         </div>
@@ -122,47 +122,24 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
         <ErrorMessage message={errors.fechaFinalizacion?.message || apiErrors?.fechaFinalizacion} />
       </div>
 
-      {/* {empleado && (
         <div className="col-span-2 space-y-2">
           <Controller
-            name="idUsuario"
+            name="idpuestoLaboral"
             control={control}
-            rules={{ required: "Seleccione un usuario" }}
+            rules={{
+              required: "Seleccione al menos un puesto laboral",
+              validate: (value) => value.length > 0 || "Debe seleccionar al menos un puesto laboral",
+            }}
             render={({ field }) => (
-              <FormSelectSearch
-                label="Usuario"
-                endpoint="usuarios"
+              <PuestoLaboralMultiSelect
                 value={field.value}
-                setValue={field.onChange}
-                placeholder="Seleccione un usuario..."
-                displayKey="username"
-                valueKey="idUsuario"
+                onChange={field.onChange}
+                placeholder="Seleccione puestos laborales..."
               />
             )}
           />
-          <ErrorMessage message={errors.idUsuario?.message || apiErrors?.idUsuario} />
+          <ErrorMessage message={errors.idpuestoLaboral?.message || apiErrors?.idpuestoLaboral} />
         </div>
-      )} */}
-
-      <div className="col-span-2 space-y-2">
-        <Controller
-          name="idpuestoLaboral"
-          control={control}
-          rules={{ required: "Seleccione un puesto laboral" }}
-          render={({ field }) => (
-            <FormSelectSearch
-              label="Puesto Laboral"
-              endpoint="puestos-laborales"
-              value={field.value}
-              setValue={field.onChange}
-              placeholder="Seleccione un puesto..."
-              displayKey="nombrepuestoLaboral"
-              valueKey="idpuestoLaboral"
-            />
-          )}
-        />
-        <ErrorMessage message={errors.idpuestoLaboral?.message || apiErrors?.idpuestoLaboral} />
-      </div>
 
       <div className="col-span-2 flex justify-end mt-3">
         <ButtonDinamicForms initialData={empleado} isLoading={isLoading} register />

@@ -1,5 +1,3 @@
-"use client"
-
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
 import ErrorMessage from "@/components/molecules/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
@@ -7,9 +5,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { useContext, useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMessage"
 import { Button } from "@/components/ui/button"
+import { PhoneInput } from "../ui/phone-input"
+import { isValidPhoneNumber } from "react-phone-number-input"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -18,6 +18,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -30,6 +31,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
   useEffect(() => {
     if (persona) {
+      console.log(persona)
       const contactoCorreo = persona.contactos?.find(
         (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
       )
@@ -64,28 +66,69 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
     const { correo, telefono, ...rest } = data
 
-    const isEdit = !!persona?.idPersona;
+    const isEdit = !!persona?.idPersona
 
-    const contactos = [
-      {
+    let contactos = []
+
+    if (isEdit) {
+      console.log("Editando persona:", persona)
+
+      // Buscar contactos existentes
+      const contactoCorreoExistente = persona?.contactos?.find(
+        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
+      )
+      const contactoTelefonoExistente = persona?.contactos?.find(
+        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
+      )
+
+      // Contacto de correo
+      const contactoCorreo = {
         descripcionContacto: correo,
         idtipoContacto: 1,
         esPrimario: true,
-        ...(isEdit && {
-          idContacto: persona?.contactos?.find(c => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario)?.idContacto,
-          idPersona: persona.idPersona
-        })
-      },
-      {
+      }
+
+      // Si existe contacto de correo previo, incluir idContacto para actualizar
+      if (contactoCorreoExistente?.idContacto) {
+        contactoCorreo.idContacto = contactoCorreoExistente.idContacto
+        contactoCorreo.idPersona = persona.idPersona
+        console.log("Actualizando contacto de correo existente")
+      } else {
+        console.log("Creando nuevo contacto de correo")
+      }
+
+      // Contacto de teléfono
+      const contactoTelefono = {
         descripcionContacto: telefono,
         idtipoContacto: 2,
         esPrimario: true,
-        ...(isEdit && {
-          idContacto: persona?.contactos?.find(c => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario)?.idContacto,
-          idPersona: persona.idPersona
-        })
       }
-    ];
+
+      // Si existe contacto de teléfono previo, incluir idContacto para actualizar
+      if (contactoTelefonoExistente?.idContacto) {
+        contactoTelefono.idContacto = contactoTelefonoExistente.idContacto
+        contactoTelefono.idPersona = persona.idPersona
+        console.log("Actualizando contacto de teléfono existente")
+      } else {
+        console.log("Creando nuevo contacto de teléfono")
+      }
+
+      contactos = [contactoCorreo, contactoTelefono]
+    } else {
+      // Para creación, siempre crear nuevos contactos
+      contactos = [
+        {
+          descripcionContacto: correo,
+          idtipoContacto: 1,
+          esPrimario: true,
+        },
+        {
+          descripcionContacto: telefono,
+          idtipoContacto: 2,
+          esPrimario: true,
+        },
+      ]
+    }
 
     const domicilios = []
 
@@ -94,12 +137,12 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       estadoPersona: persona?.estadoPersona ?? 0,
       contactos: contactos,
       domicilios: domicilios,
-    };
+    }
+
+    console.log("Payload completo:", JSON.stringify(payload, null, 2))
 
     try {
-      const endpoint = persona
-        ? `${API_URL}/personas/${persona.idPersona}/`
-        : `${API_URL}/personas/`
+      const endpoint = persona ? `${API_URL}/personas/${persona.idPersona}/` : `${API_URL}/personas/`
       const method = persona ? axios.put : axios.post
       const response = await method(endpoint, payload)
 
@@ -129,12 +172,15 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       }
     } catch (err) {
       console.error("Error al guardar persona:", err)
+      console.error("Response data:", err.response?.data)
+
       if (err.status === 500) {
         setError("Error del servidor, por favor intente más tarde.")
         return
       }
       if (err?.response?.status === 422) {
-        setError("Error, intente nuevamente más tarde.")
+        setError("Error de validación. Revise los datos ingresados.")
+        console.error("Validation errors:", err.response.data)
         return
       }
       if (err.response?.data) {
@@ -187,19 +233,29 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         <ErrorMessage message={errors.correo?.message || apiErrors?.correo} />
       </div>
 
-      <div className="space-y-2">
-        <Label>Número de Teléfono</Label>
-        <Input
-          type="tel"
-          {...register("telefono", {
+      <div className="form-group">
+        <Label htmlFor="telefono" className="text-sm font-medium">
+          Número de Teléfono
+        </Label>
+        <Controller
+          name="telefono"
+          control={control}
+          rules={{
             required: "Campo requerido",
-            pattern: {
-              value: /^[0-9+\s()-]{6,20}$/,
-              message: "Formato inválido de teléfono",
-            },
-          })}
+            validate: (value) => isValidPhoneNumber(value) || "Número de teléfono inválido",
+          }}
+          render={({ field }) => (
+            <PhoneInput
+              {...field}
+              id="telefono"
+              international
+              defaultCountry="AR"
+              placeholder="Ingrese un número de teléfono"
+              className="w-full"
+            />
+          )}
         />
-        <ErrorMessage message={errors.telefono?.message || apiErrors?.telefono} />
+        <ErrorMessage message={errors?.telefono?.message} />
       </div>
 
       <div className="col-span-2 flex justify-end gap-4 mt-3">

@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button"
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import SearchPersonas from "@/components/organisms/SearchPersonas"
 import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit"
-import PersonaCreateEdit from "./components/PersonaCreateEdit"
+import PersonaCreateEdit from "../../components/organisms/PersonaCreateEdit"
 import {
   Tabs,
   TabsContent,
