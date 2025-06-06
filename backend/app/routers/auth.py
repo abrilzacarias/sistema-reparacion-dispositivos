@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..auth.auth_handler import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_user, get_password_hash
 from ..database import get_db
-from ..schemas.user import Token, UserCreate, UserResponse
+from ..schemas.usuario import Token, UsuarioCreate, UserResponse
 from ..models.usuario import Usuario as User
 
 
@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 @router.post("/register", response_model=UserResponse)
-async def register_user(request: Request, user: UserCreate, db: Session = Depends(get_db)):
+async def register_user(request: Request, user: UsuarioCreate, db: Session = Depends(get_db)):
     try:
         user_data = await request.json()
         print(f"Datos de registro recibidos: {user_data}")

@@ -26,9 +26,13 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 db = SessionLocal()
 
-from app.models import Persona, Usuario, Empleado, PuestoLaboral, MarcaDispositivo, Repuesto, Cliente, Dispositivo, TipoDispositivo, Diagnostico, TipoRepuesto
+from app.models import Persona, Usuario, Empleado, PuestoLaboral, MarcaDispositivo, Repuesto, Cliente, Dispositivo, TipoDispositivo, Diagnostico, TipoRepuesto, TipoContacto, Contacto
 
-fake = Faker("es_ES")
+fake = Faker("es_AR")
+
+tipos_contacto = db.query(TipoContacto).all()
+tipo_correo = next((t for t in tipos_contacto if "correo" in t.descripcionTipoContacto.lower()), None)
+tipo_telefono = next((t for t in tipos_contacto if "teléfono" in t.descripcionTipoContacto.lower() or "telefono" in t.descripcionTipoContacto.lower()), None)
 
 # Crear Person  as
 personas = []
@@ -41,6 +45,25 @@ for _ in range(10):
         estadoPersona=random.choice([True, False])
     )
     db.add(persona)
+    db.flush()  # para que persona.idPersona tenga valor antes de crear contactos
+
+    contacto_correo = Contacto(
+        descripcionContacto=fake.unique.email(),
+        idtipoContacto=tipo_correo.idtipoContacto,
+        idPersona=persona.idPersona,
+        esPrimario=True
+    )
+    db.add(contacto_correo)
+    print(contacto_correo)
+
+    contacto_telefono = Contacto(
+        descripcionContacto=fake.phone_number(),
+        idtipoContacto=tipo_telefono.idtipoContacto,
+        idPersona=persona.idPersona,
+        esPrimario=True
+    )
+    db.add(contacto_telefono)
+
     personas.append(persona)
 
 # Crear Usuarios
@@ -56,7 +79,7 @@ for _ in range(10):
 
 # Crear Puestos Laborales (asumido simple)
 puestos = []
-for nombre in ["Técnico", "Administrador", "Vendedor"]:
+for nombre in ["Técnico", "Administrador", "Recepcionista"]:
     puesto = PuestoLaboral(nombrepuestoLaboral=nombre)
     db.add(puesto)
     puestos.append(puesto)
@@ -119,7 +142,7 @@ for i in range(10):
     )
     db.add(diagnostico)
 
-# Crear Tipos de Repuesto
+""" # Crear Tipos de Repuesto
 tipos_repuesto = []
 for nombre in ["Pantalla", "Batería", "Placa Madre", "Cámara", "Carcasa", "Conector de Carga", "Altavoz"]:
     tipo = TipoRepuesto(descripcionTipoRepuesto=nombre)
@@ -139,7 +162,7 @@ for _ in range(10):
         marca=marcas[random.randint(0, len(marcas) - 1)],
         tipo=tipo  
     )
-    db.add(repuesto)
+    db.add(repuesto) """
 
 db.commit()
 db.close()

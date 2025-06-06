@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app import models, database
-from app.routers import persona, auth, cliente, repuesto, marcaDispositivo, empleado, domicilio, tipoDomicilio, diagnostico, tipoRepuesto, perfil, estadoReparacion, tipoReparacion, reparacion, tipoDispositivo, dispositivo, detalleReparacion, contacto, tipoContacto
+from app.routers import persona, auth, cliente, repuesto, marcaDispositivo, empleado, domicilio, tipoDomicilio, diagnostico, tipoRepuesto, perfil, estadoReparacion, tipoReparacion, reparacion, tipoDispositivo, dispositivo, detalleReparacion, contacto, tipoContacto, usuario
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from app.routers import puestoLaboral
@@ -23,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(persona.router)
+app.include_router(usuario.router)
 app.include_router(repuesto.router)
 app.include_router(marcaDispositivo.router)
 app.include_router(auth.router)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -8,6 +8,7 @@ class Contacto(Base):
     descripcionContacto = Column(String(45), nullable=True)
     idtipoContacto = Column(Integer, ForeignKey("tipoContacto.idtipoContacto"), nullable=False)
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
+    esPrimario = Column(Boolean, nullable=False, default=False)
 
     tipoContacto = relationship("TipoContacto", back_populates="contacto")
     persona = relationship("Persona", back_populates="contactos")

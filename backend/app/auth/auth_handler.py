@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models.usuario import Usuario as User
-from ..schemas.user import TokenData
+from ..schemas.usuario import TokenData
 
 # to get a string like this run:
 # openssl rand -hex 32

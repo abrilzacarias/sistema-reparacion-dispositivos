@@ -5,15 +5,20 @@ from app.schemas.tipoContacto import TipoContactoOut  # Nombre corregido
 class ContactoBase(BaseModel):
     descripcionContacto: Optional[str]
     idtipoContacto: int
+    esPrimario: Optional[bool] = False
 
-class ContactoCreate(ContactoBase):
-    pass
+class ContactoCreate(BaseModel):
+    descripcionContacto: str
+    idtipoContacto: int
+    esPrimario: bool
 
-class ContactoUpdate(ContactoBase):
-    pass
+class ContactoUpdate(ContactoCreate):
+    idContacto: int
 
 class ContactoOut(ContactoBase):
     idContacto: int
-    tipoContacto: TipoContactoOut  # relación
+    idPersona: int
+    tipoContacto: TipoContactoOut
+
     class Config:
         orm_mode = True
