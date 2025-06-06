@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 from app.models import Persona, Contacto, Domicilio
-from app.schemas.persona import PersonaUpdate
+from app.schemas.persona import PersonaUpdate, PersonaCreate
+from fastapi import HTTPException
 
 def get_persona(db: Session, idPersona: int):
     return db.query(Persona).filter(Persona.idPersona == idPersona).first()
@@ -19,37 +20,100 @@ def get_personas(db: Session, search: str = None):
         )
     return query
 
-def create_persona(db, persona_in):
-    # persona_in es el Pydantic model con los datos de entrada
-    contactos = [Contacto(**c.dict()) for c in persona_in.contactos]
-    domicilios = [Domicilio(**d.dict()) for d in persona_in.domicilios]
+def create_persona(db: Session, persona_data: PersonaCreate):
+    persona_existente = db.query(Persona).filter(
+        Persona.cuit == persona_data.cuit,
+        Persona.estadoPersona == 1
+    ).first()
 
-    db_persona = Persona(
-        cuit=persona_in.cuit,
-        nombre=persona_in.nombre,
-        apellido=persona_in.apellido,
-        fechaNacimiento=persona_in.fechaNacimiento,
-        contactos=contactos,
-        domicilios=domicilios,
+    if persona_existente:
+        raise HTTPException(status_code=400, detail="Ya existe una persona con ese CUIT.")
+
+    persona = Persona(
+        cuit=persona_data.cuit,
+        nombre=persona_data.nombre,
+        apellido=persona_data.apellido,
+        fechaNacimiento=persona_data.fechaNacimiento,
+        estadoPersona=1,
     )
-
-    db.add(db_persona)
+    db.add(persona)
     db.commit()
-    db.refresh(db_persona)
-    return db_persona
+    db.refresh(persona)
 
-def update_persona(db: Session, idPersona: int, persona: PersonaUpdate):
-    db_persona = get_persona(db, idPersona)
-    if not db_persona:
-        return None
-    update_data = persona.dict(exclude={"contactos", "domicilios"})
-    print(f"Updating persona with ID: {idPersona}, Data: {update_data}")
-    for key, value in update_data.items():
-        setattr(db_persona, key, value)
+    for contacto_data in persona_data.contactos:
+        contacto_existente = db.query(Contacto).filter(
+            func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
+        ).first()
+
+        if contacto_existente:
+            raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
+
+        contacto = Contacto(
+            descripcionContacto=contacto_data.descripcionContacto,
+            idtipoContacto=contacto_data.idtipoContacto,
+            esPrimario=contacto_data.esPrimario,
+            idPersona=persona.idPersona
+        )
+        db.add(contacto)
+
     db.commit()
-    db.refresh(db_persona)
-    return db_persona
+    return persona
 
+
+def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
+    persona = db.query(Persona).filter(Persona.idPersona == idPersona).first()
+    if not persona:
+        raise HTTPException(status_code=404, detail="Persona no encontrada.")
+
+    persona_con_mismo_cuit = db.query(Persona).filter(
+        Persona.cuit == persona_data.cuit,
+        Persona.idPersona != idPersona,
+        Persona.estadoPersona == 1
+    ).first()
+
+    if persona_con_mismo_cuit:
+        raise HTTPException(status_code=400, detail="Ya existe otra persona con ese CUIT.")
+
+    persona.cuit = persona_data.cuit
+    persona.nombre = persona_data.nombre
+    persona.apellido = persona_data.apellido
+    persona.fechaNacimiento = persona_data.fechaNacimiento
+    db.commit()
+
+    for contacto_data in persona_data.contactos:
+        if contacto_data.idContacto:
+            contacto = db.query(Contacto).filter(Contacto.idContacto == contacto_data.idContacto).first()
+            if contacto:
+                contacto_existente = db.query(Contacto).filter(
+                    func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower(),
+                    Contacto.idContacto != contacto.idContacto
+                ).first()
+
+                if contacto_existente:
+                    raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
+
+                contacto.descripcionContacto = contacto_data.descripcionContacto
+                contacto.idtipoContacto = contacto_data.idtipoContacto
+                contacto.esPrimario = contacto_data.esPrimario
+
+        else:
+            contacto_existente = db.query(Contacto).filter(
+                func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
+            ).first()
+
+            if contacto_existente:
+                raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
+
+            nuevo_contacto = Contacto(
+                descripcionContacto=contacto_data.descripcionContacto,
+                idtipoContacto=contacto_data.idtipoContacto,
+                esPrimario=contacto_data.esPrimario,
+                idPersona=idPersona
+            )
+            db.add(nuevo_contacto)
+
+    db.commit()
+    return persona
 
 def delete_persona(db: Session, id_persona: int) -> bool:
     persona = db.query(Persona).filter(Persona.idPersona == id_persona).first()

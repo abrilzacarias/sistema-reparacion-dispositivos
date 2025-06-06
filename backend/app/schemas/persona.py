@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import date
-from .contacto import ContactoCreate, ContactoOut
+from .contacto import ContactoCreate, ContactoOut, ContactoUpdate
 from .domicilio import DomicilioCreate, DomicilioOut
 
 class PersonaBase(BaseModel):
@@ -17,7 +17,7 @@ class PersonaCreate(PersonaBase):
     pass
 
 class PersonaUpdate(PersonaBase):
-    pass
+    contactos: Optional[List[ContactoUpdate]] = []
 
 class PersonaOut(PersonaBase):
     idPersona: int

@@ -7,13 +7,13 @@ class ContactoBase(BaseModel):
     idtipoContacto: int
     esPrimario: Optional[bool] = False
 
-class ContactoCreate(ContactoBase):
-    idPersona: int 
+class ContactoCreate(BaseModel):
+    descripcionContacto: str
+    idtipoContacto: int
+    esPrimario: bool
 
-
-class ContactoUpdate(ContactoBase):
-    pass  
-
+class ContactoUpdate(ContactoCreate):
+    idContacto: int
 
 class ContactoOut(ContactoBase):
     idContacto: int

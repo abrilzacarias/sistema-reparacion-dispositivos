@@ -28,13 +28,11 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   const [apiErrors, setApiErrors] = useState({})
   const { setOpen } = useContext(OpenContext)
 
-  // Inicializar formulario cuando cambia la persona
   useEffect(() => {
     if (persona) {
       const contactoCorreo = persona.contactos?.find(
         (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
       )
-
       const contactoTelefono = persona.contactos?.find(
         (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
       )
@@ -48,7 +46,6 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         telefono: contactoTelefono?.descripcionContacto || "",
       })
     } else {
-      // Si no hay persona, resetear formulario vacío
       reset({
         cuit: "",
         nombre: "",
@@ -67,62 +64,48 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
     const { correo, telefono, ...rest } = data
 
+    const isEdit = !!persona?.idPersona;
+
+    const contactos = [
+      {
+        descripcionContacto: correo,
+        idtipoContacto: 1,
+        esPrimario: true,
+        ...(isEdit && {
+          idContacto: persona?.contactos?.find(c => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario)?.idContacto,
+          idPersona: persona.idPersona
+        })
+      },
+      {
+        descripcionContacto: telefono,
+        idtipoContacto: 2,
+        esPrimario: true,
+        ...(isEdit && {
+          idContacto: persona?.contactos?.find(c => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario)?.idContacto,
+          idPersona: persona.idPersona
+        })
+      }
+    ];
+
+    const domicilios = []
+
     const payload = {
       ...rest,
       estadoPersona: persona?.estadoPersona ?? 0,
-    }
+      contactos: contactos,
+      domicilios: domicilios,
+    };
 
     try {
-      const endpoint = persona ? `${API_URL}/personas/${persona.idPersona}/` : `${API_URL}/personas/`
+      const endpoint = persona
+        ? `${API_URL}/personas/${persona.idPersona}/`
+        : `${API_URL}/personas/`
       const method = persona ? axios.put : axios.post
       const response = await method(endpoint, payload)
+
       const idPersonaFinal = persona ? persona.idPersona : response.data.idPersona
 
-      let contactoCorreo, contactoTelefono
-
-      if (persona) {
-        contactoCorreo = persona?.contactos?.find(
-          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-        )
-        contactoTelefono = persona?.contactos?.find(
-          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
-        )
-      }
-
-      // Actualizar contactos
-      if (contactoCorreo) {
-        await axios.put(`${API_URL}/contactos/${contactoCorreo.idContacto}/`, {
-          descripcionContacto: data.correo,
-          idtipoContacto: 1,
-        })
-      } else {
-        await axios.post(`${API_URL}/contactos/`, {
-          descripcionContacto: data.correo,
-          idtipoContacto: 1,
-          idPersona: idPersonaFinal,
-          esPrimario: true,
-        })
-      }
-
-      if (contactoTelefono) {
-        await axios.put(`${API_URL}/contactos/${contactoTelefono.idContacto}/`, {
-          descripcionContacto: data.telefono,
-          idtipoContacto: 2,
-        })
-      } else {
-        await axios.post(`${API_URL}/contactos/`, {
-          descripcionContacto: data.telefono,
-          idtipoContacto: 2,
-          idPersona: idPersonaFinal,
-          esPrimario: true,
-        })
-      }
-
-      // Obtener datos actualizados
-      const idPersonaCreada = response.data.idPersona
-      const responsePersonaActualizada = await axios.get(`${API_URL}/personas/${idPersonaCreada}/`)
-
-      // Actualizar el estado en el componente padre
+      const responsePersonaActualizada = await axios.get(`${API_URL}/personas/${idPersonaFinal}/`)
       if (setSelectedPersona) {
         setSelectedPersona(responsePersonaActualizada.data)
       }
@@ -140,7 +123,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
       if (!persona && refreshPersonas) {
         setTimeout(() => {
-          persona && contactoCorreo ? ToastMessageEdit() : ToastMessageCreate()
+          persona ? ToastMessageEdit() : ToastMessageCreate()
           refreshPersonas()
         }, 300)
       }
