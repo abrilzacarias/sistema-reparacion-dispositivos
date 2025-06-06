@@ -3,6 +3,7 @@ from sqlalchemy import DECIMAL, Date, ForeignKeyConstraint, Index, Integer, JSON
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from app.database import Base
+from app.models.asignacionUsuarioPermisos import AsignacionUsuarioPermisos
 
 class PermisoPerfil(Base):
     __tablename__ = 'permisoPerfil'
@@ -20,5 +21,5 @@ class PermisoPerfil(Base):
 
     perfil = relationship('Perfil', back_populates='permisoPerfil')
     moduloFuncionSistema = relationship('ModuloFuncionSistema', back_populates='permisoPerfil')
-    asignacionUsuarioPermisos = relationship('AsignacionUsuarioPermisos', back_populates='permisoPerfil')
+    asignacionUsuarioPermisos = relationship(AsignacionUsuarioPermisos, back_populates='permisoPerfil')
 

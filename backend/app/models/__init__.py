@@ -16,8 +16,12 @@ from .tipoDomicilio import TipoDomicilio
 from .contacto import Contacto
 from .tipoContacto import TipoContacto
 from .perfil import Perfil
-
-
+from .funcionSistema import FuncionSistema
+from .moduloFuncionSistema import ModuloFuncionSistema
+from .moduloSistema import ModuloSistema
+from .moduloFuncionSistema import ModuloFuncionSistema
+from .permisoPerfil import PermisoPerfil
+from .asignacionUsuarioPermisos import AsignacionUsuarioPermisos
 from .diagnostico import Diagnostico
 from .dispositivo import Dispositivo
 from .tipoDispositivo import TipoDispositivo
