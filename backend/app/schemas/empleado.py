@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date
 from typing import Optional
 
-from app.schemas.persona import PersonaOut
+from app.schemas.persona import PersonaOutReduced
 from app.schemas.usuario import UsuarioOut
 from app.schemas.puestoLaboral import PuestoLaboralOut
 
@@ -25,9 +25,17 @@ class EmpleadoUpdate(BaseModel):
 
 class EmpleadoOut(EmpleadoBase):
     idEmpleado: int
-    persona: PersonaOut
+    persona: PersonaOutReduced
     usuario: UsuarioOut
     puesto: PuestoLaboralOut
+
+    class Config:
+        orm_mode = True
+
+class EmpleadoOutReduced(BaseModel):
+    idEmpleado: int
+    fechaContratacion: date
+    fechaFinalizacion: Optional[date]
 
     class Config:
         orm_mode = True

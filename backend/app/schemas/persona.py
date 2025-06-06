@@ -24,12 +24,24 @@ class PersonaOut(PersonaBase):
     estadoPersona: int
     domicilios : List [DomicilioOut]
     contactos: List[ContactoOut]
-    empleado: Optional["EmpleadoOut"] = None 
+    empleado: Optional["EmpleadoOutReduced"] = None 
     cliente: Optional["ClienteOut"] = None
 
     class Config:
         orm_mode = True
 
+class PersonaOutReduced(BaseModel):
+    idPersona: int
+    estadoPersona: int
+    cuit: str
+    nombre: str
+    apellido: str
+    fechaNacimiento: date
+
+    class Config:
+        orm_mode = True
+
+
 # Importación al final para evitar circular import
-from app.schemas.empleado import EmpleadoOut
+from app.schemas.empleado import EmpleadoOutReduced
 from app.schemas.cliente import ClienteOut

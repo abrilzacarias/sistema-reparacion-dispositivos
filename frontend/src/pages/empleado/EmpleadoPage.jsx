@@ -1,50 +1,47 @@
-import { useEffect, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 
-import CrudHeader from "@/components/molecules/CrudHeader"
-import CrudsTemplate from "@/components/molecules/CrudsTemplate"
-import ButtonRefetch from "@/components/atoms/ButtonRefetch"
-import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch"
-import { DataTable } from "@/components/datatable/DataTable"
-import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado"
-import {usePaginatedQuery} from "@/hooks/usePaginatedQuery"
-import { PlusCircle, Settings } from "lucide-react"
-import { useSearchPersonas } from "@/hooks/useSearchPersonas"
-import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown"
-import { Button } from "@/components/ui/button"
-import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
-import SearchPersonas from "@/components/organisms/SearchPersonas"
-import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit"
-import PersonaCreateEdit from "../../components/organisms/PersonaCreateEdit"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import ButtonRefetch from "@/components/atoms/ButtonRefetch";
+import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch";
+import ErrorDuplicateMessage from "@/components/atoms/ErrorDuplicateMessage";
+import { DataTable } from "@/components/datatable/DataTable";
+import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado";
+import CrudHeader from "@/components/molecules/CrudHeader";
+import CrudsTemplate from "@/components/molecules/CrudsTemplate";
+import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import SearchPersonas from "@/components/organisms/SearchPersonas";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
+import { useSearchPersonas } from "@/hooks/useSearchPersonas";
+import { PlusCircle, Settings } from "lucide-react";
+import PersonaCreateEdit from "../../components/organisms/PersonaCreateEdit";
+import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit";
 
 const EmpleadoPage = () => {
   const {
-  data: employees,
-  refetch,
-  fetchNextPage,
-  isLoading,
-  isError,
-  isFetching,
-  isRefetching,
-  hasNextPage,
-  total: totalEmployees,
-} = usePaginatedQuery({
-  key: "empleados",
-  endpoint: "empleados",
-})
+    data: employees,
+    refetch,
+    fetchNextPage,
+    isLoading,
+    isError,
+    isFetching,
+    isRefetching,
+    hasNextPage,
+    total: totalEmployees,
+  } = usePaginatedQuery({
+    key: "empleados",
+    endpoint: "empleados",
+  });
 
-  const [selectedPersona, setSelectedPersona] = useState("")
-  const [personaId, setPersonaId] = useState(null)
-  const [searchTarget, setSearchTarget] = useState("")
-  const [activeTab, setActiveTab] = useState("persona")
-  const [personaEmail, setPersonaEmail] = useState("")
-  
+  const [selectedPersona, setSelectedPersona] = useState("");
+  const [personaId, setPersonaId] = useState(null);
+  const [searchTarget, setSearchTarget] = useState("");
+  const [activeTab, setActiveTab] = useState("persona");
+  const [personaEmail, setPersonaEmail] = useState("");
+  const [isErrorApi, setIsErrorApi] = useState(false);
+
   const {
     personas,
     totalPersonas,
@@ -52,49 +49,58 @@ const EmpleadoPage = () => {
     isError: errorPersonas,
     refetch: refetchPersonas,
     resetQuery,
-  } = useSearchPersonas({ query: searchTarget })
+  } = useSearchPersonas({ query: searchTarget });
 
   const handleSearchTarget = (event) => {
-    resetQuery()
-    setSearchTarget("")
-    setSelectedPersona("")
-    setSearchTarget(event.target.value)
-  }
+    resetQuery();
+    setSearchTarget("");
+    setSelectedPersona("");
+    setSearchTarget(event.target.value);
+  };
 
   const startSearch = () => {
     if (searchTarget.trim() !== "") {
-      resetQuery()
+      resetQuery();
       setSelectedPersona(
-        totalPersonas === 1 ? "1 resultado" : `${totalPersonas || "sin"} resultados`
-      )
-      refetchPersonas()
+        totalPersonas === 1
+          ? "1 resultado"
+          : `${totalPersonas || "sin"} resultados`
+      );
+      refetchPersonas();
     }
-  }
+  };
 
   useEffect(() => {
     if (searchTarget.trim() === "") {
-      resetQuery()
+      resetQuery();
     }
-  }, [searchTarget])
+  }, [searchTarget]);
 
   useEffect(() => {
     if (selectedPersona?.contactos) {
       const contactoCorreo = selectedPersona.contactos.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-      )
-      const email = contactoCorreo?.descripcionContacto || ""
-      setPersonaEmail(email)
-      console.log("Email extraído de selectedPersona:", email) // Debug
+        (c) =>
+          c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" &&
+          c.esPrimario
+      );
+      const email = contactoCorreo?.descripcionContacto || "";
+      setPersonaEmail(email);
+      console.log("Email extraído de selectedPersona:", email); // Debug
     } else {
-      setPersonaEmail("")
+      setPersonaEmail("");
     }
-  }, [selectedPersona])
 
+    if (selectedPersona?.empleado) {
+      setIsErrorApi(
+        `El usuario ${selectedPersona?.nombre} ${selectedPersona?.apellido} ya tiene un perfil de empleado activo. Por favor, seleccione otro usuario o cree uno nuevo.`
+      );
+    } else {
+      setIsErrorApi(false);
+    }
+  }, [selectedPersona]);
 
   if (isError)
-    return (
-      <ErrorApiRefetch isRefetching={isFetching} refetch={refetch} />
-    )
+    return <ErrorApiRefetch isRefetching={isFetching} refetch={refetch} />;
 
   return (
     <CrudsTemplate>
@@ -104,7 +110,6 @@ const EmpleadoPage = () => {
           subTitle="Listado, registro y modificación del personal contratado."
         >
           <div className="flex items-center gap-2">
-
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
             <ExportOptionsDropdown
               excelComponent={
@@ -124,8 +129,7 @@ const EmpleadoPage = () => {
                 label: "Exportar",
               }}
             />
-            
-            
+
             <ModalFormTemplate
               icon={Settings}
               title="Agregar Empleado"
@@ -151,7 +155,9 @@ const EmpleadoPage = () => {
                 label="Filtrar persona por nombre, apellido o CUIT"
               />
 
-              {(!selectedPersona) && (
+              <ErrorDuplicateMessage message={isErrorApi} />
+
+              {(!selectedPersona || isErrorApi) && (
                 <ModalFormTemplate
                   title="Crear Nueva Persona"
                   description="Ingrese los datos para crear una nueva persona."
@@ -168,44 +174,48 @@ const EmpleadoPage = () => {
                 </ModalFormTemplate>
               )}
 
-              <Tabs
-                value={activeTab}
-                onValueChange={setActiveTab}
-                className={`mt-4 ${selectedPersona?.idPersona ? "" : "hidden"}`}
-              >
-                <TabsList className="w-full">
-                  <TabsTrigger
-                    value="persona"
-                    className="w-1/2 rounded-md rounded-r-none"
-                  >
-                    Datos de Persona
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="empleado"
-                    className="w-1/2 rounded-md rounded-l-none"
-                  >
-                    Datos de Empleado
-                  </TabsTrigger>
-                </TabsList>
+              {!isErrorApi && (
+                <Tabs
+                  value={activeTab}
+                  onValueChange={setActiveTab}
+                  className={`mt-4 ${
+                    selectedPersona?.idPersona ? "" : "hidden"
+                  }`}
+                >
+                  <TabsList className="w-full">
+                    <TabsTrigger
+                      value="persona"
+                      className="w-1/2 rounded-md rounded-r-none"
+                    >
+                      Datos de Persona
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="empleado"
+                      className="w-1/2 rounded-md rounded-l-none"
+                    >
+                      Datos de Empleado
+                    </TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="persona">
-                  <PersonaCreateEdit
-                    key={selectedPersona?.idPersona || "new"}
-                    setSelectedPersona={setSelectedPersona}
-                    persona={selectedPersona}
-                    refreshPersonas={refetchPersonas}
-                    setActiveTab={setActiveTab}
-                  />
-                </TabsContent>
+                  <TabsContent value="persona">
+                    <PersonaCreateEdit
+                      key={selectedPersona?.idPersona || "new"}
+                      setSelectedPersona={setSelectedPersona}
+                      persona={selectedPersona}
+                      refreshPersonas={refetchPersonas}
+                      setActiveTab={setActiveTab}
+                    />
+                  </TabsContent>
 
-                <TabsContent value="empleado">
-                  <EmpleadoCreateEdit
-                    refreshEmpleados={refetch}
-                    idPersona={personaId}
-                    personaEmail={personaEmail}
-                  />
-                </TabsContent>
-              </Tabs>
+                  <TabsContent value="empleado">
+                    <EmpleadoCreateEdit
+                      refreshEmpleados={refetch}
+                      idPersona={personaId}
+                      personaEmail={personaEmail}
+                    />
+                  </TabsContent>
+                </Tabs>
+              )}
             </ModalFormTemplate>
           </div>
         </CrudHeader>
@@ -228,7 +238,7 @@ const EmpleadoPage = () => {
         </Card>
       </div>
     </CrudsTemplate>
-  )
-}
+  );
+};
 
-export default EmpleadoPage
+export default EmpleadoPage;
