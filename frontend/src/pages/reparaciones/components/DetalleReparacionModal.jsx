@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/datatable/DataTable";
+import DetalleReparacionCreateEdit from "./DetalleReparacionCreateEdit";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -93,54 +95,69 @@ const DetalleReparacionModal = ({ idReparacion }) => {
   const [detalles, setDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDetalles = async () => {
-      if (!idReparacion) return;
-      
-      setLoading(true);
-      try {
-        const res = await axios.get(`${API_URL}/detalleReparacion/reparacion/${idReparacion}`);
-        
-        let dataToSet = [];
-        
-        if (res.data && Array.isArray(res.data)) {
-          dataToSet = res.data;
-        } else if (res.data && res.data.items && Array.isArray(res.data.items)) {
-          dataToSet = res.data.items;
-        } else if (res.data && res.data.data && Array.isArray(res.data.data)) {
-          dataToSet = res.data.data;
-        } else if (res.data && typeof res.data === 'object') {
-          dataToSet = [res.data];
-        } else {
-          console.error("❌ Estructura de datos incorrecta:", res.data);
-          dataToSet = [];
-        }
-        
-        setDetalles(dataToSet);
-      } catch (error) {
-        console.error("❌ Error obteniendo detalles de reparación:", error);
-        setDetalles([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchDetalles = async () => {
+    if (!idReparacion) return;
 
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/detalleReparacion/reparacion/${idReparacion}`);
+
+      let dataToSet = [];
+
+      if (res.data && Array.isArray(res.data)) {
+        dataToSet = res.data;
+      } else if (res.data?.items && Array.isArray(res.data.items)) {
+        dataToSet = res.data.items;
+      } else if (res.data?.data && Array.isArray(res.data.data)) {
+        dataToSet = res.data.data;
+      } else if (res.data && typeof res.data === "object") {
+        dataToSet = [res.data];
+      } else {
+        console.error("❌ Estructura de datos incorrecta:", res.data);
+        dataToSet = [];
+      }
+
+      setDetalles(dataToSet);
+    } catch (error) {
+      console.error("❌ Error obteniendo detalles de reparación:", error);
+      setDetalles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchDetalles();
   }, [idReparacion]);
 
-  // Calcular totales
   const totalManoObra = detalles.reduce((sum, item) => sum + (Number(item.manoObra) || 0), 0);
   const totalRepuestos = detalles.reduce((sum, item) => sum + (Number(item.precioRepuesto) || 0), 0);
   const totalGeneral = detalles.reduce((sum, item) => sum + (Number(item.montoTotalDetalleReparacion) || 0), 0);
 
   return (
     <div className="w-full max-w-[1200px] mx-auto h-full max-h-[70vh] overflow-y-auto space-y-3">
-      {/* Header compacto */}
-      <div className="sticky top-0 bg-background/95 backdrop-blur-sm pb-2 border-b">
-        <h3 className="font-semibold text-base">Detalles de Reparación</h3>
-        <p className="text-xs text-muted-foreground">
-          {detalles.length} {detalles.length === 1 ? 'detalle' : 'detalles'}
-        </p>
+      <div className="sticky top-0 bg-background/95 backdrop-blur-sm pb-2 border-b z-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-base">Detalles de Reparación</h3>
+            <p className="text-xs text-muted-foreground">
+              {detalles.length} {detalles.length === 1 ? "detalle" : "detalles"}
+            </p>
+          </div>
+          {/* Usar ModalFormTemplate como está diseñado */}
+          <ModalFormTemplate
+            label="+ Agregar Detalle"
+            title="Agregar Detalle de Reparación"
+            description="Complete los campos para agregar un nuevo detalle."
+            variant="default"
+            className="text-sm"
+          >
+            <DetalleReparacionCreateEdit
+              idReparacion={idReparacion}
+              refreshDetalles={fetchDetalles}
+            />
+          </ModalFormTemplate>
+        </div>
       </div>
 
       {loading ? (
@@ -158,7 +175,6 @@ const DetalleReparacionModal = ({ idReparacion }) => {
         </div>
       ) : (
         <>
-          {/* Tabla compacta */}
           <Card className="shadow-sm">
             <CardContent className="p-1">
               <div className="max-h-[300px] overflow-y-auto">
@@ -168,15 +184,14 @@ const DetalleReparacionModal = ({ idReparacion }) => {
                   isLoading={loading}
                   totalUsers={detalles.length}
                   placeholder="Buscar..."
-                  refetch={() => {}} 
-                  tapValue={idReparacion} 
+                  refetch={fetchDetalles}
+                  tapValue={idReparacion}
                   searchTarget="descripcion"
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Resumen compacto */}
           <Card className="bg-muted/30">
             <CardContent className="p-3">
               <div className="grid grid-cols-3 gap-2 text-center">
@@ -208,3 +223,4 @@ const DetalleReparacionModal = ({ idReparacion }) => {
 };
 
 export default DetalleReparacionModal;
+
