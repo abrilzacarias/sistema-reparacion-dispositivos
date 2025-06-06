@@ -26,12 +26,13 @@ CREATE TABLE `asignacionUsuarioPermisos` (
   `idasignacionUsuarioPermisos` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
   `idpermisoPerfil` int NOT NULL,
+  `estadoAsignacionUsuarioPermisos` tinyint NOT NULL,
   PRIMARY KEY (`idasignacionUsuarioPermisos`),
   KEY `fk_asignacionUsuarioPermisos_usuarios1_idx` (`idUsuario`),
   KEY `fk_asignacionUsuarioPermisos_permisosDePerfiles1_idx` (`idpermisoPerfil`),
   CONSTRAINT `fk_asignacionUsuarioPermisos_permisosDePerfiles1` FOREIGN KEY (`idpermisoPerfil`) REFERENCES `permisoPerfil` (`idpermisoPerfil`),
   CONSTRAINT `fk_asignacionUsuarioPermisos_usuarios1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +41,7 @@ CREATE TABLE `asignacionUsuarioPermisos` (
 
 LOCK TABLES `asignacionUsuarioPermisos` WRITE;
 /*!40000 ALTER TABLE `asignacionUsuarioPermisos` DISABLE KEYS */;
+INSERT INTO `asignacionUsuarioPermisos` VALUES (2,14,2,1);
 /*!40000 ALTER TABLE `asignacionUsuarioPermisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +89,7 @@ CREATE TABLE `contacto` (
   KEY `fk_contacto_personas1_idx` (`idPersona`),
   CONSTRAINT `fk_contacto_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_contacto_tipoContacto1` FOREIGN KEY (`idtipoContacto`) REFERENCES `tipoContacto` (`idtipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +98,7 @@ CREATE TABLE `contacto` (
 
 LOCK TABLES `contacto` WRITE;
 /*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-INSERT INTO `contacto` VALUES (2,'canobren080603@gmail.com',1,9),(5,'juan.perez@gmail.com',1,44),(6,'+54 911 1234 5678',2,44);
+INSERT INTO `contacto` VALUES (2,'canobren080603@gmail.com',1,9),(5,'juan.perez@gmail.com',1,44),(6,'+54 911 1234 5678',2,44),(8,'josefranco@gmail.com',1,46);
 /*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,7 +253,7 @@ CREATE TABLE `domicilio` (
   KEY `fk_domicilio_tipoDomicilio1_idx` (`idtipoDomicilio`),
   CONSTRAINT `fk_domicilio_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_domicilio_tipoDomicilio1` FOREIGN KEY (`idtipoDomicilio`) REFERENCES `tipoDomicilio` (`idtipoDomicilio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,6 +262,7 @@ CREATE TABLE `domicilio` (
 
 LOCK TABLES `domicilio` WRITE;
 /*!40000 ALTER TABLE `domicilio` DISABLE KEYS */;
+INSERT INTO `domicilio` VALUES (2,'1000','Argentina','Buenos Aires','CABA','Palermo','Av. Santa Fe',NULL,'3B',1,46);
 /*!40000 ALTER TABLE `domicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -329,9 +332,10 @@ DROP TABLE IF EXISTS `funcionSistema`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `funcionSistema` (
   `idfuncionSistema` int NOT NULL AUTO_INCREMENT,
-  `descripcionfuncionSistema` varchar(45) NOT NULL,
+  `descripcionFuncionSistema` varchar(45) NOT NULL,
+  `estadoFuncionSistema` tinyint NOT NULL COMMENT 'ACTIVO O NO',
   PRIMARY KEY (`idfuncionSistema`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -340,6 +344,7 @@ CREATE TABLE `funcionSistema` (
 
 LOCK TABLES `funcionSistema` WRITE;
 /*!40000 ALTER TABLE `funcionSistema` DISABLE KEYS */;
+INSERT INTO `funcionSistema` VALUES (1,'Consultar',0);
 /*!40000 ALTER TABLE `funcionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -445,7 +450,7 @@ CREATE TABLE `moduloFuncionSistema` (
   KEY `fk_moduloFuncionSistema_funcionSistema1_idx` (`idfuncionSistema`),
   CONSTRAINT `fk_moduloFuncionSistema_funcionSistema1` FOREIGN KEY (`idfuncionSistema`) REFERENCES `funcionSistema` (`idfuncionSistema`),
   CONSTRAINT `fk_moduloFuncionSistema_moduloSistema1` FOREIGN KEY (`idmoduloSistema`) REFERENCES `moduloSistema` (`idmoduloSistema`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,6 +459,7 @@ CREATE TABLE `moduloFuncionSistema` (
 
 LOCK TABLES `moduloFuncionSistema` WRITE;
 /*!40000 ALTER TABLE `moduloFuncionSistema` DISABLE KEYS */;
+INSERT INTO `moduloFuncionSistema` VALUES (1,1,1,'modulo ventas');
 /*!40000 ALTER TABLE `moduloFuncionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -466,9 +472,10 @@ DROP TABLE IF EXISTS `moduloSistema`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `moduloSistema` (
   `idmoduloSistema` int NOT NULL AUTO_INCREMENT,
-  `descripcionmoduloSistema` varchar(45) NOT NULL,
+  `descripcionModuloSistema` varchar(45) NOT NULL,
+  `estadoModuloSistema` tinyint NOT NULL,
   PRIMARY KEY (`idmoduloSistema`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -477,6 +484,7 @@ CREATE TABLE `moduloSistema` (
 
 LOCK TABLES `moduloSistema` WRITE;
 /*!40000 ALTER TABLE `moduloSistema` DISABLE KEYS */;
+INSERT INTO `moduloSistema` VALUES (1,'Reparacion',1);
 /*!40000 ALTER TABLE `moduloSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -491,7 +499,7 @@ CREATE TABLE `perfil` (
   `idPerfil` int NOT NULL AUTO_INCREMENT,
   `nombrePerfil` varchar(45) NOT NULL,
   PRIMARY KEY (`idPerfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -500,6 +508,7 @@ CREATE TABLE `perfil` (
 
 LOCK TABLES `perfil` WRITE;
 /*!40000 ALTER TABLE `perfil` DISABLE KEYS */;
+INSERT INTO `perfil` VALUES (1,'Administrador');
 /*!40000 ALTER TABLE `perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -520,7 +529,7 @@ CREATE TABLE `permisoPerfil` (
   KEY `fk_permisoPerfil_moduloFuncionSistema1_idx` (`idmoduloFuncionSistema`),
   CONSTRAINT `fk_permisoPerfil_moduloFuncionSistema1` FOREIGN KEY (`idmoduloFuncionSistema`) REFERENCES `moduloFuncionSistema` (`idmoduloFuncionSistema`),
   CONSTRAINT `fk_permisosDePerfiles_perfiles1` FOREIGN KEY (`idPerfil`) REFERENCES `perfil` (`idPerfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -529,6 +538,7 @@ CREATE TABLE `permisoPerfil` (
 
 LOCK TABLES `permisoPerfil` WRITE;
 /*!40000 ALTER TABLE `permisoPerfil` DISABLE KEYS */;
+INSERT INTO `permisoPerfil` VALUES (2,1,1,1);
 /*!40000 ALTER TABLE `permisoPerfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -547,7 +557,7 @@ CREATE TABLE `persona` (
   `fechaNacimiento` date NOT NULL,
   `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -556,7 +566,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',1),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',1),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1),(43,'20-12345678-9','Brenda','Cano','2003-06-08',1),(44,'20-12345678-9','Juan','Pérez','1990-05-21',1);
+INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',1),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',1),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1),(43,'20-12345678-9','Brenda','Cano','2003-06-08',1),(44,'20-12345678-9','Juan','Pérez','1990-05-21',1),(46,'20-12345678-9','Jose','Franco','1990-06-21',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -667,7 +677,7 @@ CREATE TABLE `repuesto` (
   KEY `fk_respuestos_tipoRepuesto1_idx` (`idTipoRepuesto`),
   CONSTRAINT `fk_repuestos_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`),
   CONSTRAINT `fk_respuestos_tipoRepuesto1` FOREIGN KEY (`idTipoRepuesto`) REFERENCES `tipoRepuesto` (`idTipoRepuesto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -676,6 +686,7 @@ CREATE TABLE `repuesto` (
 
 LOCK TABLES `repuesto` WRITE;
 /*!40000 ALTER TABLE `repuesto` DISABLE KEYS */;
+INSERT INTO `repuesto` VALUES (2,'Pantalla',4500,2,4,1,1);
 /*!40000 ALTER TABLE `repuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -788,7 +799,7 @@ CREATE TABLE `tipoDomicilio` (
   `idtipoDomicilio` int NOT NULL AUTO_INCREMENT,
   `descripciontipoDomicilio` varchar(45) NOT NULL,
   PRIMARY KEY (`idtipoDomicilio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -797,6 +808,7 @@ CREATE TABLE `tipoDomicilio` (
 
 LOCK TABLES `tipoDomicilio` WRITE;
 /*!40000 ALTER TABLE `tipoDomicilio` DISABLE KEYS */;
+INSERT INTO `tipoDomicilio` VALUES (1,'domicilio real');
 /*!40000 ALTER TABLE `tipoDomicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -834,7 +846,7 @@ CREATE TABLE `tipoRepuesto` (
   `idTipoRepuesto` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoRepuesto` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoRepuesto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -843,6 +855,7 @@ CREATE TABLE `tipoRepuesto` (
 
 LOCK TABLES `tipoRepuesto` WRITE;
 /*!40000 ALTER TABLE `tipoRepuesto` DISABLE KEYS */;
+INSERT INTO `tipoRepuesto` VALUES (1,'Pantallas');
 /*!40000 ALTER TABLE `tipoRepuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -881,4 +894,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-04  0:54:22
+-- Dump completed on 2025-06-06  1:12:33
