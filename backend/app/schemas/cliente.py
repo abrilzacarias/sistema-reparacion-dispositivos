@@ -1,22 +1,10 @@
 from pydantic import BaseModel, Field
-from datetime import date
-from typing import Optional
+from app.schemas.persona import PersonaCreate, PersonaOut
 
-class PersonaBase(BaseModel):
-    cuit: str = Field(..., example="20-87654321-0")
-    nombre: str = Field(..., example="María")
-    apellido: str = Field(..., example="Gómez")
-    fechaNacimiento: date = Field(..., example="1985-12-10")
-
-class PersonaOut(PersonaBase):
-    idPersona: int
-
-    class Config:
-        orm_mode = True
 
 class ClienteBase(BaseModel):
-    observaciones: Optional[str] = None
-    idPersona: int
+    observaciones: str | None = None
+    persona: PersonaCreate | None = None
 
 class ClienteCreate(ClienteBase):
     pass
@@ -26,7 +14,7 @@ class ClienteUpdate(ClienteBase):
 
 class ClienteOut(ClienteBase):
     idCliente: int
-    persona: PersonaOut  # nested schema
+    persona: PersonaOut
 
     class Config:
         orm_mode = True
