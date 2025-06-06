@@ -6,9 +6,18 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/datatable/DataTable";
 import DetalleReparacionCreateEdit from "./DetalleReparacionCreateEdit";
 
+import { Edit } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getColumnsDetalleReparacion = () => [
+const getColumnsDetalleReparacion = ({ refetch }) => [
   {
     header: "Descripción",
     accessorKey: "descripcion",
@@ -83,9 +92,87 @@ const getColumnsDetalleReparacion = () => [
     cell: ({ getValue }) => {
       const value = getValue();
       return (
-        <div className="max-w-[70px] truncate text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 rounded" title={value}>
+        <div
+          className="max-w-[70px] truncate text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 rounded"
+          title={value}
+        >
           {value}
         </div>
+      );
+    },
+  },
+
+  // NUEVA COLUMNA DE ACCIONES
+  {
+    id: "actions",
+    size: 40,
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex size-8 p-0 data-[state=open]:bg-muted"
+            >
+              {/* Tres puntitos */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 12H6.01M12 12h.01M18 12h.01"
+                />
+              </svg>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            {/* Editar */}
+            <DropdownMenuItem asChild>
+              <ModalFormTemplate
+                title="Editar Detalle de Reparación"
+                description="Modifique los campos para actualizar el detalle."
+                label="Editar"
+                variant="ghost"
+                icon={Edit}
+                className="p-2 m-0 cursor-pointer w-full justify-start"
+              >
+                <DetalleReparacionCreateEdit
+                  detalle={row.original}
+                  idReparacion={row.original.idReparacion}
+                  refreshDetalles={refetch}
+                />
+              </ModalFormTemplate>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            {/* Eliminar */}
+            <DropdownMenuItem
+              onClick={() => {
+                // Aquí pon la lógica para eliminar el detalle (confirmación, llamada a API, etc)
+                if (window.confirm("¿Eliminar detalle?")) {
+                  axios
+                    .delete(`${API_URL}/detalleReparacion/${row.original.idDetalleReparacion}`)
+                    .then(() => {
+                      refetch();
+                    })
+                    .catch((err) => {
+                      console.error("Error al eliminar detalle:", err);
+                      alert("Error al eliminar detalle.");
+                    });
+                }
+              }}
+            >
+              Eliminar
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
@@ -100,7 +187,9 @@ const DetalleReparacionModal = ({ idReparacion }) => {
 
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/detalleReparacion/reparacion/${idReparacion}`);
+      const res = await axios.get(
+        `${API_URL}/detalleReparacion/reparacion/${idReparacion}`
+      );
 
       let dataToSet = [];
 
@@ -130,9 +219,18 @@ const DetalleReparacionModal = ({ idReparacion }) => {
     fetchDetalles();
   }, [idReparacion]);
 
-  const totalManoObra = detalles.reduce((sum, item) => sum + (Number(item.manoObra) || 0), 0);
-  const totalRepuestos = detalles.reduce((sum, item) => sum + (Number(item.precioRepuesto) || 0), 0);
-  const totalGeneral = detalles.reduce((sum, item) => sum + (Number(item.montoTotalDetalleReparacion) || 0), 0);
+  const totalManoObra = detalles.reduce(
+    (sum, item) => sum + (Number(item.manoObra) || 0),
+    0
+  );
+  const totalRepuestos = detalles.reduce(
+    (sum, item) => sum + (Number(item.precioRepuesto) || 0),
+    0
+  );
+  const totalGeneral = detalles.reduce(
+    (sum, item) => sum + (Number(item.montoTotalDetalleReparacion) || 0),
+    0
+  );
 
   return (
     <div className="w-full max-w-[1200px] mx-auto h-full max-h-[70vh] overflow-y-auto space-y-3">
@@ -144,7 +242,7 @@ const DetalleReparacionModal = ({ idReparacion }) => {
               {detalles.length} {detalles.length === 1 ? "detalle" : "detalles"}
             </p>
           </div>
-          {/* Usar ModalFormTemplate como está diseñado */}
+          {/* Usar ModalFormTemplate para agregar */}
           <ModalFormTemplate
             label="+ Agregar Detalle"
             title="Agregar Detalle de Reparación"
@@ -180,7 +278,7 @@ const DetalleReparacionModal = ({ idReparacion }) => {
               <div className="max-h-[300px] overflow-y-auto">
                 <DataTable
                   data={detalles}
-                  columns={getColumnsDetalleReparacion()}
+                  columns={getColumnsDetalleReparacion({ refetch: fetchDetalles })}
                   isLoading={loading}
                   totalUsers={detalles.length}
                   placeholder="Buscar..."
@@ -223,4 +321,5 @@ const DetalleReparacionModal = ({ idReparacion }) => {
 };
 
 export default DetalleReparacionModal;
+
 
