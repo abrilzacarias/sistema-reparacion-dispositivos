@@ -1,9 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
-from app.models.persona import Persona
-from app.models.contacto import Contacto
-from app.models.domicilio import Domicilio
-from app.schemas.persona import PersonaCreate, PersonaUpdate
+from app.models import Persona, Contacto, Domicilio
+from app.schemas.persona import PersonaUpdate
 
 def get_persona(db: Session, idPersona: int):
     return db.query(Persona).filter(Persona.idPersona == idPersona).first()
@@ -44,7 +42,9 @@ def update_persona(db: Session, idPersona: int, persona: PersonaUpdate):
     db_persona = get_persona(db, idPersona)
     if not db_persona:
         return None
-    for key, value in persona.dict().items():
+    update_data = persona.dict(exclude={"contactos", "domicilios"})
+    print(f"Updating persona with ID: {idPersona}, Data: {update_data}")
+    for key, value in update_data.items():
         setattr(db_persona, key, value)
     db.commit()
     db.refresh(db_persona)

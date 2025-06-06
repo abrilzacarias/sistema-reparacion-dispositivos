@@ -82,6 +82,7 @@ CREATE TABLE `contacto` (
   `descripcionContacto` varchar(45) NOT NULL,
   `idtipoContacto` int NOT NULL,
   `idPersona` int NOT NULL,
+  `esPrimario` tinyint NOT NULL DEFAULT '0' COMMENT 'Indica si es el tipo de contacto principal del cliente. Por ejemplo, si es el correo electronico o telefono principal.',
   PRIMARY KEY (`idContacto`),
   KEY `fk_contacto_tipoContacto1_idx` (`idtipoContacto`),
   KEY `fk_contacto_personas1_idx` (`idPersona`),
@@ -96,7 +97,7 @@ CREATE TABLE `contacto` (
 
 LOCK TABLES `contacto` WRITE;
 /*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-INSERT INTO `contacto` VALUES (2,'canobren080603@gmail.com',1,9),(5,'juan.perez@gmail.com',1,44),(6,'+54 911 1234 5678',2,44);
+INSERT INTO `contacto` VALUES (2,'canobren080603@gmail.com',1,9, 1),(5,'juan.perez@gmail.com',1,44, 0),(6,'+54 911 1234 5678',2,44,0);
 /*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
 UNLOCK TABLES;
 

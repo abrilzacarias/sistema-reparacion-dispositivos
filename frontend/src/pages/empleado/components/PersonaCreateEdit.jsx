@@ -1,3 +1,5 @@
+"use client"
+
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
 import ErrorMessage from "@/components/molecules/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
@@ -19,58 +21,128 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     formState: { errors },
   } = useForm({
     mode: "onChange",
-    })
+  })
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [apiErrors, setApiErrors] = useState({})
   const { setOpen } = useContext(OpenContext)
 
+  // Inicializar formulario cuando cambia la persona
   useEffect(() => {
-  if (persona) {
-    reset({
-      cuit: persona.cuit || "",
-      nombre: persona.nombre || "",
-      apellido: persona.apellido || "",
-      fechaNacimiento: persona.fechaNacimiento || "",
-    })
-  }
-}, [persona, reset])
+    if (persona) {
+      const contactoCorreo = persona.contactos?.find(
+        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
+      )
+
+      const contactoTelefono = persona.contactos?.find(
+        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
+      )
+
+      reset({
+        cuit: persona.cuit || "",
+        nombre: persona.nombre || "",
+        apellido: persona.apellido || "",
+        fechaNacimiento: persona.fechaNacimiento || "",
+        correo: contactoCorreo?.descripcionContacto || "",
+        telefono: contactoTelefono?.descripcionContacto || "",
+      })
+    } else {
+      // Si no hay persona, resetear formulario vacío
+      reset({
+        cuit: "",
+        nombre: "",
+        apellido: "",
+        fechaNacimiento: "",
+        correo: "",
+        telefono: "",
+      })
+    }
+  }, [persona, reset])
 
   const onSubmit = async (data) => {
     setError("")
     setApiErrors({})
     setIsLoading(true)
 
+    const { correo, telefono, ...rest } = data
+
     const payload = {
-      ...data,
+      ...rest,
       estadoPersona: persona?.estadoPersona ?? 0,
     }
 
     try {
-      const endpoint = persona
-        ? `${API_URL}/personas/${persona.idPersona}/`
-        : `${API_URL}/personas/`
-
+      const endpoint = persona ? `${API_URL}/personas/${persona.idPersona}/` : `${API_URL}/personas/`
       const method = persona ? axios.put : axios.post
-
       const response = await method(endpoint, payload)
+      const idPersonaFinal = persona ? persona.idPersona : response.data.idPersona
 
-      persona ? ToastMessageEdit() : ToastMessageCreate()
-      refreshPersonas()
+      let contactoCorreo, contactoTelefono
 
       if (persona) {
-        setActiveTab("empleado")
-      } else {
-        const nuevaPersona = response.data
-        setOpen(false)
+        contactoCorreo = persona?.contactos?.find(
+          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
+        )
+        contactoTelefono = persona?.contactos?.find(
+          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
+        )
+      }
 
-        if (setSelectedPersona) {
-          setSelectedPersona(nuevaPersona)
-        }
+      // Actualizar contactos
+      if (contactoCorreo) {
+        await axios.put(`${API_URL}/contactos/${contactoCorreo.idContacto}/`, {
+          descripcionContacto: data.correo,
+          idtipoContacto: 1,
+        })
+      } else {
+        await axios.post(`${API_URL}/contactos/`, {
+          descripcionContacto: data.correo,
+          idtipoContacto: 1,
+          idPersona: idPersonaFinal,
+          esPrimario: true,
+        })
+      }
+
+      if (contactoTelefono) {
+        await axios.put(`${API_URL}/contactos/${contactoTelefono.idContacto}/`, {
+          descripcionContacto: data.telefono,
+          idtipoContacto: 2,
+        })
+      } else {
+        await axios.post(`${API_URL}/contactos/`, {
+          descripcionContacto: data.telefono,
+          idtipoContacto: 2,
+          idPersona: idPersonaFinal,
+          esPrimario: true,
+        })
+      }
+
+      // Obtener datos actualizados
+      const idPersonaCreada = response.data.idPersona
+      const responsePersonaActualizada = await axios.get(`${API_URL}/personas/${idPersonaCreada}/`)
+
+      // Actualizar el estado en el componente padre
+      if (setSelectedPersona) {
+        setSelectedPersona(responsePersonaActualizada.data)
+      }
+
+      if (persona) {
+        setTimeout(() => {
+          setActiveTab("empleado")
+        }, 100)
+      } else {
+        setOpen(false)
         if (setPersonaId) {
-          setPersonaId(nuevaPersona.idPersona)
+          setPersonaId(responsePersonaActualizada.data.idPersona)
         }
+      }
+
+      if (!persona && refreshPersonas) {
+        setTimeout(() => {
+          persona && contactoCorreo ? ToastMessageEdit() : ToastMessageCreate()
+          refreshPersonas()
+        }, 300)
       }
     } catch (err) {
       console.error("Error al guardar persona:", err)
@@ -105,51 +177,62 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         <ErrorMessage message={errors.apellido?.message || apiErrors?.apellido} />
       </div>
 
-      <div className="space-y-2 col-span-2">
+      <div className="space-y-2">
         <Label>CUIT</Label>
         <Input {...register("cuit", { required: "Campo requerido" })} />
         <ErrorMessage message={errors.cuit?.message || apiErrors?.cuit} />
       </div>
 
-      <div className="space-y-2 col-span-2">
+      <div className="space-y-2">
         <Label>Fecha de Nacimiento</Label>
         <Input type="date" {...register("fechaNacimiento", { required: "Campo requerido" })} />
         <ErrorMessage message={errors.fechaNacimiento?.message || apiErrors?.fechaNacimiento} />
       </div>
-<div className="space-y-2 col-span-2">
-  <Label>Correo Electrónico</Label>
-  <Input
-    type="email"
-    {...register("correo", {
-      required: "Campo requerido",
-      pattern: {
-        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        message: "Formato de correo inválido",
-      },
-    })}
-  />
-  <ErrorMessage message={errors.correo?.message || apiErrors?.correo} />
-</div>
 
-      {/* TODO FALTAN CONTACTO Y DOMICILIO, PENSAR TEMA CONTACTO POR EMAIL DE USUARIO (CREDENCIAL DE INICIO DE SESION) */}
+      <div className="space-y-2">
+        <Label>Correo Electrónico</Label>
+        <Input
+          type="email"
+          {...register("correo", {
+            required: "Campo requerido",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Formato de correo inválido",
+            },
+          })}
+        />
+        <ErrorMessage message={errors.correo?.message || apiErrors?.correo} />
+      </div>
 
-        <div className="col-span-2 flex justify-end gap-4 mt-3">
-          {(persona) && (
-            <Button
-                type="button"
-                onClick={() => setActiveTab("empleado")}
-            >
-                Continuar sin actualizar
-            </Button>
-          )}
+      <div className="space-y-2">
+        <Label>Número de Teléfono</Label>
+        <Input
+          type="tel"
+          {...register("telefono", {
+            required: "Campo requerido",
+            pattern: {
+              value: /^[0-9+\s()-]{6,20}$/,
+              message: "Formato inválido de teléfono",
+            },
+          })}
+        />
+        <ErrorMessage message={errors.telefono?.message || apiErrors?.telefono} />
+      </div>
 
-            <ButtonDinamicForms
-                initialData={persona}
-                isLoading={isLoading}
-                register
-                onClick={() => setActiveTab("empleado")} 
-            />
-        </div>
+      <div className="col-span-2 flex justify-end gap-4 mt-3">
+        {persona && (
+          <Button type="button" variant="ghost" onClick={() => setActiveTab("empleado")}>
+            Continuar sin actualizar
+          </Button>
+        )}
+
+        <ButtonDinamicForms
+          initialData={persona}
+          isLoading={isLoading}
+          register
+          onClick={() => setActiveTab("empleado")}
+        />
+      </div>
 
       <div className="col-span-2 flex justify-end">
         <ErrorMessage message={apiErrors?.detail || error} />

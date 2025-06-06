@@ -10,7 +10,7 @@ class Cliente(Base):
 
     # Recibe de Persona
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
-    persona = relationship("Persona", back_populates="cliente")
+    persona = relationship("Persona", back_populates="cliente", uselist=False)
 
     # Envia a Dispositivo
     dispositivos = relationship("Dispositivo", back_populates="cliente")

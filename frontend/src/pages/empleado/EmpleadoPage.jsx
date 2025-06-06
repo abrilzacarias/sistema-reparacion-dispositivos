@@ -43,6 +43,7 @@ const EmpleadoPage = () => {
   const [personaId, setPersonaId] = useState(null)
   const [searchTarget, setSearchTarget] = useState("")
   const [activeTab, setActiveTab] = useState("persona")
+  const [personaEmail, setPersonaEmail] = useState("")
   
   const {
     personas,
@@ -71,8 +72,24 @@ const EmpleadoPage = () => {
   }
 
   useEffect(() => {
-    resetQuery()
+    if (searchTarget.trim() === "") {
+      resetQuery()
+    }
   }, [searchTarget])
+
+  useEffect(() => {
+    if (selectedPersona?.contactos) {
+      const contactoCorreo = selectedPersona.contactos.find(
+        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
+      )
+      const email = contactoCorreo?.descripcionContacto || ""
+      setPersonaEmail(email)
+      console.log("Email extraído de selectedPersona:", email) // Debug
+    } else {
+      setPersonaEmail("")
+    }
+  }, [selectedPersona])
+
 
   if (isError)
     return (
@@ -173,6 +190,8 @@ const EmpleadoPage = () => {
 
                 <TabsContent value="persona">
                   <PersonaCreateEdit
+                    key={selectedPersona?.idPersona || "new"}
+                    setSelectedPersona={setSelectedPersona}
                     persona={selectedPersona}
                     refreshPersonas={refetchPersonas}
                     setActiveTab={setActiveTab}
@@ -183,6 +202,7 @@ const EmpleadoPage = () => {
                   <EmpleadoCreateEdit
                     refreshEmpleados={refetch}
                     idPersona={personaId}
+                    personaEmail={personaEmail}
                   />
                 </TabsContent>
               </Tabs>

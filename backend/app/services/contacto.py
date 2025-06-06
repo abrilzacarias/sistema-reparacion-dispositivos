@@ -19,7 +19,13 @@ def update_contacto(db: Session, id_contacto: int, contacto: schemas.ContactoUpd
     db_contacto = db.query(Contacto).filter(Contacto.idContacto == id_contacto).first()
     if not db_contacto:
         return None
-    for key, value in contacto.dict().items():
+
+    update_data = contacto.dict(exclude_unset=True)
+
+    if "idPersona" in update_data:
+        update_data.pop("idPersona")
+
+    for key, value in update_data.items():
         setattr(db_contacto, key, value)
     db.commit()
     db.refresh(db_contacto)
