@@ -4,7 +4,7 @@ from app.models.detallereparacion import DetalleReparacion
 from app.schemas.detalleReparacion import DetalleReparacionCreate, DetalleReparacionUpdate
 
 def get_all(db: Session) -> List[DetalleReparacion]:
-    return db.query(DetalleReparacion).all()
+    return db.query(DetalleReparacion)
 
 def get_by_id(db: Session, detalle_id: int) -> DetalleReparacion | None:
     return db.query(DetalleReparacion).filter(DetalleReparacion.idDetalleReparacion == detalle_id).first()

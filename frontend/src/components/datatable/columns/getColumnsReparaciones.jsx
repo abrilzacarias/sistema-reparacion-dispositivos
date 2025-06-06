@@ -9,6 +9,7 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import { Button } from "@/components/ui/button";
 import ReparacionesCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
+import DetalleReparacionModal from "@/pages/reparaciones/components/DetalleReparacionModal";
 
 export const getColumnsReparaciones = ({ refetch }) => {
   return [
@@ -68,9 +69,20 @@ export const getColumnsReparaciones = ({ refetch }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               {/* Detalle (opcional) */}
-              <DropdownMenuItem disabled>
-                <span className="text-muted-foreground text-sm">Ver detalles</span>
-              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <ModalFormTemplate
+                title="Detalles de Reparación"
+                label="Ver detalles"
+                variant="ghost"
+                icon={List}
+                className="p-2 m-0 cursor-pointer w-full justify-start"
+              >
+                <div>
+                  <DetalleReparacionModal idReparacion={row.original.idReparacion} />
+                </div>
+              </ModalFormTemplate>
+            </DropdownMenuItem>
+
               <DropdownMenuSeparator />
 
               {/* Editar */}
