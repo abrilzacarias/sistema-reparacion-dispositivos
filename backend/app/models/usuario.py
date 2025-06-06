@@ -11,3 +11,4 @@ class Usuario(Base):
     email = Column(String(100), nullable=False, unique=True)
 
     empleados = relationship("Empleado", back_populates="usuario")
+    asignacionUsuarioPermisos = relationship('AsignacionUsuarioPermisos', back_populates='usuario')

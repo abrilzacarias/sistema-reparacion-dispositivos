@@ -18,6 +18,7 @@ class AsignacionUsuarioPermisos(Base):
     idasignacionUsuarioPermisos = mapped_column(Integer, primary_key=True)
     idUsuario = mapped_column(Integer)
     idpermisoPerfil = mapped_column(Integer)
+    estadoAsignacionUsuarioPermisos = mapped_column(TINYINT, server_default=text("'1'"))
 
     usuario = relationship('Usuario', back_populates='asignacionUsuarioPermisos')
     permisoPerfil = relationship('PermisoPerfil', back_populates='asignacionUsuarioPermisos')

@@ -3,6 +3,9 @@ from sqlalchemy import DECIMAL, Date, ForeignKeyConstraint, Index, Integer, JSON
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from app.database import Base
+from app.models.moduloSistema import ModuloSistema
+from app.models.funcionSistema import FuncionSistema
+from app.models.permisoPerfil import PermisoPerfil
 
 class ModuloFuncionSistema(Base):
     __tablename__ = 'moduloFuncionSistema'
@@ -13,12 +16,13 @@ class ModuloFuncionSistema(Base):
         Index('fk_moduloFuncionSistema_moduloSistema1_idx', 'idmoduloSistema')
     )
 
-    idmoduloFuncionSistema = mapped_column(Integer, primary_key=True)
-    idmoduloSistema = mapped_column(Integer)
-    idfuncionSistema = mapped_column(Integer)
-    rutaModuloFuncionSistema = mapped_column(String(45))
+    idmoduloFuncionSistema: Mapped[int] = mapped_column(Integer, primary_key=True)
+    idmoduloSistema: Mapped[int] = mapped_column(Integer, nullable=False)
+    idfuncionSistema: Mapped[int] = mapped_column(Integer, nullable=False)
+    rutaModuloFuncionSistema: Mapped[Optional[str]] = mapped_column(String(45))
 
     funcionSistema = relationship('FuncionSistema', back_populates='moduloFuncionSistema')
     moduloSistema = relationship('ModuloSistema', back_populates='moduloFuncionSistema')
     permisoPerfil = relationship('PermisoPerfil', back_populates='moduloFuncionSistema')
+
 
