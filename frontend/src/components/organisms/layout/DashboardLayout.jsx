@@ -10,7 +10,7 @@ export function DashboardLayout() {
   const user = userString ? JSON.parse(userString) : { name: "Administrador" }
 
   return (
-    <div className={`flex h-screen bg-background`}>
+    <div className={`flex h-screen bg-background transition-colors duration-300`}>
       <Sidebar />
 
       <div className="flex-1 flex flex-col overflow-hidden">

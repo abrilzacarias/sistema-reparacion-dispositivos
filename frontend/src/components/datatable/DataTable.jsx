@@ -77,14 +77,16 @@ export const DataTable = ({
     >
       <div className="w-full max-w-[99%] bg-secondary dark:bg-background rounded-md px-0 py-2 overflow-y-auto lg:max-w-full mx-auto">
         <div className="space-y-4">
-          <div className="flex items-center justify-between ">
-            <DataTableHeader
-              placeholder={placeholder}
-              searchTarget={searchTarget}
-              table={table}
-              totalUsers={totalUsers}
-            />
-          </div>
+          {searchTarget && (
+            <div className="flex items-center justify-between ">
+              <DataTableHeader
+                placeholder={placeholder}
+                searchTarget={searchTarget}
+                table={table}
+                totalUsers={totalUsers}
+              />
+            </div>
+          )}
         </div>
 
         <div className="rounded-md  min-h-[290px] text-center bg-white dark:bg-inherit">
@@ -138,16 +140,18 @@ export const DataTable = ({
           </Table>
         </div>
 
-        <div className="mt-2">
-          <DataTablePagination
-            isFetching={isFetching}
-            hasNextPage={hasNextPage}
-            isLoading={isLoading}
-            isError={isError}
-            table={table}
-            fetchNextPage={fetchNextPage}
-          />
-        </div>
+        {fetchNextPage && (
+          <div className="mt-2">
+            <DataTablePagination
+              isFetching={isFetching}
+              hasNextPage={hasNextPage}
+              isLoading={isLoading}
+              isError={isError}
+              table={table}
+              fetchNextPage={fetchNextPage}
+            />
+          </div>
+        )}
       </div>
       <LoaderRefetch label="Cargando"  loading={isLoading} />
     </motion.div>

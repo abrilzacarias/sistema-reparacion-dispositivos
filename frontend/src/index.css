@@ -42,8 +42,9 @@
 
     --sidebar: 255 255 255;
     --sidebar-foreground: 15 28 42;
-    --sidebar-primary: 15 28 42;
-    --sidebar-primary-foreground: 255 255 255;
+    /* Active item: light blue background, dark blue text/icon */
+    --sidebar-primary: 240 249 255;
+    --sidebar-primary-foreground: 3 35 76;
     --sidebar-accent: 240 249 255;
     --sidebar-accent-foreground: 3 35 76;
     --sidebar-border: 229 231 235;
