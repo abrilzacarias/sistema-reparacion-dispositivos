@@ -4,7 +4,7 @@ from decimal import Decimal
 from datetime import date
 
 class DetalleReparacionBase(BaseModel):
-    montoTotalDetalleReparacion: Decimal
+    montoTotalDetalleReparacion: Optional[Decimal] = None
     manoObra: Decimal
     precioRepuesto: Decimal
     descripcion: Optional[str] = None
