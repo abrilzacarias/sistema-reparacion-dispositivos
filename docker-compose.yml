@@ -5,8 +5,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: gestionreparaciones
-      MYSQL_USER: fastapi_user
-      MYSQL_PASSWORD: fastapi_pass
+      # Ya no necesitas definir MYSQL_USER ni MYSQL_PASSWORD
     ports:
       - "3306:3306"
     volumes:

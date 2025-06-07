@@ -7,7 +7,7 @@ from app.schemas.diagnostico import DiagnosticoSchema
 
 class ReparacionBase(BaseModel):
     numeroReparacion: int
-    idEstadoReparacion: int
+    #idEstadoReparacion: int
     fechaIngreso: date
     fechaEgreso: Optional[date] = None
     montoTotalReparacion: Decimal
@@ -19,7 +19,7 @@ class ReparacionCreate(ReparacionBase):
 
 class ReparacionUpdate(ReparacionBase):
     pass
-
+"""
 class EstadoReparacionSchema(BaseModel):
     idEstadoReparacion: int
     descripcionEstadoReparacion: str
@@ -37,9 +37,10 @@ class EstadoReparacionSchema(BaseModel):
     class Config:
         orm_mode = True
 
+        """
 class ReparacionOut(ReparacionBase):
     idReparacion: int
-    estadoReparacion: EstadoReparacionSchema
+    #estadoReparacion: EstadoReparacionSchema
     diagnostico: DiagnosticoSchema
     empleado: EmpleadoOut
 

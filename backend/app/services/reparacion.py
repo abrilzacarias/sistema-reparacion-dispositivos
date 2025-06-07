@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 def get_reparacion(db: Session, id: int):
     return db.query(Reparacion)\
         .options(
-            selectinload(Reparacion.estadoReparacion),
+            #selectinload(Reparacion.estadoReparacion),
             selectinload(Reparacion.empleado).selectinload(Empleado.persona) ,
             selectinload(Reparacion.diagnostico)
         )\
@@ -16,7 +16,7 @@ def get_reparacion(db: Session, id: int):
 def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Reparacion)\
         .options(
-            selectinload(Reparacion.estadoReparacion),
+            #selectinload(Reparacion.estadoReparacion),
             selectinload(Reparacion.empleado),
             selectinload(Reparacion.diagnostico)
         )
