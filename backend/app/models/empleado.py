@@ -25,4 +25,4 @@ class Empleado(Base):
     
     registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="empleado")
 
-
+    historialAsignacionDiagnostico = relationship("HistorialAsignacionDiagnostico", back_populates="empleado")

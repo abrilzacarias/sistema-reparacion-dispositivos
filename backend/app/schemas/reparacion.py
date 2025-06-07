@@ -1,9 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import date
 from decimal import Decimal
 from app.schemas.empleado import EmpleadoOut
 from app.schemas.diagnostico import DiagnosticoSchema
+from app.schemas.registroEstadoReparacion import RegistroEstadoReparacionOut
+
 
 class ReparacionBase(BaseModel):
     numeroReparacion: int
@@ -43,6 +45,7 @@ class ReparacionOut(ReparacionBase):
     #estadoReparacion: EstadoReparacionSchema
     diagnostico: DiagnosticoSchema
     empleado: EmpleadoOut
+    registroEstadoReparacion: list[RegistroEstadoReparacionOut]
 
     class Config:
         orm_mode = True

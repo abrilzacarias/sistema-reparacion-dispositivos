@@ -9,7 +9,8 @@ def get_reparacion(db: Session, id: int):
         .options(
             #selectinload(Reparacion.estadoReparacion),
             selectinload(Reparacion.empleado).selectinload(Empleado.persona) ,
-            selectinload(Reparacion.diagnostico)
+            selectinload(Reparacion.diagnostico),
+            selectinload(Reparacion.registroEstadoReparacion)
         )\
         .filter(Reparacion.idReparacion == id).first()
 
@@ -18,7 +19,8 @@ def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
         .options(
             #selectinload(Reparacion.estadoReparacion),
             selectinload(Reparacion.empleado),
-            selectinload(Reparacion.diagnostico)
+            selectinload(Reparacion.diagnostico),
+            selectinload(Reparacion.registroEstadoReparacion)
         )
        
 

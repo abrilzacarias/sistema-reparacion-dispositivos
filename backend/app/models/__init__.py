@@ -31,3 +31,4 @@ from .reparacion import Reparacion
 from .detallereparacion import DetalleReparacion
 from .notificaciones import Notificacion
 from .registroEstadoReparacion import RegistroEstadoReparacion
+from .historialAsignacionDiagnostico import HistorialAsignacionDiagnostico
