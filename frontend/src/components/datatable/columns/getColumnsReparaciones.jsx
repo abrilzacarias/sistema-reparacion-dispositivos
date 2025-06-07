@@ -1,4 +1,6 @@
 import { Edit, Ellipsis, List } from "lucide-react";
+import axios from "axios";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +13,24 @@ import { Button } from "@/components/ui/button";
 import ReparacionesCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
 import DetalleReparacionModal from "@/pages/reparaciones/components/DetalleReparacionModal";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const getColumnsReparaciones = ({ refetch }) => {
+  const handleDelete = async (reparacion, refetch) => {
+    if (!window.confirm(`¿Seguro que querés eliminar esta reparación?`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API_URL}/reparaciones/${reparacion.idReparacion}`);
+      toast.success("Reparación eliminada con éxito");
+      refetch?.();
+    } catch (error) {
+      console.error("Error eliminando reparación:", error);
+      toast.error("Error al eliminar. Intente nuevamente.");
+    }
+  };
+
   return [
     {
       header: "N° Reparación",
@@ -48,15 +67,17 @@ export const getColumnsReparaciones = ({ refetch }) => {
       header: "Empleado",
       accessorKey: "empleado.persona.nombre",
       cell: ({ row }) => {
-    const persona = row.original.empleado?.persona;
-    const nombre = persona?.nombre || "";
-    const apellido = persona?.apellido || "";
-    return <div>{`${nombre} ${apellido}`.trim() || "Sin asignar"}</div>;
-  },
+        const persona = row.original.empleado?.persona;
+        const nombre = persona?.nombre || "";
+        const apellido = persona?.apellido || "";
+        return <div>{`${nombre} ${apellido}`.trim() || "Sin asignar"}</div>;
+      },
     },
     {
       id: "actions",
       cell: function Cell({ row }) {
+        const reparacion = row.original;
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -68,20 +89,21 @@ export const getColumnsReparaciones = ({ refetch }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              {/* Detalle (opcional) */}
+              {/* Detalle */}
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-              <ModalFormTemplate
-                title="Detalles de Reparación"
-                label="Ver detalles"
-                variant="ghost"
-                icon={List}
-                className="p-2 m-0 cursor-pointer w-full justify-start"
-              >
-                <div>
-                  <DetalleReparacionModal idReparacion={row.original.idReparacion} />
-                </div>
-              </ModalFormTemplate>
-            </DropdownMenuItem>
+                <ModalFormTemplate
+                  title="Detalles de Reparación"
+                  label="Ver detalles"
+                  variant="ghost"
+                  icon={List}
+                  contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                >
+                  <div>
+                    <DetalleReparacionModal idReparacion={reparacion.idReparacion} />
+                  </div>
+                </ModalFormTemplate>
+              </DropdownMenuItem>
 
               <DropdownMenuSeparator />
 
@@ -96,14 +118,16 @@ export const getColumnsReparaciones = ({ refetch }) => {
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
                   <ReparacionesCreateEdit
-                    reparacion={row.original}
+                    reparacion={reparacion}
                     refreshReparaciones={refetch}
                   />
                 </ModalFormTemplate>
               </DropdownMenuItem>
 
+              <DropdownMenuSeparator />
+
               {/* Eliminar */}
-              <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>
+              <DropdownMenuItem onClick={() => handleDelete(reparacion, refetch)}>
                 Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -114,3 +138,4 @@ export const getColumnsReparaciones = ({ refetch }) => {
     },
   ];
 };
+

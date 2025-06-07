@@ -56,7 +56,6 @@ const DetalleReparacionCreateEdit = ({ detalle, idReparacion, refreshDetalles })
     fetchAuxData();
   }, []);
 
-  // Actualizar precioRepuesto automáticamente según el repuesto seleccionado
   useEffect(() => {
     if (selectedRepuestoId) {
       const repuestoSeleccionado = repuestos.find(
@@ -136,7 +135,7 @@ const DetalleReparacionCreateEdit = ({ detalle, idReparacion, refreshDetalles })
         <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
       </div>
 
-      {/* Repuesto y Precio del Repuesto lado a lado */}
+      {/* Repuesto y Precio del Repuesto */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Repuesto</Label>
@@ -172,39 +171,41 @@ const DetalleReparacionCreateEdit = ({ detalle, idReparacion, refreshDetalles })
         </div>
       </div>
 
-      {/* Mano de obra debajo */}
-      <div className="space-y-2">
-        <Label>Mano de Obra</Label>
-        <Input
-          type="number"
-          step="0.01"
-          {...register("manoObra", {
-            required: "Campo requerido",
-            min: { value: 0, message: "No puede ser negativo" },
-          })}
-        />
-        <ErrorMessage message={errors.manoObra?.message || apiErrors?.manoObra} />
-      </div>
+      {/* Mano de Obra y Tipo de Reparación lado a lado */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Mano de Obra</Label>
+          <Input
+            type="number"
+            step="0.01"
+            {...register("manoObra", {
+              required: "Campo requerido",
+              min: { value: 0, message: "No puede ser negativo" },
+            })}
+          />
+          <ErrorMessage message={errors.manoObra?.message || apiErrors?.manoObra} />
+        </div>
 
-      <div className="space-y-2">
-        <Label>Tipo de Reparación</Label>
-        <Select
-          onValueChange={(value) => setValue("idTipoReparacion", value)}
-          value={watch("idTipoReparacion") || ""}
-          defaultValue={detalle?.tipoReparacion?.idTipoReparacion?.toString() || ""}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Seleccione un tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            {tiposReparacion.map((tipo) => (
-              <SelectItem key={tipo.idTipoReparacion} value={tipo.idTipoReparacion.toString()}>
-                {tipo.descripcionTipoReparacion}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <ErrorMessage message={apiErrors?.idTipoReparacion} />
+        <div className="space-y-2">
+          <Label>Tipo de Reparación</Label>
+          <Select
+            onValueChange={(value) => setValue("idTipoReparacion", value)}
+            value={watch("idTipoReparacion") || ""}
+            defaultValue={detalle?.tipoReparacion?.idTipoReparacion?.toString() || ""}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccione un tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              {tiposReparacion.map((tipo) => (
+                <SelectItem key={tipo.idTipoReparacion} value={tipo.idTipoReparacion.toString()}>
+                  {tipo.descripcionTipoReparacion}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <ErrorMessage message={apiErrors?.idTipoReparacion} />
+        </div>
       </div>
 
       <div className="flex justify-end mt-3">
@@ -219,4 +220,5 @@ const DetalleReparacionCreateEdit = ({ detalle, idReparacion, refreshDetalles })
 };
 
 export default DetalleReparacionCreateEdit;
+
 
