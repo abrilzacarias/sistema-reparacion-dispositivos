@@ -44,6 +44,18 @@ export const getColumnsReparaciones = ({ refetch }) => {
       cell: ({ row }) => <div className="ml-4">{row.original.idReparacion}</div>,
     },
     {
+      header: "Cliente",
+      accessorKey: "diagnostico.dispositivo.cliente.persona.nombre", // aunque no se usa directamente
+      cell: ({ row }) => {
+        const cliente = row.original.diagnostico?.dispositivo?.cliente?.persona;
+        if (!cliente) return <div>Sin cliente</div>;
+        const nombre = cliente.nombre || "";
+        const apellido = cliente.apellido || "";
+        return <div>{`${nombre} ${apellido}`.trim()}</div>;
+      },
+    },
+
+    {
       header: "Fecha Ingreso",
       accessorKey: "fechaIngreso",
       cell: ({ row }) => <div>{row.original.fechaIngreso}</div>,
@@ -118,7 +130,13 @@ export const getColumnsReparaciones = ({ refetch }) => {
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
                   <div>
-                    <DetalleReparacionModal idReparacion={reparacion.idReparacion} />
+                    <DetalleReparacionModal
+                    idReparacion={reparacion.idReparacion}
+                    cliente={reparacion.diagnostico.dispositivo.cliente.persona}
+                    dispositivo={reparacion.diagnostico.dispositivo}
+                    empleado={reparacion.empleado.persona}
+                    fechaIngreso={reparacion.fechaIngreso}
+                  />
                   </div>
                 </ModalFormTemplate>
               </DropdownMenuItem>
