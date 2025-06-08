@@ -10,8 +10,9 @@ class FuncionSistemaCreate(FuncionSistemaBase):
 class FuncionSistemaUpdate(FuncionSistemaBase):
     pass
 
-class FuncionSistemaOut(FuncionSistemaBase):
+class FuncionSistemaOut(BaseModel):
     idfuncionSistema: int
+    descripcionFuncionSistema: str
 
     class Config:
         orm_mode = True

@@ -10,8 +10,9 @@ class ModuloSistemaCreate(ModuloSistemaBase):
 class ModuloSistemaUpdate(ModuloSistemaBase):
     pass
 
-class ModuloSistemaOut(ModuloSistemaBase):
+class ModuloSistemaOut(BaseModel):
     idmoduloSistema: int
+    descripcionModuloSistema: str
 
     class Config:
         orm_mode = True

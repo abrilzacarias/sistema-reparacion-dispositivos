@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from typing import Optional, List
+from .permisoPerfil import PermisoAgrupado
 
 class UsuarioBase(BaseModel):
     username: str = Field(..., example="juanperez")
@@ -35,3 +36,13 @@ class UsuarioAutoCreate(BaseModel):
 
 class UsuarioAutoCreateResponse(UsuarioOut):
     message: str = Field(..., example="Usuario creado y credenciales enviadas por email")
+
+class ModuloFuncionOut(BaseModel):
+    modulo: str
+    funcion: str
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: UsuarioOut
+    permisos: List[PermisoAgrupado]

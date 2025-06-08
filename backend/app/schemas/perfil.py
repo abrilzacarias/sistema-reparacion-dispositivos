@@ -11,6 +11,7 @@ class PerfilUpdate(PerfilBase):
 
 class PerfilOut(PerfilBase):
     idPerfil: int
+    nombrePerfil: str
 
     class Config:
         orm_mode = True

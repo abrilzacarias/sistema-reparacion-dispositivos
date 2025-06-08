@@ -1,5 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+from .perfil import PerfilOut
+from .moduloFuncionSistema import ModuloFuncionSistemaOut
+from .funcionSistema import FuncionSistemaOut
 
 class PermisoPerfilBase(BaseModel):
     idpermisoPerfil: int
@@ -13,8 +16,23 @@ class PermisoPerfilCreate(PermisoPerfilBase):
 class PermisoPerfilUpdate(BaseModel):
     estadoPermisoPerfil: Optional[int]
 
-class PermisoPerfilOut(PermisoPerfilBase):
+class PermisoPerfilOut(BaseModel):
     idpermisoPerfil: int
+    idperfil: int
+    idmoduloFuncionSistema: int
+    perfil: PerfilOut
+    moduloFuncionSistema: ModuloFuncionSistemaOut 
 
     class Config:
         orm_mode = True
+
+class PermisoModuloOut(BaseModel):
+    idModulo: int
+    modulo: str
+    ruta: Optional[str]
+    funciones: List[FuncionSistemaOut]
+
+class PermisoAgrupado(BaseModel):
+    idPerfil: int
+    perfil: str
+    modulos: List[PermisoModuloOut]
