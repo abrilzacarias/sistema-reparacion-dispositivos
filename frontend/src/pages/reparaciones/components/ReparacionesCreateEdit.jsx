@@ -26,7 +26,8 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
       montoTotalReparacion: reparacion?.montoTotalReparacion || "",
       idDiagnostico: reparacion?.idDiagnostico || "",
       idEmpleado: reparacion?.idEmpleado || "",
-      idEstadoReparacion: reparacion?.idEstadoReparacion || "",
+      // Eliminamos idEstadoReparacion de los defaultValues de reparacion
+      idEstadoReparacion: "", // Este campo es solo para crear el registro
     },
   })
 
@@ -40,22 +41,55 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
     setError("")
     setApiErrors({})
 
+    // Validación extra para idEmpleado
+    if (!data.idEmpleado) {
+      setError("Debe seleccionar un empleado para registrar el estado.")
+      setIsLoading(false)
+      return
+    }
+
+    // Validación para estado de reparación
+    if (!data.idEstadoReparacion) {
+      setError("Debe seleccionar un estado de reparación.")
+      setIsLoading(false)
+      return
+    }
+
     try {
+      // Preparar datos para la reparación (sin idEstadoReparacion)
+      const reparacionData = {
+        numeroReparacion: data.numeroReparacion,
+        fechaIngreso: data.fechaIngreso,
+        fechaEgreso: data.fechaEgreso,
+        montoTotalReparacion: data.montoTotalReparacion,
+        idDiagnostico: data.idDiagnostico,
+        idEmpleado: data.idEmpleado,
+      }
+
       const endpoint = reparacion
         ? `${API_URL}/reparaciones/${reparacion.idReparacion}/`
         : `${API_URL}/reparaciones/`
 
       const method = reparacion ? axios.put : axios.post
-      await method(endpoint, data)
+      const response = await method(endpoint, reparacionData)
+      const reparacionResponse = response.data
+
+      // Crear el registro de estado de reparación
+      await axios.post(`${API_URL}/registro-estado-reparacion/`, {
+        idReparacion: reparacionResponse.idReparacion,
+        idEstadoReparacion: data.idEstadoReparacion,
+        idEmpleado: data.idEmpleado,
+      })
 
       reparacion ? ToastMessageEdit() : ToastMessageCreate()
-
       refreshReparaciones()
       setOpen(false)
     } catch (err) {
-      console.error(err)
+      console.error("Error completo:", err)
       if (err.response?.status === 422) {
-        setError("Error, intente nuevamente más tarde.")
+        setError("Error de validación, revise los datos ingresados.")
+      } else if (err.response?.status === 400) {
+        setError("Datos incorrectos, revise los campos.")
       } else if (err.response?.data) {
         setApiErrors(err.response.data)
         setError("Error al guardar la reparación, revise los campos.")
@@ -69,6 +103,7 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
+      {/* Campos existentes */}
       <div className="space-y-2">
         <Label>Número de reparación</Label>
         <Input
@@ -129,49 +164,48 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
       </div>
 
       <div className="col-span-2 grid grid-cols-2 gap-4">
-  <div className="space-y-2">
-    <Controller
-      name="idEmpleado"
-      control={control}
-      rules={{ required: "Seleccione un empleado" }}
-      render={({ field }) => (
-        <FormSelectSearch
-          label="Empleado"
-          endpoint="empleados/"
-          value={field.value}
-          setValue={field.onChange}
-          placeholder="Seleccione un empleado..."
-          displayKey={(empleado) =>
-            `${empleado.persona?.nombre || "Sin nombre"} ${empleado.persona?.apellido || "Sin apellido"}`
-          }
-          valueKey="idEmpleado"
-        />
-      )}
-    />
-    <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
-  </div>
+        <div className="space-y-2">
+          <Controller
+            name="idEmpleado"
+            control={control}
+            rules={{ required: "Seleccione un empleado" }}
+            render={({ field }) => (
+              <FormSelectSearch
+                label="Empleado"
+                endpoint="empleados/"
+                value={field.value}
+                setValue={field.onChange}
+                placeholder="Seleccione un empleado..."
+                displayKey={(empleado) =>
+                  `${empleado.persona?.nombre || "Sin nombre"} ${empleado.persona?.apellido || "Sin apellido"}`
+                }
+                valueKey="idEmpleado"
+              />
+            )}
+          />
+          <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+        </div>
 
-  <div className="space-y-2">
-    <Controller
-      name="idEstadoReparacion"
-      control={control}
-      rules={{ required: "Seleccione un estado" }}
-      render={({ field }) => (
-        <FormSelectSearch
-          label="Estado de reparación"
-          endpoint="estado-reparacion/"
-          value={field.value}
-          setValue={field.onChange}
-          placeholder="Seleccione un estado..."
-          displayKey="descripcionEstadoReparacion"
-          valueKey="idEstadoReparacion"
-        />
-      )}
-    />
-    <ErrorMessage message={errors.idEstadoReparacion?.message || apiErrors?.idEstadoReparacion} />
-  </div>
-</div>
-
+        <div className="space-y-2">
+          <Controller
+            name="idEstadoReparacion"
+            control={control}
+            rules={{ required: "Seleccione un estado" }}
+            render={({ field }) => (
+              <FormSelectSearch
+                label="Estado de reparación"
+                endpoint="estado-reparacion/"
+                value={field.value}
+                setValue={field.onChange}
+                placeholder="Seleccione un estado..."
+                displayKey="descripcionEstadoReparacion"
+                valueKey="idEstadoReparacion"
+              />
+            )}
+          />
+          <ErrorMessage message={errors.idEstadoReparacion?.message || apiErrors?.idEstadoReparacion} />
+        </div>
+      </div>
 
       <div className="col-span-2 flex justify-end mt-3">
         <ButtonDinamicForms initialData={reparacion} isLoading={isLoading} register />
@@ -185,4 +219,5 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
 }
 
 export default ReparacionesCreateEdit
+
 

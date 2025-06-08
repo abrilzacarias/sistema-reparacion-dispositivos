@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field
+# schemas/estadoReparacion.py
+
+from pydantic import BaseModel
 
 class EstadoReparacionBase(BaseModel):
-    descripcionEstadoReparacion: str = Field(..., example="En proceso")
+    descripcionEstadoReparacion: str
 
 class EstadoReparacionCreate(EstadoReparacionBase):
     pass
@@ -13,4 +15,4 @@ class EstadoReparacionOut(EstadoReparacionBase):
     idEstadoReparacion: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True

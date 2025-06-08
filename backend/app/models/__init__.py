@@ -25,3 +25,4 @@ from .estadoreparacion import EstadoReparacion
 from .tiporeparacion import TipoReparacion
 from .reparacion import Reparacion
 from .detallereparacion import DetalleReparacion
+from .registroEstadoReparacion import RegistroEstadoReparacion

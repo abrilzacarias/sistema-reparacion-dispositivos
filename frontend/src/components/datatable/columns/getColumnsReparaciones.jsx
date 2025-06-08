@@ -58,10 +58,20 @@ export const getColumnsReparaciones = ({ refetch }) => {
     },
     {
       header: "Estado",
-      accessorKey: "estadoReparacion.descripcionEstadoReparacion",
-      cell: ({ row }) => (
-        <div>{row.original.estadoReparacion?.descripcionEstadoReparacion ?? "Sin estado"}</div>
-      ),
+      accessorKey: "registroEstadoReparacion",
+      cell: ({ row }) => {
+        const estados = row.original.registroEstadoReparacion;
+        if (!estados || estados.length === 0) return <div>Sin estado</div>;
+
+        // Obtener el último estado registrado por fechaHoraRegistroEstadoReparacion
+        const ultimoEstado = estados.reduce((prev, curr) => {
+          return new Date(prev.fechaHoraRegistroEstadoReparacion) > new Date(curr.fechaHoraRegistroEstadoReparacion)
+            ? prev
+            : curr;
+        });
+
+        return <div>{ultimoEstado.estadoReparacion?.descripcionEstadoReparacion ?? "Sin estado"}</div>;
+      },
     },
     {
       header: "Empleado",
@@ -138,4 +148,5 @@ export const getColumnsReparaciones = ({ refetch }) => {
     },
   ];
 };
+
 
