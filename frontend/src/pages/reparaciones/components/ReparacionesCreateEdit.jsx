@@ -122,11 +122,6 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
 
-      <div className="space-y-2">
-        <Label>Fecha de egreso</Label>
-        <Input type="date" {...register("fechaEgreso")} />
-        <ErrorMessage message={errors.fechaEgreso?.message || apiErrors?.fechaEgreso} />
-      </div>
 
       <div className="col-span-2 space-y-2">
         <Controller
