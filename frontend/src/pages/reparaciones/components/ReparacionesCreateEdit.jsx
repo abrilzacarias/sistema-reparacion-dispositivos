@@ -20,10 +20,10 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      numeroReparacion: reparacion?.numeroReparacion || "",
-      fechaIngreso: reparacion?.fechaIngreso || "",
+      //numeroReparacion: reparacion?.numeroReparacion || "",
+      fechaIngreso: reparacion?.fechaIngreso || new Date().toISOString().split("T")[0], // hoy
       fechaEgreso: reparacion?.fechaEgreso || "",
-      montoTotalReparacion: reparacion?.montoTotalReparacion || "",
+      //montoTotalReparacion: reparacion?.montoTotalReparacion || "",
       idDiagnostico: reparacion?.idDiagnostico || "",
       idEmpleado: reparacion?.idEmpleado || "",
       // Eliminamos idEstadoReparacion de los defaultValues de reparacion
@@ -58,10 +58,10 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
     try {
       // Preparar datos para la reparación (sin idEstadoReparacion)
       const reparacionData = {
-        numeroReparacion: data.numeroReparacion,
+        //numeroReparacion: data.numeroReparacion,
         fechaIngreso: data.fechaIngreso,
-        fechaEgreso: data.fechaEgreso,
-        montoTotalReparacion: data.montoTotalReparacion,
+        fechaEgreso: data.fechaEgreso || null,
+        //montoTotalReparacion: data.montoTotalReparacion,
         idDiagnostico: data.idDiagnostico,
         idEmpleado: data.idEmpleado,
       }
@@ -103,37 +103,6 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
-      {/* Campos existentes */}
-      <div className="space-y-2">
-        <Label>Número de reparación</Label>
-        <Input
-          type="number"
-          {...register("numeroReparacion", { required: "Campo requerido" })}
-        />
-        <ErrorMessage message={errors.numeroReparacion?.message || apiErrors?.numeroReparacion} />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Monto total</Label>
-        <Input
-          type="number"
-          step="0.01"
-          {...register("montoTotalReparacion", {
-            required: "Campo requerido",
-            min: { value: 0, message: "Debe ser mayor a 0" },
-          })}
-        />
-        <ErrorMessage message={errors.montoTotalReparacion?.message || apiErrors?.montoTotalReparacion} />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Fecha de ingreso</Label>
-        <Input
-          type="date"
-          {...register("fechaIngreso", { required: "Campo requerido" })}
-        />
-        <ErrorMessage message={errors.fechaIngreso?.message || apiErrors?.fechaIngreso} />
-      </div>
 
       <div className="space-y-2">
         <Label>Fecha de egreso</Label>

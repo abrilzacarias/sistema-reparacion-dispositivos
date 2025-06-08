@@ -97,7 +97,7 @@ const DetalleReparacionCreateEdit = ({ detalle, idReparacion, refreshDetalles })
       console.log("Payload enviado:", payload);
 
       const endpoint = detalle
-        ? `${API_URL}/detalleReparacion/${detalle.idDetalleReparacion}/`
+        ? `${API_URL}/detalleReparacion/${detalle.idDetalleReparacion}`
         : `${API_URL}/detalleReparacion/`;
       const method = detalle ? axios.put : axios.post;
 

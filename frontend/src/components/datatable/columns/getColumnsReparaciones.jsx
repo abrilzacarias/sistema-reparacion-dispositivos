@@ -22,20 +22,26 @@ export const getColumnsReparaciones = ({ refetch }) => {
     }
 
     try {
-      await axios.delete(`${API_URL}/reparaciones/${reparacion.idReparacion}`);
+      const res = await axios.delete(`${API_URL}/reparaciones/${reparacion.idReparacion}`);
       toast.success("Reparación eliminada con éxito");
       refetch?.();
+      
     } catch (error) {
-      console.error("Error eliminando reparación:", error);
-      toast.error("Error al eliminar. Intente nuevamente.");
+    console.error("Error eliminando reparación:", error);
+
+    // Verificamos si hay una respuesta con un mensaje personalizado
+    const errorMsg =
+      error.response?.data?.detail || "No se puede eliminar una reparacion con detalles.";
+
+    toast.error(errorMsg);
     }
   };
 
   return [
     {
       header: "N° Reparación",
-      accessorKey: "numeroReparacion",
-      cell: ({ row }) => <div className="ml-4">{row.original.numeroReparacion}</div>,
+      accessorKey: "idReparacion",
+      cell: ({ row }) => <div className="ml-4">{row.original.idReparacion}</div>,
     },
     {
       header: "Fecha Ingreso",
@@ -46,14 +52,16 @@ export const getColumnsReparaciones = ({ refetch }) => {
       header: "Fecha Egreso",
       accessorKey: "fechaEgreso",
       cell: ({ row }) => (
-        <div>{row.original.fechaEgreso ?? "En proceso"}</div>
+        <div>{row.original.fechaEgreso ?? "-"}</div>
       ),
     },
     {
       header: "Monto Total ($)",
       accessorKey: "montoTotalReparacion",
       cell: ({ row }) => (
-        <div>${parseFloat(row.original.montoTotalReparacion).toFixed(2)}</div>
+        <div>{row.original.montoTotalReparacion !== null && row.original.montoTotalReparacion !== undefined
+        ? `$${parseFloat(row.original.montoTotalReparacion).toFixed(2)}`
+        : "-"}</div>
       ),
     },
     {

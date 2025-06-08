@@ -164,7 +164,7 @@ DROP TABLE IF EXISTS `detalleReparacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleReparacion` (
   `idDetalleReparacion` int NOT NULL AUTO_INCREMENT,
-  `montoTotalDetalleReparacion` decimal(10,0) NOT NULL,
+  `montoTotalDetalleReparacion` decimal(10,0) NULL,
   `manoObra` decimal(10,0) NOT NULL,
   `precioRepuesto` decimal(10,0) NOT NULL,
   `descripcion` varchar(60) DEFAULT NULL,
@@ -691,7 +691,6 @@ DROP TABLE IF EXISTS `reparacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reparacion` (
   `idReparacion` int NOT NULL AUTO_INCREMENT,
-  `numeroReparacion` int NOT NULL,
   `fechaIngreso` date NOT NULL,
   `fechaEgreso` date DEFAULT NULL,
   `montoTotalReparacion` decimal(10,0) NOT NULL,

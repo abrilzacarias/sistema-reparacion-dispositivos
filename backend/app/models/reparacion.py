@@ -16,10 +16,11 @@ class Reparacion(Base):
     )
 
     idReparacion = mapped_column(Integer, primary_key=True)
-    numeroReparacion = mapped_column(Integer)
+    #numeroReparacion = mapped_column(Integer)
 
     fechaIngreso = mapped_column(Date)
-    montoTotalReparacion = mapped_column(DECIMAL(10, 0))
+    montoTotalReparacion: Mapped[Optional[decimal.Decimal]] = mapped_column(DECIMAL(10, 0), nullable=True)
+
     idDiagnostico = mapped_column(Integer, ForeignKey('diagnostico.idDiagnostico'))
     idEmpleado = mapped_column(Integer, ForeignKey('empleado.idEmpleado'), comment='puede ser que un empleado haga el diagnostico y otro la reparacion')
     fechaEgreso: Mapped[Optional[datetime.date]] = mapped_column(Date)

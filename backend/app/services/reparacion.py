@@ -4,6 +4,8 @@ from app.models.empleado import Empleado
 from app.schemas.reparacion import ReparacionCreate, ReparacionUpdate
 from sqlalchemy.orm import selectinload
 from app.models.registroEstadoReparacion import RegistroEstadoReparacion
+from app.models import DetalleReparacion
+from fastapi import HTTPException
 
 
 def get_reparacion(db: Session, id: int):
@@ -24,7 +26,7 @@ def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
             selectinload(Reparacion.diagnostico),
             selectinload(Reparacion.registroEstadoReparacion)
         )
-       
+
 
 def create_reparacion(db: Session, reparacion: ReparacionCreate):
     db_reparacion = Reparacion(**reparacion.dict())
@@ -32,6 +34,7 @@ def create_reparacion(db: Session, reparacion: ReparacionCreate):
     db.commit()
     db.refresh(db_reparacion)
     return db_reparacion
+
 
 def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     db_reparacion = get_reparacion(db, id)
@@ -43,10 +46,23 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     db.refresh(db_reparacion)
     return db_reparacion
 
+
 def delete_reparacion(db: Session, id: int):
     db_reparacion = get_reparacion(db, id)
     if not db_reparacion:
         return None
+
+    # Verificar si hay detalles asociados a la reparación
+    detalles = db.query(DetalleReparacion).filter_by(idReparacion=id).first()
+    if detalles:
+        raise HTTPException(
+            status_code=400,
+            detail="No se puede eliminar la reparación porque tiene detalles asociados."
+        )
+
     db.delete(db_reparacion)
     db.commit()
     return db_reparacion
+
+
+

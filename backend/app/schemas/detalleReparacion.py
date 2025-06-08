@@ -27,7 +27,7 @@ class DetalleReparacionUpdate(BaseModel):
 # Schemas simples para relaciones anidadas (podés extender según necesidad)
 class ReparacionSchema(BaseModel):
     idReparacion: int
-    numeroReparacion: int
+    #numeroReparacion: int
     fechaIngreso: date
     montoTotalReparacion: Decimal
     fechaEgreso: Optional[date] = None
