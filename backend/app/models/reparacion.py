@@ -29,5 +29,5 @@ class Reparacion(Base):
     #estadoReparacion = relationship('EstadoReparacion', back_populates='reparaciones')
     detalleReparacion = relationship('DetalleReparacion', back_populates='reparacion')  # ✅ correcto
     registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="reparacion", cascade="all, delete-orphan")
-    #historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparaciones')
+    historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparacion')
 
