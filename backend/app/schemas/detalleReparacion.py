@@ -29,7 +29,7 @@ class ReparacionSchema(BaseModel):
     idReparacion: int
     #numeroReparacion: int
     fechaIngreso: date
-    montoTotalReparacion: Decimal
+    montoTotalReparacion: Optional[Decimal] = None
     fechaEgreso: Optional[date] = None
 
     class Config:

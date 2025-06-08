@@ -12,6 +12,19 @@ import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
 const API_URL = import.meta.env.VITE_API_URL
 
 const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
+  // Función para obtener el estado más reciente de la reparación
+  const getEstadoActual = (reparacion) => {
+    if (!reparacion?.registroEstadoReparacion || reparacion.registroEstadoReparacion.length === 0) {
+      return ""
+    }
+    
+    // Ordenar por fecha más reciente y devolver el idEstadoReparacion
+    const estadoMasReciente = reparacion.registroEstadoReparacion
+      .sort((a, b) => new Date(b.fechaHoraRegistroEstadoReparacion) - new Date(a.fechaHoraRegistroEstadoReparacion))[0]
+    
+    return estadoMasReciente.idEstadoReparacion
+  }
+
   const {
     register,
     handleSubmit,
@@ -26,8 +39,8 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
       //montoTotalReparacion: reparacion?.montoTotalReparacion || "",
       idDiagnostico: reparacion?.idDiagnostico || "",
       idEmpleado: reparacion?.idEmpleado || "",
-      // Eliminamos idEstadoReparacion de los defaultValues de reparacion
-      idEstadoReparacion: "", // Este campo es solo para crear el registro
+      // Obtener el estado actual de la reparación si existe
+      idEstadoReparacion: reparacion ? getEstadoActual(reparacion) : "",
     },
   })
 
@@ -74,12 +87,17 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
       const response = await method(endpoint, reparacionData)
       const reparacionResponse = response.data
 
-      // Crear el registro de estado de reparación
-      await axios.post(`${API_URL}/registro-estado-reparacion/`, {
-        idReparacion: reparacionResponse.idReparacion,
-        idEstadoReparacion: data.idEstadoReparacion,
-        idEmpleado: data.idEmpleado,
-      })
+      // Solo crear registro de estado si cambió o es una nueva reparación
+      const estadoActual = reparacion ? getEstadoActual(reparacion) : null
+      const estadoSeleccionado = parseInt(data.idEstadoReparacion)
+      
+      if (!reparacion || estadoActual !== estadoSeleccionado) {
+        await axios.post(`${API_URL}/registro-estado-reparacion/`, {
+          idReparacion: reparacionResponse.idReparacion,
+          idEstadoReparacion: data.idEstadoReparacion,
+          idEmpleado: data.idEmpleado,
+        })
+      }
 
       reparacion ? ToastMessageEdit() : ToastMessageCreate()
       refreshReparaciones()

@@ -61,7 +61,7 @@ export const getColumnsReparaciones = ({ refetch }) => {
       cell: ({ row }) => (
         <div>{row.original.montoTotalReparacion !== null && row.original.montoTotalReparacion !== undefined
         ? `$${parseFloat(row.original.montoTotalReparacion).toFixed(2)}`
-        : "-"}</div>
+        : "$0.0"}</div>
       ),
     },
     {
