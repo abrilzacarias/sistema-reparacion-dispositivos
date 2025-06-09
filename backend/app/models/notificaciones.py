@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy import Column, String, DateTime, Date
 from app.database import Base
 
 class Notificacion(Base):
@@ -7,5 +7,5 @@ class Notificacion(Base):
     idActividad = Column(String, primary_key=True)
     tipo = Column(String)
     mensaje = Column(String)
-    fecha = Column(DateTime)
+    fecha = Column(Date, nullable=True)
     accion = Column(String)

@@ -1,6 +1,6 @@
-import { AlertCircle, CheckCircle, Info, AlertTriangle, ChevronRight } from "lucide-react";
+import { AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { tipoToNotificationType } from '@/lib/utils';
 
 const notificationTypeConfig = {
   info: {
@@ -23,12 +23,17 @@ const notificationTypeConfig = {
 
 export const getColumnsNotifications = () => [
   {
-    id: "type",
+    id: "tipo",
     header: "Tipo",
-    accessorKey: "type",
+    accessorKey: "tipo",  // <-- Aquí "tipo" no "type"
     cell: ({ row }) => {
-      const type = row.original.type;
-      const config = notificationTypeConfig[type] || notificationTypeConfig.info;
+      const tipo = row.original.tipo;
+      // Ojo que la configuración espera claves como 'info', 'success' etc. Si tus tipos son diferentes,
+      // podrías mapearlos o usar un default.
+      const notiType = tipoToNotificationType(tipo);
+      console.log("TIPO:", tipo, "→", notiType); // 👈 Agregá esto
+      const config = notificationTypeConfig[notiType] || notificationTypeConfig.info;
+      console.log(config.name);  // Muestra solo el nombre
       const IconComponent = config.icon;
       return (
         <div className="flex justify-center">
@@ -43,29 +48,31 @@ export const getColumnsNotifications = () => [
     },
   },
   {
-    id: "message",
+    id: "mensaje",
     header: "Mensaje",
-    accessorKey: "message",
-    cell: ({ row }) => <div className="text-left">{row.original.message}</div>,
+    accessorKey: "mensaje",
+    cell: ({ row }) => (
+      <div className="flex justify-center">{row.original.mensaje}</div>
+    ),
     meta: {
-      className: "text-left",
+      className: "text-center",
     },
   },
   {
-    id: "actions",
-    header: "Acción",
+    id: "fecha",
+    header: "Fecha",
+    accessorKey: "fecha",
     cell: ({ row }) => {
-      const { onClick } = row.original;
-      if (!onClick) return null;
-      return (
-        <Button variant="ghost" size="sm" onClick={onClick} className="text-primary hover:text-primary/90">
-          Ver <ChevronRight className="w-4 h-4 ml-1" />
-        </Button>
-      );
+      const rawDate = row.original.fecha;
+      const date = new Date(rawDate).toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      return <div className="flex justify-center">{date}</div>;
     },
-    enableSorting: false,
     meta: {
-      className: "w-[100px] text-center",
+      className: "text-center w-[180px]",
     },
   },
 ];
