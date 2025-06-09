@@ -10,5 +10,7 @@ class EstadoReparacion(Base):
     idEstadoReparacion = mapped_column(Integer, primary_key=True)
     descripcionEstadoReparacion = mapped_column(String(70))
 
-    reparaciones = relationship('Reparacion', back_populates='estadoReparacion')
+    #reparaciones = relationship('Reparacion', back_populates='estadoReparacion')
+    registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="estadoReparacion")
+
 

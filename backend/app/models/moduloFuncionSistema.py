@@ -20,6 +20,7 @@ class ModuloFuncionSistema(Base):
     idmoduloSistema: Mapped[int] = mapped_column(Integer, nullable=False)
     idfuncionSistema: Mapped[int] = mapped_column(Integer, nullable=False)
     rutaModuloFuncionSistema: Mapped[Optional[str]] = mapped_column(String(45))
+    estadoModuloFuncionSistema = mapped_column(TINYINT, server_default=text("'1'"))
 
     funcionSistema = relationship('FuncionSistema', back_populates='moduloFuncionSistema')
     moduloSistema = relationship('ModuloSistema', back_populates='moduloFuncionSistema')

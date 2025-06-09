@@ -17,7 +17,7 @@ export function Dashboard() {
     total: totalNotifications,
   } = usePaginatedQuery({
     key: "dashboardNotifications",
-    endpoint: "notifications",   
+    endpoint: "notificaciones/notificaciones",
     pageSize: 5,          
   });
   return (
@@ -103,7 +103,7 @@ export function Dashboard() {
           hasNextPage={hasNextNotificationsPage}     // To enable/disable load more
           refetch={refetchNotifications}           // To allow manual refetch if needed
           totalUsers={totalNotifications}      // Pass total for header and pagination logic
-          searchTarget="message"               // Enable search by notification message
+          searchTarget="mensaje"               // Enable search by notification message
           placeholder="Buscar notificaciones..." // Custom placeholder for the search input
         />
       </div>
