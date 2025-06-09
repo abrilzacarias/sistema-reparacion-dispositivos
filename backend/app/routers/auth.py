@@ -70,14 +70,12 @@ async def login_for_access_token(
         expires_delta=access_token_expires
     )
 
-    # Agrupar permisos por perfil y módulo
     permisos_dict = defaultdict(lambda: defaultdict(lambda: {
-        "idModulo": None,
-        "modulo": "",
-        "ruta": "",
-        "funciones": [],
+        "idmoduloSistema": None,
+        "descripcionModuloSistema": "",
+        "rutas": [],
+        "funciones": []
     }))
-
     perfil_ids = {}
 
     for asignacion in user.asignacionUsuarioPermisos:
@@ -89,28 +87,37 @@ async def login_for_access_token(
         modulo_funcion = permiso.moduloFuncionSistema
         modulo = modulo_funcion.moduloSistema
         funcion = modulo_funcion.funcionSistema
-
-        key_modulo = modulo.descripcionModuloSistema
         ruta_modulo = modulo_funcion.rutaModuloFuncionSistema
 
+        key_modulo = modulo.descripcionModuloSistema
         mod_data = permisos_dict[perfil_nombre][key_modulo]
-        mod_data["idModulo"] = modulo.idmoduloSistema
-        mod_data["modulo"] = key_modulo
-        mod_data["ruta"] = ruta_modulo
+        mod_data["idmoduloSistema"] = modulo.idmoduloSistema
+        mod_data["descripcionModuloSistema"] = key_modulo
 
-        # Solo agregamos función si no está
+        # Agregar ruta como objeto RutaFuncionOut
+        if ruta_modulo and not any(
+            rf["ruta"] == ruta_modulo and rf["idfuncionSistema"] == funcion.idfuncionSistema
+            for rf in mod_data["rutas"]
+        ):
+            mod_data["rutas"].append({
+                "idfuncionSistema": funcion.idfuncionSistema,
+                "descripcionFuncionSistema": funcion.descripcionFuncionSistema,
+                "ruta": ruta_modulo
+            })
+
+        # Agregar función a la lista de funciones únicas
         if not any(f["idfuncionSistema"] == funcion.idfuncionSistema for f in mod_data["funciones"]):
             mod_data["funciones"].append({
                 "idfuncionSistema": funcion.idfuncionSistema,
                 "descripcionFuncionSistema": funcion.descripcionFuncionSistema
             })
 
-    # Formar la respuesta final
+    # Armar respuesta final
     permisos_final = []
     for perfil_nombre, modulos in permisos_dict.items():
         permisos_final.append({
             "idPerfil": perfil_ids[perfil_nombre],
-            "perfil": perfil_nombre,
+            "nombrePerfil": perfil_nombre,
             "modulos": list(modulos.values())
         })
 

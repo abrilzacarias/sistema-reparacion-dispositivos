@@ -1,9 +1,73 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.models.permisoPerfil import PermisoPerfil
+from app.models.moduloFuncionSistema import ModuloFuncionSistema
 from app.schemas import permisoPerfil as schemas
+from collections import defaultdict
 
 def get_permisos_perfil(db: Session):
-    return db.query(PermisoPerfil).filter(PermisoPerfil.estadoPermisoPerfil == 1)
+    permisos = db.query(PermisoPerfil).options(
+        joinedload(PermisoPerfil.moduloFuncionSistema)
+        .joinedload(ModuloFuncionSistema.moduloSistema),
+        joinedload(PermisoPerfil.moduloFuncionSistema)
+        .joinedload(ModuloFuncionSistema.funcionSistema),
+        joinedload(PermisoPerfil.perfil)
+    ).filter(PermisoPerfil.estadoPermisoPerfil == 1).all()
+
+    agrupado = {}
+
+    for permiso in permisos:
+        perfil = permiso.perfil
+        mod_func = permiso.moduloFuncionSistema
+        modulo = mod_func.moduloSistema
+        funcion = mod_func.funcionSistema
+        ruta = mod_func.rutaModuloFuncionSistema
+
+        if perfil.idPerfil not in agrupado:
+            agrupado[perfil.idPerfil] = {
+                "idPerfil": perfil.idPerfil,
+                "nombrePerfil": perfil.nombrePerfil,
+                "modulos": defaultdict(lambda: {"funciones": [], "rutas": []})
+            }
+
+        modulo_key = (modulo.idmoduloSistema, modulo.descripcionModuloSistema)
+        funcion_data = {
+            "idfuncionSistema": funcion.idfuncionSistema,
+            "descripcionFuncionSistema": funcion.descripcionFuncionSistema
+        }
+
+        ruta_data = {
+            "idfuncionSistema": funcion.idfuncionSistema,
+            "descripcionFuncionSistema": funcion.descripcionFuncionSistema,
+            "ruta": ruta or ""
+        }
+
+        if funcion_data not in agrupado[perfil.idPerfil]["modulos"][modulo_key]["funciones"]:
+            agrupado[perfil.idPerfil]["modulos"][modulo_key]["funciones"].append(funcion_data)
+
+        if ruta_data not in agrupado[perfil.idPerfil]["modulos"][modulo_key]["rutas"]:
+            agrupado[perfil.idPerfil]["modulos"][modulo_key]["rutas"].append(ruta_data)
+
+    # Armar resultado final
+    resultado = []
+    for perfil_data in agrupado.values():
+        modulos = []
+        for (idModulo, nombreModulo), datos in perfil_data["modulos"].items():
+            modulos.append({
+                "idmoduloSistema": idModulo,
+                "descripcionModuloSistema": nombreModulo,
+                "funciones": datos["funciones"],
+                "rutas": datos["rutas"]
+            })
+        resultado.append({
+            "idPerfil": perfil_data["idPerfil"],
+            "nombrePerfil": perfil_data["nombrePerfil"],
+            "modulos": modulos
+        })
+    
+    print(resultado)
+
+    return resultado
+
 
 def get_permiso_perfil(db: Session, id_permiso: int):
     return db.query(PermisoPerfil).filter(PermisoPerfil.idpermisoPerfil == id_permiso).first()

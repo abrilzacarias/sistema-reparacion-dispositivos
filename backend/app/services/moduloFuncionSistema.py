@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from app.models import ModuloFuncionSistema
 from app.schemas import moduloFuncionSistema as schemas
+from collections import defaultdict
 
 def get_modulos_funcion(db: Session):
     return db.query(ModuloFuncionSistema).options(

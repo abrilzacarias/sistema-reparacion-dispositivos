@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from fastapi_pagination import Page
-from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination import Page, paginate
 
 from app.database import get_db
 from app.schemas import permisoPerfil as schemas
@@ -9,10 +8,10 @@ from app.services import permisoPerfil as services
 
 router = APIRouter(prefix="/permisos-perfil", tags=["Permisos por Perfil"])
 
-@router.get("/", response_model=Page[schemas.PermisoPerfilOut], summary="Obtener lista paginada de permisos por perfil")
+@router.get("/", response_model=Page[schemas.PermisoAgrupado], summary="Obtener lista paginada de permisos por perfil")
 def read_permisos_perfil(db: Session = Depends(get_db)):
-    permisos = services.get_permisos_perfil(db)
-    return paginate(permisos)
+    datos_agrupados = services.get_permisos_perfil(db)
+    return paginate(datos_agrupados)
 
 @router.get("/{idpermiso}", response_model=schemas.PermisoPerfilOut, summary="Obtener un permiso por ID")
 def read_permiso_perfil(idpermiso: int, db: Session = Depends(get_db)):

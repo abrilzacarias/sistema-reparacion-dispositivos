@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from .moduloSistema import ModuloSistemaOut
 from .funcionSistema import FuncionSistemaOut
 
@@ -16,12 +16,26 @@ class ModuloFuncionSistemaUpdate(ModuloFuncionSistemaBase):
 
 class ModuloFuncionSistemaOut(ModuloFuncionSistemaBase):
     idmoduloFuncionSistema: int
-    idmoduloSistema: int
-    idfuncionSistema: int
     rutaModuloFuncionSistema: Optional[str]
 
     moduloSistema: ModuloSistemaOut  
     funcionSistema: FuncionSistemaOut
     
+    class Config:
+        orm_mode = True
+
+class ModuloConFuncionesOut(BaseModel):
+    idmoduloSistema: int
+    descripcionModuloSistema: str
+    funciones: List[FuncionSistemaOut]
+
+    class Config:
+        orm_mode = True
+
+class FuncionConModulosOut(BaseModel):
+    idfuncionSistema: int
+    descripcionFuncionSistema: str
+    modulos: List[ModuloSistemaOut] = []
+
     class Config:
         orm_mode = True

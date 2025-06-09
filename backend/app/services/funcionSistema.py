@@ -1,6 +1,30 @@
-from sqlalchemy.orm import Session
-from app.models import FuncionSistema
+from sqlalchemy.orm import Session, joinedload
+from app.models import FuncionSistema, ModuloFuncionSistema
 from app.schemas import funcionSistema as schemas
+
+def get_funciones_con_modulos(db: Session):
+    funciones = db.query(FuncionSistema).options(
+        joinedload(FuncionSistema.moduloFuncionSistema).joinedload(ModuloFuncionSistema.moduloSistema)
+    ).all()
+
+    resultado = []
+    for funcion in funciones:
+        modulos = [
+            {
+                "idmoduloSistema": mf.moduloSistema.idmoduloSistema,
+                "descripcionModuloSistema": mf.moduloSistema.descripcionModuloSistema
+            }
+            for mf in funcion.moduloFuncionSistema
+            if mf.moduloSistema is not None
+        ]
+
+        resultado.append({
+            "idfuncionSistema": funcion.idfuncionSistema,
+            "descripcionFuncionSistema": funcion.descripcionFuncionSistema,
+            "modulos": modulos
+        })
+
+    return resultado
 
 def get_funciones_sistema(db: Session, skip: int = 0, limit: int = 100):
     return db.query(FuncionSistema).filter(FuncionSistema.estadoFuncionSistema == True)

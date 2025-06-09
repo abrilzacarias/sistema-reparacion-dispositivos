@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import List
 
 class FuncionSistemaBase(BaseModel):
     idfuncionSistema: int
@@ -16,3 +17,11 @@ class FuncionSistemaOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+""" class FuncionConModulosOut(BaseModel):
+    idfuncionSistema: int
+    descripcionFuncionSistema: str
+    modulos: List[ModuloSistemaOut] = []
+
+    class Config:
+        orm_mode = True """

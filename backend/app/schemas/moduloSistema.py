@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from .funcionSistema import FuncionSistemaOut
+from typing import List
 
 class ModuloSistemaBase(BaseModel):
     idmoduloSistema: int
@@ -13,6 +15,14 @@ class ModuloSistemaUpdate(ModuloSistemaBase):
 class ModuloSistemaOut(BaseModel):
     idmoduloSistema: int
     descripcionModuloSistema: str
+
+    class Config:
+        orm_mode = True
+
+class ModuloSistemaFuncionesOut(BaseModel):
+    idmoduloSistema: int
+    descripcionModuloSistema: str
+    funciones: List[FuncionSistemaOut] = []
 
     class Config:
         orm_mode = True
