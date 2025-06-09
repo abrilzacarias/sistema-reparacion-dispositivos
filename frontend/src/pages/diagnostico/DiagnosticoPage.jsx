@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 
 // Crear este archivo en @/components/datatable/columns/getColumnsDiagnosticos.js
 import { getColumnsDiagnosticos } from "@/components/datatable/columns/getColumnsDiagnosticos";
+import DiagnosticoCreateEdit from "./DiagnosticoCreateEdit";
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 
 const DiagnosticosPage = () => {
   const {
@@ -94,6 +96,16 @@ const DiagnosticosPage = () => {
                 label: "Exportar",
               }}
             />
+            {/* Botón Agregar Diagnóstico con ModalFormTemplate */}
+            <ModalFormTemplate
+              title="Registrar Diagnóstico"
+              description="Complete los campos para registrar un nuevo diagnóstico."
+              label="Agregar Diagnóstico"
+              variant="default"
+              className="ml-2"
+            >
+              <DiagnosticoCreateEdit refreshDiagnosticos={refetch} />
+            </ModalFormTemplate>
           </div>
         </CrudHeader>
 
