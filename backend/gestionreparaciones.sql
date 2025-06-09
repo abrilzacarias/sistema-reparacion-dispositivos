@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -59,7 +59,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`idCliente`),
   KEY `fk_cliente_persona1_idx` (`idPersona`),
   CONSTRAINT `fk_cliente_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (12,'Earum rem iusto culpa sunt dolores.',45),(13,'Optio reprehenderit officia eum.',46),(14,'Non tempore aliquid vitae soluta eaque ipsa ex.',47),(15,'Quia atque debitis enim molestias.',48),(16,'Adipisci expedita reiciendis eum quis sint repellendus ipsa.',49),(17,'Aliquid ex asperiores maxime assumenda recusandae corporis ea.',50),(18,'Consequuntur amet quo illo qui.',51),(19,'Laboriosam suscipit commodi.',52),(20,'Libero maiores quisquam amet quod.',53),(21,'Amet asperiores harum sint nisi eligendi harum.',54);
+INSERT INTO `cliente` VALUES (9,'2025-06-21',1),(10,'2025-05-21',2);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,13 +84,13 @@ CREATE TABLE `contacto` (
   `descripcionContacto` varchar(45) NOT NULL,
   `idtipoContacto` int NOT NULL,
   `idPersona` int NOT NULL,
-  `esPrimario` tinyint NOT NULL DEFAULT '0' COMMENT 'Indica si es el tipo de contacto principal del cliente. Por ejemplo, si es el correo electronico o telefono principal.',
+  `esPrimario` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`idContacto`),
   KEY `fk_contacto_tipoContacto1_idx` (`idtipoContacto`),
   KEY `fk_contacto_personas1_idx` (`idPersona`),
   CONSTRAINT `fk_contacto_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_contacto_tipoContacto1` FOREIGN KEY (`idtipoContacto`) REFERENCES `tipoContacto` (`idtipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,8 +99,31 @@ CREATE TABLE `contacto` (
 
 LOCK TABLES `contacto` WRITE;
 /*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-INSERT INTO `contacto` VALUES (7,'castillothiago-benjamin@example.com',1,45,1),(8,'+54 9 3946 9579',2,45,1),(9,'fescobar@example.com',1,46,1),(10,'+54 9 3486 1712',2,46,1),(11,'luz-milagros30@example.com',1,47,1),(12,'+54 15 2145 5044',2,47,1),(13,'imaidana@example.org',1,48,1),(14,'+54 9 3100 1346',2,48,1),(15,'juan-cruz35@example.com',1,49,1),(16,'+54 15 2760 3590',2,49,1),(17,'dgomez@example.net',1,50,1),(18,'+54 9 3734 1557',2,50,1),(19,'franco40@example.net',1,51,1),(20,'+54 9 3945 4672',2,51,1),(21,'emma88@example.net',1,52,1),(22,'+54 9 3471 7863',2,52,1),(23,'valentinomunoz@example.com',1,53,1),(24,'+54 15 2684 2705',2,53,1),(25,'lautaro17@example.com',1,54,1),(26,'+54 15 2226 8796',2,54,1);
+INSERT INTO `contacto` VALUES (2,'canobren080603@gmail.com',1,9,0),(5,'juan.perez@gmail.com',1,44,0),(6,'+54 911 1234 5678',2,44,0),(8,'josefranco@gmail.com',1,46,0);
 /*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `debug_trigger`
+--
+
+DROP TABLE IF EXISTS `debug_trigger`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `debug_trigger` (
+  `mensaje` varchar(100) DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `debug_trigger`
+--
+
+LOCK TABLES `debug_trigger` WRITE;
+/*!40000 ALTER TABLE `debug_trigger` DISABLE KEYS */;
+INSERT INTO `debug_trigger` VALUES ('Trigger activado para idPersona: 26','2025-06-07 02:10:48'),('Trigger activado para idPersona: 30','2025-06-07 02:15:13');
+/*!40000 ALTER TABLE `debug_trigger` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -184,7 +207,7 @@ CREATE TABLE `diagnostico` (
   KEY `fk_diagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_diagnostico_dispositivo1` FOREIGN KEY (`idDispositivo`) REFERENCES `dispositivo` (`idDispositivo`),
   CONSTRAINT `fk_diagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,9 +216,35 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (1,'2024-07-08',1,23),(2,'2024-08-29',2,23),(3,'2024-08-03',3,22),(4,'2024-11-29',4,28),(5,'2025-02-10',5,23),(6,'2025-02-15',6,27),(7,'2025-05-03',7,24),(8,'2024-12-30',8,29),(9,'2024-11-10',9,29),(10,'2024-07-13',10,30);
+INSERT INTO `diagnostico` VALUES (1,'2025-06-07',1,11),(2,'2025-06-07',1,28);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `insertar_historial_asignacion` AFTER INSERT ON `diagnostico` FOR EACH ROW BEGIN
+    INSERT INTO historialAsignacionDiagnostico (
+        fechaInicioAsignacionDiagnostico,
+        idDiagnostico,
+        idEmpleado
+    )
+    VALUES (
+        CURRENT_DATE,
+        NEW.idDiagnostico,
+        NEW.idEmpleado
+    );
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `dispositivo`
@@ -219,7 +268,7 @@ CREATE TABLE `dispositivo` (
   CONSTRAINT `fk_dispositivo_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`),
   CONSTRAINT `fk_dispositivo_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`),
   CONSTRAINT `fk_dispositivo_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,7 +277,7 @@ CREATE TABLE `dispositivo` (
 
 LOCK TABLES `dispositivo` WRITE;
 /*!40000 ALTER TABLE `dispositivo` DISABLE KEYS */;
-INSERT INTO `dispositivo` VALUES (1,'Ullam aspernatur perspiciatis sapiente.','Aliquid',15,4,12,1),(2,'Natus facere corrupti consequuntur.','Ullam',10,2,13,1),(3,'Excepturi impedit distinctio dolorum.','Corrupti',12,3,14,1),(4,'Unde eum minus reiciendis.','Rem',11,3,15,1),(5,'Incidunt itaque modi minus at.','Sunt',14,4,16,1),(6,'Perspiciatis voluptatum et natus sint.','Quaerat',10,2,17,1),(7,'Sunt ea reiciendis.','Nihil',14,3,18,1),(8,'Iure non animi sapiente corrupti.','Inventore',12,2,19,1),(9,'Cumque iste tempora sunt quibusdam.','Corporis',14,4,20,1),(10,'Quod debitis fugit quibusdam tenetur.','Quis',13,2,21,1);
+INSERT INTO `dispositivo` VALUES (1,'Samsung A70','424234532',4,1,9,1);
 /*!40000 ALTER TABLE `dispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,7 +339,7 @@ CREATE TABLE `empleado` (
   CONSTRAINT `fk_empleado_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_empleado_puestoLaboral1` FOREIGN KEY (`idpuestoLaboral`) REFERENCES `puestoLaboral` (`idpuestoLaboral`),
   CONSTRAINT `fk_empleado_usuario1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -299,7 +348,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (21,'2025-04-11',NULL,7,45,23),(22,'2025-03-23',NULL,8,46,24),(23,'2024-01-02',NULL,9,47,25),(24,'2023-12-30','2024-11-01',7,48,26),(25,'2023-06-30','2024-09-02',8,49,27),(26,'2024-07-12','2025-03-09',9,50,28),(27,'2023-08-07','2025-02-12',7,51,29),(28,'2023-10-21','2024-07-06',8,52,30),(29,'2024-03-06','2025-04-28',9,53,31),(30,'2024-09-21',NULL,7,54,32);
+INSERT INTO `empleado` VALUES (11,'2024-11-09','2024-12-15',4,33,13),(12,'2023-11-16','2024-10-12',5,34,14),(13,'2025-02-20','2024-06-11',6,35,15),(14,'2025-01-21',NULL,4,36,16),(15,'2023-07-06','2024-09-25',5,37,17),(16,'2023-10-29',NULL,6,38,18),(17,'2025-04-22','2025-02-26',4,39,19),(18,'2023-10-03',NULL,5,40,20),(19,'2024-05-13','2025-03-15',6,41,21),(20,'2025-02-04',NULL,4,42,22),(23,'2025-06-07','2025-06-07',1,1,1),(25,'2025-06-07','2025-06-07',1,48,1),(26,'2025-06-07','2025-06-07',1,30,1),(27,'2025-06-07','2025-06-07',1,49,1),(28,'2025-06-07','2025-06-07',4,50,1);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,7 +363,7 @@ CREATE TABLE `estadoReparacion` (
   `idEstadoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionEstadoReparacion` varchar(70) NOT NULL,
   PRIMARY KEY (`idEstadoReparacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -323,6 +372,7 @@ CREATE TABLE `estadoReparacion` (
 
 LOCK TABLES `estadoReparacion` WRITE;
 /*!40000 ALTER TABLE `estadoReparacion` DISABLE KEYS */;
+INSERT INTO `estadoReparacion` VALUES (1,'cancelado');
 /*!40000 ALTER TABLE `estadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -369,7 +419,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
   KEY `fk_historialAsignacionDiagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,6 +428,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
 
 LOCK TABLES `historialAsignacionDiagnostico` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` DISABLE KEYS */;
+INSERT INTO `historialAsignacionDiagnostico` VALUES (1,'2025-06-07',NULL,1,11),(2,'2025-06-07','2025-06-07',2,28);
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -423,7 +474,7 @@ CREATE TABLE `marcaDispositivo` (
   `descripcionMarcaDispositivo` varchar(45) NOT NULL,
   `estadoMarcaDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idMarcaDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -432,7 +483,7 @@ CREATE TABLE `marcaDispositivo` (
 
 LOCK TABLES `marcaDispositivo` WRITE;
 /*!40000 ALTER TABLE `marcaDispositivo` DISABLE KEYS */;
-INSERT INTO `marcaDispositivo` VALUES (4,'Samsung',1),(5,'LG',1),(6,'Apple',1),(7,'Xiaomi',1),(8,'Huawei',1),(9,'Motorola',1),(10,'Samsung',1),(11,'LG',1),(12,'Apple',1),(13,'Xiaomi',1),(14,'Huawei',1),(15,'Motorola',1),(16,'Sony',1);
+INSERT INTO `marcaDispositivo` VALUES (4,'Samsung',1),(5,'LG',1),(6,'Apple',1),(7,'Xiaomi',1),(8,'Huawei',1),(9,'Motorola',1);
 /*!40000 ALTER TABLE `marcaDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -448,6 +499,7 @@ CREATE TABLE `moduloFuncionSistema` (
   `idmoduloSistema` int NOT NULL,
   `idfuncionSistema` int NOT NULL,
   `rutaModuloFuncionSistema` varchar(45) NOT NULL,
+  `estadoModuloFuncionSistema` tinyint NOT NULL,
   PRIMARY KEY (`idmoduloFuncionSistema`),
   KEY `fk_moduloFuncionSistema_moduloSistema1_idx` (`idmoduloSistema`),
   KEY `fk_moduloFuncionSistema_funcionSistema1_idx` (`idfuncionSistema`),
@@ -462,7 +514,7 @@ CREATE TABLE `moduloFuncionSistema` (
 
 LOCK TABLES `moduloFuncionSistema` WRITE;
 /*!40000 ALTER TABLE `moduloFuncionSistema` DISABLE KEYS */;
-INSERT INTO `moduloFuncionSistema` VALUES (1,1,1,'modulo ventas');
+INSERT INTO `moduloFuncionSistema` VALUES (1,1,1,'modulo ventas',1);
 /*!40000 ALTER TABLE `moduloFuncionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -541,9 +593,32 @@ CREATE TABLE `permisoPerfil` (
 
 LOCK TABLES `permisoPerfil` WRITE;
 /*!40000 ALTER TABLE `permisoPerfil` DISABLE KEYS */;
-INSERT INTO `permisoPerfil` VALUES (2,1,1,1);
+INSERT INTO `permisoPerfil` VALUES (1,1,1,1),(2,1,1,1);
 /*!40000 ALTER TABLE `permisoPerfil` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `baja_permisoPerfil` AFTER UPDATE ON `permisoPerfil` FOR EACH ROW BEGIN
+  -- Verifica si el permiso fue dado de baja (cambio de estado de 1 a 0)
+  IF OLD.estadoPermisoPerfil = 1 AND NEW.estadoPermisoPerfil = 0 THEN
+    -- Marca como dado de baja el módulo asociado
+    UPDATE moduloFuncionSistema
+    SET estadoModuloFuncionSistema = 0
+    WHERE idmoduloFuncionSistema = NEW.idmoduloFuncionSistema;
+  END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `persona`
@@ -560,7 +635,7 @@ CREATE TABLE `persona` (
   `fechaNacimiento` date NOT NULL,
   `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -569,9 +644,45 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (45,'32580324419','Felipe','Ponce','1975-05-30',1),(46,'98215338567','Milagros','Alvarez','1976-04-23',0),(47,'31612906550','Luciano','Benitez','1988-02-16',1),(48,'32493528288','Felicitas','Lopez','1985-07-24',1),(49,'2250439427','Santiago Nicolas','Barrios','1965-08-10',0),(50,'45815221570','Antonella','Garcia','2005-06-04',0),(51,'11731125938','Thiago Benjamin','Ortiz','2006-09-13',1),(52,'29450731509','Francisco','Rios','1977-06-11',1),(53,'60185925154','Juliana','Suarez','1978-06-17',0),(54,'33235016775','Mia Valentina','Gutierrez','2003-01-19',0);
+INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',0),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',0),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1),(43,'20-12345678-9','Brenda','Cano','2003-06-08',1),(44,'20-12345678-9','Juan','Pérez','1990-05-21',1),(46,'20-12345678-9','Jose','Franco','1990-06-21',1),(47,'20-12345678-9','Juan','Pérez','1990-01-01',1),(48,'20-12345678-9','Abril','Zacaria','1990-01-01',0),(49,'20-44923092-9','Martina','Cano','2013-03-21',0),(50,'20-456789043-9','Beglu','Bechir','2000-07-21',0);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_fecha_finalizacion` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
+    IF OLD.estadoPersona = 1 AND NEW.estadoPersona = 0 THEN
+        -- Actualizar fechaFinalizacion del empleado
+        UPDATE empleado
+        SET fechaFinalizacion = CURRENT_DATE
+        WHERE idPersona = NEW.idPersona;
+
+        -- Cerrar asignaciones de diagnóstico activas
+        UPDATE historialAsignacionDiagnostico
+        SET fechaFinAsignacionDiagnostico = CURRENT_DATE
+        WHERE idEmpleado = (
+            SELECT idEmpleado FROM empleado WHERE idPersona = NEW.idPersona
+        ) AND fechaFinAsignacionDiagnostico IS NULL;
+
+        -- Cerrar asignaciones de reparación activas
+        UPDATE historialAsignacionReparacion
+        SET fechaFinAsignacionReparacion = CURRENT_DATE
+        WHERE idEmpleado = (
+            SELECT idEmpleado FROM empleado WHERE idPersona = NEW.idPersona
+        ) AND fechaFinAsignacionReparacion IS NULL;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `preguntaDiagnostico`
@@ -612,7 +723,7 @@ CREATE TABLE `puestoLaboral` (
   `nombrepuestoLaboral` varchar(45) NOT NULL,
   `estadoPuestoLaboral` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idpuestoLaboral`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -621,8 +732,41 @@ CREATE TABLE `puestoLaboral` (
 
 LOCK TABLES `puestoLaboral` WRITE;
 /*!40000 ALTER TABLE `puestoLaboral` DISABLE KEYS */;
-INSERT INTO `puestoLaboral` VALUES (7,'Técnico',1),(8,'Administrador',1),(9,'Recepcionista',1);
+INSERT INTO `puestoLaboral` VALUES (1,'Técnico',1),(4,'Técnico',1),(5,'Administrador',1),(6,'Vendedor',1);
 /*!40000 ALTER TABLE `puestoLaboral` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `registroEstadoReparacion`
+--
+
+DROP TABLE IF EXISTS `registroEstadoReparacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `registroEstadoReparacion` (
+  `idRegistroEstadoReparacion` int NOT NULL AUTO_INCREMENT,
+  `idReparacion` int NOT NULL,
+  `idEstadoReparacion` int NOT NULL,
+  `fechaHoraRegistroEstadoReparacion` datetime NOT NULL COMMENT 'fecha y hora en la que se registró el cambio de estado',
+  `idEmpleado` int NOT NULL COMMENT 'empleado que hizo el cambio',
+  PRIMARY KEY (`idRegistroEstadoReparacion`),
+  KEY `fk_registro_reparacion` (`idReparacion`),
+  KEY `fk_registro_estado_reparacion` (`idEstadoReparacion`),
+  KEY `fk_registro_empleado` (`idEmpleado`),
+  CONSTRAINT `fk_registro_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
+  CONSTRAINT `fk_registro_estado_reparacion` FOREIGN KEY (`idEstadoReparacion`) REFERENCES `estadoReparacion` (`idEstadoReparacion`),
+  CONSTRAINT `fk_registro_reparacion` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `registroEstadoReparacion`
+--
+
+LOCK TABLES `registroEstadoReparacion` WRITE;
+/*!40000 ALTER TABLE `registroEstadoReparacion` DISABLE KEYS */;
+INSERT INTO `registroEstadoReparacion` VALUES (1,2,1,'2025-06-07 19:21:46',12),(2,2,1,'2025-06-07 19:48:13',13);
+/*!40000 ALTER TABLE `registroEstadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -635,7 +779,6 @@ DROP TABLE IF EXISTS `reparacion`;
 CREATE TABLE `reparacion` (
   `idReparacion` int NOT NULL AUTO_INCREMENT,
   `numeroReparacion` int NOT NULL,
-  `idEstadoReparacion` int NOT NULL,
   `fechaIngreso` date NOT NULL,
   `fechaEgreso` date DEFAULT NULL,
   `montoTotalReparacion` decimal(10,0) NOT NULL,
@@ -644,11 +787,9 @@ CREATE TABLE `reparacion` (
   PRIMARY KEY (`idReparacion`),
   KEY `fk_reparacion_diagnostico1_idx` (`idDiagnostico`),
   KEY `fk_reparacion_empleado1_idx` (`idEmpleado`),
-  KEY `fk_reparacion_estadoReparacion1_idx` (`idEstadoReparacion`),
   CONSTRAINT `fk_reparacion_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
-  CONSTRAINT `fk_reparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
-  CONSTRAINT `fk_reparacion_estadoReparacion1` FOREIGN KEY (`idEstadoReparacion`) REFERENCES `estadoReparacion` (`idEstadoReparacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `fk_reparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -657,8 +798,37 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
+INSERT INTO `reparacion` VALUES (1,1,'2025-06-07',NULL,4500,1,11),(2,2,'2025-06-07',NULL,4500,1,11),(3,2587,'2025-06-07',NULL,8500,1,28);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `insertar_historial_asignacion_reparacion` AFTER INSERT ON `reparacion` FOR EACH ROW BEGIN
+    IF NEW.idEmpleado IS NOT NULL THEN
+        INSERT INTO historialAsignacionReparacion (
+            fechaInicioAsignacionReparacion,
+            idReparacion,
+            idEmpleado
+        )
+        VALUES (
+            CURRENT_DATE,
+            NEW.idReparacion,
+            NEW.idEmpleado
+        );
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `repuesto`
@@ -751,7 +921,7 @@ CREATE TABLE `tipoDispositivo` (
   `idTipoDispositivo` int NOT NULL AUTO_INCREMENT,
   `nombreTipoDispositivo` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -760,7 +930,7 @@ CREATE TABLE `tipoDispositivo` (
 
 LOCK TABLES `tipoDispositivo` WRITE;
 /*!40000 ALTER TABLE `tipoDispositivo` DISABLE KEYS */;
-INSERT INTO `tipoDispositivo` VALUES (1,'Celular'),(2,'Tablet'),(3,'Notebook'),(4,'Smartwatch');
+INSERT INTO `tipoDispositivo` VALUES (1,'celular');
 /*!40000 ALTER TABLE `tipoDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -876,7 +1046,7 @@ CREATE TABLE `usuario` (
   `password` varchar(500) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -885,9 +1055,43 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com'),(13,'aguedamarquez','hashed_password','evilla@example.org'),(14,'castelloprudencio','hashed_password','rayairene@example.com'),(15,'paulapenalver','hashed_password','gilabertjorge@example.org'),(16,'ynavarrete','hashed_password','ayusoagapito@example.org'),(17,'emiliapaz','hashed_password','jose00@example.org'),(18,'malemany','hashed_password','rocamorasabina@example.com'),(19,'lealinigo','hashed_password','jimena57@example.net'),(20,'pugagabriel','hashed_password','aguilabenigno@example.org'),(21,'dborrego','hashed_password','calixta67@example.com'),(22,'usimo','hashed_password','agustinagaliano@example.net'),(23,'luciano-benjamin04','hashed_password','lola52@example.net'),(24,'yrivero','hashed_password','zbustos@example.org'),(25,'umacorrea','hashed_password','santino-benjamindiaz@example.org'),(26,'oliviagonzalez','hashed_password','lautaro-nicolasramirez@example.net'),(27,'kmartinez','hashed_password','nmedina@example.com'),(28,'ruizlautaro','hashed_password','thiago-joaquin87@example.net'),(29,'vegamartina','hashed_password','rafael16@example.net'),(30,'ygonzalez','hashed_password','martinezcarmela@example.com'),(31,'peraltaabril','hashed_password','thiago-emanuel84@example.net'),(32,'facundogomez','hashed_password','mateo05@example.org');
+INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com'),(13,'aguedamarquez','hashed_password','evilla@example.org'),(14,'castelloprudencio','hashed_password','rayairene@example.com'),(15,'paulapenalver','hashed_password','gilabertjorge@example.org'),(16,'ynavarrete','hashed_password','ayusoagapito@example.org'),(17,'emiliapaz','hashed_password','jose00@example.org'),(18,'malemany','hashed_password','rocamorasabina@example.com'),(19,'lealinigo','hashed_password','jimena57@example.net'),(20,'pugagabriel','hashed_password','aguilabenigno@example.org'),(21,'dborrego','hashed_password','calixta67@example.com'),(22,'usimo','hashed_password','agustinagaliano@example.net');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `vista_notificaciones`
+--
+
+DROP TABLE IF EXISTS `vista_notificaciones`;
+/*!50001 DROP VIEW IF EXISTS `vista_notificaciones`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `vista_notificaciones` AS SELECT 
+ 1 AS `idActividad`,
+ 1 AS `tipo`,
+ 1 AS `mensaje`,
+ 1 AS `fecha`,
+ 1 AS `accion`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `vista_notificaciones`
+--
+
+/*!50001 DROP VIEW IF EXISTS `vista_notificaciones`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`fastapi_user`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `vista_notificaciones` AS select row_number() OVER (ORDER BY `subconsulta`.`fecha` desc )  AS `idActividad`,`subconsulta`.`tipo` AS `tipo`,`subconsulta`.`mensaje` AS `mensaje`,`subconsulta`.`fecha` AS `fecha`,`subconsulta`.`accion` AS `accion` from (select 'Alta empleado' AS `tipo`,concat('Empleado agregado: ',`p`.`nombre`,' ',`p`.`apellido`) AS `mensaje`,`e`.`fechaContratacion` AS `fecha`,'Ver empleado' AS `accion` from (`empleado` `e` join `persona` `p` on((`e`.`idPersona` = `p`.`idPersona`))) where ((`e`.`fechaContratacion` is not null) and (`e`.`fechaFinalizacion` is null)) union all select 'Baja empleado' AS `Baja empleado`,concat('Empleado dado de baja: ',`p`.`nombre`,' ',`p`.`apellido`) AS `CONCAT('Empleado dado de baja: ', p.nombre, ' ', p.apellido)`,`e`.`fechaFinalizacion` AS `fechaFinalizacion`,'Ver empleado' AS `Ver empleado` from (`empleado` `e` join `persona` `p` on((`e`.`idPersona` = `p`.`idPersona`))) where (`e`.`fechaFinalizacion` is not null) union all select 'Nuevo diagnóstico' AS `Nuevo diagnóstico`,concat('Se diagnosticó el dispositivo ID ',`d`.`idDispositivo`) AS `CONCAT('Se diagnosticó el dispositivo ID ', d.idDispositivo)`,`d`.`fechaDiagnostico` AS `fechaDiagnostico`,'Ver diagnóstico' AS `Ver diagnóstico` from `diagnostico` `d` union all select 'Reparación ingresada' AS `Reparación ingresada`,concat('Nueva reparación con número: ',`r`.`numeroReparacion`) AS `CONCAT('Nueva reparación con número: ', r.numeroReparacion)`,`r`.`fechaIngreso` AS `fechaIngreso`,'Ver reparación' AS `Ver reparación` from `reparacion` `r`) `subconsulta` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -898,4 +1102,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-06  4:45:08
+-- Dump completed on 2025-06-09  8:20:20
