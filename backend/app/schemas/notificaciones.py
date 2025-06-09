@@ -6,7 +6,7 @@ class Notificacion(BaseModel):
     idActividad: int
     tipo: str
     mensaje: str
-    fecha: datetime
+    fecha: date
     accion: str
 
     class Config:

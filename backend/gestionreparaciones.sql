@@ -219,6 +219,32 @@ LOCK TABLES `diagnostico` WRITE;
 INSERT INTO `diagnostico` VALUES (1,'2025-06-07',1,11),(2,'2025-06-07',1,28);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `insertar_historial_asignacion` AFTER INSERT ON `diagnostico` FOR EACH ROW BEGIN
+    INSERT INTO historialAsignacionDiagnostico (
+        fechaInicioAsignacionDiagnostico,
+        idDiagnostico,
+        idEmpleado
+    )
+    VALUES (
+        CURRENT_DATE,
+        NEW.idDiagnostico,
+        NEW.idEmpleado
+    );
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `dispositivo`
@@ -473,6 +499,7 @@ CREATE TABLE `moduloFuncionSistema` (
   `idmoduloSistema` int NOT NULL,
   `idfuncionSistema` int NOT NULL,
   `rutaModuloFuncionSistema` varchar(45) NOT NULL,
+  `estadoModuloFuncionSistema` tinyint NOT NULL,
   PRIMARY KEY (`idmoduloFuncionSistema`),
   KEY `fk_moduloFuncionSistema_moduloSistema1_idx` (`idmoduloSistema`),
   KEY `fk_moduloFuncionSistema_funcionSistema1_idx` (`idfuncionSistema`),
@@ -487,7 +514,7 @@ CREATE TABLE `moduloFuncionSistema` (
 
 LOCK TABLES `moduloFuncionSistema` WRITE;
 /*!40000 ALTER TABLE `moduloFuncionSistema` DISABLE KEYS */;
-INSERT INTO `moduloFuncionSistema` VALUES (1,1,1,'modulo ventas');
+INSERT INTO `moduloFuncionSistema` VALUES (1,1,1,'modulo ventas',1);
 /*!40000 ALTER TABLE `moduloFuncionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -566,9 +593,32 @@ CREATE TABLE `permisoPerfil` (
 
 LOCK TABLES `permisoPerfil` WRITE;
 /*!40000 ALTER TABLE `permisoPerfil` DISABLE KEYS */;
-INSERT INTO `permisoPerfil` VALUES (2,1,1,1);
+INSERT INTO `permisoPerfil` VALUES (1,1,1,1),(2,1,1,1);
 /*!40000 ALTER TABLE `permisoPerfil` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `baja_permisoPerfil` AFTER UPDATE ON `permisoPerfil` FOR EACH ROW BEGIN
+  -- Verifica si el permiso fue dado de baja (cambio de estado de 1 a 0)
+  IF OLD.estadoPermisoPerfil = 1 AND NEW.estadoPermisoPerfil = 0 THEN
+    -- Marca como dado de baja el módulo asociado
+    UPDATE moduloFuncionSistema
+    SET estadoModuloFuncionSistema = 0
+    WHERE idmoduloFuncionSistema = NEW.idmoduloFuncionSistema;
+  END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `persona`
@@ -597,6 +647,42 @@ LOCK TABLES `persona` WRITE;
 INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',0),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',0),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1),(43,'20-12345678-9','Brenda','Cano','2003-06-08',1),(44,'20-12345678-9','Juan','Pérez','1990-05-21',1),(46,'20-12345678-9','Jose','Franco','1990-06-21',1),(47,'20-12345678-9','Juan','Pérez','1990-01-01',1),(48,'20-12345678-9','Abril','Zacaria','1990-01-01',0),(49,'20-44923092-9','Martina','Cano','2013-03-21',0),(50,'20-456789043-9','Beglu','Bechir','2000-07-21',0);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_fecha_finalizacion` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
+    IF OLD.estadoPersona = 1 AND NEW.estadoPersona = 0 THEN
+        -- Actualizar fechaFinalizacion del empleado
+        UPDATE empleado
+        SET fechaFinalizacion = CURRENT_DATE
+        WHERE idPersona = NEW.idPersona;
+
+        -- Cerrar asignaciones de diagnóstico activas
+        UPDATE historialAsignacionDiagnostico
+        SET fechaFinAsignacionDiagnostico = CURRENT_DATE
+        WHERE idEmpleado = (
+            SELECT idEmpleado FROM empleado WHERE idPersona = NEW.idPersona
+        ) AND fechaFinAsignacionDiagnostico IS NULL;
+
+        -- Cerrar asignaciones de reparación activas
+        UPDATE historialAsignacionReparacion
+        SET fechaFinAsignacionReparacion = CURRENT_DATE
+        WHERE idEmpleado = (
+            SELECT idEmpleado FROM empleado WHERE idPersona = NEW.idPersona
+        ) AND fechaFinAsignacionReparacion IS NULL;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `preguntaDiagnostico`
@@ -715,6 +801,34 @@ LOCK TABLES `reparacion` WRITE;
 INSERT INTO `reparacion` VALUES (1,1,'2025-06-07',NULL,4500,1,11),(2,2,'2025-06-07',NULL,4500,1,11),(3,2587,'2025-06-07',NULL,8500,1,28);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `insertar_historial_asignacion_reparacion` AFTER INSERT ON `reparacion` FOR EACH ROW BEGIN
+    IF NEW.idEmpleado IS NOT NULL THEN
+        INSERT INTO historialAsignacionReparacion (
+            fechaInicioAsignacionReparacion,
+            idReparacion,
+            idEmpleado
+        )
+        VALUES (
+            CURRENT_DATE,
+            NEW.idReparacion,
+            NEW.idEmpleado
+        );
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `repuesto`
@@ -988,4 +1102,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-08  0:39:24
+-- Dump completed on 2025-06-09  8:20:20
