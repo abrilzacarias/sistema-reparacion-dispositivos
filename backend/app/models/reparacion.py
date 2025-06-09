@@ -27,7 +27,6 @@ class Reparacion(Base):
 
     diagnostico = relationship('Diagnostico', back_populates='reparaciones')
     empleado = relationship('Empleado', back_populates='reparaciones')
-    #estadoReparacion = relationship('EstadoReparacion', back_populates='reparaciones')
-    detalleReparacion = relationship('DetalleReparacion', back_populates='reparacion')  # ✅ correcto
+    detalleReparacion = relationship('DetalleReparacion', back_populates='reparacion')  
     registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="reparacion", cascade="all, delete-orphan")
-    #historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparaciones')
+    historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparacion')

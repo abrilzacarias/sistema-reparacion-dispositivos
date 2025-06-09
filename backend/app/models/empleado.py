@@ -23,5 +23,6 @@ class Empleado(Base):
     diagnosticos = relationship("Diagnostico", back_populates="empleado")
     reparaciones = relationship("Reparacion", back_populates="empleado")
     registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="empleado")
+    historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='empleado')
 
 

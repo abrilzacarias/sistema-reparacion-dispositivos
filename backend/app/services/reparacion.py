@@ -9,6 +9,7 @@ from fastapi import HTTPException
 from app.services.detalleReparacion import actualizar_monto_total_reparacion
 from datetime import datetime
 from sqlalchemy import desc
+from app.models.historialasignacionreparacion import HistorialAsignacionReparacion
 
 
 def get_reparacion(db: Session, id: int):
@@ -36,6 +37,17 @@ def create_reparacion(db: Session, reparacion: ReparacionCreate):
     db.add(db_reparacion)
     db.commit()
     db.refresh(db_reparacion)
+     # Registrar asignación inicial si tiene empleado
+    if db_reparacion.idEmpleado:
+        historial = HistorialAsignacionReparacion(
+            idReparacion=db_reparacion.idReparacion,
+            idEmpleado=db_reparacion.idEmpleado,
+            fechaInicioAsignacionReparacion=datetime.now(),  # ¡Aquí!
+            fechaFinAsignacionReparacion=None  # Hasta que termine la asignación
+        )
+        db.add(historial)
+        db.commit()
+
     return db_reparacion
 
 
@@ -50,9 +62,36 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     id_estado = update_data.pop("idEstadoReparacion", None)
     id_empleado_estado = update_data.pop("idEmpleadoEstado", None)
 
+    # Guardar idEmpleado anterior para detectar cambio
+    id_empleado_anterior = db_reparacion.idEmpleado
+    id_empleado_nuevo = update_data.get("idEmpleado")
+
     # Actualizar campos de la reparación
     for key, value in update_data.items():
         setattr(db_reparacion, key, value)
+
+    # Registrar cambio de asignación de empleado si hubo un cambio
+    if id_empleado_nuevo and id_empleado_nuevo != id_empleado_anterior:
+        # Cerrar la asignación anterior (fechaFinAsignacion)
+        historial_anterior = db.query(HistorialAsignacionReparacion)\
+            .filter(
+                HistorialAsignacionReparacion.idReparacion == id,
+                HistorialAsignacionReparacion.fechaFinAsignacionReparacion == None
+            )\
+            .order_by(HistorialAsignacionReparacion.fechaInicioAsignacionReparacion.desc())\
+            .first()
+        if historial_anterior:
+            historial_anterior.fechaFinAsignacionReparacion = datetime.now()
+            db.add(historial_anterior)
+
+        # Crear nuevo registro de asignación con fechaInicioAsignacion
+        nuevo_historial = HistorialAsignacionReparacion(
+            idReparacion=id,
+            idEmpleado=id_empleado_nuevo,
+            fechaInicioAsignacionReparacion=datetime.now(),
+            fechaFinAsignacionReparacion=None
+        )
+        db.add(nuevo_historial)
 
     # Crear un nuevo registro de estado si se proporcionan los datos
     nuevo_estado_registro = None
@@ -96,6 +135,7 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     db.refresh(db_reparacion)
 
     return db_reparacion
+
 
 
 

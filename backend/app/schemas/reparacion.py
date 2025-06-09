@@ -6,6 +6,7 @@ from app.schemas.empleado import EmpleadoOut
 from app.schemas.diagnostico import DiagnosticoSchema
 from app.schemas.registroEstadoReparacion import RegistroEstadoReparacionOut
 
+
 class ReparacionBase(BaseModel):
     fechaIngreso: date
     fechaEgreso: Optional[date] = None

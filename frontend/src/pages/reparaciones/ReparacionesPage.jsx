@@ -97,7 +97,7 @@ const ReparacionesPage = () => {
               columns={getColumnsReparaciones({ refetch })}
               refetch={refetch}
               isLoading={isLoading}
-              searchTarget="cliente" // o el campo por el que quieras filtrar
+              searchTarget="Cliente" // o el campo por el que quieras filtrar
               totalUsers={totalReparaciones}
               fetchNextPage={fetchNextPage}
               isError={isError}
