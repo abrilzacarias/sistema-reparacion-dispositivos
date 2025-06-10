@@ -40,6 +40,7 @@ def create_persona(db: Session, persona_data: PersonaCreate):
     db.commit()
     db.refresh(persona)
 
+    # Create contactos
     for contacto_data in persona_data.contactos:
         contacto_existente = db.query(Contacto).filter(
             func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
@@ -55,6 +56,21 @@ def create_persona(db: Session, persona_data: PersonaCreate):
             idPersona=persona.idPersona
         )
         db.add(contacto)
+
+    # Create domicilios
+    for domicilio_data in persona_data.domicilios:
+        domicilio = Domicilio(
+            codigoPostal=domicilio_data.codigoPostal,
+            pais=domicilio_data.pais,
+            provincia=domicilio_data.provincia,
+            ciudad=domicilio_data.ciudad,
+            barrio=domicilio_data.barrio,
+            calle=domicilio_data.calle,
+            departamento=domicilio_data.departamento,
+            idtipoDomicilio=domicilio_data.idtipoDomicilio,
+            idPersona=persona.idPersona
+        )
+        db.add(domicilio)
 
     db.commit()
     return persona
@@ -80,6 +96,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     persona.fechaNacimiento = persona_data.fechaNacimiento
     db.commit()
 
+    # Update contactos
     for contacto_data in persona_data.contactos:
         if contacto_data.idContacto:
             contacto = db.query(Contacto).filter(Contacto.idContacto == contacto_data.idContacto).first()
@@ -111,6 +128,33 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
                 idPersona=idPersona
             )
             db.add(nuevo_contacto)
+
+    # Update domicilios
+    for domicilio_data in persona_data.domicilios:
+        if domicilio_data.idDomicilio:
+            domicilio = db.query(Domicilio).filter(Domicilio.idDomicilio == domicilio_data.idDomicilio).first()
+            if domicilio:
+                domicilio.codigoPostal = domicilio_data.codigoPostal
+                domicilio.pais = domicilio_data.pais
+                domicilio.provincia = domicilio_data.provincia
+                domicilio.ciudad = domicilio_data.ciudad
+                domicilio.barrio = domicilio_data.barrio
+                domicilio.calle = domicilio_data.calle
+                domicilio.departamento = domicilio_data.departamento
+                domicilio.idtipoDomicilio = domicilio_data.idtipoDomicilio
+        else:
+            nuevo_domicilio = Domicilio(
+                codigoPostal=domicilio_data.codigoPostal,
+                pais=domicilio_data.pais,
+                provincia=domicilio_data.provincia,
+                ciudad=domicilio_data.ciudad,
+                barrio=domicilio_data.barrio,
+                calle=domicilio_data.calle,
+                departamento=domicilio_data.departamento,
+                idtipoDomicilio=domicilio_data.idtipoDomicilio,
+                idPersona=idPersona
+            )
+            db.add(nuevo_domicilio)
 
     db.commit()
     return persona

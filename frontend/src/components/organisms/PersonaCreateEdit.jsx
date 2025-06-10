@@ -10,6 +10,7 @@ import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMe
 import { Button } from "@/components/ui/button"
 import { PhoneInput } from "../ui/phone-input"
 import { isValidPhoneNumber } from "react-phone-number-input"
+import FormSelectSearch from "@/components/atoms/FormSelectSearch"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -38,6 +39,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       const contactoTelefono = persona.contactos?.find(
         (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
       )
+      const domicilio = persona.domicilios?.[0]
 
       reset({
         cuit: persona.cuit || "",
@@ -46,6 +48,15 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         fechaNacimiento: persona.fechaNacimiento || "",
         correo: contactoCorreo?.descripcionContacto || "",
         telefono: contactoTelefono?.descripcionContacto || "",
+        // Domicilio fields
+        codigoPostal: domicilio?.codigoPostal || "",
+        pais: domicilio?.pais || "",
+        provincia: domicilio?.provincia || "",
+        ciudad: domicilio?.ciudad || "",
+        barrio: domicilio?.barrio || "",
+        calle: domicilio?.calle || "",
+        departamento: domicilio?.departamento || "",
+        idtipoDomicilio: domicilio?.idtipoDomicilio || "",
       })
     } else {
       reset({
@@ -55,6 +66,15 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         fechaNacimiento: "",
         correo: "",
         telefono: "",
+        // Domicilio fields
+        codigoPostal: "",
+        pais: "",
+        provincia: "",
+        ciudad: "",
+        barrio: "",
+        calle: "",
+        departamento: "",
+        idtipoDomicilio: "",
       })
     }
   }, [persona, reset])
@@ -130,13 +150,29 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       ]
     }
 
-    const domicilios = []
+    // Prepare domicilio data
+    const domicilio = {
+      codigoPostal: data.codigoPostal,
+      pais: data.pais,
+      provincia: data.provincia,
+      ciudad: data.ciudad,
+      barrio: data.barrio,
+      calle: data.calle,
+      departamento: data.departamento,
+      idtipoDomicilio: data.idtipoDomicilio,
+    }
+
+    // If editing and domicilio exists, include idDomicilio
+    if (isEdit && persona?.domicilios?.[0]?.idDomicilio) {
+      domicilio.idDomicilio = persona.domicilios[0].idDomicilio
+      domicilio.idPersona = persona.idPersona
+    }
 
     const payload = {
       ...rest,
       estadoPersona: persona?.estadoPersona ?? 0,
       contactos: contactos,
-      domicilios: domicilios,
+      domicilios: [domicilio],
     }
 
     console.log("Payload completo:", JSON.stringify(payload, null, 2))
@@ -256,6 +292,73 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
           )}
         />
         <ErrorMessage message={errors?.telefono?.message} />
+      </div>
+
+      {/* Domicilio fields */}
+      <div className="col-span-2 mt-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Controller
+              name="idtipoDomicilio"
+              control={control}
+              rules={{ required: "Seleccione un tipo de domicilio" }}
+              render={({ field }) => (
+                <FormSelectSearch
+                  label="Tipo de Domicilio"
+                  endpoint="tipo-domicilios"
+                  value={field.value}
+                  setValue={field.onChange}
+                  placeholder="Seleccione un tipo..."
+                  displayKey="descripciontipoDomicilio"
+                  valueKey="idtipoDomicilio"
+                />
+              )}
+            />
+            <ErrorMessage message={errors.idtipoDomicilio?.message || apiErrors?.idtipoDomicilio} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Código Postal</Label>
+            <Input {...register("codigoPostal", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.codigoPostal?.message || apiErrors?.codigoPostal} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>País</Label>
+            <Input {...register("pais", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.pais?.message || apiErrors?.pais} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Provincia</Label>
+            <Input {...register("provincia", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.provincia?.message || apiErrors?.provincia} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Ciudad</Label>
+            <Input {...register("ciudad", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.ciudad?.message || apiErrors?.ciudad} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Barrio</Label>
+            <Input {...register("barrio", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.barrio?.message || apiErrors?.barrio} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Calle</Label>
+            <Input {...register("calle", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.calle?.message || apiErrors?.calle} />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Departamento</Label>
+            <Input {...register("departamento", { required: "Campo requerido" })} />
+            <ErrorMessage message={errors.departamento?.message || apiErrors?.departamento} />
+          </div>
+        </div>
       </div>
 
       <div className="col-span-2 flex justify-end gap-4 mt-3">
