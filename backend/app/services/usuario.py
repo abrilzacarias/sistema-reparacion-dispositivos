@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from sqlalchemy import or_, func
 from app.models.usuario import Usuario
 from app.schemas.usuario import UsuarioCreate, UsuarioUpdate, UsuarioAutoCreate
-from app.utils import generate_username_from_email, generate_random_password, send_email_creds
+from app.utils import generate_username_from_email, generate_random_password, send_email_creds, send_email_recover
 from app.auth.auth_handler import get_password_hash
 
 def get_user(db: Session, id_usuario: int):
@@ -87,3 +87,21 @@ def delete_user(db: Session, id_usuario: int) -> bool:
     user.is_active = False
     db.commit()
     return True
+
+def recover_password(db: Session, email: str):
+    usuario = db.query(Usuario).filter(Usuario.email == email).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="No se encontró un usuario con ese email.")
+
+    nueva_password_plana = generate_random_password()
+    usuario.password = get_password_hash(nueva_password_plana)
+
+    try:
+        enviado = send_email_recover(email, nueva_password_plana)
+        if not enviado:
+            raise HTTPException(status_code=500, detail="Error al enviar el email.")
+        db.commit()
+        return {"msg": "Nueva contraseña enviada al correo."}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))

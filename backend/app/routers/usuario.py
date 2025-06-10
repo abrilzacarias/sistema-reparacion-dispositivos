@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -59,3 +59,7 @@ def eliminar_usuario(usuario_id: int, db: Session = Depends(get_db)):
     if not services.delete_user(db, usuario_id):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return None
+
+@router.post("/recuperar-password")
+def recuperar_password(email: str = Body(..., embed=True), db: Session = Depends(get_db)):
+    return services.recover_password(db, email)

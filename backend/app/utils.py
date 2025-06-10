@@ -10,8 +10,11 @@ import os
 from dotenv import load_dotenv
 
 from pathlib import Path
-env_path = Path(__file__).resolve().parents[2] / ".env"
+env_path = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(dotenv_path=env_path)
+print("Cargando .env desde:", env_path)
+print("Ruta __file__:", __file__)
+print("Ruta absoluta __file__:", Path(__file__).resolve())
 
 SMTP_SERVER = os.getenv("SMTP_SERVER")      
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
@@ -41,6 +44,39 @@ def send_email_creds(email, password):
 Hola,
 
 Tu cuenta ha sido creada exitosamente. Estas son tus credenciales de acceso:
+
+Usuario: {email}
+Contraseña: {password}
+
+Por favor, cambia tu contraseña al iniciar sesión.
+
+Saludos.
+    """
+
+    mensaje = MIMEMultipart()
+    mensaje["From"] = SMTP_USER
+    mensaje["To"] = email
+    mensaje["Subject"] = asunto
+    mensaje.attach(MIMEText(cuerpo, "plain"))
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
+            servidor.ehlo() 
+            servidor.starttls()
+            servidor.ehlo() 
+            servidor.login(SMTP_USER, SMTP_PASSWORD)
+            servidor.sendmail(SMTP_USER, email, mensaje.as_string())
+        return True
+    except Exception as e:
+        print("Error al enviar el email:", e)
+        return False
+
+def send_email_recover(email, password):
+    asunto = "Nueva contraseña"
+    cuerpo = f"""
+Hola,
+
+Se ha creado una nueva constraseña. Estas son tus nuevas credenciales de acceso:
 
 Usuario: {email}
 Contraseña: {password}

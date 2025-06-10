@@ -7,10 +7,12 @@ import { Link, useNavigate } from "react-router-dom"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { loginUser } from "@/auth/auth"
 import { useAppContext } from "@/hooks/useAppContext"
+import RecuperarPassModal from "./RecuperarPassModal"
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { darkMode, toggleDarkMode, setIsAuthenticated } = useAppContext()
+  const [modalOpen, setModalOpen] = useState(false)
 
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
@@ -156,9 +158,14 @@ export default function LoginPage() {
             </div>
 
             <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-gray-600 dark:text-gray-400 hover:underline">
+              {/* Cambié Link por button para abrir modal */}
+              <button
+                type="button"
+                onClick={() => setModalOpen(true)}
+                className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
+              >
                 ¿Olvidaste tu contraseña?
-              </Link>
+              </button>
             </div>
 
             <Button
@@ -185,6 +192,9 @@ export default function LoginPage() {
           </Link>
         </div>
       </div>
+      {modalOpen && (
+        <RecuperarPassModal onClose={() => setModalOpen(false)} />
+      )}
     </div>
   )
 }
