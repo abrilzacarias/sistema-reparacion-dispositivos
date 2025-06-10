@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 from app.database import Base
 
 class Diagnostico(Base):
@@ -15,3 +15,7 @@ class Diagnostico(Base):
     idEmpleado = Column(Integer, ForeignKey('empleado.idEmpleado'), nullable=False)
     empleado = relationship("Empleado", back_populates="diagnosticos")
     reparaciones = relationship("Reparacion", back_populates="diagnostico")
+
+    detalleDiagnostico = relationship(
+        "DetalleDiagnostico", back_populates="diagnostico", cascade="all, delete-orphan"
+    )

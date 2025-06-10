@@ -29,3 +29,7 @@ from .estadoreparacion import EstadoReparacion
 from .tiporeparacion import TipoReparacion
 from .reparacion import Reparacion
 from .detallereparacion import DetalleReparacion
+from .preguntaDiagnostico import PreguntaDiagnostico
+from .tipoDatoPreguntaDiagnostico import TipoDatoPreguntaDiagnostico
+from .tipoDispositivoSegunPregunta import TipoDispositivoSegunPregunta
+from .detalleDiagnostico import DetalleDiagnostico
