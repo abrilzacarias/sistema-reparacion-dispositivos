@@ -27,7 +27,7 @@ from .tipoDispositivo import TipoDispositivo
 from .estadoReparacion import EstadoReparacion
 from .tipoReparacion import TipoReparacion
 from .reparacion import Reparacion
-from .detallereparacion import DetalleReparacion
+from .detalleReparacion import DetalleReparacion
 from .notificaciones import Notificacion
 from .registroEstadoReparacion import RegistroEstadoReparacion
 from .historialAsignacionDiagnostico import HistorialAsignacionDiagnostico
