@@ -4,9 +4,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, HTTPException, status, APIRouter, Request
 from sqlalchemy.orm import Session
 
-from ..auth.auth_handler import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_user, get_password_hash, get_current_active_user
+from ..auth.auth_handler import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_user, get_password_hash, get_current_active_user, verify_password
 from ..database import get_db
-from ..schemas.usuario import Token, UsuarioCreate, UserResponse, LoginResponse
+from ..schemas.usuario import Token, UsuarioCreate, UserResponse, LoginResponse, PasswordChangeRequest
 from ..models.usuario import Usuario as User
 from collections import defaultdict
 
@@ -50,6 +50,27 @@ async def register_user(request: Request, user: UsuarioCreate, db: Session = Dep
     except Exception as e:
         print(f"Error inesperado en registro: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.post("/change-password")
+async def change_password(
+    password_data: PasswordChangeRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    if not verify_password(password_data.current_password, current_user.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Contraseña actual incorrecta"
+        )
+    
+    hashed_password = get_password_hash(password_data.new_password)
+    current_user.password = hashed_password
+    current_user.needs_password_change = False
+    
+    db.commit()
+    db.refresh(current_user)
+    
+    return {"message": "Contraseña actualizada exitosamente"}
 
 @router.post("/token", response_model=LoginResponse)
 async def login_for_access_token(
@@ -125,5 +146,6 @@ async def login_for_access_token(
         "access_token": access_token,
         "token_type": "bearer",
         "user": user,
-        "permisos": permisos_final
+        "permisos": permisos_final,
+        "needs_password_change": user.needs_password_change
     }

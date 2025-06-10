@@ -40,6 +40,7 @@ def crear_usuario_automatico(usuario_in: UsuarioAutoCreate, db: Session = Depend
             idUsuario=usuario.idUsuario,
             username=usuario.username,
             email=usuario.email,
+            needs_password_change=usuario.needs_password_change,
             message=message
         )
     except ValueError as e:
