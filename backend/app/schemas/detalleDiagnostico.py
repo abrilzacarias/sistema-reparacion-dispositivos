@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class DetalleDiagnosticoBase(BaseModel):
     valorDiagnostico: str
     idDiagnostico: int
-    idTipoDispositivoSegunPregunta: str
+    idTipoDispositivoSegunPregunta: int
 
 class DetalleDiagnosticoCreate(DetalleDiagnosticoBase):
     pass

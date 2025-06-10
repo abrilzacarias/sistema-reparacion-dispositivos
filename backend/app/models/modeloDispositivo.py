@@ -4,11 +4,11 @@ from app.database import Base
 
 class ModeloDispositivo(Base):
     __tablename__ = "modeloDispositivo"
-
-    idModeloDispositivo = Column(Integer, primary_key=True, autoincrement=True)
-    descripcionModeloDispositivo = Column(String(45), nullable=False)
-    estadoModeloDispositivo = Column(Boolean, default=True, nullable=False)
-    idMarcaDispositivo = Column(Integer, ForeignKey("marcaDispositivo.idMarcaDispositivo"), nullable=False)
-
+    idModeloDispositivo = Column(Integer, primary_key=True, index=True)
+    descripcionModeloDispositivo = Column(String)
+    estadoModeloDispositivo = Column(Boolean)
+    idMarcaDispositivo = Column(Integer, ForeignKey("marcaDispositivo.idMarcaDispositivo"))
+    
     marcaDispositivo = relationship("MarcaDispositivo", back_populates="modeloDispositivo")
+
     dispositivos = relationship("Dispositivo", back_populates="modeloDispositivo")

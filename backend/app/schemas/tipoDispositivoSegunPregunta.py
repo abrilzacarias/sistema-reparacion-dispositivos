@@ -6,14 +6,14 @@ class TipoDispositivoSegunPreguntaBase(BaseModel):
     idPreguntaDiagnostico: int
 
 class TipoDispositivoSegunPreguntaCreate(TipoDispositivoSegunPreguntaBase):
-    idTipoDispositivoSegunPregunta: str
+    idTipoDispositivoSegunPregunta: int
 
 class TipoDispositivoSegunPreguntaUpdate(BaseModel):
     idTipoDispositivo: Optional[int] = None
     idPreguntaDiagnostico: Optional[int] = None
 
 class TipoDispositivoSegunPreguntaResponse(TipoDispositivoSegunPreguntaBase):
-    idTipoDispositivoSegunPregunta: str
+    idTipoDispositivoSegunPregunta: int
 
     class Config:
         orm_mode = True

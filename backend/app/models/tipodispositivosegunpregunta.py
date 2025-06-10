@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, ForeignKeyConstraint, Index
+from sqlalchemy import Integer, String, ForeignKeyConstraint, Index, Column
 from sqlalchemy.orm import mapped_column, relationship
 from app.database import Base
 
@@ -11,7 +11,7 @@ class TipoDispositivoSegunPregunta(Base):
         Index('fk_tipoDispositivo_has_preguntasDiagnostico_tipoDispositivo_idx', 'idTipoDispositivo')
     )
 
-    idTipoDispositivoSegunPregunta = mapped_column(String(45), primary_key=True)
+    idTipoDispositivoSegunPregunta = Column(Integer, primary_key=True, index=True)
     idTipoDispositivo = mapped_column(Integer, nullable=False)
     idPreguntaDiagnostico = mapped_column(Integer, nullable=False)
 

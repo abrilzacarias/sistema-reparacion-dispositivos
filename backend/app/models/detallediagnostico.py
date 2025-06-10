@@ -23,7 +23,7 @@ class DetalleDiagnostico(Base):
     idDetalleDiagnostico = mapped_column(Integer, primary_key=True, autoincrement=True)
     valorDiagnostico= mapped_column(String(150), nullable=False)
     idDiagnostico = mapped_column(Integer, nullable=False)
-    idTipoDispositivoSegunPregunta = mapped_column(String(45), nullable=False)
+    idTipoDispositivoSegunPregunta = mapped_column(Integer, nullable=False)  # <-- Cambiado a Integer
 
     diagnostico = relationship('Diagnostico', back_populates='detalleDiagnostico')
     tipoDispositivoSegunPregunta = relationship('TipoDispositivoSegunPregunta', back_populates='detalleDiagnostico')
