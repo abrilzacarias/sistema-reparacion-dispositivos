@@ -176,17 +176,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
           
           {/* Información básica del diagnóstico */}
           <div className="grid grid-cols-2 gap-4">
-            
-            {/* Fecha de diagnóstico */}
-            <div>
-              <label className="text-sm font-medium">Fecha de Diagnóstico *</label>
-              <input
-                type="date"
-                {...register("fechaDiagnostico", { required: "La fecha es obligatoria" })}
-                className="w-full mt-1 rounded-md border px-3 py-2 bg-background text-foreground"
-              />
-              <ErrorMessage message={errors.fechaDiagnostico?.message || apiErrors?.fechaDiagnostico} />
-            </div>
 
             {/* Técnico */}
             <div>
@@ -252,6 +241,17 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 <ErrorMessage message={errors.idModelo?.message || apiErrors?.idModelo} />
               </div>
             </div>
+                      {/* Preguntas dinámicas del dispositivo */}
+          {watchTipoDispositivo && (
+            <div className="border rounded-lg p-4">
+              <DeviceQuestionsDynamic
+                tipoDispositivo={watchTipoDispositivo}
+                value={watchDeviceQuestions}
+                onChange={handleDeviceQuestionsChange}
+                diagnosticoId={diagnostico?.idDiagnostico}
+              />
+            </div>
+          )}
           </div>
 
           {/* Descripción general */}
@@ -266,17 +266,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
             <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
           </div>
 
-          {/* Preguntas dinámicas del dispositivo */}
-          {watchTipoDispositivo && (
-            <div className="border rounded-lg p-4">
-              <DeviceQuestionsDynamic
-                tipoDispositivo={watchTipoDispositivo}
-                value={watchDeviceQuestions}
-                onChange={handleDeviceQuestionsChange}
-                diagnosticoId={diagnostico?.idDiagnostico}
-              />
-            </div>
-          )}
+
 
           {/* Error general */}
           {error && (

@@ -34,3 +34,15 @@ def eliminar(id: str, db: Session = Depends(get_db)):
     if not obj:
         raise HTTPException(status_code=404, detail="No encontrado")
     return {"message": "Eliminado correctamente"}
+
+@router.get("/por-tipo-dispositivo/{id_tipo_dispositivo}", response_model=list[TipoDispositivoSegunPreguntaResponse])
+def obtener_preguntas_por_tipo_dispositivo(id_tipo_dispositivo: int, db: Session = Depends(get_db)):
+    """
+    Obtiene todas las preguntas de diagnóstico asociadas a un tipo de dispositivo específico.
+    Incluye información completa de la pregunta y su tipo de dato.
+    """
+    preguntas = service.get_by_tipo_dispositivo(db, id_tipo_dispositivo)
+    if not preguntas:
+        # No es un error si no hay preguntas, simplemente devuelve lista vacía
+        return []
+    return preguntas

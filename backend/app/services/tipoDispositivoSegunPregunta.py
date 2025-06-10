@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from app.models.tipoDispositivoSegunPregunta import TipoDispositivoSegunPregunta
 from app.schemas.tipoDispositivoSegunPregunta import TipoDispositivoSegunPreguntaCreate, TipoDispositivoSegunPreguntaUpdate
+from app.models.preguntaDiagnostico import PreguntaDiagnostico
+from app.models.tipoDatoPreguntaDiagnostico import TipoDatoPreguntaDiagnostico
 
 def get_all(db: Session):
     return db.query(TipoDispositivoSegunPregunta).all()
@@ -30,3 +32,14 @@ def delete(db: Session, id: str):
         db.delete(obj)
         db.commit()
     return obj
+
+
+def get_by_tipo_dispositivo(db: Session, id_tipo: int):
+    return (
+        db.query(TipoDispositivoSegunPregunta)
+        .join(PreguntaDiagnostico)             # Pregunta asociada
+        .join(TipoDatoPreguntaDiagnostico)     # Tipo de dato
+        .filter(TipoDispositivoSegunPregunta.idTipoDispositivo == id_tipo)
+        .order_by(TipoDispositivoSegunPregunta.idTipoDispositivoSegunPregunta)
+        .all()
+    )
