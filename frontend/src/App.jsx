@@ -7,12 +7,14 @@ import EmpleadoPage from "./pages/empleado/EmpleadoPage"
 import RepuestosPage from "./pages/repuestos/RepuestosPage"
 import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
 import ReparacionesPage from "./pages/reparaciones/ReparacionesPage"
+import ResetPassword from "./pages/login/ResetPassword"
 
 function App() {
   return (
     <div className="min-h-screen bg-red-500 dark:bg-gray-900">
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/usuarios/reset-password" element={<ResetPassword />} />
 
         <Route
           element={
@@ -33,6 +35,8 @@ function App() {
           <Route path="/repuestos" element={<RepuestosPage />} />
           <Route path="/configuracion" element={<div>Página de Configuración</div>} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
+
+          
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />

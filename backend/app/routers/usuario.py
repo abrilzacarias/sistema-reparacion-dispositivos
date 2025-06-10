@@ -16,10 +16,24 @@ router = APIRouter(
     prefix="/usuarios",
     tags=["usuarios"]
 )
+from app.schemas.usuario import ResetPasswordRequest
 
 @router.get("/", response_model=List[UsuarioOut])
 def listar_usuarios(search: str = None, db: Session = Depends(get_db)):
     return services.get_users(db, search).all()
+
+@router.post("/recuperar-password")
+def recuperar_password(email: str = Body(..., embed=True), db: Session = Depends(get_db)):
+    return services.recover_password(db, email)
+
+@router.post("/reset-password")
+def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_db)):
+    try:
+        services.reset_password(db, data.token, data.nueva_password)
+        return {"msg": "Contraseña actualizada correctamente."}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 @router.get("/{usuario_id}", response_model=UsuarioOut)
 def obtener_usuario(usuario_id: int, db: Session = Depends(get_db)):
@@ -60,6 +74,3 @@ def eliminar_usuario(usuario_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return None
 
-@router.post("/recuperar-password")
-def recuperar_password(email: str = Body(..., embed=True), db: Session = Depends(get_db)):
-    return services.recover_password(db, email)

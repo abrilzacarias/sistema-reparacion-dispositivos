@@ -35,3 +35,7 @@ class UsuarioAutoCreate(BaseModel):
 
 class UsuarioAutoCreateResponse(UsuarioOut):
     message: str = Field(..., example="Usuario creado y credenciales enviadas por email")
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., example="dfde6087-4d06-438e-9228-c74179b559db")
+    nueva_password: str = Field(..., example="NewStrongPassword123!")
