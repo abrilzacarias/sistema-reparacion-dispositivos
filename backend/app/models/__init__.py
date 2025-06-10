@@ -34,3 +34,7 @@ from .registroEstadoReparacion import RegistroEstadoReparacion
 from .historialAsignacionDiagnostico import HistorialAsignacionDiagnostico
 from .historialAsignacionReparacion import HistorialAsignacionReparacion
 from .modeloDispositivo import ModeloDispositivo
+from .preguntaDiagnostico import PreguntaDiagnostico
+from .tipoDatoPreguntaDiagnostico import TipoDatoPreguntaDiagnostico
+from .tipoDispositivoSegunPregunta import TipoDispositivoSegunPregunta
+from .detalleDiagnostico import DetalleDiagnostico

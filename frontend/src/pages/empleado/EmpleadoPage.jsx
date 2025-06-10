@@ -92,7 +92,7 @@ const EmpleadoPage = () => {
 
     if (selectedPersona?.empleado) {
       setIsErrorApi(
-        `El usuario ${selectedPersona?.nombre} ${selectedPersona?.apellido} ya tiene un perfil de empleado activo. Por favor, seleccione otro usuario o cree uno nuevo.`
+        `${selectedPersona?.nombre} ${selectedPersona?.apellido} ya tiene un perfil de empleado activo. Por favor, seleccione otra persona o cree una nueva.`
       );
     } else {
       setIsErrorApi(false);
@@ -211,6 +211,8 @@ const EmpleadoPage = () => {
                     <EmpleadoCreateEdit
                       refreshEmpleados={refetch}
                       idPersona={personaId}
+                      setPersonaId={setPersonaId}
+                      setSelectedPersona={setSelectedPersona}
                       personaEmail={personaEmail}
                     />
                   </TabsContent>

@@ -1,4 +1,5 @@
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
+import FormSelectSearch from "@/components/atoms/FormSelectSearch"
 import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMessage"
 import ErrorMessage from "@/components/molecules/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
@@ -7,11 +8,10 @@ import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { useContext, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import PuestoLaboralMultiSelect from "./PuestoLaboralMultiSelect"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmail }) => {
+const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmail, setPersonaId, setSelectedPersona }) => {
   const {
     register,
     handleSubmit,
@@ -21,9 +21,8 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
     mode: "onChange",
     defaultValues: {
       fechaContratacion: empleado?.fechaContratacion || "",
-      fechaFinalizacion: empleado?.fechaFinalizacion || "",
       idUsuario: empleado?.usuario?.idUsuario || "",
-      idpuestoLaboral: empleado?.puestos?.map((p) => p.idpuestoLaboral) || [], // Cambio para array
+      idpuestoLaboral: empleado?.puesto?.idpuestoLaboral || "",
     },
   })
 
@@ -33,16 +32,17 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
   const { open, setOpen } = useContext(OpenContext)
 
   const crearUsuarioAutomatico = async (email) => {
+    setError("")
+    setApiErrors({})
     try {
-      console.log("Creando usuario automático con email:", email)
-      const response = await axios.post(`${API_URL}/usuarios`, {
+      const response = await axios.post(`${API_URL}/usuarios/auto`, {
         email: email,
       })
       console.log("Usuario creado:", response.data)
       return response.data.idUsuario
     } catch (err) {
-      console.error("Error al crear usuario automático:", err)
-      throw new Error("Error al crear el usuario automáticamente")
+      console.error("Error al crear usuario:", err)
+      throw new Error(err.response.data.detail)
     }
   }
 
@@ -61,9 +61,8 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
 
       const empleadoPayload = {
         fechaContratacion: data.fechaContratacion,
-        fechaFinalizacion: data.fechaFinalizacion,
         idUsuario: idUsuario,
-        puestosLaborales: data.idpuestoLaboral,
+        idpuestoLaboral: data.idpuestoLaboral,
         idPersona,
       }
 
@@ -76,6 +75,8 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
 
       empleado ? ToastMessageEdit() : ToastMessageCreate()
       refreshEmpleados()
+      setPersonaId(null)
+      setSelectedPersona(null)
       setOpen(false)
     } catch (err) {
       console.error("Error al guardar empleado:", err)
@@ -99,47 +100,41 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
       {!empleado && personaEmail && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             <p className="text-sm text-blue-700">
-              <strong>AVISO:</strong> Se creará un usuario con el correo electrónico{" "}
+              <strong>AVISO:</strong> Se creará un usuario {" "}
               <span className="font-mono bg-blue-100 px-1 rounded">{personaEmail}</span> y se enviarán las credenciales
-              de acceso por correo.
+              de acceso por correo electrónico.
             </p>
           </div>
         </div>
       )}
   
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
-      <div className="space-y-2">
+      <div className="col-span-2 space-y-2">
         <Label>Fecha de Contratación</Label>
         <Input type="date" {...register("fechaContratacion", { required: "Campo requerido" })} />
         <ErrorMessage message={errors.fechaContratacion?.message || apiErrors?.fechaContratacion} />
       </div>
 
-      <div className="space-y-2">
-        <Label>Fecha de Finalización</Label>
-        <Input type="date" {...register("fechaFinalizacion")} />
-        <ErrorMessage message={errors.fechaFinalizacion?.message || apiErrors?.fechaFinalizacion} />
+      <div className="col-span-2 space-y-2">
+        <Controller
+          name="idpuestoLaboral"
+          control={control}
+          rules={{ required: "Seleccione un puesto laboral" }}
+          render={({ field }) => (
+            <FormSelectSearch
+              label="Puesto Laboral"
+              endpoint="puestos-laborales"
+              value={field.value}
+              setValue={field.onChange}
+              placeholder="Seleccione un puesto..."
+              displayKey="nombrepuestoLaboral"
+              valueKey="idpuestoLaboral"
+            />
+          )}
+        />
+        <ErrorMessage message={errors.idpuestoLaboral?.message || apiErrors?.idpuestoLaboral} />
       </div>
-
-        <div className="col-span-2 space-y-2">
-          <Controller
-            name="idpuestoLaboral"
-            control={control}
-            rules={{
-              required: "Seleccione al menos un puesto laboral",
-              validate: (value) => value.length > 0 || "Debe seleccionar al menos un puesto laboral",
-            }}
-            render={({ field }) => (
-              <PuestoLaboralMultiSelect
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Seleccione puestos laborales..."
-              />
-            )}
-          />
-          <ErrorMessage message={errors.idpuestoLaboral?.message || apiErrors?.idpuestoLaboral} />
-        </div>
 
       <div className="col-span-2 flex justify-end mt-3">
         <ButtonDinamicForms initialData={empleado} isLoading={isLoading} register />
