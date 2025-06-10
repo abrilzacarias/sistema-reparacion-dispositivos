@@ -22,7 +22,7 @@ class ReparacionUpdate(ReparacionBase):
     idEstadoReparacion: Optional[int] = None
     idEmpleadoEstado: Optional[int] = None  # para guardar quién registró el estado
 
-        """
+
 class ReparacionOut(ReparacionBase):
     idReparacion: int
     diagnostico: DiagnosticoSchema

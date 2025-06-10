@@ -9,7 +9,7 @@ from fastapi import HTTPException
 from app.services.detalleReparacion import actualizar_monto_total_reparacion
 from datetime import datetime
 from sqlalchemy import desc
-from app.models.historialasignacionreparacion import HistorialAsignacionReparacion
+from app.models.historialAsignacionReparacion import HistorialAsignacionReparacion
 
 
 def get_reparacion(db: Session, id: int):

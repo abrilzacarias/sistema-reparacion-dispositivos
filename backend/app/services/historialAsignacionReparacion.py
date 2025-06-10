@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
-from app.models.historialasignacionreparacion import HistorialAsignacionReparacion
+from app.models.historialAsignacionReparacion import HistorialAsignacionReparacion
 from app.schemas.historialAsignacionReparacion import (
     HistorialAsignacionReparacionCreate,
     HistorialAsignacionReparacionUpdate
