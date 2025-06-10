@@ -14,12 +14,11 @@ from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
 from .contacto import Contacto
-from .tipoContacto import TipoContacto
+from .tipocontacto import TipoContacto
 from .perfil import Perfil
 from .funcionSistema import FuncionSistema
 from .moduloFuncionSistema import ModuloFuncionSistema
 from .moduloSistema import ModuloSistema
-from .moduloFuncionSistema import ModuloFuncionSistema
 from .permisoPerfil import PermisoPerfil
 from .asignacionUsuarioPermisos import AsignacionUsuarioPermisos
 from .diagnostico import Diagnostico
@@ -31,5 +30,5 @@ from .reparacion import Reparacion
 from .detallereparacion import DetalleReparacion
 from .notificaciones import Notificacion
 from .registroEstadoReparacion import RegistroEstadoReparacion
-from .historialAsignacionDiagnostico import HistorialAsignacionDiagnostico
-from .historialAsignacionReparacion import HistorialAsignacionReparacion
+from .historialasignaciondiagnostico import HistorialAsignacionDiagnostico
+from .historialasignacionreparacion import HistorialAsignacionReparacion
