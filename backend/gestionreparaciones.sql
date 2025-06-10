@@ -1044,6 +1044,7 @@ CREATE TABLE `usuario` (
   `username` varchar(45) NOT NULL,
   `password` varchar(500) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
+  `needs_password_change` BOOLEAN DEFAULT TRUE,
   PRIMARY KEY (`idUsuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1054,7 +1055,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com'),(13,'aguedamarquez','hashed_password','evilla@example.org'),(14,'castelloprudencio','hashed_password','rayairene@example.com'),(15,'paulapenalver','hashed_password','gilabertjorge@example.org'),(16,'ynavarrete','hashed_password','ayusoagapito@example.org'),(17,'emiliapaz','hashed_password','jose00@example.org'),(18,'malemany','hashed_password','rocamorasabina@example.com'),(19,'lealinigo','hashed_password','jimena57@example.net'),(20,'pugagabriel','hashed_password','aguilabenigno@example.org'),(21,'dborrego','hashed_password','calixta67@example.com'),(22,'usimo','hashed_password','agustinagaliano@example.net');
+INSERT INTO `usuario` (`idUsuario`, `username`, `password`, `email`) VALUES (1,'admin','$2b$12$GMM2gkbAfcnbvjGrTCzuye8.GHhIE1cRcrx35DFD8mgEMC0PjV87m','admin@admin.com'),(2,'admin','$2b$12$J4DJbQJ2d8yeMKGHw6eYmuIwXEF3VERnKK78i2gWaOih1PdxzsoCu','brenda@admin.com'),(13,'aguedamarquez','hashed_password','evilla@example.org'),(14,'castelloprudencio','hashed_password','rayairene@example.com'),(15,'paulapenalver','hashed_password','gilabertjorge@example.org'),(16,'ynavarrete','hashed_password','ayusoagapito@example.org'),(17,'emiliapaz','hashed_password','jose00@example.org'),(18,'malemany','hashed_password','rocamorasabina@example.com'),(19,'lealinigo','hashed_password','jimena57@example.net'),(20,'pugagabriel','hashed_password','aguilabenigno@example.org'),(21,'dborrego','hashed_password','calixta67@example.com'),(22,'usimo','hashed_password','agustinagaliano@example.net');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
