@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from app.schemas import registroEstadoReparacion as schemas
 from app.models.reparacion import Reparacion
-from app.models.estadoreparacion import EstadoReparacion
+from app.models.estadoReparacion import EstadoReparacion
 from app.models.empleado import Empleado
 from app.models.registroEstadoReparacion import RegistroEstadoReparacion
 

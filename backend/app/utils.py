@@ -17,8 +17,6 @@ SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-print('hola')
-print(SMTP_USER)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
