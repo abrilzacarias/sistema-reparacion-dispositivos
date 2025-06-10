@@ -11,3 +11,5 @@ python-multipart==0.0.16
 email-validator==2.2.0
 fastapi-pagination
 Faker
+requests
+pydantic-settings

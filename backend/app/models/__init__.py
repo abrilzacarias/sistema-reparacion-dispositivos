@@ -33,3 +33,4 @@ from .notificaciones import Notificacion
 from .registroEstadoReparacion import RegistroEstadoReparacion
 from .historialAsignacionDiagnostico import HistorialAsignacionDiagnostico
 from .historialAsignacionReparacion import HistorialAsignacionReparacion
+from .modeloDispositivo import ModeloDispositivo
