@@ -8,6 +8,7 @@ import RepuestosPage from "./pages/repuestos/RepuestosPage"
 import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
 import ReparacionesPage from "./pages/reparaciones/ReparacionesPage"
 import PerfilesPage from "./pages/perfiles/PerfilesPage"
+import AddPerfilPage from "./pages/perfiles/AddPerfilPage"
 
 function App() {
   return (
@@ -27,8 +28,8 @@ function App() {
           <Route path="/diagnosticos" element={<DiagnosticoPage />} />
           {/* 
           <Route path="/reparaciones" element={<ReparacionesPage />} /> */}
-          {/* Puedes añadir más rutas aquí y todas usarán el mismo layout */}
           <Route path="/perfiles" element={<PerfilesPage />} />
+          <Route path="/perfiles/nuevo" element={<AddPerfilPage />} />
           <Route path="/empleados" element={<EmpleadoPage />} />
           <Route path="/clientes" element={<div>Página de Clientes</div>} />
           <Route path="/repuestos" element={<RepuestosPage />} />

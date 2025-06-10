@@ -14,6 +14,7 @@ def get_modulos_sistema(db: Session):
             {
                 "idfuncionSistema": mf.funcionSistema.idfuncionSistema,
                 "descripcionFuncionSistema": mf.funcionSistema.descripcionFuncionSistema,
+                "idmoduloFuncionSistema": mf.idmoduloFuncionSistema
             }
             for mf in modulo.moduloFuncionSistema
             if mf.funcionSistema is not None

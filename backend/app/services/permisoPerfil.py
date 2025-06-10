@@ -31,8 +31,9 @@ def get_permisos_perfil(db: Session):
 
         modulo_key = (modulo.idmoduloSistema, modulo.descripcionModuloSistema)
         funcion_data = {
+            "idModuloFuncionSistema": mod_func.idmoduloFuncionSistema, 
             "idfuncionSistema": funcion.idfuncionSistema,
-            "descripcionFuncionSistema": funcion.descripcionFuncionSistema
+            "descripcionFuncionSistema": funcion.descripcionFuncionSistema,
         }
 
         ruta_data = {
@@ -63,8 +64,6 @@ def get_permisos_perfil(db: Session):
             "nombrePerfil": perfil_data["nombrePerfil"],
             "modulos": modulos
         })
-    
-    print(resultado)
 
     return resultado
 
@@ -73,11 +72,18 @@ def get_permiso_perfil(db: Session, id_permiso: int):
     return db.query(PermisoPerfil).filter(PermisoPerfil.idpermisoPerfil == id_permiso).first()
 
 def create_permiso_perfil(db: Session, permiso: schemas.PermisoPerfilCreate):
-    db_permiso = PermisoPerfil(**permiso.dict())
+    db_permiso = PermisoPerfil(**permiso.model_dump())  # Pydantic v2
+    
     db.add(db_permiso)
     db.commit()
     db.refresh(db_permiso)
-    return db_permiso
+    
+    db_permiso_with_relations = db.query(PermisoPerfil).options(
+        joinedload(PermisoPerfil.perfil),
+        joinedload(PermisoPerfil.moduloFuncionSistema)
+    ).filter(PermisoPerfil.idpermisoPerfil == db_permiso.idpermisoPerfil).first()
+    
+    return db_permiso_with_relations
 
 def update_permiso_perfil(db: Session, id_permiso: int, permiso: schemas.PermisoPerfilUpdate):
     db_permiso = get_permiso_perfil(db, id_permiso)

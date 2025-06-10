@@ -20,9 +20,12 @@ def read_permiso_perfil(idpermiso: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Permiso no encontrado")
     return permiso
 
-@router.post("/", response_model=schemas.PermisoPerfilOut, status_code=status.HTTP_201_CREATED, summary="Crear un nuevo permiso por perfil")
+@router.post("/", response_model=schemas.PermisoPerfilOut, status_code=status.HTTP_201_CREATED)
 def create_permiso_perfil(permiso: schemas.PermisoPerfilCreate, db: Session = Depends(get_db)):
-    return services.create_permiso_perfil(db, permiso)
+    try:
+        return services.create_permiso_perfil(db, permiso)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 #no sirve mucho solo cambia el valor del estado!!!!
 @router.put("/{idpermiso}", response_model=schemas.PermisoPerfilOut, summary="Actualizar un permiso existente")

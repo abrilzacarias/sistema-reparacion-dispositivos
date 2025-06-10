@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react"
+import { MoreHorizontal, Edit, Trash2, List } from "lucide-react"
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import PerfilCreateEdit from "../PerfilCreateEdit"
+import PerfilCard from "../PerfilCard"
 
 export const getColPerfiles = ({ refetch }) => [
   {
@@ -64,6 +65,18 @@ export const getColPerfiles = ({ refetch }) => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                <ModalFormTemplate
+                  title="Detalles del perfil"
+                  description="Información completa del perfil seleccionado"
+                  label="Ver detalles"
+                  variant="ghost"
+                  icon={List}
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                >
+                  <PerfilCard perfil={perfil} />
+            </ModalFormTemplate>
+          </DropdownMenuItem>
             <ModalFormTemplate
               title="Editar Perfil"
               description="Modifica los datos del perfil"

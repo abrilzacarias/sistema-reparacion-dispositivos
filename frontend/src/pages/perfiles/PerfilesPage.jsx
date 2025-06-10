@@ -18,8 +18,11 @@ import { getColFunciones } from "./components/columns/getColumnsFunciones"
 import ModuloCreateEdit from "./components/ModuloCreateEdit"
 import FuncionCreateEdit from "./components/FuncionCreateEdit"
 import PerfilCreateEdit from "./components/PerfilCreateEdit"
+import { useNavigate } from "react-router-dom"
 
 const PerfilesPage = () => {
+  const navigate = useNavigate()
+
   const {
     data: perfiles,
     refetch: refetchPerfiles,
@@ -131,11 +134,18 @@ const PerfilesPage = () => {
 
   const currentData = getCurrentData()
 
-  const modulosSistema = modulos?.items || []
-  const funcionesSistema = funciones?.items || []
+  const modulosSistema = modulos || []
+  const funcionesSistema = funciones || []
 
-  console.log(modulosSistema)
-  console.log(funcionesSistema)
+  const handleAddPerfil = () => {
+    navigate("/perfiles/nuevo", {
+      state: {
+        modulos: modulosSistema,
+        funciones: funcionesSistema,
+      },
+    })
+  }
+
   const getColumns = () => {
     switch (activeTab) {
       case "perfiles":
@@ -209,7 +219,6 @@ const PerfilesPage = () => {
 
   const tabConfig = getTabConfig()
 
-
   return (
     <CrudsTemplate>
       <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
@@ -235,31 +244,30 @@ const PerfilesPage = () => {
               }}
             />
 
-            <ModalFormTemplate
-              icon={Plus}
-              title={tabConfig.modalTitle}
-              description={tabConfig.modalDescription}
-              label={tabConfig.modalLabel}
+            <Button
               variant="default"
-              className="p-2 m-0 cursor-pointer w-full justify-start"
+              onClick={handleAddPerfil}
+              className="cursor-pointer w-full justify-start data-[state=open]:bg-secondary-foreground"
+              disabled={currentData.isLoading || currentData.isFetching}
             >
-              {tabConfig.component}
-            </ModalFormTemplate>
+              <Plus className="h-4 w-4" />
+              {tabConfig.modalLabel}
+            </Button>
           </div>
         </CrudHeader>
 
         {/* Tabs para las diferentes secciones */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="w-full">
-            <TabsTrigger value="perfiles" className="flex-1 rounded-md">
+            <TabsTrigger value="perfiles" className="flex-1 rounded-md rounded-r-none">
               <Users className="h-4 w-4 mr-2" />
               Perfiles
             </TabsTrigger>
-            <TabsTrigger value="modulos" className="flex-1 rounded-md">
+            <TabsTrigger value="modulos" className="flex-1">
               <Layers className="h-4 w-4 mr-2" />
               Módulos
             </TabsTrigger>
-            <TabsTrigger value="funciones" className="flex-1 rounded-md">
+            <TabsTrigger value="funciones" className="flex-1 rounded-md rounded-l-none">
               <Zap className="h-4 w-4 mr-2" />
               Funciones
             </TabsTrigger>

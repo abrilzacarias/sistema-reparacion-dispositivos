@@ -1,10 +1,9 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
-from .moduloFuncionSistema import ModuloFuncionSistemaOut
-from .funcionSistema import FuncionSistemaOut
+from .moduloFuncionSistema import ModuloFuncionSistemaOutCreate
+from .funcionSistema import FuncionSistemaOut, FuncionSistemaSimpleOut
 
 class PermisoPerfilBase(BaseModel):
-    idpermisoPerfil: int
     idPerfil: int
     idmoduloFuncionSistema: int
     estadoPermisoPerfil: Optional[int] = 1
@@ -20,7 +19,7 @@ class PermisoPerfilOut(BaseModel):
     idPerfil: int
     idmoduloFuncionSistema: int
     estadoPermisoPerfil: int
-    moduloFuncionSistema: 'ModuloFuncionSistemaOut'
+    moduloFuncionSistema: 'ModuloFuncionSistemaOutCreate'
     # perfil: 'PerfilOut'  
 
     class Config:
@@ -44,7 +43,7 @@ class PermisoModuloOut(BaseModel):
     idmoduloSistema: int
     descripcionModuloSistema: str
     rutas: List[RutaFuncionOut]
-    funciones: List[FuncionSistemaOut]
+    funciones: List[FuncionSistemaSimpleOut]
 
     class Config:
         allow_population_by_field_name = True

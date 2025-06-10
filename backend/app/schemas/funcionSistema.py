@@ -14,6 +14,7 @@ class FuncionSistemaUpdate(FuncionSistemaBase):
 class FuncionSistemaOut(BaseModel):
     idfuncionSistema: int
     descripcionFuncionSistema: str
+    idmoduloFuncionSistema: int
 
     class Config:
         orm_mode = True
@@ -25,3 +26,10 @@ class FuncionSistemaOut(BaseModel):
 
     class Config:
         orm_mode = True """
+
+class FuncionSistemaSimpleOut(BaseModel):
+    idfuncionSistema: int
+    descripcionFuncionSistema: str
+
+    class Config:
+        orm_mode = True
