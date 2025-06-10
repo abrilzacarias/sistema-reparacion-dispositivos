@@ -4,7 +4,7 @@ from decimal import Decimal
 from datetime import date
 
 class DetalleReparacionBase(BaseModel):
-    montoTotalDetalleReparacion: Decimal
+    montoTotalDetalleReparacion: Optional[Decimal] = None
     manoObra: Decimal
     precioRepuesto: Decimal
     descripcion: Optional[str] = None
@@ -27,9 +27,9 @@ class DetalleReparacionUpdate(BaseModel):
 # Schemas simples para relaciones anidadas (podés extender según necesidad)
 class ReparacionSchema(BaseModel):
     idReparacion: int
-    numeroReparacion: int
+    #numeroReparacion: int
     fechaIngreso: date
-    montoTotalReparacion: Decimal
+    montoTotalReparacion: Optional[Decimal] = None
     fechaEgreso: Optional[date] = None
 
     class Config:

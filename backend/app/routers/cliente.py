@@ -4,9 +4,12 @@ from typing import List
 
 from app.schemas import cliente as schemas
 from app.services import cliente as services
+from app.models import Cliente
+from app.models import Persona
+
 from app.database import get_db
 from app.services import persona as persona_service  # importás el servicio de persona
-
+from sqlalchemy.exc import SQLAlchemyError
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 @router.get("/", response_model=List[schemas.ClienteOut], summary="Obtener lista de clientes")
@@ -34,10 +37,19 @@ def update_cliente(idCliente: int, cliente: schemas.ClienteUpdate, db: Session =
 
 @router.delete("/{idCliente}", status_code=status.HTTP_204_NO_CONTENT, summary="Dar de baja (inhabilitar) un cliente")
 def delete_cliente(idCliente: int, db: Session = Depends(get_db)):
-    cliente = services.get_cliente(db, idCliente)
-    if not cliente:
-        raise HTTPException(status_code=404, detail="Cliente no encontrado")
-    
-    success = persona_service.delete_persona(db, cliente.idPersona)
-    if not success:
-        raise HTTPException(status_code=404, detail="Persona asociada no encontrada o ya dada de baja")
+    try:
+        cliente = db.query(Cliente).filter(Cliente.idCliente == idCliente).first()
+        if not cliente:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+        persona = db.query(Persona).filter(Persona.idPersona == cliente.idPersona).first()
+        if not persona:
+            raise HTTPException(status_code=404, detail="Persona no encontrada")
+
+        persona.estadoPersona = False
+        db.commit()
+        return
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error al eliminar cliente: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error interno del servidor")

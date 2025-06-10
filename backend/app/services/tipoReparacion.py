@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
-from app.models.tiporeparacion import TipoReparacion
+from app.models.tipoReparacion import TipoReparacion
 from app.schemas.tipoReparacion import TipoReparacionCreate, TipoReparacionUpdate
 
 def get_tipo_reparacion(db: Session, id: int):
     return db.query(TipoReparacion).filter(TipoReparacion.idTipoReparacion == id).first()
 
 def get_tipos_reparacion(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(TipoReparacion).offset(skip).limit(limit).all()
+    return db.query(TipoReparacion)
 
 def create_tipo_reparacion(db: Session, tipo_reparacion: TipoReparacionCreate):
     db_tipo = TipoReparacion(descripcionTipoReparacion=tipo_reparacion.descripcionTipoReparacion)
