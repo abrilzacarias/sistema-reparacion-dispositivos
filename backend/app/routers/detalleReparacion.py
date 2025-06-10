@@ -8,12 +8,21 @@ from app.schemas.detalleReparacion import (
     DetalleReparacionUpdate,
 )
 from app.services.detalleReparacion import get_all, get_by_id, create, update, delete
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
+from app.models.detallereparacion import DetalleReparacion
 
 router = APIRouter(prefix="/detalleReparacion", tags=["Detalle Reparacion"])
 
-@router.get("/", response_model=List[DetalleReparacionOut])
+@router.get("/reparacion/{reparacion_id}", response_model=Page[DetalleReparacionOut])
+def read_detalles_by_reparacion(reparacion_id: int, db: Session = Depends(get_db)):
+    query = db.query(DetalleReparacion).filter(DetalleReparacion.idReparacion == reparacion_id)
+    return paginate(query)
+
+@router.get("/", response_model=Page[DetalleReparacionOut], summary="Obtener lista paginada de detalles de reparación")
 def read_detalles(db: Session = Depends(get_db)):
-    return get_all(db)
+    return paginate(get_all(db))
+
 
 @router.get("/{detalle_id}", response_model=DetalleReparacionOut)
 def read_detalle(detalle_id: int, db: Session = Depends(get_db)):

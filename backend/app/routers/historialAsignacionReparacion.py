@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -9,31 +9,36 @@ from app.services import historialAsignacionReparacion as services
 
 router = APIRouter(prefix="/historial-asignacion-reparacion", tags=["Historial Asignación Reparación"])
 
-@router.get("/", response_model=Page[schemas.HistorialAsignacionReparacionOut], summary="Obtener lista paginada de historiales de asignación de reparación")
-def read_historiales(db: Session = Depends(get_db)):
-    historiales = services.get_historiales(db)
+@router.get("/", response_model=Page[schemas.HistorialAsignacionReparacionOut], summary="Lista paginada del historial de asignación")
+def read_historiales(
+    search: str = Query(None, description="Buscar por nombre del empleado"),
+    db: Session = Depends(get_db)
+):
+    historiales = services.get_historiales(db, search=search)
     return paginate(historiales)
 
-@router.get("/{id}", response_model=schemas.HistorialAsignacionReparacionOut, summary="Obtener historial de reparación por ID")
-def read_historial(id: int, db: Session = Depends(get_db)):
-    historial = services.get_historial(db, id)
+@router.get("/{idHistorial}", response_model=schemas.HistorialAsignacionReparacionOut, summary="Obtener historial por ID")
+def read_historial(idHistorial: int, db: Session = Depends(get_db)):
+    historial = services.get_historial(db, idHistorial)
     if not historial:
         raise HTTPException(status_code=404, detail="Historial no encontrado")
     return historial
 
-@router.post("/", response_model=schemas.HistorialAsignacionReparacionOut, status_code=status.HTTP_201_CREATED, summary="Crear nuevo historial de asignación de reparación")
+@router.post("/", response_model=schemas.HistorialAsignacionReparacionOut, status_code=status.HTTP_201_CREATED, summary="Crear historial de asignación")
 def create_historial(historial: schemas.HistorialAsignacionReparacionCreate, db: Session = Depends(get_db)):
     return services.create_historial(db, historial)
 
-@router.put("/{id}", response_model=schemas.HistorialAsignacionReparacionOut, summary="Actualizar historial existente")
-def update_historial(id: int, historial: schemas.HistorialAsignacionReparacionUpdate, db: Session = Depends(get_db)):
-    updated = services.update_historial(db, id, historial)
+@router.put("/{idHistorial}", response_model=schemas.HistorialAsignacionReparacionOut, summary="Actualizar historial")
+def update_historial(idHistorial: int, historial: schemas.HistorialAsignacionReparacionUpdate, db: Session = Depends(get_db)):
+    updated = services.update_historial(db, idHistorial, historial)
     if not updated:
         raise HTTPException(status_code=404, detail="Historial no encontrado")
     return updated
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar historial por ID")
-def delete_historial(id: int, db: Session = Depends(get_db)):
-    success = services.delete_historial(db, id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Historial no encontrado")
+@router.get("/por-reparacion/{idReparacion}", response_model=Page[schemas.HistorialAsignacionReparacionOut], summary="Historial de asignación filtrado por idReparacion")
+def read_historiales_por_reparacion(
+    idReparacion: int,
+    db: Session = Depends(get_db)
+):
+    historiales = services.get_historial_asignaciones_por_reparacion(db, idReparacion)
+    return paginate(historiales)

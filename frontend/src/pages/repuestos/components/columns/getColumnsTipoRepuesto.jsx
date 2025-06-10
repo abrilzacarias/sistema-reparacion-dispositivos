@@ -9,8 +9,46 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import { Button } from "@/components/ui/button"
 import TipoRepuestoCreateEdit from "../TipoRepuestoCreateEdit"
+import axios from "axios"
+import { toast } from "sonner"
+
+const API_URL = import.meta.env.VITE_API_URL
 
 export const getColumnsTiposRepuesto = ({ refetch }) => {
+  const handleDelete = (id, descripcion) => {
+  toast(
+    `¿Eliminar el tipo de repuesto "${descripcion}"?`,
+    {
+      action: {
+        label: "Eliminar",
+        onClick: async (e) => {
+          e?.stopPropagation(); // 👈 clave: evitar que el clic se propague y cierre modales/dropdowns
+          try {
+            await axios.delete(`${API_URL}/tipos-repuesto/${id}/`);
+            toast.success("Tipo de repuesto eliminado con éxito");
+            refetch?.();
+          } catch (err) {
+            console.error("Error al eliminar tipo de repuesto:", err);
+            if (err.response?.status === 400 && err.response.data?.detail) {
+              toast.error(err.response.data.detail);
+            } else {
+              toast.error("Error al eliminar. Intente nuevamente.");
+            }
+          }
+        },
+      },
+      cancel: {
+        label: "Cancelar",
+        onClick: (e) => e?.stopPropagation(), // 👈 también cancelación limpia
+      },
+      duration: 10000,
+    }
+  );
+};
+
+
+
+
   return [
     {
       header: "Descripción",
@@ -22,6 +60,8 @@ export const getColumnsTiposRepuesto = ({ refetch }) => {
     {
       id: "actions",
       cell: ({ row }) => {
+        const tipoRepuesto = row.original
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -43,7 +83,7 @@ export const getColumnsTiposRepuesto = ({ refetch }) => {
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
                   <TipoRepuestoCreateEdit
-                    tipoRepuesto={row.original}
+                    tipoRepuesto={tipoRepuesto}
                     refreshTiposRepuesto={refetch}
                   />
                 </ModalFormTemplate>
@@ -52,7 +92,9 @@ export const getColumnsTiposRepuesto = ({ refetch }) => {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem
-                onClick={() => console.log("Eliminar", row.original)}
+                onClick={() =>
+                  handleDelete(tipoRepuesto.idTipoRepuesto, tipoRepuesto.descripcionTipoRepuesto)
+                }
               >
                 Eliminar
               </DropdownMenuItem>
@@ -64,3 +106,4 @@ export const getColumnsTiposRepuesto = ({ refetch }) => {
     },
   ]
 }
+

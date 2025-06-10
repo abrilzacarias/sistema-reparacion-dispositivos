@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -164,7 +164,7 @@ DROP TABLE IF EXISTS `detalleReparacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleReparacion` (
   `idDetalleReparacion` int NOT NULL AUTO_INCREMENT,
-  `montoTotalDetalleReparacion` decimal(10,0) NOT NULL,
+  `montoTotalDetalleReparacion` decimal(10,0) NULL,
   `manoObra` decimal(10,0) NOT NULL,
   `precioRepuesto` decimal(10,0) NOT NULL,
   `descripcion` varchar(60) DEFAULT NULL,
@@ -207,7 +207,7 @@ CREATE TABLE `diagnostico` (
   KEY `fk_diagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_diagnostico_dispositivo1` FOREIGN KEY (`idDispositivo`) REFERENCES `dispositivo` (`idDispositivo`),
   CONSTRAINT `fk_diagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -778,7 +778,6 @@ DROP TABLE IF EXISTS `reparacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reparacion` (
   `idReparacion` int NOT NULL AUTO_INCREMENT,
-  `numeroReparacion` int NOT NULL,
   `fechaIngreso` date NOT NULL,
   `fechaEgreso` date DEFAULT NULL,
   `montoTotalReparacion` decimal(10,0) NOT NULL,
@@ -789,7 +788,7 @@ CREATE TABLE `reparacion` (
   KEY `fk_reparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_reparacion_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_reparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -798,7 +797,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (1,1,'2025-06-07',NULL,4500,1,11),(2,2,'2025-06-07',NULL,4500,1,11),(3,2587,'2025-06-07',NULL,8500,1,28);
+INSERT INTO `reparacion` VALUES (1,1,'2025-06-07',NULL,4500,1,11),(2,2,'2025-06-07',NULL,4500,1,11);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;

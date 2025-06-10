@@ -8,11 +8,9 @@ from app.schemas.registroEstadoReparacion import RegistroEstadoReparacionOut
 
 
 class ReparacionBase(BaseModel):
-    numeroReparacion: int
-    #idEstadoReparacion: int
     fechaIngreso: date
     fechaEgreso: Optional[date] = None
-    montoTotalReparacion: Decimal
+    montoTotalReparacion: Optional[Decimal] = None
     idDiagnostico: int
     idEmpleado: int
 
@@ -20,32 +18,16 @@ class ReparacionCreate(ReparacionBase):
     pass
 
 class ReparacionUpdate(ReparacionBase):
-    pass
-"""
-class EstadoReparacionSchema(BaseModel):
-    idEstadoReparacion: int
-    descripcionEstadoReparacion: str
-
-    class Config:
-        orm_mode = True
-
-
-
-    class Config:
-        orm_mode = True
-
-
-
-    class Config:
-        orm_mode = True
+    # Nuevos campos para registrar el estado de la reparación
+    idEstadoReparacion: Optional[int] = None
+    idEmpleadoEstado: Optional[int] = None  # para guardar quién registró el estado
 
         """
 class ReparacionOut(ReparacionBase):
     idReparacion: int
-    #estadoReparacion: EstadoReparacionSchema
     diagnostico: DiagnosticoSchema
     empleado: EmpleadoOut
-    registroEstadoReparacion: list[RegistroEstadoReparacionOut]
+    registroEstadoReparacion: List[RegistroEstadoReparacionOut]
 
     class Config:
         orm_mode = True
