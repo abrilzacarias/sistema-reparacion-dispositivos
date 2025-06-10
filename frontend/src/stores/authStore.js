@@ -8,10 +8,11 @@ export const useAuthStore = create(
       tokenType: null,
       user: null,
       permisos: {},
-      setAuth: ({ token, tokenType, user, permisos }) =>
-        set({ token, tokenType, user, permisos }),
+      needs_password_change: false,
+      setAuth: ({ token, tokenType, user, permisos, needs_password_change }) =>
+        set({ token, tokenType, user, permisos, needs_password_change }),
       clearAuth: () =>
-        set({ token: null, tokenType: null, user: null, permisos: {} }),
+        set({ token: null, tokenType: null, user: null, permisos: {}, needs_password_change: false }),
     }),
     {
       name: 'auth-storage',

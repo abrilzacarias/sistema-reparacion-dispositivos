@@ -53,7 +53,8 @@ def create_user_auto(db: Session, usuario_in: UsuarioAutoCreate):
     usuario = Usuario(
         username=username,
         email=email,
-        password=hashed_password
+        password=hashed_password,
+        needs_password_change=True
     )
     db.add(usuario)
 

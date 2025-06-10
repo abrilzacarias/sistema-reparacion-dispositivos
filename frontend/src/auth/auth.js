@@ -18,7 +18,11 @@ async function loginUser(email, password) {
       withCredentials: true,
     })
 
-    const { access_token, token_type, user, permisos } = response.data
+    const { access_token, token_type, user, permisos, needs_password_change } = response.data
+    
+    // Guardar token en localStorage
+    localStorage.setItem("token", access_token)
+    
     // Guardar en Zustand
     const { setAuth } = useAuthStore.getState()
     setAuth({
@@ -26,6 +30,7 @@ async function loginUser(email, password) {
       tokenType: token_type,
       user,
       permisos,
+      needs_password_change
     })
 
     console.log(response.data)
