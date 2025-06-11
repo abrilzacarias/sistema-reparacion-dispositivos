@@ -66,6 +66,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     if not persona:
         raise HTTPException(status_code=404, detail="Persona no encontrada.")
 
+    # Verificar CUIT duplicado
     persona_con_mismo_cuit = db.query(Persona).filter(
         Persona.cuit == persona_data.cuit,
         Persona.idPersona != idPersona,
@@ -75,44 +76,72 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     if persona_con_mismo_cuit:
         raise HTTPException(status_code=400, detail="Ya existe otra persona con ese CUIT.")
 
+    # Actualizar datos básicos de la persona
     persona.cuit = persona_data.cuit
     persona.nombre = persona_data.nombre
     persona.apellido = persona_data.apellido
     persona.fechaNacimiento = persona_data.fechaNacimiento
-    db.commit()
 
+    # Procesar contactos
     for contacto_data in persona_data.contactos:
-        print(contacto_data)
-        if contacto_data.idContacto:
-            contacto = db.query(Contacto).filter(Contacto.idContacto == contacto_data.idContacto).first()
+        print(f"Procesando contacto: {contacto_data}")
+        
+        # Verificar si el contacto ya existe para otra persona
+        contacto_existente_otra_persona = db.query(Contacto).filter(
+            func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower(),
+            Contacto.idPersona != idPersona
+        ).first()
+
+        if contacto_existente_otra_persona:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona."
+            )
+
+        # Si tiene idContacto, es una actualización
+        if hasattr(contacto_data, 'idContacto') and contacto_data.idContacto:
+            contacto = db.query(Contacto).filter(
+                Contacto.idContacto == contacto_data.idContacto,
+                Contacto.idPersona == idPersona
+            ).first()
+            
             if contacto:
-                contacto_existente = db.query(Contacto).filter(
-                    func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower(),
-                    Contacto.idContacto != contacto.idContacto
-                ).first()
-
-                if contacto_existente:
-                    raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
-
+                print(f"Actualizando contacto existente: {contacto_data.idContacto}")
                 contacto.descripcionContacto = contacto_data.descripcionContacto
                 contacto.idtipoContacto = contacto_data.idtipoContacto
                 contacto.esPrimario = contacto_data.esPrimario
-
+            else:
+                print(f"Contacto con ID {contacto_data.idContacto} no encontrado, creando nuevo")
+                # Si no se encuentra el contacto con ese ID, crear uno nuevo
+                nuevo_contacto = Contacto(
+                    descripcionContacto=contacto_data.descripcionContacto,
+                    idtipoContacto=contacto_data.idtipoContacto,
+                    esPrimario=contacto_data.esPrimario,
+                    idPersona=idPersona
+                )
+                db.add(nuevo_contacto)
         else:
+            # No tiene idContacto, verificar si ya existe un contacto del mismo tipo
             contacto_existente = db.query(Contacto).filter(
-                func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
+                Contacto.idPersona == idPersona,
+                Contacto.idtipoContacto == contacto_data.idtipoContacto
             ).first()
 
             if contacto_existente:
-                raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
-
-            nuevo_contacto = Contacto(
-                descripcionContacto=contacto_data.descripcionContacto,
-                idtipoContacto=contacto_data.idtipoContacto,
-                esPrimario=contacto_data.esPrimario,
-                idPersona=idPersona
-            )
-            db.add(nuevo_contacto)
+                print(f"Actualizando contacto existente del mismo tipo: {contacto_existente.idContacto}")
+                # Si existe un contacto del mismo tipo, actualizarlo
+                contacto_existente.descripcionContacto = contacto_data.descripcionContacto
+                contacto_existente.esPrimario = contacto_data.esPrimario
+            else:
+                print("Creando nuevo contacto")
+                # Si no existe, crear uno nuevo
+                nuevo_contacto = Contacto(
+                    descripcionContacto=contacto_data.descripcionContacto,
+                    idtipoContacto=contacto_data.idtipoContacto,
+                    esPrimario=contacto_data.esPrimario,
+                    idPersona=idPersona
+                )
+                db.add(nuevo_contacto)
 
     db.commit()
     return persona
