@@ -35,7 +35,7 @@ function App() {
           <Route path="/repuestos" element={<RepuestosPage />} />
           <Route path="/configuracion" element={<div>Página de Configuración</div>} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
-          <Route path="/marcas" element={<MarcasPage/>} />
+          {/* <Route path="/marcas" element={<MarcasPage/>} /> */}
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />
