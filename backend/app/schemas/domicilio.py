@@ -14,13 +14,14 @@ class DomicilioBase(BaseModel):
     idtipoDomicilio: int
 
 class DomicilioCreate(DomicilioBase):
-    pass
+    idPersona: Optional[int] = None
 
 class DomicilioUpdate(DomicilioBase):
     pass
 
 class DomicilioOut(DomicilioBase):
     idDomicilio: int
+    idPersona: int
     tipoDomicilio: TipoDomicilioOut  # ✅ igual que contacto
 
     class Config:

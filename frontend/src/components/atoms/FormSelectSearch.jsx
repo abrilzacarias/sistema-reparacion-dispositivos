@@ -28,8 +28,13 @@ const FormSelectSearch = ({
   valueKey = "id",
   placeholder = "Seleccione una opción...",
 }) => {
-  const { data, loading } = useFetchAll(endpoint)
+  const { data, loading, error } = useFetchAll(endpoint)
   const [open, setOpen] = useState(false)
+
+  console.log(`[FormSelectSearch] Endpoint: ${endpoint}`)
+  console.log(`[FormSelectSearch] Data:`, data)
+  console.log(`[FormSelectSearch] Loading:`, loading)
+  console.log(`[FormSelectSearch] Error:`, error)
 
   const getValue = (item) => (typeof valueKey === "function" ? valueKey(item) : item[valueKey]);
 
@@ -59,44 +64,45 @@ const FormSelectSearch = ({
           <Command>
             <CommandInput placeholder={`Buscar ${label.toLowerCase()}...`} />
             <CommandList>
-              {!loading && data?.length === 0 && (
+              {loading ? (
+                [...Array(4)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-3 px-4 py-2">
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                    <Skeleton className="h-4 w-full rounded-md" />
+                  </div>
+                ))
+              ) : error ? (
+                <CommandEmpty>Error al cargar los datos. Por favor, intente nuevamente.</CommandEmpty>
+              ) : !data?.length ? (
                 <CommandEmpty>No se encontraron resultados.</CommandEmpty>
-              )}
-              <CommandGroup>
-                {loading ? (
-                  [...Array(4)].map((_, i) => (
-                    <div key={i} className="flex items-center gap-3 px-4 py-2">
-                      <Skeleton className="h-6 w-6 rounded-full" />
-                      <Skeleton className="h-4 w-full rounded-md" />
-                    </div>
-                  ))
-                ) : (
-                  data?.map((item) => (
+              ) : (
+                <CommandGroup>
+                  {data?.map((item) => (
                     <CommandItem
-                key={getValue(item)}
-                value={typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
-                onSelect={(e) => {
-                  if (typeof setValue === 'function') {
-                    setValue(getValue(item));
-                  } else {
-                    console.error('setValue function is not provided to FormSelectSearch');
-                  }
-                  setTimeout(() => setOpen(false), 100);
-                }}
-              >
-                {typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
-                <Check
-                  className={cn(
-                    "ml-auto",
-                    value === getValue(item)
-                      ? "opacity-100"
-                      : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-                  ))
-                )}
-              </CommandGroup>
+                      key={getValue(item)}
+                      value={typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
+                      onSelect={(e) => {
+                        if (typeof setValue === 'function') {
+                          setValue(getValue(item));
+                        } else {
+                          console.error('setValue function is not provided to FormSelectSearch');
+                        }
+                        setTimeout(() => setOpen(false), 100);
+                      }}
+                    >
+                      {typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          value === getValue(item)
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

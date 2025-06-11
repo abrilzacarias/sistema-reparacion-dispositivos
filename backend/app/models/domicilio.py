@@ -11,6 +11,7 @@ class Domicilio(Base):
     ciudad = Column(String(45), nullable=True)
     barrio = Column(String(45), nullable=False)
     calle = Column(String(45), nullable=False)
+    numero = Column(String(45), nullable=False)
     departamento = Column(String(45), nullable=False)
     idtipoDomicilio = Column(Integer, ForeignKey("tipoDomicilio.idtipoDomicilio"), nullable=False)
     idPersona = Column(Integer, ForeignKey("persona.idPersona"), nullable=False)
