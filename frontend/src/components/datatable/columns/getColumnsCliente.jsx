@@ -11,6 +11,8 @@ import ClienteCard from "@/components/organisms/ClienteCard";
 import { Button } from "@/components/ui/button";
 import ClienteDeleteConfirmModal from "@/components/organisms/ClienteDeleteConfirmModal";
 import ClienteCreateEdit from "@/pages/cliente/components/ClienteCreateEdit";
+// 👇 NUEVA IMPORTACIÓN
+import EditarClienteConTabs from "@/pages/cliente/components/EditarClienteConTabs";
 
 export const getColumnsCliente = ({ refetch, onEdit }) => {
   return [
@@ -98,18 +100,24 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                 </ModalFormTemplate>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              
+              {/* 👇 CAMBIO PRINCIPAL: Reemplazado ClienteCreateEdit por EditarClienteConTabs */}
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Editar Cliente"
-                  description="Modifique los campos del cliente."
+                  description="Editar datos de cliente y persona asociada."
                   label="Editar"
                   variant="ghost"
                   icon={Edit}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
-                  <ClienteCreateEdit cliente={row.original} refreshClientes={refetch} onClose={() => {}} />
+                  <EditarClienteConTabs 
+                    cliente={row.original} 
+                    refreshClientes={refetch} 
+                  />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+              
               <DropdownMenuItem asChild>
                 <ClienteDeleteConfirmModal cliente={row.original} refetch={refetch} />
               </DropdownMenuItem>

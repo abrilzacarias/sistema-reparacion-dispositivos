@@ -61,6 +61,7 @@ def create_persona(db: Session, persona_data: PersonaCreate):
 
 
 def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
+    print('updateando')
     persona = db.query(Persona).filter(Persona.idPersona == idPersona).first()
     if not persona:
         raise HTTPException(status_code=404, detail="Persona no encontrada.")
@@ -81,6 +82,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     db.commit()
 
     for contacto_data in persona_data.contactos:
+        print(contacto_data)
         if contacto_data.idContacto:
             contacto = db.query(Contacto).filter(Contacto.idContacto == contacto_data.idContacto).first()
             if contacto:
