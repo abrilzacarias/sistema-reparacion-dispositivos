@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 from app.models.registroEstadoReparacion import RegistroEstadoReparacion
 from app.schemas import registroEstadoReparacion as schemas
-from app.services.whatsapp import enviar_whatsapp
+from app.services.mensajes import enviarWhatsapp
 from app.models.reparacion import Reparacion  # si tenés este modelo
 from app.models.cliente import Cliente  # idem
 from app.models.persona import Persona  # idem
 from app.services.contacto import obtener_telefono_de_persona_o_contactos
+from app.services.mensajes import notificar_cambio_estado_reparacion
 
 def get_registros(db: Session):
     return db.query(RegistroEstadoReparacion)
@@ -18,20 +19,7 @@ def create_registro(db: Session, registro: schemas.RegistroEstadoReparacionCreat
     db.add(db_registro)
     db.commit()
     db.refresh(db_registro)
-
-    # Obtener el teléfono del cliente asociado a la reparación
-    reparacion = db.query(Reparacion).filter(Reparacion.idReparacion == db_registro.idReparacion).first()
-    if reparacion:
-        cliente = db.query(Cliente).filter(Cliente.idCliente == reparacion.idCliente).first()
-        if cliente:
-            # Suponiendo que tenés el teléfono en la persona o en contactos (ajustar según tu modelo)
-            persona = db.query(Persona).filter(Persona.idPersona == cliente.idPersona).first()
-            if persona:
-                # Por ejemplo, si persona tiene un atributo 'telefono' (o tomalo de contactos)
-                telefono = obtener_telefono_de_persona_o_contactos(persona)  # Definir esta función según modelo
-                if telefono:
-                    mensaje = f"El estado de su reparación ha cambiado a: {db_registro.estadoReparacion.nombreEstado}"  # o el texto que quieras
-                    enviar_whatsapp(telefono, mensaje)
+    notificar_cambio_estado_reparacion(db, db_registro)
 
     return db_registro
 
