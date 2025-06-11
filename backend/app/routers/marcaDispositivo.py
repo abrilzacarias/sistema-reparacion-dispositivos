@@ -29,7 +29,7 @@ def create_marca(marca: schemas.MarcaDispositivoCreate, db: Session = Depends(ge
         return services.create_marca_dispositivo(db, marca)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-        
+
 @router.put("/{idMarcaDispositivo}", response_model=schemas.MarcaDispositivoOut, summary="Actualizar una marca")
 def update_marca(idMarcaDispositivo: int, marca: schemas.MarcaDispositivoUpdate, db: Session = Depends(get_db)):
     db_marca = services.update_marca_dispositivo(db, idMarcaDispositivo, marca)

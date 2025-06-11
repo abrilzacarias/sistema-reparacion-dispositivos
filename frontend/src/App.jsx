@@ -10,7 +10,7 @@ import ReparacionesPage from "./pages/reparaciones/ReparacionesPage"
 import ClientePage from "./pages/cliente/ClientePage"
 import PerfilesPage from "./pages/perfiles/PerfilesPage"
 import AddPerfilPage from "./pages/perfiles/AddPerfilPage"
-// import MarcasPage from "./pages/marcas/MarcasPage"
+import MarcasPage from "./pages/marcas/MarcasPage"
 
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
           <Route path="/repuestos" element={<RepuestosPage />} />
           <Route path="/configuracion" element={<div>Página de Configuración</div>} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
-          {/* <Route path="/marcas" element={<MarcasPage/>} /> */}
+          <Route path="/marcas" element={<MarcasPage/>} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />

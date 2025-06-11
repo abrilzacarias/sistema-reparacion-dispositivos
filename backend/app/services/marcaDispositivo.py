@@ -8,6 +8,7 @@ def get_marca_dispositivos(db: Session):
         models.MarcaDispositivo.estadoMarcaDispositivo == True
     )
 
+
 def get_marca_dispositivo(db: Session, id_marca: int):
     return db.query(models.MarcaDispositivo).filter(
         models.MarcaDispositivo.idMarcaDispositivo == id_marca
@@ -60,6 +61,7 @@ def delete_marca_dispositivo(db: Session, id_marca: int):
     db_marca = get_marca_dispositivo(db, id_marca)
     if not db_marca:
         return None
+        
 
     # Verificamos si tiene repuestos activos asociados
     if any(repuesto.estadoRepuesto for repuesto in db_marca.repuestos):

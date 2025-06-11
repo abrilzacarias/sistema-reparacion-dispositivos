@@ -35,7 +35,7 @@ export function Sidebar() {
     { path: "/reparaciones", label: "Reparaciones", icon: <Wrench className="h-5 w-5" /> },
     { path: "/clientes", label: "Clientes", icon: <UserRound className="h-5 w-5" /> },
     { path: "/repuestos", label: "Repuestos", icon: <Package className="h-5 w-5" /> },
-    // { path: "/marcas", label: "Marcas", icon: <Settings className="h-5 w-5" /> }
+    { path: "/marcas", label: "Marcas", icon: <Settings className="h-5 w-5" /> }
     // { path: "/configuracion", label: "Configuración", icon: <Settings className="h-5 w-5" /> }
   ]
 
