@@ -31,7 +31,7 @@ const PerfilCard = ({ perfil }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <Card className="w-full shadow-md hover:shadow-lg transition-shadow">
+      <Card className="w-full">
         <CardHeader>
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -48,7 +48,7 @@ const PerfilCard = ({ perfil }) => {
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 max-h-[400px] overflow-y-auto">
           {/* Módulos y Funciones */}
           <div>
             <h4 className="text-sm font-semibold text-muted-foreground mb-2">
@@ -75,30 +75,6 @@ const PerfilCard = ({ perfil }) => {
             ) : (
               <p className="text-sm text-muted-foreground italic">
                 No hay módulos asignados
-              </p>
-            )}
-          </div>
-
-          <Separator />
-
-          {/* Rutas */}
-          <div>
-            <h4 className="text-sm font-semibold text-muted-foreground mb-2">
-              Rutas asignadas
-            </h4>
-            {rutas.length > 0 ? (
-              rutas.map((ruta, index) => (
-                <div key={index} className="flex items-center space-x-2 mb-2">
-                  <Route className="w-4 h-4 text-muted-foreground" />
-                  <p className="text-sm">
-                    {ruta.descripcionFuncionSistema} -{" "}
-                    <span className="text-muted-foreground">{ruta.ruta}</span>
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground italic">
-                No hay rutas asignadas
               </p>
             )}
           </div>

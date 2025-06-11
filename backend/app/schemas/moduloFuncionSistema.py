@@ -47,3 +47,6 @@ class ModuloFuncionSistemaOutCreate(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ModuloFuncionesUpdateSchema(BaseModel):
+    funciones_ids: List[int]

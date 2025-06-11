@@ -1,4 +1,4 @@
-import ErrorMessage from "@/components/molecules/ErrorMessage"
+import ErrorMessage from "@/components/atoms/ErrorMessage"
 import { cn } from "@/lib/utils"
 import InputSearchApi from "../molecules/InputSearchApi"
 import SearchResultsList from "../molecules/SearchResultsList"

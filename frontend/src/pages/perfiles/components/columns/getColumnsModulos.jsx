@@ -1,23 +1,14 @@
-import { Badge } from "@/components/ui/badge"
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react"
-import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
-import ModuloCreateEdit from "../ModuloCreateEdit"
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react"
+import ModuloEdit from "../ModuloEdit"
 
-export const getColModulos = ({ refetch }) => [
+export const getColModulos = ({ refetch, funcionesSistema }) => [
   {
     accessorKey: "descripcionModuloSistema",
     header: "Nombre",
     cell: ({ row }) => <div className="font-medium">{row.getValue("descripcionModuloSistema")}</div>,
-  },
-  {
-    accessorKey: "estadoModulo",
-    header: "Estado",
-    cell: ({ row }) => {
-      const estado = row.getValue("estadoModulo")
-      return <Badge variant={estado ? "default" : "secondary"}>{estado ? "Activo" : "Inactivo"}</Badge>
-    },
   },
   {
     accessorKey: "funciones",
@@ -54,8 +45,6 @@ export const getColModulos = ({ refetch }) => [
     id: "actions",
     header: "Acciones",
     cell: ({ row }) => {
-      const modulo = row.original
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -64,28 +53,18 @@ export const getColModulos = ({ refetch }) => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <ModalFormTemplate
-              title="Editar Módulo"
-              description="Modifica los datos del módulo"
-              trigger={
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Editar
-                </DropdownMenuItem>
-              }
-            >
-              <ModuloCreateEdit modulo={modulo} refreshModulos={refetch} />
-            </ModalFormTemplate>
-            <DropdownMenuItem
-              onClick={() => {
-                if (confirm(`¿Está seguro de eliminar el módulo "${modulo.nombreModulo}"?`)) {
-                  console.log("Eliminar módulo:", modulo)
-                }
-              }}
-              className="text-red-600"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Eliminar
+            <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                <ModalFormTemplate
+                  title="Editar Módulo"
+                  description="Selecciona las funciones que deseas asociar a este módulo."
+                  label="Editar"
+                  variant="ghost"
+                  icon={Edit}
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                  contentClassName="sm:max-w-[600px] sm:max-h-[650px]"
+                >
+                  <ModuloEdit modulo={row.original} refreshModulos={refetch} funciones={funcionesSistema} />
+                </ModalFormTemplate>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

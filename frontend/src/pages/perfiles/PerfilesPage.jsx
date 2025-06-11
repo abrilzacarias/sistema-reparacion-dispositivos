@@ -1,24 +1,20 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { useState } from "react"
+import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
 
-import ButtonRefetch from "@/components/atoms/ButtonRefetch"
-import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch"
-import { DataTable } from "@/components/datatable/DataTable"
-import CrudHeader from "@/components/molecules/CrudHeader"
-import CrudsTemplate from "@/components/molecules/CrudsTemplate"
-import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown"
-import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { usePaginatedQuery } from "@/hooks/usePaginatedQuery"
-import { Users, Layers, Zap, Plus } from "lucide-react"
-import { getColPerfiles } from "./components/columns/getColumnsPerfiles"
-import { getColModulos } from "./components/columns/getColumnsModulos"
-import { getColFunciones } from "./components/columns/getColumnsFunciones"
-import ModuloCreateEdit from "./components/ModuloCreateEdit"
-import FuncionCreateEdit from "./components/FuncionCreateEdit"
-import PerfilCreateEdit from "./components/PerfilCreateEdit"
-import { useNavigate } from "react-router-dom"
+import ButtonRefetch from "@/components/atoms/ButtonRefetch";
+import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch";
+import { DataTable } from "@/components/datatable/DataTable";
+import CrudHeader from "@/components/molecules/CrudHeader";
+import CrudsTemplate from "@/components/molecules/CrudsTemplate";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
+import { Layers, Plus, Users, Zap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { getColFunciones } from "./components/columns/getColumnsFunciones";
+import { getColModulos } from "./components/columns/getColumnsModulos";
+import { getColPerfiles } from "./components/columns/getColumnsPerfiles";
+import PerfilCreateEdit from "./components/PerfilCreateEdit";
 
 const PerfilesPage = () => {
   const navigate = useNavigate()
@@ -66,9 +62,10 @@ const PerfilesPage = () => {
   } = usePaginatedQuery({
     key: "funciones-sistema",
     endpoint: "funciones-sistema",
+    pageSize: "50",
   })
 
-  const [activeTab, setActiveTab] = useState("perfiles")
+  const [activeTab, setActiveTab] = useState("perfiles");
 
   if (isErrorPerfiles && activeTab === "perfiles")
     return <ErrorApiRefetch isRefetching={isFetchingPerfiles} refetch={refetchPerfiles} />
@@ -149,15 +146,18 @@ const PerfilesPage = () => {
   const getColumns = () => {
     switch (activeTab) {
       case "perfiles":
-        return getColPerfiles({ refetch: refetchPerfiles })
+        return getColPerfiles({ refetch: refetchPerfiles, modulos: modulosSistema, funciones: funcionesSistema });
       case "modulos":
-        return getColModulos({ refetch: refetchModulos })
+        return getColModulos({
+          refetch: refetchModulos,
+          funcionesSistema: funcionesSistema || [],
+        });
       case "funciones":
-        return getColFunciones({ refetch: refetchFunciones })
+        return getColFunciones({ refetch: refetchFunciones });
       default:
-        return getColPerfiles({ refetch: refetchPerfiles })
+        return getColPerfiles({ refetch: refetchPerfiles, modulos: modulosSistema, funciones: funcionesSistema });
     }
-  }
+  };
 
   const getSearchTarget = () => {
     switch (activeTab) {
@@ -192,7 +192,6 @@ const PerfilesPage = () => {
           modalDescription: "Complete los campos para agregar un nuevo módulo.",
           modalLabel: "Agregar Módulo",
           icon: Layers,
-          component: <ModuloCreateEdit refreshModulos={refetchModulos} />,
         }
       case "funciones":
         return {
@@ -202,7 +201,6 @@ const PerfilesPage = () => {
           modalDescription: "Complete los campos para agregar una nueva función.",
           modalLabel: "Agregar Función",
           icon: Zap,
-          component: <FuncionCreateEdit refreshFunciones={refetchFunciones} />,
         }
       default:
         return {
@@ -224,42 +222,32 @@ const PerfilesPage = () => {
       <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
         <CrudHeader title={tabConfig.title} subTitle={tabConfig.subtitle}>
           <div className="flex items-center gap-2">
-            <ButtonRefetch isFetching={currentData.isRefetching} refetch={currentData.refetch} />
-            <ExportOptionsDropdown
-              excelComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  Excel
-                </Button>
-              }
-              pdfComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  PDF
-                </Button>
-              }
-              formats={{ excel: true, pdf: true }}
-              buttonProps={{
-                variant: "outline",
-                size: "sm",
-                label: "Exportar",
-              }}
+            <ButtonRefetch
+              isFetching={currentData.isRefetching}
+              refetch={currentData.refetch}
             />
 
-            <Button
-              variant="default"
-              onClick={handleAddPerfil}
-              className="cursor-pointer w-full justify-start data-[state=open]:bg-secondary-foreground"
-              disabled={currentData.isLoading || currentData.isFetching}
-            >
-              <Plus className="h-4 w-4" />
-              {tabConfig.modalLabel}
-            </Button>
+            {tabConfig.component && (
+              <Button
+                variant="default"
+                onClick={handleAddPerfil}
+                className="cursor-pointer justify-start data-[state=open]:bg-secondary-foreground"
+                disabled={currentData.isLoading || currentData.isFetching}
+              >
+                <Plus className="h-4 w-4" />
+                {tabConfig.modalLabel}
+              </Button>
+            )}
           </div>
         </CrudHeader>
 
         {/* Tabs para las diferentes secciones */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="w-full">
-            <TabsTrigger value="perfiles" className="flex-1 rounded-md rounded-r-none">
+            <TabsTrigger
+              value="perfiles"
+              className="flex-1 rounded-md rounded-r-none"
+            >
               <Users className="h-4 w-4 mr-2" />
               Perfiles
             </TabsTrigger>
@@ -267,14 +255,17 @@ const PerfilesPage = () => {
               <Layers className="h-4 w-4 mr-2" />
               Módulos
             </TabsTrigger>
-            <TabsTrigger value="funciones" className="flex-1 rounded-md rounded-l-none">
+            <TabsTrigger
+              value="funciones"
+              className="flex-1 rounded-md rounded-l-none"
+            >
               <Zap className="h-4 w-4 mr-2" />
               Funciones
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="perfiles">
-            <Card className="mt-4 border-none bg-secondary dark:bg-background">
+            <Card className="border-none bg-secondary dark:bg-background py-0">
               <CardContent className="p-0">
                 <DataTable
                   data={currentData.data ?? []}
@@ -293,7 +284,7 @@ const PerfilesPage = () => {
           </TabsContent>
 
           <TabsContent value="modulos">
-            <Card className="mt-4 border-none bg-secondary dark:bg-background">
+            <Card className="border-none bg-secondary dark:bg-background py-0">
               <CardContent className="p-0">
                 <DataTable
                   data={currentData.data ?? []}
@@ -312,7 +303,7 @@ const PerfilesPage = () => {
           </TabsContent>
 
           <TabsContent value="funciones">
-            <Card className="mt-4 border-none bg-secondary dark:bg-background">
+            <Card className="border-none bg-secondary dark:bg-background py-0">
               <CardContent className="p-0">
                 <DataTable
                   data={currentData.data ?? []}

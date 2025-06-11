@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
-import ErrorMessage from "@/components/molecules/ErrorMessage";
+import ErrorMessage from "@/components/atoms/ErrorMessage";
 import FormSelectSearch from "@/components/atoms/FormSelectSearch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DeviceQuestionsDynamic from "./DeviceQuestionsDynamic";
