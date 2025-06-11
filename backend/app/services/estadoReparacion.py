@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.estadoreparacion import EstadoReparacion
+from app.models.estadoReparacion import EstadoReparacion
 from app.schemas.estadoReparacion import EstadoReparacionCreate, EstadoReparacionUpdate
 
 def get_all_estado_reparacion(db: Session):
