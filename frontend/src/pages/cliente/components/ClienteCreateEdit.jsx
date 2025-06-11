@@ -1,39 +1,40 @@
-import React, { useEffect } from "react";
-import axios from "axios";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useContext } from "react"
+import axios from "axios"
+import { useForm } from "react-hook-form"
+import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMessage"
+import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 
-const ClienteCreateEdit = ({ cliente, onClose, refreshClientes, personaId }) => {
+const ClienteCreateEdit = ({ cliente, refreshClientes, personaId }) => {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       observaciones: cliente?.observaciones || "",
-      // otros campos si los tienes
     },
-  });
+  })
+
+  const { setOpen } = useContext(OpenContext)
 
   useEffect(() => {
     reset({
       observaciones: cliente?.observaciones || "",
-      // resetear otros campos según cliente
-    });
-  }, [cliente, reset]);
+    })
+  }, [cliente, reset])
 
   const onSubmit = async (data) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
       if (cliente) {
-        // Modo edición
-        await axios.put(`${API_URL}/clientes/${cliente.idCliente}`, data);
+        await axios.put(`${API_URL}/clientes/${cliente.idCliente}`, data)
+        ToastMessageEdit()
       } else {
-        // Modo creación
-        await axios.post(`${API_URL}/clientes`, { ...data, idPersona: personaId });
+        await axios.post(`${API_URL}/clientes`, { ...data, idPersona: personaId })
+        ToastMessageCreate()
       }
-      refreshClientes();
-      onClose();
+      refreshClientes()
+      setOpen(false) // ✅ Cerrar el modal
     } catch (error) {
-      console.error("Error al guardar cliente:", error);
-      // mostrar error a usuario si quieres
+      console.error("Error al guardar cliente:", error)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -43,7 +44,9 @@ const ClienteCreateEdit = ({ cliente, onClose, refreshClientes, personaId }) => 
       </div>
       <button type="submit">{cliente ? "Guardar cambios" : "Crear cliente"}</button>
     </form>
-  );
-};
+  )
+}
 
-export default ClienteCreateEdit;
+export default ClienteCreateEdit
+
+

@@ -52,7 +52,7 @@ const ClientePage = () => {
   }, []);
 
   // Estados creación/edición
-  const [selectedPersona, setSelectedPersona] = useState(null);
+  const [selectedPersona, setSelectedPersona] = useState("");
   const [personaId, setPersonaId] = useState(null);
   const [searchTarget, setSearchTarget] = useState("");
   const [activeTab, setActiveTab] = useState("persona");
@@ -61,11 +61,48 @@ const ClientePage = () => {
   // Hook búsqueda personas
   const {
     personas,
+    totalPersonas,
     isLoading: loadingPersonas,
     isError: errorPersonas,
     refetch: refetchPersonas,
     resetQuery,
   } = useSearchPersonas({ query: searchTarget });
+
+  // Corregir el manejo del handleSearchTarget
+  const handleSearchTarget = (event) => {
+    console.log("🟡 handleSearchTarget ejecutado:", event.target.value);
+    resetQuery();
+    setSearchTarget("");
+    setSelectedPersona("");
+    setSearchTarget(event.target.value);
+  };
+
+  // Corregir la función startSearch
+  const startSearch = () => {
+    console.log("🔍 startSearch ejecutado! searchTarget:", searchTarget);
+    console.log("🔍 searchTarget.trim():", searchTarget.trim());
+    console.log("🔍 Condición:", searchTarget.trim() !== "");
+    
+    if (searchTarget.trim() !== "") {
+      console.log("✅ Condición cumplida, ejecutando búsqueda...");
+      resetQuery();
+      setSelectedPersona(
+        totalPersonas === 1
+          ? "1 resultado"
+          : `${totalPersonas || "sin"} resultados`
+      );
+      console.log("🚀 Llamando refetchPersonas...");
+      refetchPersonas();
+    } else {
+      console.log("❌ Condición NO cumplida, no se ejecuta búsqueda");
+    }
+  };
+
+  useEffect(() => {
+    if (searchTarget.trim() === "") {
+      resetQuery();
+    }
+  }, [searchTarget]);
 
   useEffect(() => {
     if (selectedPersona?.cliente) {
@@ -77,19 +114,8 @@ const ClientePage = () => {
     }
   }, [selectedPersona]);
 
-  const handleSearchTarget = (e) => setSearchTarget(e.target.value);
-  const startSearch = () => {
-    if (searchTarget.trim()) {
-      setSelectedPersona(null);
-      setPersonaId(null);
-      resetQuery();
-      refetchPersonas();
-    }
-  };
-
-  useEffect(() => {
-    if (!searchTarget.trim()) resetQuery();
-  }, [searchTarget]);
+  // Debug: Verificar que startSearch existe
+  console.log("🔧 Debug - startSearch function:", typeof startSearch);
 
   return (
     <CrudsTemplate>
@@ -116,7 +142,7 @@ const ClientePage = () => {
                 setSearch={setSearchTarget}
                 search={searchTarget}
                 variant="modal"
-                label="Filtrar persona"
+                label="Filtrar persona por nombre, apellido o CUIT"
               />
               <ErrorDuplicateMessage message={isErrorApi} />
               {(!selectedPersona || isErrorApi) && (
@@ -126,7 +152,7 @@ const ClientePage = () => {
                   icon={PlusCircle}
                   label="Crear Persona"
                   variant="default"
-                  className="mt-4"
+                  className="border w-[40%] lg:w-[30%] mt-6 rounded-md justify-center flex mx-auto"
                 >
                   <PersonaCreateEdit
                     refreshPersonas={refetchPersonas}
@@ -135,15 +161,29 @@ const ClientePage = () => {
                   />
                 </ModalFormTemplate>
               )}
-              {selectedPersona && !isErrorApi && (
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-                  <TabsList>
-                    <TabsTrigger value="persona">Persona</TabsTrigger>
-                    <TabsTrigger value="cliente">Cliente</TabsTrigger>
+              {!isErrorApi && (
+                <Tabs 
+                  value={activeTab} 
+                  onValueChange={setActiveTab} 
+                  className={`mt-4 ${selectedPersona?.idPersona ? "" : "hidden"}`}
+                >
+                  <TabsList className="w-full">
+                    <TabsTrigger 
+                      value="persona"
+                      className="w-1/2 rounded-md rounded-r-none"
+                    >
+                      Datos de Persona
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="cliente"
+                      className="w-1/2 rounded-md rounded-l-none"
+                    >
+                      Datos de Cliente
+                    </TabsTrigger>
                   </TabsList>
                   <TabsContent value="persona">
                     <PersonaCreateEdit
-                      key={selectedPersona.idPersona}
+                      key={selectedPersona?.idPersona || "new"}
                       persona={selectedPersona}
                       setSelectedPersona={setSelectedPersona}
                       refreshPersonas={refetchPersonas}

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.historialAsignacionReparacion import HistorialAsignacionReparacion
+from app.models.historialasignacionreparacion import HistorialAsignacionReparacion
 from app.schemas import historialAsignacionReparacion as schemas
 
 def get_historiales(db: Session, skip: int = 0, limit: int = 100):
