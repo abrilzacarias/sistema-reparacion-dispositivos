@@ -13,13 +13,24 @@ const MarcasCreateEdit = ({ marca, refreshMarcas, onClose }) => {
     try {
       if (marca) {
         await axios.put(`${API_URL}/marcas/${marca.idMarcaDispositivo}`, data);
+        alert("✅ Marca modificada correctamente.");
       } else {
         await axios.post(`${API_URL}/marcas`, data);
+        alert("✅ Marca creada correctamente.");
       }
-      refreshMarcas();
-      onClose?.();
+
+      refreshMarcas();   // Actualiza la lista
+      onClose?.();       // Cierra el modal
+      reset();           // Limpia el formulario
+
     } catch (error) {
-      console.error("Error al guardar marca:", error);
+      let msg = "❌ Error inesperado.";
+
+      if (error.response?.data?.detail) {
+        msg = `❌ ${error.response.data.detail}`;
+      }
+
+      alert(msg);
     }
   };
 
@@ -28,7 +39,10 @@ const MarcasCreateEdit = ({ marca, refreshMarcas, onClose }) => {
       <div>
         <label>Descripción de la Marca</label>
         <input
-          {...register("descripcionMarcaDispositivo")}
+          {...register("descripcionMarcaDispositivo", {
+            required: true,
+            maxLength: 100,
+          })}
           className="input"
           required
         />
