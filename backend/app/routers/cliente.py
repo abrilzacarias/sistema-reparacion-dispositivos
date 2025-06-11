@@ -1,15 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-
+from fastapi_pagination import Page
+from app.schemas.reparacion import ReparacionOut
+from fastapi_pagination.ext.sqlalchemy import paginate
 from app.schemas import cliente as schemas
 from app.services import cliente as services
 from app.models import Cliente
 from app.models import Persona
-
+from app.services import cliente as cliente_service
 from app.database import get_db
 from app.services import persona as persona_service  # importás el servicio de persona
 from sqlalchemy.exc import SQLAlchemyError
+
+
+
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 @router.get("/", response_model=List[schemas.ClienteOut], summary="Obtener lista de clientes")
@@ -51,5 +56,13 @@ def delete_cliente(idCliente: int, db: Session = Depends(get_db)):
         return
     except Exception as e:
         db.rollback()
-        logger.error(f"Error al eliminar cliente: {e}", exc_info=True)
+
         raise HTTPException(status_code=500, detail="Error interno del servidor")
+    
+@router.get("/{id_persona}/reparaciones", response_model=Page[ReparacionOut])
+def listar_reparaciones_del_cliente(
+    id_persona: int,
+    db: Session = Depends(get_db)
+):
+    query = cliente_service.get_reparaciones_por_id_persona(db, id_persona)
+    return paginate(query)

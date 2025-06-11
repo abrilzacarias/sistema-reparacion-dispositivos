@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-
-from app.models import Cliente, Persona
+from sqlalchemy.orm import joinedload
+from app.models import Cliente, Persona, Reparacion, Diagnostico, Dispositivo
 from app.schemas.cliente import ClienteCreate, ClienteUpdate, ClienteOut
 
 def create_cliente(db: Session, data: ClienteCreate) -> ClienteOut:
@@ -91,3 +91,23 @@ def delete_cliente(db: Session, idCliente: int) -> dict:
     }
     print(f"[INFO] Cliente eliminado: {resultado}")
     return resultado
+
+
+def get_reparaciones_por_id_persona(db: Session, id_persona: int):
+    from app.models import Reparacion, Diagnostico, Dispositivo, Cliente
+
+    return (
+        db.query(Reparacion)
+        .options(
+            joinedload(Reparacion.diagnostico)
+                .joinedload(Diagnostico.dispositivo),  # Por si necesitás info de dispositivo
+            joinedload(Reparacion.empleado),
+            joinedload(Reparacion.registroEstadoReparacion)  # Asegurate que se llama así en el modelo
+        )
+        .select_from(Reparacion)
+        .join(Diagnostico, Diagnostico.idDiagnostico == Reparacion.idDiagnostico)
+        .join(Dispositivo, Dispositivo.idDispositivo == Diagnostico.idDispositivo)
+        .join(Cliente, Cliente.idCliente == Dispositivo.idCliente)
+        .filter(Cliente.idPersona == id_persona)
+        .order_by(Reparacion.fechaIngreso.desc())
+    )

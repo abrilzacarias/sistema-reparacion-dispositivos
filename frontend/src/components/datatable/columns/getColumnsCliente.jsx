@@ -11,6 +11,8 @@ import ClienteCard from "@/components/organisms/ClienteCard";
 import { Button } from "@/components/ui/button";
 import ClienteDeleteConfirmModal from "@/components/organisms/ClienteDeleteConfirmModal";
 import ClienteCreateEdit from "@/pages/cliente/components/ClienteCreateEdit";
+import HistorialReparacionClienteModal from "@/pages/cliente/components/HistorialReparacionClienteModal";
+
 // 👇 NUEVA IMPORTACIÓN
 import EditarClienteConTabs from "@/pages/cliente/components/EditarClienteConTabs";
 
@@ -117,6 +119,21 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                   />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <ModalFormTemplate
+                title="Historial de Reparaciones"
+                description="Listado de todas las reparaciones asociadas al cliente."
+                label="Historial reparaciones"
+                variant="ghost"
+                icon={List}
+                contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+              >
+                <HistorialReparacionClienteModal idPersona={row.original?.idPersona} nombre={row.original?.persona?.nombre} apellido={row.original?.persona?.apellido}/>
+              </ModalFormTemplate>
+            </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
               
               <DropdownMenuItem asChild>
                 <ClienteDeleteConfirmModal cliente={row.original} refetch={refetch} />
