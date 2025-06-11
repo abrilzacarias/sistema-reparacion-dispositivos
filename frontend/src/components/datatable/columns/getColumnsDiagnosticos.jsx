@@ -1,4 +1,4 @@
-import { Ellipsis, List } from "lucide-react";
+  import { Ellipsis, List } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,34 +26,30 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
     },
     {
       header: "Dispositivo",
-      accessorKey: "dispositivo.descripcionDispositivo",
+      accessorKey: "dispositivo.idDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.descripcionDispositivo || "N/A"}</div>
+        <div>{row.original.dispositivo?.idDispositivo || "N/A"}</div>
       ),
     },
     {
       header: "Modelo",
-      accessorKey: "dispositivo.modeloDispositivo",
+      accessorKey: "dispositivo.modeloDispositivo.descripcionModeloDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.modeloDispositivo || "N/A"}</div>
+        <div>{row.original.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo || "N/A"}</div>
       ),
     },
     {
       header: "Marca",
-      accessorKey: "dispositivo.marcaDispositivo.descripcionMarcaDispositivo",
+      accessorKey: "dispositivo.modeloDispositivo.idMarcaDispositivo",
       cell: ({ row }) => (
-        <div>
-          {row.original.dispositivo?.marcaDispositivo?.descripcionMarcaDispositivo || "N/A"}
-        </div>
+        <div>{row.original.dispositivo?.modeloDispositivo?.idMarcaDispositivo || "N/A"}</div>
       ),
     },
     {
       header: "Tipo",
       accessorKey: "dispositivo.tipoDispositivo.nombreTipoDispositivo",
       cell: ({ row }) => (
-        <div>
-          {row.original.dispositivo?.tipoDispositivo?.nombreTipoDispositivo || "N/A"}
-        </div>
+        <div>{row.original.dispositivo?.tipoDispositivo?.nombreTipoDispositivo || "N/A"}</div>
       ),
     },
     {
@@ -85,11 +81,11 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-              variant="ghost"
-              className="flex size-8 p-0 data-[state=open]:bg-muted"
-            >
-              <Ellipsis className="size-4" />
-            </Button>
+                variant="ghost"
+                className="flex size-8 p-0 data-[state=open]:bg-muted"
+              >
+                <Ellipsis className="size-4" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">

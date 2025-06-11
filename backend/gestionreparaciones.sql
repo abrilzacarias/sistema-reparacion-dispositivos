@@ -58,7 +58,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`idCliente`),
   KEY `fk_cliente_persona1_idx` (`idPersona`),
   CONSTRAINT `fk_cliente_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,6 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (9,'2025-06-21',1),(10,'2025-05-21',2);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +88,7 @@ CREATE TABLE `contacto` (
   KEY `fk_contacto_personas1_idx` (`idPersona`),
   CONSTRAINT `fk_contacto_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_contacto_tipoContacto1` FOREIGN KEY (`idtipoContacto`) REFERENCES `tipoContacto` (`idtipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +97,6 @@ CREATE TABLE `contacto` (
 
 LOCK TABLES `contacto` WRITE;
 /*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-INSERT INTO `contacto` VALUES (2,'canobren080603@gmail.com',1,9,0),(5,'juan.perez@gmail.com',1,44,0),(6,'+54 911 1234 5678',2,44,0),(8,'josefranco@gmail.com',1,46,0);
 /*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +119,6 @@ CREATE TABLE `debug_trigger` (
 
 LOCK TABLES `debug_trigger` WRITE;
 /*!40000 ALTER TABLE `debug_trigger` DISABLE KEYS */;
-INSERT INTO `debug_trigger` VALUES ('Trigger activado para idPersona: 26','2025-06-07 02:10:48'),('Trigger activado para idPersona: 30','2025-06-07 02:15:13');
 /*!40000 ALTER TABLE `debug_trigger` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,6 +198,7 @@ CREATE TABLE `diagnostico` (
   `fechaDiagnostico` date NOT NULL,
   `idDispositivo` int NOT NULL,
   `idEmpleado` int NOT NULL,
+  `descripcionDiagnostico` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idDiagnostico`),
   KEY `fk_diagnostico_dispositivo1_idx` (`idDispositivo`),
   KEY `fk_diagnostico_empleado1_idx` (`idEmpleado`),
@@ -215,7 +213,6 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (1,'2025-06-07',1,11),(2,'2025-06-07',1,28);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,18 +225,16 @@ DROP TABLE IF EXISTS `dispositivo`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dispositivo` (
   `idDispositivo` int NOT NULL AUTO_INCREMENT,
-  `descripcionDispositivo` varchar(80) NOT NULL,
-  `modeloDispositivo` varchar(45) NOT NULL,
-  `idMarcaDispositivo` int NOT NULL,
+  `idModeloDispositivo` int NOT NULL,
   `idTipoDispositivo` int NOT NULL,
   `idCliente` int NOT NULL,
   `estadoDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idDispositivo`),
-  KEY `fk_dispositivo_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_dispositivo_tipoDispositivo1_idx` (`idTipoDispositivo`),
   KEY `fk_dispositivo_cliente1_idx` (`idCliente`),
+  KEY `fk_dispositivo_modeloDispositivo1_idx` (`idModeloDispositivo`),
   CONSTRAINT `fk_dispositivo_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`),
-  CONSTRAINT `fk_dispositivo_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`),
+  CONSTRAINT `fk_dispositivo_modeloDispositivo1` FOREIGN KEY (`idModeloDispositivo`) REFERENCES `modeloDispositivo` (`idModeloDispositivo`),
   CONSTRAINT `fk_dispositivo_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -250,7 +245,6 @@ CREATE TABLE `dispositivo` (
 
 LOCK TABLES `dispositivo` WRITE;
 /*!40000 ALTER TABLE `dispositivo` DISABLE KEYS */;
-INSERT INTO `dispositivo` VALUES (1,'Samsung A70','424234532',4,1,9,1);
 /*!40000 ALTER TABLE `dispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,7 +281,6 @@ CREATE TABLE `domicilio` (
 
 LOCK TABLES `domicilio` WRITE;
 /*!40000 ALTER TABLE `domicilio` DISABLE KEYS */;
-INSERT INTO `domicilio` VALUES (2,'1000','Argentina','Buenos Aires','CABA','Palermo','Av. Santa Fe',NULL,'3B',1,46);
 /*!40000 ALTER TABLE `domicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +314,6 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (11,'2024-11-09','2024-12-15',4,33,13),(12,'2023-11-16','2024-10-12',5,34,14),(13,'2025-02-20','2024-06-11',6,35,15),(14,'2025-01-21',NULL,4,36,16),(15,'2023-07-06','2024-09-25',5,37,17),(16,'2023-10-29',NULL,6,38,18),(17,'2025-04-22','2025-02-26',4,39,19),(18,'2023-10-03',NULL,5,40,20),(19,'2024-05-13','2025-03-15',6,41,21),(20,'2025-02-04',NULL,4,42,22),(23,'2025-06-07','2025-06-07',1,1,1),(25,'2025-06-07','2025-06-07',1,48,1),(26,'2025-06-07','2025-06-07',1,30,1),(27,'2025-06-07','2025-06-07',1,49,1),(28,'2025-06-07','2025-06-07',4,50,1);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -345,7 +337,6 @@ CREATE TABLE `estadoReparacion` (
 
 LOCK TABLES `estadoReparacion` WRITE;
 /*!40000 ALTER TABLE `estadoReparacion` DISABLE KEYS */;
-INSERT INTO `estadoReparacion` VALUES (1,'cancelado');
 /*!40000 ALTER TABLE `estadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -401,7 +392,6 @@ CREATE TABLE `historialAsignacionDiagnostico` (
 
 LOCK TABLES `historialAsignacionDiagnostico` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` DISABLE KEYS */;
-INSERT INTO `historialAsignacionDiagnostico` VALUES (1,'2025-06-07',NULL,1,11),(2,'2025-06-07','2025-06-07',2,28);
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -447,7 +437,7 @@ CREATE TABLE `marcaDispositivo` (
   `descripcionMarcaDispositivo` varchar(45) NOT NULL,
   `estadoMarcaDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idMarcaDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -456,8 +446,36 @@ CREATE TABLE `marcaDispositivo` (
 
 LOCK TABLES `marcaDispositivo` WRITE;
 /*!40000 ALTER TABLE `marcaDispositivo` DISABLE KEYS */;
-INSERT INTO `marcaDispositivo` VALUES (4,'Samsung',1),(5,'LG',1),(6,'Apple',1),(7,'Xiaomi',1),(8,'Huawei',1),(9,'Motorola',1);
+INSERT INTO `marcaDispositivo` VALUES (10,'Samsung',1);
 /*!40000 ALTER TABLE `marcaDispositivo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `modeloDispositivo`
+--
+
+DROP TABLE IF EXISTS `modeloDispositivo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `modeloDispositivo` (
+  `idModeloDispositivo` int NOT NULL AUTO_INCREMENT,
+  `descripcionModeloDispositivo` varchar(100) NOT NULL,
+  `estadoModeloDispositivo` tinyint(1) NOT NULL DEFAULT '1',
+  `idMarcaDispositivo` int NOT NULL,
+  PRIMARY KEY (`idModeloDispositivo`),
+  KEY `fk_dispositivo_marcaDispositivo1_idx` (`idMarcaDispositivo`),
+  CONSTRAINT `fk_dispositivo_marcaDispositivo1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `modeloDispositivo`
+--
+
+LOCK TABLES `modeloDispositivo` WRITE;
+/*!40000 ALTER TABLE `modeloDispositivo` DISABLE KEYS */;
+INSERT INTO `modeloDispositivo` VALUES (3,'Galaxy S22',0,10);
+/*!40000 ALTER TABLE `modeloDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -586,7 +604,7 @@ CREATE TABLE `persona` (
   `fechaNacimiento` date NOT NULL,
   `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -595,7 +613,6 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',0),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',0),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1),(43,'20-12345678-9','Brenda','Cano','2003-06-08',1),(44,'20-12345678-9','Juan','Pérez','1990-05-21',1),(46,'20-12345678-9','Jose','Franco','1990-06-21',1),(47,'20-12345678-9','Juan','Pérez','1990-01-01',1),(48,'20-12345678-9','Abril','Zacaria','1990-01-01',0),(49,'20-44923092-9','Martina','Cano','2013-03-21',0),(50,'20-456789043-9','Beglu','Bechir','2000-07-21',0);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -647,7 +664,6 @@ CREATE TABLE `puestoLaboral` (
 
 LOCK TABLES `puestoLaboral` WRITE;
 /*!40000 ALTER TABLE `puestoLaboral` DISABLE KEYS */;
-INSERT INTO `puestoLaboral` VALUES (1,'Técnico',1),(4,'Técnico',1),(5,'Administrador',1),(6,'Vendedor',1);
 /*!40000 ALTER TABLE `puestoLaboral` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -680,7 +696,6 @@ CREATE TABLE `registroEstadoReparacion` (
 
 LOCK TABLES `registroEstadoReparacion` WRITE;
 /*!40000 ALTER TABLE `registroEstadoReparacion` DISABLE KEYS */;
-INSERT INTO `registroEstadoReparacion` VALUES (1,2,1,'2025-06-07 19:21:46',12),(2,2,1,'2025-06-07 19:48:13',13);
 /*!40000 ALTER TABLE `registroEstadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -745,7 +760,6 @@ CREATE TABLE `repuesto` (
 
 LOCK TABLES `repuesto` WRITE;
 /*!40000 ALTER TABLE `repuesto` DISABLE KEYS */;
-INSERT INTO `repuesto` VALUES (2,'Pantalla',4500,2,4,1,1);
 /*!40000 ALTER TABLE `repuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -769,7 +783,6 @@ CREATE TABLE `tipoContacto` (
 
 LOCK TABLES `tipoContacto` WRITE;
 /*!40000 ALTER TABLE `tipoContacto` DISABLE KEYS */;
-INSERT INTO `tipoContacto` VALUES (1,'correo'),(2,'telefono');
 /*!40000 ALTER TABLE `tipoContacto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -816,7 +829,6 @@ CREATE TABLE `tipoDispositivo` (
 
 LOCK TABLES `tipoDispositivo` WRITE;
 /*!40000 ALTER TABLE `tipoDispositivo` DISABLE KEYS */;
-INSERT INTO `tipoDispositivo` VALUES (1,'celular');
 /*!40000 ALTER TABLE `tipoDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -868,7 +880,6 @@ CREATE TABLE `tipoDomicilio` (
 
 LOCK TABLES `tipoDomicilio` WRITE;
 /*!40000 ALTER TABLE `tipoDomicilio` DISABLE KEYS */;
-INSERT INTO `tipoDomicilio` VALUES (1,'domicilio real');
 /*!40000 ALTER TABLE `tipoDomicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -915,7 +926,6 @@ CREATE TABLE `tipoRepuesto` (
 
 LOCK TABLES `tipoRepuesto` WRITE;
 /*!40000 ALTER TABLE `tipoRepuesto` DISABLE KEYS */;
-INSERT INTO `tipoRepuesto` VALUES (1,'Pantallas');
 /*!40000 ALTER TABLE `tipoRepuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 

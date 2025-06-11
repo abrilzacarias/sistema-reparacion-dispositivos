@@ -35,8 +35,6 @@ const FormSelectSearch = ({
 
   const selectedItem = data?.find((item) => String(getValue(item)) === String(value));
 
-
-
   return (
     <div className="flex gap-2 capitalize flex-col justify-center m-auto">
       <Label>{label}</Label>
@@ -78,7 +76,11 @@ const FormSelectSearch = ({
                 key={getValue(item)}
                 value={typeof displayKey === "function" ? displayKey(item) : item[displayKey]}
                 onSelect={(e) => {
-                  setValue(getValue(item));
+                  if (typeof setValue === 'function') {
+                    setValue(getValue(item));
+                  } else {
+                    console.error('setValue function is not provided to FormSelectSearch');
+                  }
                   setTimeout(() => setOpen(false), 100);
                 }}
               >

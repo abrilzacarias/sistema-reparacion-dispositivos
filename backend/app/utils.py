@@ -1,25 +1,34 @@
 import re
 import string
-from passlib.context import CryptContext
-import string
 import secrets
 import smtplib
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+from passlib.context import CryptContext
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import os
-from dotenv import load_dotenv
+from twilio.rest import Client
 
-from pathlib import Path
+# Cargar .env
 env_path = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(dotenv_path=env_path)
 
+# ----- Email Config -----
 SMTP_SERVER = os.getenv("SMTP_SERVER")      
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
+# ----- Twilio Config -----
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = "whatsapp:+14155238886"  # N° oficial de Twilio para WhatsApp
+
+# ----- Password Context -----
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+# ----- Funciones de usuario -----
 def generate_username_from_email(email: str) -> str:
     base = email.split('@')[0]
     username = re.sub(r'[^a-zA-Z0-9]', '', base)
@@ -33,6 +42,7 @@ def generate_random_password(length: int = 8) -> str:
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
+# ----- Funciones de email -----
 def send_email_creds(email, password):
     asunto = "Credenciales de acceso a la plataforma"
     cuerpo = f"""
@@ -56,12 +66,27 @@ Saludos.
 
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
-            servidor.ehlo() 
+            servidor.ehlo()
             servidor.starttls()
-            servidor.ehlo() 
+            servidor.ehlo()
             servidor.login(SMTP_USER, SMTP_PASSWORD)
             servidor.sendmail(SMTP_USER, email, mensaje.as_string())
         return True
     except Exception as e:
         print("Error al enviar el email:", e)
+        return False
+
+# ----- Funciones de WhatsApp (Twilio) -----
+def enviarWhatsapp(numero_destino: str, mensaje: str):
+    try:
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        message = client.messages.create(
+            body=mensaje,
+            from_=TWILIO_PHONE_NUMBER,
+            to=f"whatsapp:{numero_destino}"
+        )
+        print(f"Mensaje enviado a {numero_destino}. SID: {message.sid}")
+        return True
+    except Exception as e:
+        print(f"Error al enviar mensaje: {e}")
         return False
