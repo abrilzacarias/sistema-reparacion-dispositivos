@@ -8,9 +8,6 @@ class PermisoPerfilBase(BaseModel):
     idmoduloFuncionSistema: int
     estadoPermisoPerfil: Optional[int] = 1
 
-class PermisoPerfilCreate(PermisoPerfilBase):
-    pass
-
 class PermisoPerfilUpdate(BaseModel):
     estadoPermisoPerfil: Optional[int]
 
@@ -56,3 +53,10 @@ class PermisoAgrupado(BaseModel):
     class Config:
         orm_mode = True
 
+class PermisoPerfilCreate(BaseModel):
+    idPerfil: int
+    idmoduloFuncionSistema: int
+    estadoPermisoPerfil: int
+
+class PermisosPerfilCreate(BaseModel):
+    permisos: List[PermisoPerfilCreate]

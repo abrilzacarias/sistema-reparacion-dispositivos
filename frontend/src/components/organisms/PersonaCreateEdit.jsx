@@ -1,5 +1,5 @@
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
-import ErrorMessage from "@/components/molecules/ErrorMessage"
+import ErrorMessage from "@/components/atoms/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"

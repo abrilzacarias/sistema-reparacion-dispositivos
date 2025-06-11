@@ -9,7 +9,7 @@ import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
 import ReparacionesPage from "./pages/reparaciones/ReparacionesPage"
 import ClientePage from "./pages/cliente/ClientePage"
 import PerfilesPage from "./pages/perfiles/PerfilesPage"
-import AddPerfilPage from "./pages/perfiles/AddPerfilPage"
+import PerfilFormPage from "./pages/perfiles/PerfilFormPage"
 
 function App() {
   return (
@@ -29,7 +29,8 @@ function App() {
           {/* 
           <Route path="/reparaciones" element={<ReparacionesPage />} /> */}
           <Route path="/perfiles" element={<PerfilesPage />} />
-          <Route path="/perfiles/nuevo" element={<AddPerfilPage />} />
+          <Route path="/perfiles/nuevo" element={<PerfilFormPage />} />
+          <Route path="/perfiles/editar" element={<PerfilFormPage />} />
           <Route path="/empleados" element={<EmpleadoPage />} />
           <Route path="/clientes" element={<ClientePage />} />
           <Route path="/repuestos" element={<RepuestosPage />} />
