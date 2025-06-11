@@ -30,42 +30,41 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   const { setOpen } = useContext(OpenContext)
 
   useEffect(() => {
-  if (persona) {
-    console.log(persona)
-    console.log("📨 Contactos de persona:", persona.contactos);
+    if (persona) {
+      console.log(persona)
+      console.log("📨 Contactos de persona:", persona.contactos);
 
-    const contactoCorreo = persona.contactos?.find(
-      (c) => c.idtipoContacto === 1 && c.esPrimario
-    ) ?? persona.contactos?.find(
-      (c) => c.idtipoContacto === 1
-    );
+      const contactoCorreo = persona.contactos?.find(
+        (c) => c.idtipoContacto === 1 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 1
+      );
 
-    const contactoTelefono = persona.contactos?.find(
-      (c) => c.idtipoContacto === 2 && c.esPrimario
-    ) ?? persona.contactos?.find(
-      (c) => c.idtipoContacto === 2
-    );
+      const contactoTelefono = persona.contactos?.find(
+        (c) => c.idtipoContacto === 2 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 2
+      );
 
-    reset({
-      cuit: persona.cuit || "",
-      nombre: persona.nombre || "",
-      apellido: persona.apellido || "",
-      fechaNacimiento: persona.fechaNacimiento || "",
-      correo: contactoCorreo?.descripcionContacto || "",
-      telefono: contactoTelefono?.descripcionContacto || "",
-    });
-  } else {
-    reset({
-      cuit: "",
-      nombre: "",
-      apellido: "",
-      fechaNacimiento: "",
-      correo: "",
-      telefono: "",
-    });
-  }
-}, [persona, reset]);
-
+      reset({
+        cuit: persona.cuit || "",
+        nombre: persona.nombre || "",
+        apellido: persona.apellido || "",
+        fechaNacimiento: persona.fechaNacimiento || "",
+        correo: contactoCorreo?.descripcionContacto || "",
+        telefono: contactoTelefono?.descripcionContacto || "",
+      });
+    } else {
+      reset({
+        cuit: "",
+        nombre: "",
+        apellido: "",
+        fechaNacimiento: "",
+        correo: "",
+        telefono: "",
+      });
+    }
+  }, [persona, reset]);
 
   const onSubmit = async (data) => {
     setError("")
@@ -81,19 +80,18 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     if (isEdit) {
       console.log("Editando persona:", persona)
 
-      // CORREGIDO: Buscar contactos existentes con verificación de tipoContacto
+      // CORREGIDO: Usar la misma lógica que en useEffect para buscar contactos
       const contactoCorreoExistente = persona.contactos?.find(
-  (c) => c.tipoContacto && c.tipoContacto.descripcionTipoContacto?.toLowerCase() === "correo" && c.esPrimario
-) ?? persona.contactos?.find(
-  (c) => c.tipoContacto && c.tipoContacto.descripcionTipoContacto?.toLowerCase() === "correo"
-);
+        (c) => c.idtipoContacto === 1 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 1
+      );
 
-const contactoTelefonoExistente = persona.contactos?.find(
-  (c) => c.tipoContacto && c.tipoContacto.descripcionTipoContacto?.toLowerCase() === "telefono" && c.esPrimario
-) ?? persona.contactos?.find(
-  (c) => c.tipoContacto && c.tipoContacto.descripcionTipoContacto?.toLowerCase() === "telefono"
-);
-
+      const contactoTelefonoExistente = persona.contactos?.find(
+        (c) => c.idtipoContacto === 2 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 2
+      );
 
       // Contacto de correo
       const contactoCorreo = {
@@ -106,7 +104,7 @@ const contactoTelefonoExistente = persona.contactos?.find(
       if (contactoCorreoExistente?.idContacto) {
         contactoCorreo.idContacto = contactoCorreoExistente.idContacto
         contactoCorreo.idPersona = persona.idPersona
-        console.log("Actualizando contacto de correo existente")
+        console.log("Actualizando contacto de correo existente:", contactoCorreoExistente.idContacto)
       } else {
         console.log("Creando nuevo contacto de correo")
       }
@@ -122,12 +120,15 @@ const contactoTelefonoExistente = persona.contactos?.find(
       if (contactoTelefonoExistente?.idContacto) {
         contactoTelefono.idContacto = contactoTelefonoExistente.idContacto
         contactoTelefono.idPersona = persona.idPersona
-        console.log("Actualizando contacto de teléfono existente")
+        console.log("Actualizando contacto de teléfono existente:", contactoTelefonoExistente.idContacto)
       } else {
         console.log("Creando nuevo contacto de teléfono")
       }
 
       contactos = [contactoCorreo, contactoTelefono]
+      
+      // AÑADIDO: Log para debugging
+      console.log("Contactos a enviar:", contactos)
     } else {
       // Para creación, siempre crear nuevos contactos
       contactos = [
@@ -144,13 +145,10 @@ const contactoTelefonoExistente = persona.contactos?.find(
       ]
     }
 
-    const domicilios = []
-
     const payload = {
       ...rest,
       estadoPersona: persona?.estadoPersona ?? 0,
       contactos: contactos,
-      ...(domicilios.length > 0 && { domicilios }),
     }
 
     console.log("Payload completo:", JSON.stringify(payload, null, 2))
@@ -168,7 +166,6 @@ const contactoTelefonoExistente = persona.contactos?.find(
       }
 
       if (persona) {
-        // 👇 CAMBIO: Cambiado de "empleado" a "cliente" para que funcione en ambos contextos
         setTimeout(() => {
           if (setActiveTab) {
             setActiveTab("cliente")
@@ -188,7 +185,6 @@ const contactoTelefonoExistente = persona.contactos?.find(
         }, 300)
       }
       
-      // 👇 NUEVO: Si es edición, mostrar toast de edición
       if (persona) {
         ToastMessageEdit()
       }
@@ -264,7 +260,8 @@ const contactoTelefonoExistente = persona.contactos?.find(
           control={control}
           rules={{
             required: "Campo requerido",
-            validate: (value) => isValidPhoneNumber(value) || "Número de teléfono inválido",
+            validate: (value) =>
+              isValidPhoneNumber(value) || "Número de teléfono inválido",
           }}
           render={({ field }) => (
             <PhoneInput
@@ -274,6 +271,14 @@ const contactoTelefonoExistente = persona.contactos?.find(
               defaultCountry="AR"
               placeholder="Ingrese un número de teléfono"
               className="w-full"
+              onChange={(value) => {
+                // Si empieza con +54 y no con +549, lo modificamos
+                if (value?.startsWith("+54") && !value.startsWith("+549")) {
+                  field.onChange(value.replace("+54", "+549"));
+                } else {
+                  field.onChange(value);
+                }
+              }}
             />
           )}
         />
