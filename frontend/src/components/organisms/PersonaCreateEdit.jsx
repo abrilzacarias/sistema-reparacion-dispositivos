@@ -242,7 +242,8 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
           control={control}
           rules={{
             required: "Campo requerido",
-            validate: (value) => isValidPhoneNumber(value) || "Número de teléfono inválido",
+            validate: (value) =>
+              isValidPhoneNumber(value) || "Número de teléfono inválido",
           }}
           render={({ field }) => (
             <PhoneInput
@@ -252,6 +253,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
               defaultCountry="AR"
               placeholder="Ingrese un número de teléfono"
               className="w-full"
+              onChange={(value) => {
+                // Si empieza con +54 y no con +549, lo modificamos
+                if (value?.startsWith("+54") && !value.startsWith("+549")) {
+                  field.onChange(value.replace("+54", "+549"));
+                } else {
+                  field.onChange(value);
+                }
+              }}
             />
           )}
         />
