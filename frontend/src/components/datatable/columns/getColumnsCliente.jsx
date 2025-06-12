@@ -1,4 +1,4 @@
-import {Edit, Ellipsis, List } from "lucide-react";
+import {Edit, Ellipsis, List, Wrench  } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,10 @@ import ClienteCard from "@/components/organisms/ClienteCard";
 import { Button } from "@/components/ui/button";
 import ClienteDeleteConfirmModal from "@/components/organisms/ClienteDeleteConfirmModal";
 import ClienteCreateEdit from "@/pages/cliente/components/ClienteCreateEdit";
+import HistorialReparacionClienteModal from "@/pages/cliente/components/HistorialReparacionClienteModal";
+
+// 👇 NUEVA IMPORTACIÓN
+import EditarClienteConTabs from "@/pages/cliente/components/EditarClienteConTabs";
 
 export const getColumnsCliente = ({ refetch, onEdit }) => {
   return [
@@ -97,19 +101,40 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                   <ClienteCard cliente={row.original} />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+
               <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <ModalFormTemplate
+                title="Historial de Reparaciones"
+                description="Listado de todas las reparaciones asociadas al cliente."
+                label="Reparaciones"
+                variant="ghost"
+                icon={Wrench }
+                contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+              >
+                <HistorialReparacionClienteModal idPersona={row.original?.idPersona} nombre={row.original?.persona?.nombre} apellido={row.original?.persona?.apellido} cuit={row.original?.persona?.cuit}/>
+              </ModalFormTemplate>
+            </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Editar Cliente"
-                  description="Modifique los campos del cliente."
+                  description="Editar datos de cliente y persona asociada."
                   label="Editar"
                   variant="ghost"
                   icon={Edit}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
-                  <ClienteCreateEdit cliente={row.original} refreshClientes={refetch} onClose={() => {}} />
+                  <EditarClienteConTabs 
+                    cliente={row.original} 
+                    refreshClientes={refetch} 
+                  />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+              
               <DropdownMenuItem asChild>
                 <ClienteDeleteConfirmModal cliente={row.original} refetch={refetch} />
               </DropdownMenuItem>

@@ -5,6 +5,7 @@ from app.schemas.historialAsignacionReparacion import (
     HistorialAsignacionReparacionCreate,
     HistorialAsignacionReparacionUpdate
 )
+from app.schemas import historialAsignacionReparacion as schemas
 
 
 def get_historiales(db: Session, search: str = None):

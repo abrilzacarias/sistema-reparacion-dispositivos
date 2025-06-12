@@ -32,12 +32,19 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   useEffect(() => {
     if (persona) {
       console.log(persona)
+      console.log("📨 Contactos de persona:", persona.contactos);
+
       const contactoCorreo = persona.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-      )
+        (c) => c.idtipoContacto === 1 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 1
+      );
+
       const contactoTelefono = persona.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
-      )
+        (c) => c.idtipoContacto === 2 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 2
+      );
 
       reset({
         cuit: persona.cuit || "",
@@ -46,7 +53,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         fechaNacimiento: persona.fechaNacimiento || "",
         correo: contactoCorreo?.descripcionContacto || "",
         telefono: contactoTelefono?.descripcionContacto || "",
-      })
+      });
     } else {
       reset({
         cuit: "",
@@ -55,9 +62,9 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         fechaNacimiento: "",
         correo: "",
         telefono: "",
-      })
+      });
     }
-  }, [persona, reset])
+  }, [persona, reset]);
 
   const onSubmit = async (data) => {
     setError("")
@@ -73,13 +80,18 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     if (isEdit) {
       console.log("Editando persona:", persona)
 
-      // Buscar contactos existentes
-      const contactoCorreoExistente = persona?.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-      )
-      const contactoTelefonoExistente = persona?.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
-      )
+      // CORREGIDO: Usar la misma lógica que en useEffect para buscar contactos
+      const contactoCorreoExistente = persona.contactos?.find(
+        (c) => c.idtipoContacto === 1 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 1
+      );
+
+      const contactoTelefonoExistente = persona.contactos?.find(
+        (c) => c.idtipoContacto === 2 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 2
+      );
 
       // Contacto de correo
       const contactoCorreo = {
@@ -92,7 +104,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       if (contactoCorreoExistente?.idContacto) {
         contactoCorreo.idContacto = contactoCorreoExistente.idContacto
         contactoCorreo.idPersona = persona.idPersona
-        console.log("Actualizando contacto de correo existente")
+        console.log("Actualizando contacto de correo existente:", contactoCorreoExistente.idContacto)
       } else {
         console.log("Creando nuevo contacto de correo")
       }
@@ -108,12 +120,15 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       if (contactoTelefonoExistente?.idContacto) {
         contactoTelefono.idContacto = contactoTelefonoExistente.idContacto
         contactoTelefono.idPersona = persona.idPersona
-        console.log("Actualizando contacto de teléfono existente")
+        console.log("Actualizando contacto de teléfono existente:", contactoTelefonoExistente.idContacto)
       } else {
         console.log("Creando nuevo contacto de teléfono")
       }
 
       contactos = [contactoCorreo, contactoTelefono]
+      
+      // AÑADIDO: Log para debugging
+      console.log("Contactos a enviar:", contactos)
     } else {
       // Para creación, siempre crear nuevos contactos
       contactos = [
@@ -130,13 +145,10 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       ]
     }
 
-    const domicilios = []
-
     const payload = {
       ...rest,
       estadoPersona: persona?.estadoPersona ?? 0,
       contactos: contactos,
-      domicilios: domicilios,
     }
 
     console.log("Payload completo:", JSON.stringify(payload, null, 2))
@@ -155,7 +167,9 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
       if (persona) {
         setTimeout(() => {
-          setActiveTab("empleado")
+          if (setActiveTab) {
+            setActiveTab("cliente")
+          }
         }, 100)
       } else {
         setOpen(false)
@@ -169,6 +183,10 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
           persona ? ToastMessageEdit() : ToastMessageCreate()
           refreshPersonas()
         }, 300)
+      }
+      
+      if (persona) {
+        ToastMessageEdit()
       }
     } catch (err) {
       console.error("Error al guardar persona:", err)
@@ -269,7 +287,11 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
       <div className="col-span-2 flex justify-end gap-4 mt-3">
         {persona && (
-          <Button type="button" variant="ghost" onClick={() => setActiveTab("empleado")}>
+          <Button 
+            type="button" 
+            variant="ghost" 
+            onClick={() => setActiveTab && setActiveTab("cliente")}
+          >
             Continuar sin actualizar
           </Button>
         )}
@@ -278,7 +300,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
           initialData={persona}
           isLoading={isLoading}
           register
-          onClick={() => setActiveTab("empleado")}
+          onClick={() => setActiveTab && setActiveTab("cliente")}
         />
       </div>
 
@@ -290,3 +312,4 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 }
 
 export default PersonaCreateEdit
+
