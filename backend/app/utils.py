@@ -72,16 +72,18 @@ Saludos.
         return False
 
 def send_email_recover(email, password):
-    asunto = "Nueva contraseña"
+    asunto = "Restablecimiento de contraseña"
     cuerpo = f"""
 Hola,
 
-Se ha creado una nueva constraseña. Estas son tus nuevas credenciales de acceso:
+Has solicitado restablecer tu contraseña. Para crear una nueva, hacé clic en el siguiente enlace:
 
-Usuario: {email}
-Contraseña: {password}
 
-Por favor, cambia tu contraseña al iniciar sesión.
+🔗 {password}
+
+Este enlace es válido por un tiempo limitado y solo puede usarse una vez.
+
+Si no solicitaste este cambio, por favor ignorá este mensaje.
 
 Saludos.
     """
