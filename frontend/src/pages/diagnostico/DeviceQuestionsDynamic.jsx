@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnosticoId }) => {
+const DeviceQuestionsDynamic = ({ tipoDispositivo, value = [], onChange, diagnosticoId, onQuestionsLoaded }) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -9,7 +9,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
   useEffect(() => {
     if (!tipoDispositivo) {
       setQuestions([]);
-      onChange({});
+      onChange([]);
       return;
     }
 
@@ -23,6 +23,9 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
         if (!response.ok) throw new Error(`HTTP ${response.status}: ${await response.text()}`);
 
         const data = await response.json();
+        console.log('📋 Datos cargados del API:', data);
+
+        let processedQuestions = [];
 
         if (data.length > 0 && !data[0].preguntaDiagnostico) {
           const questionsWithDetails = await Promise.all(
@@ -48,11 +51,17 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
             })
           );
 
-          setQuestions(questionsWithDetails.filter(Boolean));
+          processedQuestions = questionsWithDetails.filter(Boolean);
+          console.log('❓ Preguntas procesadas:', processedQuestions);
         } else {
-          setQuestions(data);
+          console.log('❓ Preguntas directas:', data);
+          processedQuestions = data;
         }
+
+        setQuestions(processedQuestions);
+
       } catch (err) {
+        console.error('❌ Error cargando preguntas:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -60,7 +69,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
     };
 
     loadQuestions();
-  }, [tipoDispositivo, onChange]);
+  }, [tipoDispositivo]);
 
   // Cargar respuestas existentes si diagnosticoId existe
   useEffect(() => {
@@ -72,26 +81,87 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
         if (!response.ok) return;
 
         const detalles = await response.json();
-        const existingAnswers = {};
-        detalles.forEach((detalle) => {
-          const index = questions.findIndex(
-            q => q.idTipoDispositivoSegunPregunta === detalle.idTipoDispositivoSegunPregunta
+        console.log('🔄 Respuestas existentes cargadas:', detalles);
+        
+        const answers = questions.map((q) => {
+          const encontrado = detalles.find(
+            (d) => d.idTipoDispositivoSegunPregunta === q.idTipoDispositivoSegunPregunta
           );
-          if (index !== -1) {
-            existingAnswers[index] = detalle.valorDiagnostico;
-          }
+          return encontrado
+            ? {
+                valorDiagnostico: encontrado.valorDiagnostico,
+                idDiagnostico: diagnosticoId,
+                idTipoDispositivoSegunPregunta: encontrado.idTipoDispositivoSegunPregunta,
+              }
+            : {
+                valorDiagnostico: '',
+                idDiagnostico: diagnosticoId,
+                idTipoDispositivoSegunPregunta: q.idTipoDispositivoSegunPregunta,
+              };
         });
-        onChange(existingAnswers);
+
+        console.log('💾 Respuestas mapeadas:', answers);
+        onChange(answers);
       } catch (err) {
         console.error('❌ Error loading existing answers:', err);
       }
     };
 
     loadExistingAnswers();
-  }, [diagnosticoId, questions, onChange]);
+  }, [diagnosticoId, questions]);
+
+  // Notificar al padre cuando las preguntas cambien
+  useEffect(() => {
+    if (onQuestionsLoaded) {
+      console.log("📡 Notificando preguntas cargadas al padre:", questions);
+      onQuestionsLoaded(questions);
+    }
+  }, [questions]);
+
+  // Inicializar respuestas vacías cuando se cargan las preguntas por primera vez
+  useEffect(() => {
+    if (questions.length > 0 && (!value || value.length === 0) && !diagnosticoId) {
+      const initialAnswers = questions.map((q) => ({
+        valorDiagnostico: '',
+        idDiagnostico: 0,
+        idTipoDispositivoSegunPregunta: q.idTipoDispositivoSegunPregunta,
+      }));
+      
+      console.log('🔄 Inicializando respuestas vacías:', initialAnswers);
+      onChange(initialAnswers);
+    }
+  }, [questions, diagnosticoId]);
 
   const handleAnswerChange = (index, answer) => {
-    onChange({ ...value, [index]: answer });
+    // Asegurar que value sea array
+    const updated = Array.isArray(value) ? [...value] : [];
+    const pregunta = questions[index];
+    
+    // LOG PRINCIPAL: Ver qué pregunta se está respondiendo
+    console.log('✅ RESPUESTA CAMBIADA:');
+    console.log('  📝 Pregunta:', pregunta.preguntaDiagnostico?.textoPregunta);
+    console.log('  🆔 ID Pregunta:', pregunta.idPreguntaDiagnostico);
+    console.log('  📍 Índice:', index);
+    console.log('  💬 Respuesta:', answer);
+    console.log('  🔗 ID Relación:', pregunta.idTipoDispositivoSegunPregunta);
+
+    // Asegurar que el array tenga el tamaño correcto
+    while (updated.length <= index) {
+      updated.push({
+        valorDiagnostico: '',
+        idDiagnostico: diagnosticoId ?? 0,
+        idTipoDispositivoSegunPregunta: 0,
+      });
+    }
+
+    updated[index] = {
+      valorDiagnostico: answer,
+      idDiagnostico: diagnosticoId ?? 0,
+      idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+    };
+
+    console.log('📊 Todas las respuestas actualizadas:', updated);
+    onChange(updated);
   };
 
   const renderQuestionInput = (question, index) => {
@@ -103,7 +173,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
         return (
           <input
             type="text"
-            value={value[index] || ''}
+            value={value[index]?.valorDiagnostico || ''}
             onChange={(e) => handleAnswerChange(index, e.target.value)}
             className="w-full rounded-md border px-3 py-2 bg-background text-foreground"
             placeholder="Ingrese su respuesta..."
@@ -115,7 +185,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
         return (
           <input
             type="number"
-            value={value[index] || ''}
+            value={value[index]?.valorDiagnostico || ''}
             onChange={(e) => handleAnswerChange(index, e.target.value)}
             className="w-full rounded-md border px-3 py-2 bg-background text-foreground"
             placeholder="Ingrese un número..."
@@ -133,7 +203,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
                   type="radio"
                   name={`question_${index}`}
                   value={val}
-                  checked={value[index] === val}
+                  checked={value[index]?.valorDiagnostico === val}
                   onChange={(e) => handleAnswerChange(index, e.target.value)}
                 />
                 {val === 'true' ? 'Sí' : 'No'}
@@ -147,7 +217,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
         const opciones = question.preguntaDiagnostico?.opcionesPregunta;
         return Array.isArray(opciones) && opciones.length > 0 ? (
           <select
-            value={value[index] || ''}
+            value={value[index]?.valorDiagnostico || ''}
             onChange={(e) => handleAnswerChange(index, e.target.value)}
             className="w-full rounded-md border px-3 py-2 bg-background text-foreground"
           >
@@ -170,6 +240,15 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
         );
     }
   };
+
+  // LOG cuando cambian las props principales (solo para debug)
+  useEffect(() => {
+    console.log('🔄 Props cambiadas:');
+    console.log('  🖥️ Tipo Dispositivo:', tipoDispositivo);
+    console.log('  🆔 Diagnóstico ID:', diagnosticoId);
+    console.log('  📋 Value actual:', value);
+    console.log('  ❓ Preguntas cargadas:', questions.length);
+  }, [tipoDispositivo, diagnosticoId]);
 
   if (loading) {
     return (
@@ -221,18 +300,10 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = {}, onChange, diagnos
           <div key={question.idTipoDispositivoSegunPregunta} className="space-y-2">
             <label className="text-sm font-medium">
               {question.preguntaDiagnostico?.textoPregunta || 'Pregunta sin texto'}
-              {question.preguntaDiagnostico?.esObligatoria && (
-                <span className="text-red-500"> *</span>
-              )}
+              {question.preguntaDiagnostico?.esObligatoria && <span className="text-red-500"> *</span>}
             </label>
 
             {renderQuestionInput(question, index)}
-
-            {/* Debug info: opcional */}
-            {/* <details className="text-xs text-gray-500">
-              <summary>Debug</summary>
-              <pre>{JSON.stringify(question, null, 2)}</pre>
-            </details> */}
           </div>
         ))}
       </div>

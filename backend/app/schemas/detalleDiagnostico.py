@@ -6,8 +6,10 @@ class DetalleDiagnosticoBase(BaseModel):
     idDiagnostico: int
     idTipoDispositivoSegunPregunta: int
 
-class DetalleDiagnosticoCreate(DetalleDiagnosticoBase):
-    pass
+class DetalleDiagnosticoCreate(BaseModel):
+    valorDiagnostico: str
+    idDiagnostico: int   
+    idTipoDispositivoSegunPregunta: int
 
 class DetalleDiagnosticoUpdate(DetalleDiagnosticoBase):
     pass
