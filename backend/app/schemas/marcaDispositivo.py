@@ -14,7 +14,7 @@ class MarcaDispositivoUpdate(MarcaDispositivoBase):
 # Schema básico sin referencias circulares
 class MarcaDispositivoOut(MarcaDispositivoBase):
     idMarcaDispositivo: int
-    descripcionMarcaDispositivo: str
+    #descripcionMarcaDispositivo: str
 
 
     class Config:

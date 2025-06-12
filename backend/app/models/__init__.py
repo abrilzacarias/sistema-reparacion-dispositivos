@@ -26,3 +26,4 @@ from .reparacion import Reparacion
 from .detallereparacion import DetalleReparacion
 from .registroEstadoReparacion import RegistroEstadoReparacion
 from .historialasignacionreparacion import HistorialAsignacionReparacion
+from .detalleDiagnostico import DetalleDiagnostico
