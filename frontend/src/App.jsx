@@ -32,7 +32,7 @@ function App() {
           <Route path="/perfiles/nuevo" element={<PerfilFormPage />} />
           <Route path="/perfiles/editar" element={<PerfilFormPage />} />
           <Route path="/empleados" element={<EmpleadoPage />} />
-          <Route path="/perfiles/nuevo" element={<AddPerfilPage />} />
+          <Route path="/perfiles/nuevo" element={<PerfilFormPage />} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
           <Route path="/clientes" element={<ClientePage />} />
           <Route path="/repuestos" element={<RepuestosPage />} />

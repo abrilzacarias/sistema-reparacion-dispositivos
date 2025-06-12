@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useContext, useState } from "react"
 import axios from "axios"
 import { useForm } from "react-hook-form"
@@ -7,11 +5,11 @@ import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMe
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import ErrorMessage from "@/components/molecules/ErrorMessage"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, CheckCircle2, Loader2, Save, X } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { cn } from "@/lib/utils"
+import ErrorMessage from "@/components/atoms/ErrorMessage"
 
 const ClienteCreateEdit = ({ cliente, refreshClientes, personaId }) => {
   const {
