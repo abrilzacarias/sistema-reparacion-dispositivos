@@ -68,7 +68,6 @@ def delete_marca_dispositivo(db: Session, id_marca: int):
     if not db_marca:
         return None
         
-
     # Verificamos si tiene repuestos activos asociados
     if any(repuesto.estadoRepuesto for repuesto in db_marca.repuestos):
         raise ValueError("No se puede eliminar la marca porque tiene repuestos activos asociados.")
