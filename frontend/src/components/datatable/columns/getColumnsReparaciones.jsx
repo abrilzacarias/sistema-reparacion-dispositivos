@@ -13,11 +13,6 @@ import ReparacionesCreateEdit from "@/pages/reparaciones/components/Reparaciones
 export const getColumnsReparaciones = ({ refetch }) => {
   return [
     {
-      header: "N° Reparación",
-      accessorKey: "numeroReparacion",
-      cell: ({ row }) => <div className="ml-4">{row.original.numeroReparacion}</div>,
-    },
-    {
       header: "Fecha Ingreso",
       accessorKey: "fechaIngreso",
       cell: ({ row }) => <div>{row.original.fechaIngreso}</div>,

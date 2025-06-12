@@ -16,7 +16,6 @@ class Reparacion(Base):
     )
 
     idReparacion = mapped_column(Integer, primary_key=True)
-    numeroReparacion = mapped_column(Integer)
 
     fechaIngreso = mapped_column(Date)
     montoTotalReparacion = mapped_column(DECIMAL(10, 0))

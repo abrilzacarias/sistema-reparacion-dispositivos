@@ -8,7 +8,7 @@ from app.schemas.registroEstadoReparacion import RegistroEstadoReparacionOut
 
 
 class ReparacionBase(BaseModel):
-    numeroReparacion: int
+    #numeroReparacion: int
     #idEstadoReparacion: int
     fechaIngreso: date
     fechaEgreso: Optional[date] = None
