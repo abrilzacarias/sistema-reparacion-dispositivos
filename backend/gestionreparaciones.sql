@@ -736,6 +736,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
+INSERT INTO `reparacion` VALUES (4,3466,'2025-06-11',NULL,8900,3,29);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -985,6 +986,14 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping events for database 'gestionreparaciones'
+--
+
+--
+-- Dumping routines for database 'gestionreparaciones'
+--
+
+--
 -- Final view structure for view `vista_notificaciones`
 --
 
@@ -997,7 +1006,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`fastapi_user`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `vista_notificaciones` AS select row_number() OVER (ORDER BY `subconsulta`.`fecha` desc )  AS `idActividad`,`subconsulta`.`tipo` AS `tipo`,`subconsulta`.`mensaje` AS `mensaje`,`subconsulta`.`fecha` AS `fecha`,`subconsulta`.`accion` AS `accion` from (select 'Alta empleado' AS `tipo`,concat('Empleado agregado: ',`p`.`nombre`,' ',`p`.`apellido`) AS `mensaje`,`e`.`fechaContratacion` AS `fecha`,'Ver empleado' AS `accion` from (`empleado` `e` join `persona` `p` on((`e`.`idPersona` = `p`.`idPersona`))) where ((`e`.`fechaContratacion` is not null) and (`e`.`fechaFinalizacion` is null)) union all select 'Baja empleado' AS `Baja empleado`,concat('Empleado dado de baja: ',`p`.`nombre`,' ',`p`.`apellido`) AS `CONCAT('Empleado dado de baja: ', p.nombre, ' ', p.apellido)`,`e`.`fechaFinalizacion` AS `fechaFinalizacion`,'Ver empleado' AS `Ver empleado` from (`empleado` `e` join `persona` `p` on((`e`.`idPersona` = `p`.`idPersona`))) where (`e`.`fechaFinalizacion` is not null) union all select 'Nuevo diagnóstico' AS `Nuevo diagnóstico`,concat('Se diagnosticó el dispositivo ID ',`d`.`idDispositivo`) AS `CONCAT('Se diagnosticó el dispositivo ID ', d.idDispositivo)`,`d`.`fechaDiagnostico` AS `fechaDiagnostico`,'Ver diagnóstico' AS `Ver diagnóstico` from `diagnostico` `d` union all select 'Reparación ingresada' AS `Reparación ingresada`,concat('Nueva reparación con número: ',`r`.`idReparacion`) AS `CONCAT('Nueva reparación con número: ', r.idReparacion)`,`r`.`fechaIngreso` AS `fechaIngreso`,'Ver reparación' AS `Ver reparación` from `reparacion` `r`) `subconsulta` */;
+/*!50001 VIEW `vista_notificaciones` AS select row_number() OVER (ORDER BY `subconsulta`.`fecha` desc )  AS `idActividad`,`subconsulta`.`tipo` AS `tipo`,`subconsulta`.`mensaje` AS `mensaje`,`subconsulta`.`fecha` AS `fecha`,`subconsulta`.`accion` AS `accion` from (select 'Alta empleado' AS `tipo`,concat('Empleado agregado: ',`p`.`nombre`,' ',`p`.`apellido`) AS `mensaje`,`e`.`fechaContratacion` AS `fecha`,'Ver empleado' AS `accion` from (`empleado` `e` join `persona` `p` on((`e`.`idPersona` = `p`.`idPersona`))) where ((`e`.`fechaContratacion` is not null) and (`e`.`fechaFinalizacion` is null)) union all select 'Baja empleado' AS `Baja empleado`,concat('Empleado dado de baja: ',`p`.`nombre`,' ',`p`.`apellido`) AS `CONCAT('Empleado dado de baja: ', p.nombre, ' ', p.apellido)`,`e`.`fechaFinalizacion` AS `fechaFinalizacion`,'Ver empleado' AS `Ver empleado` from (`empleado` `e` join `persona` `p` on((`e`.`idPersona` = `p`.`idPersona`))) where (`e`.`fechaFinalizacion` is not null) union all select 'Nuevo diagnóstico' AS `Nuevo diagnóstico`,concat('Se diagnosticó el dispositivo ID ',`d`.`idDispositivo`) AS `CONCAT('Se diagnosticó el dispositivo ID ', d.idDispositivo)`,`d`.`fechaDiagnostico` AS `fechaDiagnostico`,'Ver diagnóstico' AS `Ver diagnóstico` from `diagnostico` `d` union all select 'Reparación ingresada' AS `Reparación ingresada`,concat('Nueva reparación con número: ',`r`.`numeroReparacion`) AS `CONCAT('Nueva reparación con número: ', r.numeroReparacion)`,`r`.`fechaIngreso` AS `fechaIngreso`,'Ver reparación' AS `Ver reparación` from `reparacion` `r`) `subconsulta` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1011,4 +1020,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-12 10:32:23
+-- Dump completed on 2025-06-12 13:01:59
