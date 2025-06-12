@@ -2,10 +2,13 @@ import { useForm } from "react-hook-form";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
-import ErrorMessage from "@/components/molecules/ErrorMessage";
+import ErrorMessage from "@/components/atoms/ErrorMessage";
 import FormSelectSearch from "@/components/atoms/FormSelectSearch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DeviceQuestionsDynamic from "./DeviceQuestionsDynamic";
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import TipoDispositivoCreateEdit from "./components/TipoDispositivoCreateEdit";
+import { Plus } from "lucide-react";
 
 const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   const isEditMode = !!diagnostico;
@@ -40,10 +43,8 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   const watchTipoDispositivo = watch("idTipoDispositivo");
   const watchDeviceQuestions = watch("deviceQuestions");
   
-  // Estado para almacenar las preguntas cargadas
   const [questions, setQuestions] = useState([]);
 
-  // Función que será llamada por DeviceQuestionsDynamic cuando las preguntas se carguen
   const handleQuestionsLoaded = (loadedQuestions) => {
     console.log("🔄 Preguntas recibidas en padre:", loadedQuestions);
     setQuestions(loadedQuestions);
@@ -55,7 +56,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     setApiErrors({});
 
     try {
-      // 🛡️ Validación local
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
       if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
@@ -78,7 +78,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         return;
       }
 
-      // ⚙️ 1. Crear el dispositivo (solo si no estamos en modo edición)
       let dispositivoId = data.idDispositivo;
 
       if (!isEditMode) {
@@ -105,21 +104,19 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         console.log("✅ Dispositivo creado con ID:", dispositivoId);
       }
 
-      // 🧠 2. Crear detalles del diagnóstico
       const idDiagnostico = isEditMode ? diagnostico.idDiagnostico : 0;
 
       const detalles = data.deviceQuestions.map((respuesta, index) => {
         const pregunta = questions[index];
         if (!pregunta || !respuesta) return null;
         return {
-          idDiagnostico: idDiagnostico, // Usar el ID correcto
+          idDiagnostico: idDiagnostico, 
           idDetalleDiagnostico: 0,
           valorDiagnostico: String(respuesta.valorDiagnostico || ""),
           idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
         };
       }).filter(Boolean);
 
-      // 🔧 FIXED: El backend necesita AMBOS campos
       const diagnosticoData = {
         fechaDiagnostico: data.fechaDiagnostico,
         descripcion: data.descripcion,
@@ -183,12 +180,9 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
   return (
     <Tabs defaultValue="diagnostico" className="w-full">
-      <TabsList className="mb-6">
-        <TabsTrigger value="cliente">Cliente</TabsTrigger>
-        <TabsTrigger value="diagnostico">Diagnóstico</TabsTrigger>
-        <TabsTrigger value="imagenes">Imágenes</TabsTrigger>
-        <TabsTrigger value="reparacion">Reparación</TabsTrigger>
-        <TabsTrigger value="pagos">Pagos</TabsTrigger>
+      <TabsList className="mb-6 w-full">
+        <TabsTrigger value="cliente" className="flex-1 rounded-md rounded-r-none">Cliente</TabsTrigger>
+        <TabsTrigger value="diagnostico" className="flex-1 rounded-md rounded-l-none">Diagnóstico</TabsTrigger>
       </TabsList>
 
       <TabsContent value="cliente">
@@ -198,7 +192,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       </TabsContent>
 
       <TabsContent value="diagnostico">
-        {/* Debug: Ver todos los valores del formulario */}
         {console.log("🔍 Valores del formulario:", {
           idEmpleado: watch("idEmpleado"),
           idTipoDispositivo: watch("idTipoDispositivo"),
@@ -260,16 +253,32 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
-                <FormSelectSearch
-                  label="Tipo de Dispositivo *"
-                  endpoint="tipo-dispositivo"
-                  valueKey="idTipoDispositivo"
-                  displayKey={(d) => d.nombreTipoDispositivo}
-                  value={watch("idTipoDispositivo")}
-                  setValue={(value) => setValue("idTipoDispositivo", value)}
-                  {...register("idTipoDispositivo", { required: "Seleccione un tipo de dispositivo" })}
-                />
-                <ErrorMessage message={errors.idTipoDispositivo?.message || apiErrors?.idTipoDispositivo} />
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <FormSelectSearch
+                      label="Tipo de Dispositivo *"
+                      endpoint="tipo-dispositivo"
+                      valueKey="idTipoDispositivo"
+                      displayKey={(d) => d.nombreTipoDispositivo}
+                      value={watch("idTipoDispositivo")}
+                      setValue={(value) => setValue("idTipoDispositivo", value)}
+                      {...register("idTipoDispositivo", { required: "Seleccione un tipo de dispositivo" })}
+                    />
+                    <ErrorMessage
+                      message={errors.idTipoDispositivo?.message || apiErrors?.idTipoDispositivo}
+                    />
+                  </div>
+                  <ModalFormTemplate
+                    title="Nuevo tipo de dispositivo"
+                    description="Agregar un nuevo tipo de dispositivo"
+                    variant="default"
+                    icon={Plus}
+                    className="p-2 m-0 cursor-pointer"
+                    contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+                  >
+                    <TipoDispositivoCreateEdit />
+                  </ModalFormTemplate>
+                </div>
               </div>
 
               <div>
@@ -336,23 +345,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         </form>
       </TabsContent>
 
-      <TabsContent value="imagenes">
-        <div className="p-6 text-center text-muted-foreground">
-          Imágenes (placeholder)
-        </div>
-      </TabsContent>
-
-      <TabsContent value="reparacion">
-        <div className="p-6 text-center text-muted-foreground">
-          Reparación (placeholder)
-        </div>
-      </TabsContent>
-
-      <TabsContent value="pagos">
-        <div className="p-6 text-center text-muted-foreground">
-          Pagos (placeholder)
-        </div>
-      </TabsContent>
     </Tabs>
   );
 };

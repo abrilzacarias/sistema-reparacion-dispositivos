@@ -10,6 +10,7 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import EmpleadoCard from "@/components/organisms/EmpleadoCard"
 import { Button } from "@/components/ui/button";
+import EmpleadoDeleteConfirmModal from "@/components/organisms/EmpleadoDeleteConfirmModal"
 
 export const getColEmpleados = ({ refetch }) => {
   return [
@@ -79,11 +80,14 @@ export const getColEmpleados = ({ refetch }) => {
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
-
               {/* TODO Otras acciones */}
-              <DropdownMenuItem onClick={() => console.log("Editar", row.original)}>Editar</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>Eliminar</DropdownMenuItem>
-            </DropdownMenuContent>
+                <DropdownMenuItem onClick={() => console.log("Editar", row.original)}>
+                  Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                    <EmpleadoDeleteConfirmModal empleado={row.original} refetch={refetch} />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
           </DropdownMenu>
         )
       },

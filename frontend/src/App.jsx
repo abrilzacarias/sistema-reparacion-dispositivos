@@ -7,12 +7,20 @@ import EmpleadoPage from "./pages/empleado/EmpleadoPage"
 import RepuestosPage from "./pages/repuestos/RepuestosPage"
 import DiagnosticoPage from './pages/diagnostico/DiagnosticoPage';
 import ReparacionesPage from "./pages/reparaciones/ReparacionesPage"
+import ClientePage from "./pages/cliente/ClientePage"
+import PerfilesPage from "./pages/perfiles/PerfilesPage"
+import PerfilFormPage from "./pages/perfiles/PerfilFormPage"
+import MarcasPage from "./pages/marcas/MarcasPage"
+import ResetPassword from "./pages/login/ResetPassword"
+import DiagnosticoFormPage from "./pages/diagnostico/DiagnosticoFormPage"
+import ConfigPage from "./pages/configuracion/ConfigPage"
 
 function App() {
   return (
     <div className="min-h-screen bg-red-500 dark:bg-gray-900">
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/usuarios/reset-password" element={<ResetPassword />} />
 
         <Route
           element={
@@ -21,18 +29,20 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* Todas estas rutas heredarán el layout con sidebar y topbar */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/diagnosticos" element={<DiagnosticoPage />} />
-          {/* 
-          <Route path="/reparaciones" element={<ReparacionesPage />} /> */}
-          {/* Puedes añadir más rutas aquí y todas usarán el mismo layout */}
-          <Route path="/roles" element={<div>Página de Roles</div>} />
+          <Route path="/diagnosticos/nuevo" element={<DiagnosticoFormPage />} />
+          <Route path="/empleados" element={<EmpleadoPage />} /> 
+          <Route path="/perfiles" element={<PerfilesPage />} />
+          <Route path="/perfiles/nuevo" element={<PerfilFormPage />} />
+          <Route path="/perfiles/editar" element={<PerfilFormPage />} />
           <Route path="/empleados" element={<EmpleadoPage />} />
-          <Route path="/clientes" element={<div>Página de Clientes</div>} />
-          <Route path="/repuestos" element={<RepuestosPage />} />
-          <Route path="/configuracion" element={<div>Página de Configuración</div>} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
+          <Route path="/clientes" element={<ClientePage />} />
+          <Route path="/repuestos" element={<RepuestosPage />} />
+          <Route path="/configuracion" element={<ConfigPage />} />
+          <Route path="/reparaciones" element={<ReparacionesPage />} />
+          <Route path="/marcas" element={<MarcasPage/>} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />

@@ -1,4 +1,4 @@
-import ErrorMessage from "@/components/molecules/ErrorMessage"
+import ErrorMessage from "@/components/atoms/ErrorMessage"
 import { cn } from "@/lib/utils"
 import InputSearchApi from "../molecules/InputSearchApi"
 import SearchResultsList from "../molecules/SearchResultsList"
@@ -21,9 +21,15 @@ const SearchPersonas = ({
 }) => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      // resetQuery()
+      console.log("🔵 Enter presionado, ejecutando startSearch");
       startSearch(search)
     }
+  }
+
+  // Función para manejar el click en la lupa
+  const handleSearchClick = () => {
+    console.log("🔍 Lupa clickeada, ejecutando startSearch");
+    startSearch(search)
   }
 
   const variants = {
@@ -45,6 +51,7 @@ const SearchPersonas = ({
           error={error}
           handleChange={handleChange}
           handleKeyDown={handleKeyDown}
+          handleSearchClick={handleSearchClick} // ✅ Agregamos esta prop
           isLoading={isLoading}
           label={label}
         />

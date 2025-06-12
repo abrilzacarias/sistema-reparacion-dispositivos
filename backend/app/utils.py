@@ -13,6 +13,9 @@ from twilio.rest import Client
 # Cargar .env
 env_path = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(dotenv_path=env_path)
+print("Cargando .env desde:", env_path)
+print("Ruta __file__:", __file__)
+print("Ruta absoluta __file__:", Path(__file__).resolve())
 
 # ----- Email Config -----
 SMTP_SERVER = os.getenv("SMTP_SERVER")      
@@ -89,4 +92,38 @@ def enviarWhatsapp(numero_destino: str, mensaje: str):
         return True
     except Exception as e:
         print(f"Error al enviar mensaje: {e}")
+        
+def send_email_recover(email, password):
+    asunto = "Restablecimiento de contraseña"
+    cuerpo = f"""
+Hola,
+
+Has solicitado restablecer tu contraseña. Para crear una nueva, hacé clic en el siguiente enlace:
+
+
+🔗 {password}
+
+Este enlace es válido por un tiempo limitado y solo puede usarse una vez.
+
+Si no solicitaste este cambio, por favor ignorá este mensaje.
+
+Saludos.
+    """
+
+    mensaje = MIMEMultipart()
+    mensaje["From"] = SMTP_USER
+    mensaje["To"] = email
+    mensaje["Subject"] = asunto
+    mensaje.attach(MIMEText(cuerpo, "plain"))
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as servidor:
+            servidor.ehlo() 
+            servidor.starttls()
+            servidor.ehlo() 
+            servidor.login(SMTP_USER, SMTP_PASSWORD)
+            servidor.sendmail(SMTP_USER, email, mensaje.as_string())
+        return True
+    except Exception as e:
+        print("Error al enviar el email:", e)
         return False

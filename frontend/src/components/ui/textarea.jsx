@@ -1,6 +1,6 @@
-// src/components/ui/textarea.jsx
-import React from "react"
-import { cn } from "@/lib/utils" // si usás Tailwind con una función de clases condicionales
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
 
 const Textarea = React.forwardRef(({ className, ...props }, ref) => {
   return (
@@ -14,7 +14,6 @@ const Textarea = React.forwardRef(({ className, ...props }, ref) => {
     />
   )
 })
-
 Textarea.displayName = "Textarea"
 
 export { Textarea }
