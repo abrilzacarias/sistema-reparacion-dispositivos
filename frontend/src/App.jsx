@@ -11,12 +11,14 @@ import ClientePage from "./pages/cliente/ClientePage"
 import PerfilesPage from "./pages/perfiles/PerfilesPage"
 import PerfilFormPage from "./pages/perfiles/PerfilFormPage"
 import MarcasPage from "./pages/marcas/MarcasPage"
+import ResetPassword from "./pages/login/ResetPassword"
 
 function App() {
   return (
     <div className="min-h-screen bg-red-500 dark:bg-gray-900">
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/usuarios/reset-password" element={<ResetPassword />} />
 
         <Route
           element={

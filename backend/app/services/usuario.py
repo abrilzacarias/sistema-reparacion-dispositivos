@@ -3,11 +3,29 @@ from fastapi import HTTPException
 from sqlalchemy import or_, func
 from app.models.usuario import Usuario
 from app.schemas.usuario import UsuarioCreate, UsuarioUpdate, UsuarioAutoCreate
-from app.utils import generate_username_from_email, generate_random_password, send_email_creds
+from app.utils import generate_username_from_email, generate_random_password, send_email_creds, send_email_recover
 from app.auth.auth_handler import get_password_hash
+from datetime import datetime, timedelta
+import jwt  # pyjwt
+from jwt import PyJWTError
+
+# Clave secreta para firmar el JWT (debería estar en .env o config)
+SECRET_KEY = "tu_clave_super_secreta"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_HOURS = 1
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta if expires_delta else timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS))
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
 
 def get_user(db: Session, id_usuario: int):
-    return db.query(Usuario).filter(Usuario.id == id_usuario).first()
+    return db.query(Usuario).filter(Usuario.idUsuario == id_usuario).first()
+
 
 def get_users(db: Session, search: str = None):
     query = db.query(Usuario)
@@ -71,6 +89,7 @@ def create_user_auto(db: Session, usuario_in: UsuarioAutoCreate):
         db.rollback()
         raise e 
 
+
 def update_user(db: Session, id_usuario: int, user_in: UsuarioUpdate):
     db_user = get_user(db, id_usuario)
     if not db_user:
@@ -81,6 +100,7 @@ def update_user(db: Session, id_usuario: int, user_in: UsuarioUpdate):
     db.refresh(db_user)
     return db_user
 
+
 def delete_user(db: Session, id_usuario: int) -> bool:
     user = get_user(db, id_usuario)
     if not user:
@@ -88,3 +108,40 @@ def delete_user(db: Session, id_usuario: int) -> bool:
     user.is_active = False
     db.commit()
     return True
+
+
+def recover_password(db: Session, email: str):
+    usuario = db.query(Usuario).filter(Usuario.email == email).first()
+    if not usuario:
+        raise HTTPException(status_code=404, detail="No se encontró un usuario con ese email.")
+
+    # Generar token JWT con info usuario y expiración
+    token_data = {"user_id": usuario.idUsuario, "email": usuario.email}
+    token = create_access_token(token_data, expires_delta=timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS))
+
+    # Enviar mail con el enlace que incluye el token
+    link = f"http://localhost:5173/usuarios/reset-password?token={token}"
+    enviado = send_email_recover(email, link)
+    
+    if not enviado:
+        raise HTTPException(status_code=500, detail="Error al enviar el email.")
+    
+    return {"msg": "Correo con enlace para recuperar contraseña enviado."}
+
+
+def reset_password(db: Session, token: str, nueva_password: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: int = payload.get("user_id")
+        if user_id is None:
+            raise HTTPException(status_code=400, detail="Token inválido.")
+    except PyJWTError:
+        raise HTTPException(status_code=400, detail="Token inválido o expirado.")
+
+    usuario = get_user(db, user_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado.")
+
+    usuario.password = get_password_hash(nueva_password)
+    db.commit()
+    return {"msg": "Contraseña actualizada correctamente."}
