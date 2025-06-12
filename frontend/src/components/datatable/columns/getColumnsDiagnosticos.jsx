@@ -10,6 +10,8 @@ import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import DiagnosticoCard from "@/components/organisms/DiagnosticoCard"; // Necesitarás crear este componente
 import { Button } from "@/components/ui/button";
 
+
+//NO SE SI DISPOSITIVO SE TIENE QUE MANDAR COMO OCULTO
 export const getColumnsDiagnosticos = ({ refetch }) => {
   return [
     {
@@ -38,13 +40,6 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
       accessorKey: "dispositivo.modeloDispositivo.marcaDispositivo.descripcionMarcaDispositivo",
       cell: ({ row }) => (
         <div>{row.original.dispositivo?.modeloDispositivo?.marcaDispositivo?.descripcionMarcaDispositivo || "N/A"}</div>
-      ),
-    },
-    {
-      header: "Tipo",
-      accessorKey: "dispositivo.tipoDispositivo.nombreTipoDispositivo",
-      cell: ({ row }) => (
-        <div>{row.original.dispositivo?.tipoDispositivo?.nombreTipoDispositivo || "N/A"}</div>
       ),
     },
     {
