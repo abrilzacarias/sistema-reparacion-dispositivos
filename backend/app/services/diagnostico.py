@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session, selectinload
 from app.models import Diagnostico as Diagnostico
 from app.schemas import diagnostico as schemas
+from app.models.detalleDiagnostico import DetalleDiagnostico
+from app.schemas.diagnostico import DiagnosticoCreate
 
 def obtener_diagnosticos(db: Session):
     return db.query(Diagnostico) 
@@ -17,13 +19,29 @@ def obtener_diagnosticos(db: Session):
 def get_diagnostico(db: Session, idDiagnostico: int):
     return obtener_diagnosticos(db).filter(Diagnostico.idDiagnostico == idDiagnostico).first()
 
-def create_diagnostico(db: Session, diagnostico: schemas.DiagnosticoCreate):
-    db_diagnostico = Diagnostico(**diagnostico.dict())
-    db.add(db_diagnostico)
+def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
+    # 1. Crear el objeto Diagnostico
+    nuevo_diagnostico = Diagnostico(
+        fechaDiagnostico=diagnostico.fechaDiagnostico,
+        idDispositivo=diagnostico.idDispositivo,
+        idEmpleado=diagnostico.idEmpleado
+    )
+    db.add(nuevo_diagnostico)
     db.commit()
-    db.refresh(db_diagnostico)
-    # Retornamos el diagnóstico con todas sus relaciones cargadas
-    return get_diagnostico(db, db_diagnostico.idDiagnostico)
+    db.refresh(nuevo_diagnostico)  # para obtener el id generado
+
+    # 2. Crear los detalles relacionados
+    for detalle in diagnostico.detalles:
+        nuevo_detalle = DetalleDiagnostico(
+            valorDiagnostico=detalle.valorDiagnostico,
+            idTipoDispositivoSegunPregunta=detalle.idTipoDispositivoSegunPregunta,
+            idDiagnostico=nuevo_diagnostico.idDiagnostico  # usar el ID recién creado
+        )
+        db.add(nuevo_detalle)
+
+    db.commit()
+
+    return nuevo_diagnostico
 
 def update_diagnostico(db: Session, idDiagnostico: int, diagnostico: schemas.DiagnosticoUpdate):
     db_diagnostico = get_diagnostico(db, idDiagnostico)

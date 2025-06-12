@@ -13,11 +13,6 @@ import { Button } from "@/components/ui/button";
 export const getColumnsDiagnosticos = ({ refetch }) => {
   return [
     {
-      header: "ID",
-      accessorKey: "idDiagnostico",
-      size: 80,
-    },
-    {
       header: "Fecha",
       accessorKey: "fechaDiagnostico",
       cell: ({ row }) => (
@@ -25,10 +20,10 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
       ),
     },
     {
-      header: "Dispositivo",
-      accessorKey: "dispositivo.idDispositivo",
+      header: "Tipo de Dispositivo",
+      accessorKey: "dispositivo.tipoDispositivo.nombreTipoDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.idDispositivo || "N/A"}</div>
+        <div>{row.original.dispositivo?.tipoDispositivo?.nombreTipoDispositivo || "N/A"}</div>
       ),
     },
     {
@@ -40,9 +35,9 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
     },
     {
       header: "Marca",
-      accessorKey: "dispositivo.modeloDispositivo.idMarcaDispositivo",
+      accessorKey: "dispositivo.modeloDispositivo.marcaDispositivo.descripcionMarcaDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.modeloDispositivo?.idMarcaDispositivo || "N/A"}</div>
+        <div>{row.original.dispositivo?.modeloDispositivo?.marcaDispositivo?.descripcionMarcaDispositivo || "N/A"}</div>
       ),
     },
     {
