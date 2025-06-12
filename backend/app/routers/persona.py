@@ -32,6 +32,7 @@ def create_persona(persona: schemas.PersonaCreate, db: Session = Depends(get_db)
 
 @router.put("/{idPersona}", response_model=schemas.PersonaOut, summary="Actualizar una persona")
 def update_persona(idPersona: int, persona: schemas.PersonaUpdate, db: Session = Depends(get_db)):
+    print('router persona')
     db_persona = persona_service.update_persona(db, idPersona, persona)
     if db_persona is None:
         raise HTTPException(status_code=404, detail="Persona no encontrada")

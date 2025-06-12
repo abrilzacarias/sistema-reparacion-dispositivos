@@ -45,3 +45,8 @@ class PersonaOutReduced(BaseModel):
 # Importación al final para evitar circular import
 from app.schemas.empleado import EmpleadoOutReduced
 from app.schemas.cliente import ClienteOut
+
+
+# Importación al final para evitar circular import
+from app.schemas.empleado import EmpleadoOutReduced
+from app.schemas.cliente import ClienteOut

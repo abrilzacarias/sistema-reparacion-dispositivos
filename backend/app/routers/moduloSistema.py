@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from fastapi_pagination import Page
-from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination import Page, paginate
 
 from app.database import get_db
 from app.schemas import moduloSistema as schemas
@@ -11,7 +10,7 @@ from app.services import moduloSistema as services
 
 router = APIRouter(prefix="/modulos-sistema", tags=["Modulos del Sistema"])
 
-@router.get("/", response_model=Page[schemas.ModuloSistemaOut], summary="Obtener lista paginada de modulos del sistema")
+@router.get("/", response_model=Page[schemas.ModuloSistemaFuncionesOut], summary="Obtener lista paginada de modulos del sistema")
 def read_modulos_sistema(db: Session = Depends(get_db)):
     modulos = services.get_modulos_sistema(db)
     return paginate(modulos)

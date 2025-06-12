@@ -30,11 +30,13 @@ export function Sidebar() {
   const menuItems = [
     { path: "/dashboard", label: "Inicio", icon: <LayoutGrid className="h-5 w-5" /> },
     { path: "/diagnosticos", label: "Diagnóstico", icon: <Stethoscope className="h-5 w-5" /> },
-    { path: "/roles", label: "Roles", icon: <Users className="h-5 w-5" /> },
+    { path: "/perfiles", label: "Perfiles", icon: <Users className="h-5 w-5" /> },
     { path: "/empleados", label: "Empleados", icon: <UserCircle className="h-5 w-5" /> },
     { path: "/reparaciones", label: "Reparaciones", icon: <Wrench className="h-5 w-5" /> },
     { path: "/clientes", label: "Clientes", icon: <UserRound className="h-5 w-5" /> },
     { path: "/repuestos", label: "Repuestos", icon: <Package className="h-5 w-5" /> },
+    { path: "/marcas", label: "Marcas", icon: <Settings className="h-5 w-5" /> }
+    // { path: "/configuracion", label: "Configuración", icon: <Settings className="h-5 w-5" /> }
   ]
 
   return (

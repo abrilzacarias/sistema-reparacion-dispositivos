@@ -11,6 +11,6 @@ class EstadoReparacion(Base):
     descripcionEstadoReparacion = mapped_column(String(70))
 
     #reparaciones = relationship('Reparacion', back_populates='estadoReparacion')
+    
     registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="estadoReparacion")
-
 
