@@ -4,6 +4,7 @@ const InputSearchApi = ({
   error,
   handleChange,
   handleKeyDown,
+  handleSearchClick, // ✅ Nueva prop
   isLoading,
   label,
 }) => {
@@ -20,19 +21,25 @@ const InputSearchApi = ({
           id="username"
           autoComplete="off"
           required
-
         />
 
         <label className="text-primary" htmlFor="username">
           {label}
         </label>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-aqua-700  bg-transparent hover:bg-gray-100 dark:hover:bg-gray-900/10 w-8 h-8 p-1 rounded-full ">
+        
+        {/* ✅ Cambié div por button y agregué onClick */}
+        <button 
+          type="button"
+          onClick={handleSearchClick}
+          disabled={isLoading}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-aqua-700 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-900/10 w-8 h-8 p-1 rounded-full transition-colors cursor-pointer disabled:cursor-not-allowed"
+        >
           {isLoading ? (
-            <Loader2 className="w-full h-full" />
+            <Loader2 className="w-full h-full animate-spin" />
           ) : (
-            <Search className="text-aqua-700/10 flex items-center justify-center hover:bg-none" />
+            <Search className="w-full h-full text-aqua-700 hover:text-aqua-800" />
           )}
-        </div>
+        </button>
       </div>
     </div>
   )

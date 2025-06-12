@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/authStore"
 import axios from "axios"
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -17,11 +18,22 @@ async function loginUser(email, password) {
       withCredentials: true,
     })
 
-    if (response.data.access_token) {
-      localStorage.setItem("token", response.data.access_token)
-      localStorage.setItem("tokenType", response.data.token_type)
-    }
+    const { access_token, token_type, user, permisos, needs_password_change } = response.data
+    
+    // Guardar token en localStorage
+    localStorage.setItem("token", access_token)
+    
+    // Guardar en Zustand
+    const { setAuth } = useAuthStore.getState()
+    setAuth({
+      token: access_token,
+      tokenType: token_type,
+      user,
+      permisos,
+      needs_password_change
+    })
 
+    console.log(response.data)
     return response.data
   } catch (error) {
     console.error("Login error:", error)

@@ -1,21 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional 
+from typing import Optional
 
 
-
-# Base para creación
-class DispositivoBase(BaseModel):
-    descripcionDispositivo: str
-    modeloDispositivo: str
-    idMarcaDispositivo: int
-    idTipoDispositivo: int
-    idCliente: int
-
-# Create schema (entrada)
-class DispositivoCreate(DispositivoBase):
-    pass
-
-# MarcaDispositivo schema
+# MarcaDispositivo (mínimo para anidar)
 class MarcaDispositivoSchema(BaseModel):
     idMarcaDispositivo: int
     descripcionMarcaDispositivo: str
@@ -23,6 +10,18 @@ class MarcaDispositivoSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ModeloDispositivoSchema(BaseModel):
+    idModeloDispositivo: int
+    descripcionModeloDispositivo: str
+    estadoModeloDispositivo: bool
+    idMarcaDispositivo: int
+    marcaDispositivo: MarcaDispositivoSchema
+
+    class Config:
+        orm_mode = True
+
 
 # TipoDispositivo schema
 class TipoDispositivoSchema(BaseModel):
@@ -32,26 +31,38 @@ class TipoDispositivoSchema(BaseModel):
     class Config:
         orm_mode = True
 
-# Cliente schema (solo con campos relevantes, podés agregar más)
+
+# Cliente schema
 class ClienteSchema(BaseModel):
     idCliente: int
-    observaciones: str | None
+    observaciones: Optional[str] = None
 
     class Config:
         orm_mode = True
 
-# Dispositivo schema con anidación
-class DispositivoSchema(BaseModel):
-    idDispositivo: int
-    descripcionDispositivo: str
-    modeloDispositivo: str
-    estadoDispositivo: bool
 
-    idMarcaDispositivo: int
+# Base para creación
+class DispositivoBase(BaseModel):
+    idModeloDispositivo: int
     idTipoDispositivo: int
     idCliente: int
 
-    marcaDispositivo: MarcaDispositivoSchema
+
+# Create schema (entrada)
+class DispositivoCreate(DispositivoBase):
+    pass
+
+
+# Dispositivo schema con relaciones anidadas (salida)
+class DispositivoSchema(BaseModel):
+    idDispositivo: int
+    estadoDispositivo: bool
+
+    idModeloDispositivo: int
+    idTipoDispositivo: int
+    idCliente: int
+
+    modeloDispositivo: ModeloDispositivoSchema
     tipoDispositivo: TipoDispositivoSchema
     cliente: ClienteSchema
 

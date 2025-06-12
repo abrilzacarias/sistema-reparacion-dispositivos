@@ -3,15 +3,17 @@ from sqlalchemy.orm import Session
 from app.schemas.tipoDispositivo import TipoDispositivoRead, TipoDispositivoCreate
 from app.services import tipoDispositivo as tipo_service
 from app.database import get_db
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 router = APIRouter(
-    prefix="/tipoDispositivo",
+    prefix="/tipo-dispositivo",
     tags=["Tipo Dispositivo"]
 )
 
-@router.get("/", response_model=list[TipoDispositivoRead])
+@router.get("/", response_model=Page[TipoDispositivoRead])
 def listar_tipos(db: Session = Depends(get_db)):
-    return tipo_service.get_all(db)
+    return paginate(tipo_service.get_all(db))
 
 @router.get("/{id}", response_model=TipoDispositivoRead)
 def obtener_tipo(id: int, db: Session = Depends(get_db)):

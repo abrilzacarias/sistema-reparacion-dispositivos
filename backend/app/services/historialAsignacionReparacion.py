@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
-from app.models.historialasignacionreparacion import HistorialAsignacionReparacion
+from app.models.historialAsignacionReparacion import HistorialAsignacionReparacion
 from app.schemas.historialAsignacionReparacion import (
     HistorialAsignacionReparacionCreate,
     HistorialAsignacionReparacionUpdate
 )
+from app.schemas import historialAsignacionReparacion as schemas
 
 
 def get_historiales(db: Session, search: str = None):

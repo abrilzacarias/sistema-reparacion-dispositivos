@@ -1,17 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from fastapi_pagination import Page
-from fastapi_pagination.ext.sqlalchemy import paginate
-
+from fastapi_pagination import Page, paginate
 from app.database import get_db
 from app.schemas import funcionSistema as schemas
+from app.schemas import moduloFuncionSistema as schemasModuloFuncion
 from app.services import funcionSistema as services
 
 router = APIRouter(prefix="/funciones-sistema", tags=["Funciones del Sistema"])
 
-@router.get("/", response_model=Page[schemas.FuncionSistemaOut], summary="Obtener lista paginada de funciones del sistema")
+@router.get("/", response_model=Page[schemasModuloFuncion.FuncionConModulosOut], summary="Obtener lista paginada de funciones del sistema")
 def read_funciones_sistema(db: Session = Depends(get_db)):
-    funciones = services.get_funciones_sistema(db)
+    funciones = services.get_funciones_con_modulos(db)
     return paginate(funciones)
 
 @router.get("/{idFuncion}", response_model=schemas.FuncionSistemaOut, summary="Obtener una función del sistema por ID")

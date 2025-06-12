@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.tiporeparacion import TipoReparacion
+from app.models.tipoReparacion import TipoReparacion
 from app.schemas.tipoReparacion import TipoReparacionCreate, TipoReparacionUpdate
 
 def get_tipo_reparacion(db: Session, id: int):

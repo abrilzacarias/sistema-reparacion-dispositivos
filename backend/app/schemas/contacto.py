@@ -13,7 +13,7 @@ class ContactoCreate(BaseModel):
     esPrimario: bool
 
 class ContactoUpdate(ContactoCreate):
-    idContacto: int
+    idContacto: Optional[int] = None 
 
 class ContactoOut(ContactoBase):
     idContacto: int

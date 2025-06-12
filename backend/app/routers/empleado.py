@@ -34,3 +34,10 @@ def update_empleado(idEmpleado: int, empleado: schemas.EmpleadoUpdate, db: Sessi
     if not updated:
         raise HTTPException(status_code=404, detail="Empleado no encontrado")
     return updated
+
+@router.delete("/{idEmpleado}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar empleado (borrado lógico)")
+def delete_empleado(idEmpleado: int, db: Session = Depends(get_db)):
+    empleado = services.delete_empleado(db, idEmpleado)
+    if empleado is None:
+        raise HTTPException(status_code=404, detail="Empleado no encontrado")
+    return None

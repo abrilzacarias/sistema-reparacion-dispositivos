@@ -3,7 +3,7 @@ from app.models.tipoDispositivo import TipoDispositivo
 from app.schemas.tipoDispositivo import TipoDispositivoCreate
 
 def get_all(db: Session):
-    return db.query(TipoDispositivo).all()
+    return db.query(TipoDispositivo)
 
 def get_by_id(db: Session, id: int):
     return db.query(TipoDispositivo).filter(TipoDispositivo.idTipoDispositivo == id).first()

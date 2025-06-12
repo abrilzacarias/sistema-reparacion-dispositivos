@@ -21,5 +21,5 @@ class PermisoPerfil(Base):
 
     perfil = relationship('Perfil', back_populates='permisoPerfil')
     moduloFuncionSistema = relationship('ModuloFuncionSistema', back_populates='permisoPerfil')
-    asignacionUsuarioPermisos = relationship(AsignacionUsuarioPermisos, back_populates='permisoPerfil')
+    asignacionUsuarioPermisos = relationship(AsignacionUsuarioPermisos, cascade="all, delete-orphan", back_populates='permisoPerfil')
 

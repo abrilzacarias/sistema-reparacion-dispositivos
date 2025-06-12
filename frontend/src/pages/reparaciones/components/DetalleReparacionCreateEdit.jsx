@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { OpenContext } from "@/components/organisms/ModalFormTemplate";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
-import ErrorMessage from "@/components/molecules/ErrorMessage";
+import ErrorMessage from "@/components/atoms/ErrorMessage";
 import { ToastMessageCreate, ToastMessageEdit } from "@/components/atoms/ToastMessage";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
