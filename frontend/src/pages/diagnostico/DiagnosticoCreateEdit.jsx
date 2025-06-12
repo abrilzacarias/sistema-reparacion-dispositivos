@@ -1,13 +1,15 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
-import ErrorMessage from "@/components/molecules/ErrorMessage";
+import ErrorMessage from "@/components/atoms/ErrorMessage";
 import FormSelectSearch from "@/components/atoms/FormSelectSearch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DeviceQuestionsDynamic from "./DeviceQuestionsDynamic";
 
 const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
+  const isEditMode = !!diagnostico;
+
   const {
     register,
     handleSubmit,
@@ -19,11 +21,15 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      fechaDiagnostico: diagnostico?.fechaDiagnostico || "",
-      descripcion: diagnostico?.descripcion || "",
-      idDispositivo: diagnostico?.dispositivo?.idDispositivo || "",
-      idEmpleado: diagnostico?.empleado?.idEmpleado || "",
-      deviceQuestions: {},
+      fechaDiagnostico: isEditMode ? diagnostico.fechaDiagnostico : new Date().toISOString().split("T")[0],
+      descripcion: isEditMode ? diagnostico.descripcion : "",
+      idDispositivo: isEditMode ? diagnostico.dispositivo?.idDispositivo : "",
+      idEmpleado: isEditMode ? diagnostico.empleado?.idEmpleado : "",
+      idCliente: isEditMode ? diagnostico.dispositivo?.cliente?.idCliente : "",
+      idTipoDispositivo: isEditMode ? diagnostico.dispositivo?.tipoDispositivo?.idTipoDispositivo : "",
+      idMarcaDispositivo: isEditMode ? diagnostico.dispositivo?.marca?.idMarca : "",
+      idModeloDispositivo: isEditMode ? diagnostico.dispositivo?.modelo?.idModelo : "",
+      deviceQuestions: [],
     },
   });
 
@@ -31,30 +37,148 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   const [error, setError] = useState("");
   const [apiErrors, setApiErrors] = useState({});
 
-  // Obtener el dispositivo seleccionado para mostrar preguntas
-  const dispositivos = watch("idDispositivo");
-  const allDispositivos = watch();
-  // Suponiendo que el endpoint de dispositivos trae tipoDispositivo en el objeto
-  // Si no, habría que hacer un fetch extra
-  const selectedDispositivo = allDispositivos?.dispositivos?.find?.(
-    d => String(d.idDispositivo) === String(dispositivos)
-  );
-  const watchTipoDispositivo = selectedDispositivo?.tipoDispositivo?.nombreTipoDispositivo || "";
+  const watchTipoDispositivo = watch("idTipoDispositivo");
   const watchDeviceQuestions = watch("deviceQuestions");
+  
+  // Estado para almacenar las preguntas cargadas
+  const [questions, setQuestions] = useState([]);
+
+  // Función que será llamada por DeviceQuestionsDynamic cuando las preguntas se carguen
+  const handleQuestionsLoaded = (loadedQuestions) => {
+    console.log("🔄 Preguntas recibidas en padre:", loadedQuestions);
+    setQuestions(loadedQuestions);
+  };
 
   const onSubmit = async (data) => {
     setIsLoading(true);
     setError("");
     setApiErrors({});
+
     try {
-      // Aquí deberías hacer el POST o PUT según corresponda
-      // await axios.post(...)
+      // 🛡️ Validación local
+      const validationErrors = {};
+      if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
+      if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
+      if (!data.idMarcaDispositivo) validationErrors.idMarcaDispositivo = "Marca es requerida";
+      if (!data.idModeloDispositivo) validationErrors.idModeloDispositivo = "Modelo es requerido";
+      if (!data.idCliente) validationErrors.idCliente = "Cliente es requerido";
+      if (!data.fechaDiagnostico) validationErrors.fechaDiagnostico = "Fecha es requerida";
+
+      if (questions.length > 0) {
+        if (!data.deviceQuestions || !Array.isArray(data.deviceQuestions)) {
+          validationErrors.deviceQuestions = "No hay respuestas válidas para procesar";
+        } else if (data.deviceQuestions.length !== questions.length) {
+          validationErrors.deviceQuestions = `Se esperaban ${questions.length} respuestas, pero se recibieron ${data.deviceQuestions.length}`;
+        }
+      }
+
+      if (Object.keys(validationErrors).length > 0) {
+        setApiErrors(validationErrors);
+        setError("Por favor complete todos los campos requeridos");
+        return;
+      }
+
+      // ⚙️ 1. Crear el dispositivo (solo si no estamos en modo edición)
+      let dispositivoId = data.idDispositivo;
+
+      if (!isEditMode) {
+        const dispositivoData = {
+          idModeloDispositivo: data.idModeloDispositivo,
+          idTipoDispositivo: data.idTipoDispositivo,
+          idCliente: data.idCliente,
+        };
+
+        console.log("🛠️ Creando dispositivo:", dispositivoData);
+        const dispositivoRes = await fetch("http://localhost:8000/dispositivo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dispositivoData),
+        });
+
+        if (!dispositivoRes.ok) {
+          const resText = await dispositivoRes.text();
+          throw new Error(`Error creando dispositivo: ${resText}`);
+        }
+
+        const dispositivoResData = await dispositivoRes.json();
+        dispositivoId = dispositivoResData.idDispositivo;
+        console.log("✅ Dispositivo creado con ID:", dispositivoId);
+      }
+
+      // 🧠 2. Crear detalles del diagnóstico
+      const idDiagnostico = isEditMode ? diagnostico.idDiagnostico : 0;
+
+      const detalles = data.deviceQuestions.map((respuesta, index) => {
+        const pregunta = questions[index];
+        if (!pregunta || !respuesta) return null;
+        return {
+          idDiagnostico: idDiagnostico, // Usar el ID correcto
+          idDetalleDiagnostico: 0,
+          valorDiagnostico: String(respuesta.valorDiagnostico || ""),
+          idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+        };
+      }).filter(Boolean);
+
+      // 🔧 FIXED: El backend necesita AMBOS campos
+      const diagnosticoData = {
+        fechaDiagnostico: data.fechaDiagnostico,
+        descripcion: data.descripcion,
+        idDispositivo: dispositivoId,
+        idEmpleado: data.idEmpleado,
+        detalleDiagnostico: detalles.map(d => ({
+          idDiagnostico: d.idDiagnostico || 0,
+          idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
+          valorDiagnostico: d.valorDiagnostico,
+          idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
+        })),
+        detalles: detalles.map(d => ({
+          idDiagnostico: d.idDiagnostico || 0,
+          idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
+          valorDiagnostico: d.valorDiagnostico,
+          idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
+        })),
+      };
+
+      console.log("🧪 Enviando:", JSON.stringify(diagnosticoData, null, 2));
+
+      const url = isEditMode
+        ? `http://localhost:8000/diagnostico/diagnostico/${diagnostico.idDiagnostico}`
+        : "http://localhost:8000/diagnostico/diagnostico";
+
+      const method = isEditMode ? "PUT" : "POST";
+
+      console.log(`📡 Enviando ${method} a:`, url);
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(diagnosticoData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`Error al guardar diagnóstico: ${errorData}`);
+      }
+
+      console.log("✅ Diagnóstico guardado con éxito");
       if (refreshDiagnosticos) refreshDiagnosticos();
+      if (!isEditMode) {
+        reset();
+        setQuestions([]);
+      }
+      setError("");
+
     } catch (err) {
-      setError("Ocurrió un error al guardar el diagnóstico");
+      console.error("❌ Error general:", err);
+      setError(err.message || "Ocurrió un error al guardar el diagnóstico");
     } finally {
       setIsLoading(false);
     }
+  };
+
+
+  const handleDeviceQuestionsChange = (newAnswers) => {
+    console.log("🔄 Actualizando respuestas en formulario:", newAnswers);
+    setValue("deviceQuestions", newAnswers, { shouldDirty: true });
   };
 
   return (
@@ -66,72 +190,168 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         <TabsTrigger value="reparacion">Reparación</TabsTrigger>
         <TabsTrigger value="pagos">Pagos</TabsTrigger>
       </TabsList>
+
       <TabsContent value="cliente">
-        <div className="p-6 text-center text-muted-foreground">Información de cliente (placeholder)</div>
+        <div className="p-6 text-center text-muted-foreground">
+          Información de cliente (placeholder)
+        </div>
       </TabsContent>
+
       <TabsContent value="diagnostico">
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 p-4">
-          <div className="col-span-2">
-            <label className="text-sm font-medium">Fecha de diagnóstico *</label>
-            <input
-              type="date"
-              {...register("fechaDiagnostico", { required: "La fecha es obligatoria" })}
-              className="w-full mt-1 rounded-md border px-3 py-2 bg-background text-foreground"
-            />
-            <ErrorMessage message={errors.fechaDiagnostico?.message || apiErrors?.fechaDiagnostico} />
+        {/* Debug: Ver todos los valores del formulario */}
+        {console.log("🔍 Valores del formulario:", {
+          idEmpleado: watch("idEmpleado"),
+          idTipoDispositivo: watch("idTipoDispositivo"),
+          idMarcaDispositivo: watch("idMarcaDispositivo"),
+          idModeloDispositivo: watch("idModeloDispositivo"),
+          fechaDiagnostico: watch("fechaDiagnostico"),
+          descripcion: watch("descripcion"),
+          deviceQuestions: watch("deviceQuestions")
+        })}
+        
+        {/* Panel de debug visual */}
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+          <strong>🐛 Debug - Estado actual:</strong>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div>Empleado: <code>{watch("idEmpleado") || "sin seleccionar"}</code></div>
+            <div>Tipo Dispositivo: <code>{watch("idTipoDispositivo") || "sin seleccionar"}</code></div>
+            <div>Preguntas cargadas: <code>{questions.length}</code></div>
+            <div>Respuestas: <code>{Array.isArray(watch("deviceQuestions")) ? watch("deviceQuestions").length : 0}</code></div>
+            <div>Modo: <code>{isEditMode ? 'Edición' : 'Creación'}</code></div>
+            <div>ID Diagnóstico: <code>{diagnostico?.idDiagnostico || 'N/A'}</code></div>
           </div>
-          <div className="col-span-2">
-            <label className="text-sm font-medium">Descripción *</label>
-            <textarea
-              {...register("descripcion", { required: "La descripción es obligatoria" })}
-              className="w-full mt-1 rounded-md border px-3 py-2 bg-background text-foreground"
-              rows={3}
-            />
-            <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
-          </div>
-          <div>
-            <FormSelectSearch
-              label="Dispositivo *"
-              endpoint="dispositivos"
-              valueKey="idDispositivo"
-              displayKey={d => `${d.marcaDispositivo?.descripcionMarcaDispositivo || ''} ${d.modeloDispositivo || ''}`}
-              {...register("idDispositivo", { required: "Seleccione un dispositivo" })}
-            />
-            <ErrorMessage message={errors.idDispositivo?.message || apiErrors?.idDispositivo} />
-          </div>
-          <div>
-            <FormSelectSearch
-              label="Técnico *"
-              endpoint="empleados"
-              valueKey="idEmpleado"
-              displayKey={e => `${e.persona?.nombre || ''} ${e.persona?.apellido || ''}`}
-              {...register("idEmpleado", { required: "Seleccione un técnico" })}
-            />
-            <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <FormSelectSearch
+                label="Técnico *"
+                endpoint="empleados"
+                valueKey="idEmpleado"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idEmpleado")}
+                setValue={(value) => setValue("idEmpleado", value)}
+                {...register("idEmpleado", { required: "Seleccione un técnico" })}
+              />
+              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            </div>
           </div>
 
-          {/* Preguntas dinámicas según el tipo de dispositivo */}
-          <DeviceQuestionsDynamic
-            tipoDispositivo={watchTipoDispositivo}
-            value={watchDeviceQuestions}
-            onChange={val => setValue("deviceQuestions", val)}
-          />
-          <div className="col-span-2 flex justify-end mt-3">
-            <ButtonDinamicForms initialData={diagnostico} isLoading={isLoading} register />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <FormSelectSearch
+                label="Cliente *"
+                endpoint="clientes"
+                valueKey="idCliente"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idCliente")}
+                setValue={(value) => setValue("idCliente", value)}
+                {...register("idCliente", { required: "Seleccione un cliente" })}
+              />
+              <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
+            </div>
+          </div>          
+
+          <div className="border rounded-lg p-4 bg-gray-50/50">
+            <h3 className="font-medium text-sm text-muted-foreground mb-3 border-b pb-2">
+              Información del Dispositivo
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <FormSelectSearch
+                  label="Tipo de Dispositivo *"
+                  endpoint="tipo-dispositivo"
+                  valueKey="idTipoDispositivo"
+                  displayKey={(d) => d.nombreTipoDispositivo}
+                  value={watch("idTipoDispositivo")}
+                  setValue={(value) => setValue("idTipoDispositivo", value)}
+                  {...register("idTipoDispositivo", { required: "Seleccione un tipo de dispositivo" })}
+                />
+                <ErrorMessage message={errors.idTipoDispositivo?.message || apiErrors?.idTipoDispositivo} />
+              </div>
+
+              <div>
+                <FormSelectSearch
+                  label="Marca *"
+                  endpoint="marcas"
+                  valueKey="idMarcaDispositivo"
+                  displayKey={(d) => d.descripcionMarcaDispositivo || ""}
+                  value={watch("idMarcaDispositivo")}
+                  setValue={(value) => setValue("idMarcaDispositivo", value)}
+                  {...register("idMarcaDispositivo", { required: "Seleccione una marca" })}
+                />
+                {errors.idMarcaDispositivo && <ErrorMessage message={errors.idMarcaDispositivo.message} />}
+              </div>
+
+              <div>
+                <FormSelectSearch
+                  label="Modelo *"
+                  endpoint="modelos"
+                  valueKey="idModeloDispositivo"
+                  displayKey={(d) => d.descripcionModeloDispositivo || ""}
+                  value={watch("idModeloDispositivo")}
+                  setValue={(value) => setValue("idModeloDispositivo", value)}
+                  {...register("idModeloDispositivo", { required: "Seleccione un modelo" })}
+                />
+                {errors.idModeloDispositivo && <ErrorMessage message={errors.idModeloDispositivo.message} />}
+              </div>
+            </div>
+
+            {watchTipoDispositivo && (
+              <div className="border rounded-lg p-4 mt-4">
+                <DeviceQuestionsDynamic
+                  tipoDispositivo={watchTipoDispositivo}
+                  value={watchDeviceQuestions}
+                  onChange={handleDeviceQuestionsChange}
+                  diagnosticoId={diagnostico?.idDiagnostico}
+                  onQuestionsLoaded={handleQuestionsLoaded}
+                />
+              </div>
+            )}
           </div>
-          <div className="col-span-2 flex justify-end">
-            <ErrorMessage message={apiErrors?.detail || error} />
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <ErrorMessage message={error} />
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => reset()}
+              disabled={isLoading}
+            >
+              Limpiar
+            </Button>
+            <ButtonDinamicForms 
+              initialData={diagnostico} 
+              isLoading={isLoading} 
+              register 
+            />
           </div>
         </form>
       </TabsContent>
+
       <TabsContent value="imagenes">
-        <div className="p-6 text-center text-muted-foreground">Imágenes (placeholder)</div>
+        <div className="p-6 text-center text-muted-foreground">
+          Imágenes (placeholder)
+        </div>
       </TabsContent>
+
       <TabsContent value="reparacion">
-        <div className="p-6 text-center text-muted-foreground">Reparación (placeholder)</div>
+        <div className="p-6 text-center text-muted-foreground">
+          Reparación (placeholder)
+        </div>
       </TabsContent>
+
       <TabsContent value="pagos">
-        <div className="p-6 text-center text-muted-foreground">Pagos (placeholder)</div>
+        <div className="p-6 text-center text-muted-foreground">
+          Pagos (placeholder)
+        </div>
       </TabsContent>
     </Tabs>
   );

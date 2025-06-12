@@ -1,32 +1,41 @@
 from pydantic import BaseModel, Field
+from typing import List, Optional
 from datetime import date
-from typing import Optional
 
-class PersonaBase(BaseModel):
-    cuit: str = Field(..., example="20-87654321-0")
-    nombre: str = Field(..., example="María")
-    apellido: str = Field(..., example="Gómez")
-    fechaNacimiento: date = Field(..., example="1985-12-10")
+# Reutilizamos schemas de Persona y Contacto:
+class ContactoOut(BaseModel):
+    idContacto: int
+    descripcionContacto: str
+    idtipoContacto: int
+    esPrimario: bool
 
-class PersonaOut(PersonaBase):
+    class Config:
+        orm_mode = True
+
+class PersonaOut(BaseModel):
     idPersona: int
+    nombre: str
+    apellido: str
+    cuit: str
+    fechaNacimiento: date
+    contactos: List[ContactoOut]
 
     class Config:
         orm_mode = True
 
 class ClienteBase(BaseModel):
     observaciones: Optional[str] = None
-    idPersona: int
 
 class ClienteCreate(ClienteBase):
-    pass
+    idPersona: int
 
 class ClienteUpdate(ClienteBase):
     pass
 
 class ClienteOut(ClienteBase):
     idCliente: int
-    persona: PersonaOut  # nested schema
+    idPersona: int
+    persona: PersonaOut
 
     class Config:
         orm_mode = True

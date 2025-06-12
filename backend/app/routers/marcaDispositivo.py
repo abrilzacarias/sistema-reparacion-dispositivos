@@ -11,9 +11,11 @@ from app.database import get_db
 router = APIRouter(prefix="/marcas", tags=["Marcas de Dispositivos"])
 
 # Obtener todas las marcas (sin repuestos para evitar sobrecarga)
-@router.get("/", response_model=Page[schemas.MarcaDispositivoOut], summary="Obtener todas las marcas")
-def read_marcas(db: Session = Depends(get_db)):
-    return paginate(services.get_marca_dispositivos(db))
+
+@router.get("/", response_model=List[schemas.MarcaDispositivoOut], summary="Obtener todos los modelos")
+def read_modelos(db: Session = Depends(get_db)):
+    modelos = services.get_marca_dispositivos(db)
+    return modelos
 
 # Obtener marca específica CON sus repuestos
 @router.get("/{idMarcaDispositivo}", response_model=schemas.MarcaDispositivoWithRepuestos, summary="Obtener una marca por ID con sus repuestos")
@@ -25,8 +27,10 @@ def read_marca(idMarcaDispositivo: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=schemas.MarcaDispositivoOut, status_code=status.HTTP_201_CREATED, summary="Crear una nueva marca")
 def create_marca(marca: schemas.MarcaDispositivoCreate, db: Session = Depends(get_db)):
-    print('creando en router')
-    return services.create_marca_dispositivo(db, marca)
+    try:
+        return services.create_marca_dispositivo(db, marca)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/{idMarcaDispositivo}", response_model=schemas.MarcaDispositivoOut, summary="Actualizar una marca")
 def update_marca(idMarcaDispositivo: int, marca: schemas.MarcaDispositivoUpdate, db: Session = Depends(get_db)):

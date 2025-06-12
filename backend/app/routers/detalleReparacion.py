@@ -10,7 +10,7 @@ from app.schemas.detalleReparacion import (
 from app.services.detalleReparacion import get_all, get_by_id, create, update, delete
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
-from app.models.detallereparacion import DetalleReparacion
+from app.models.detalleReparacion import DetalleReparacion
 
 router = APIRouter(prefix="/detalleReparacion", tags=["Detalle Reparacion"])
 

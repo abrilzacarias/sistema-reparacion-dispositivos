@@ -18,13 +18,28 @@ const useFetchAll = (endpoint, dependencies = []) => {
     try {
       while (true) {
         const response = await axios.get(`${API_URL}/${endpoint}?page=${currentPage}&size=${pageSize}`)
-        const { items, total: totalItems, pages } = response.data
+        let items = []
+        let totalItems = 0
+        let pages = 1
+
+        // Verificamos si la respuesta es un array directo (sin paginación)
+        if (Array.isArray(response.data)) {
+          items = response.data
+          totalItems = items.length
+          pages = 1
+        } else {
+          items = response.data.items || []
+          totalItems = response.data.total || items.length
+          pages = response.data.pages || 1
+        }
+
         console.log(`[useFetchAll] Página ${currentPage} recibida:`, items)
         setTotal(totalItems)
         allData = [...allData, ...items]
 
         if (currentPage >= pages) break
         currentPage++
+
       }
 
       setData(allData)

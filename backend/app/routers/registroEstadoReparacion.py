@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
+#from app.utils.whatsappService import send_whatsapp
 
 from app.database import get_db
 from app.schemas import registroEstadoReparacion as schemas
@@ -20,9 +21,11 @@ def read_registro(idregistro: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Registro no encontrado")
     return registro
 
-@router.post("/", response_model=schemas.RegistroEstadoReparacionOut, status_code=status.HTTP_201_CREATED, summary="Crear nuevo registro")
+
+@router.post("/", response_model=schemas.RegistroEstadoReparacionOut,  status_code=status.HTTP_201_CREATED, summary="Crear nuevo registro")
 def create_registro(registro: schemas.RegistroEstadoReparacionCreate, db: Session = Depends(get_db)):
-    return services.create_registro(db, registro)
+    nuevo_registro = services.create_registro(db, registro)
+    return nuevo_registro
 
 @router.put("/{idregistro}", response_model=schemas.RegistroEstadoReparacionOut, summary="Actualizar un registro")
 def update_registro(idregistro: int, registro: schemas.RegistroEstadoReparacionUpdate, db: Session = Depends(get_db)):

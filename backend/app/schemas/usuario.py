@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from pydantic import BaseModel, EmailStr, Field, validator
+from typing import Optional, List
+from .permisoPerfil import PermisoAgrupado
 
 class UsuarioBase(BaseModel):
     username: str = Field(..., example="juanperez")
@@ -13,8 +14,25 @@ class UsuarioUpdate(BaseModel):
     email: Optional[EmailStr] = Field(None, example="juan.perez@example.com")
     password: Optional[str] = Field(None, example="NewPassword123!")
 
+class PasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+    @validator('new_password')
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('La contraseña debe tener al menos 8 caracteres')
+        if not any(c.isupper() for c in v):
+            raise ValueError('La contraseña debe contener al menos una letra mayúscula')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('La contraseña debe contener al menos un número')
+        if not any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in v):
+            raise ValueError('La contraseña debe contener al menos un carácter especial')
+        return v
+
 class UsuarioOut(UsuarioBase):
     idUsuario: int
+    needs_password_change: bool
 
     class Config:
         orm_mode = True
@@ -33,5 +51,29 @@ class UserResponse(BaseModel):
 class UsuarioAutoCreate(BaseModel):
     email: EmailStr = Field(..., example="juan.perez@example.com")
 
+class UsuarioAutoCreateResponse(BaseModel):
+    idUsuario: int
+    username: str
+    email: EmailStr
+    needs_password_change: bool
+    message: str
+
+    class Config:
+        orm_mode = True
+
+class ModuloFuncionOut(BaseModel):
+    modulo: str
+    funcion: str
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: UsuarioOut
+    permisos: List[PermisoAgrupado]
+    
 class UsuarioAutoCreateResponse(UsuarioOut):
     message: str = Field(..., example="Usuario creado y credenciales enviadas por email")
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., example="dfde6087-4d06-438e-9228-c74179b559db")
+    nueva_password: str = Field(..., example="NewStrongPassword123!")

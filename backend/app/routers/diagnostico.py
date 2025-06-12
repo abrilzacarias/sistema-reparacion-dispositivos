@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
-
 from app.schemas import diagnostico as schemas
 from app.services.diagnostico import (
     obtener_diagnosticos,
@@ -31,7 +30,7 @@ def obtener_diagnostico(idDiagnostico: int, db: Session = Depends(get_db)):
     return diagnostico
 
 # POST: Crear diagnóstico
-@router.post("/", response_model=schemas.DiagnosticoSchema, status_code=201)
+@router.post("/diagnostico", response_model=schemas.DiagnosticoSchema, status_code=201)
 def crear_diagnostico(diagnostico: schemas.DiagnosticoCreate, db: Session = Depends(get_db)):
     return create_diagnostico(db, diagnostico)
 

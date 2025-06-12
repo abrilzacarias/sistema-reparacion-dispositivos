@@ -14,6 +14,8 @@ class MarcaDispositivoUpdate(MarcaDispositivoBase):
 # Schema básico sin referencias circulares
 class MarcaDispositivoOut(MarcaDispositivoBase):
     idMarcaDispositivo: int
+    descripcionMarcaDispositivo: str
+
 
     class Config:
         from_attributes = True

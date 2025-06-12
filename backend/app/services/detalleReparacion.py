@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import List
-from app.models.detallereparacion import DetalleReparacion
+from app.models.detalleReparacion import DetalleReparacion
 from app.schemas.detalleReparacion import DetalleReparacionCreate, DetalleReparacionUpdate
 
 def get_all(db: Session) -> List[DetalleReparacion]:
