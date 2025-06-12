@@ -734,11 +734,6 @@ CREATE TABLE `reparacion` (
 -- Dumping data for table `reparacion`
 --
 
-LOCK TABLES `reparacion` WRITE;
-/*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (4,3466,'2025-06-11',NULL,8900,3,29);
-/*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `repuesto`
@@ -965,7 +960,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com');
+INSERT INTO `usuario` VALUES (24,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com', 0);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
