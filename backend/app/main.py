@@ -52,4 +52,8 @@ app.include_router(asignacionUsuarioPermisos.router)
 app.include_router(registroEstadoReparacion.router)
 app.include_router(historialAsignacionDiagnostico.router)
 app.include_router(historialAsignacionReparacion.router)
+app.include_router(registroEstadoReparacion.router)
+
+
+
 add_pagination(app)
