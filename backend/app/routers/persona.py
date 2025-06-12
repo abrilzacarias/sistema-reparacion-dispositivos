@@ -5,6 +5,9 @@ from typing import List
 from app.schemas import persona as schemas
 from app.services import persona as persona_service
 from app.database import get_db
+from app.services.contacto import update_contacto
+from app.services.domicilio import update_domicilio
+from app.schemas.persona import PersonaOut, PersonaUpdate
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 
@@ -30,12 +33,9 @@ def read_persona(idPersona: int, db: Session = Depends(get_db)):
 def create_persona(persona: schemas.PersonaCreate, db: Session = Depends(get_db)):
     return persona_service.create_persona(db, persona)
 
-@router.put("/{idPersona}", response_model=schemas.PersonaOut, summary="Actualizar una persona")
-def update_persona(idPersona: int, persona: schemas.PersonaUpdate, db: Session = Depends(get_db)):
-    db_persona = persona_service.update_persona(db, idPersona, persona)
-    if db_persona is None:
-        raise HTTPException(status_code=404, detail="Persona no encontrada")
-    return db_persona
+@router.put("/{id}", response_model=PersonaOut)
+def update_persona(id: int, persona: PersonaUpdate, db: Session = Depends(get_db)):
+    return persona_service.update_persona(db, id, persona)
 
 @router.delete("/{idPersona}", status_code=status.HTTP_204_NO_CONTENT, summary="Dar de baja (inhabilitar) una persona")
 def delete_persona(idPersona: int, db: Session = Depends(get_db)):

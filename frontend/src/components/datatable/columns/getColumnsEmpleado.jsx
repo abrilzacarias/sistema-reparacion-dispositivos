@@ -10,6 +10,10 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
 import EmpleadoCard from "@/components/organisms/EmpleadoCard"
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit"
+import EmpleadoCreateEdit from "@/pages/empleado/components/EmpleadoCreateEdit"
+import { useState } from "react";
 
 export const getColEmpleados = ({ refetch }) => {
   return [
@@ -54,6 +58,8 @@ export const getColEmpleados = ({ refetch }) => {
     {
       id: "actions",
       cell: function Cell({ row }) {
+        const [activeTab, setActiveTab] = useState("persona");
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -80,8 +86,61 @@ export const getColEmpleados = ({ refetch }) => {
 
               <DropdownMenuSeparator />
 
-              {/* TODO Otras acciones */}
-              <DropdownMenuItem onClick={() => console.log("Editar", row.original)}>Editar</DropdownMenuItem>
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                <ModalFormTemplate
+                  title="Editar Empleado"
+                  description="Modifique los datos del empleado seleccionado"
+                  label="Editar"
+                  variant="ghost"
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                >
+                  <Tabs
+                    defaultValue="persona"
+                    className="mt-4"
+                    onValueChange={setActiveTab}
+                    value={activeTab}
+                  >
+                    <TabsList className="w-full">
+                      <TabsTrigger
+                        value="persona"
+                        className="w-1/2 rounded-md rounded-r-none"
+                      >
+                        Datos de Persona
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="empleado"
+                        className="w-1/2 rounded-md rounded-l-none"
+                      >
+                        Datos de Empleado
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="persona">
+                      <PersonaCreateEdit
+                        persona={row.original.persona}
+                        refreshPersonas={refetch}
+                        setActiveTab={setActiveTab}
+                      />
+                    </TabsContent>
+
+                    <TabsContent value="empleado">
+                      <EmpleadoCreateEdit 
+                        empleado={row.original}
+                        refreshEmpleados={refetch}
+                        idPersona={row.original.persona.idPersona}
+                        personaEmail={
+                          row.original.persona.contactos?.find(
+                            c => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario
+                          )?.descripcionContacto
+                        }
+                      />
+                    </TabsContent>
+                  </Tabs>
+                </ModalFormTemplate>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
               <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>Eliminar</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

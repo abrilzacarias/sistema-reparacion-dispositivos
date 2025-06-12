@@ -40,7 +40,6 @@ def create_persona(db: Session, persona_data: PersonaCreate):
     db.commit()
     db.refresh(persona)
 
-    # Create contactos
     for contacto_data in persona_data.contactos:
         contacto_existente = db.query(Contacto).filter(
             func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
@@ -57,7 +56,6 @@ def create_persona(db: Session, persona_data: PersonaCreate):
         )
         db.add(contacto)
 
-    # Create domicilios
     for domicilio_data in persona_data.domicilios:
         domicilio = Domicilio(
             codigoPostal=domicilio_data.codigoPostal,
@@ -66,6 +64,7 @@ def create_persona(db: Session, persona_data: PersonaCreate):
             ciudad=domicilio_data.ciudad,
             barrio=domicilio_data.barrio,
             calle=domicilio_data.calle,
+            numero=domicilio_data.numero,
             departamento=domicilio_data.departamento,
             idtipoDomicilio=domicilio_data.idtipoDomicilio,
             idPersona=persona.idPersona
@@ -94,9 +93,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     persona.nombre = persona_data.nombre
     persona.apellido = persona_data.apellido
     persona.fechaNacimiento = persona_data.fechaNacimiento
-    db.commit()
 
-    # Update contactos
     for contacto_data in persona_data.contactos:
         if contacto_data.idContacto:
             contacto = db.query(Contacto).filter(Contacto.idContacto == contacto_data.idContacto).first()
@@ -112,7 +109,6 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
                 contacto.descripcionContacto = contacto_data.descripcionContacto
                 contacto.idtipoContacto = contacto_data.idtipoContacto
                 contacto.esPrimario = contacto_data.esPrimario
-
         else:
             contacto_existente = db.query(Contacto).filter(
                 func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
@@ -129,7 +125,6 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
             )
             db.add(nuevo_contacto)
 
-    # Update domicilios
     for domicilio_data in persona_data.domicilios:
         if domicilio_data.idDomicilio:
             domicilio = db.query(Domicilio).filter(Domicilio.idDomicilio == domicilio_data.idDomicilio).first()
@@ -140,6 +135,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
                 domicilio.ciudad = domicilio_data.ciudad
                 domicilio.barrio = domicilio_data.barrio
                 domicilio.calle = domicilio_data.calle
+                domicilio.numero = domicilio_data.numero
                 domicilio.departamento = domicilio_data.departamento
                 domicilio.idtipoDomicilio = domicilio_data.idtipoDomicilio
         else:
@@ -150,6 +146,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
                 ciudad=domicilio_data.ciudad,
                 barrio=domicilio_data.barrio,
                 calle=domicilio_data.calle,
+                numero=domicilio_data.numero,
                 departamento=domicilio_data.departamento,
                 idtipoDomicilio=domicilio_data.idtipoDomicilio,
                 idPersona=idPersona
@@ -157,6 +154,7 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
             db.add(nuevo_domicilio)
 
     db.commit()
+    db.refresh(persona)
     return persona
 
 def delete_persona(db: Session, id_persona: int) -> bool:

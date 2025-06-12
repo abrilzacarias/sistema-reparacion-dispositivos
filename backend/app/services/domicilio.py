@@ -15,8 +15,8 @@ def create_domicilio(db: Session, domicilio: schemas.DomicilioCreate):
     db.refresh(db_domicilio)
     return db_domicilio
 
-def update_domicilio(db: Session, id_domicilio: int, domicilio: schemas.DomicilioUpdate):
-    db_domicilio = db.query(Domicilio).filter(Domicilio.idDomicilio == id_domicilio).first()
+def update_domicilio(db: Session, domicilio: schemas.DomicilioUpdate):
+    db_domicilio = db.query(Domicilio).filter(Domicilio.idDomicilio == domicilio.idDomicilio).first()
     if not db_domicilio:
         return None
     for key, value in domicilio.dict().items():

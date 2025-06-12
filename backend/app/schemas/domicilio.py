@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import date
-from app.schemas.tipoDomicilio import TipoDomicilioOut  # <-- Importar desde el otro archivo
+from app.schemas.tipoDomicilio import TipoDomicilioOut 
 
 class DomicilioBase(BaseModel):
     codigoPostal: Optional[str]
@@ -10,19 +10,31 @@ class DomicilioBase(BaseModel):
     ciudad: Optional[str]
     barrio: str
     calle: str
+    numero: str
     departamento: str
     idtipoDomicilio: int
 
 class DomicilioCreate(DomicilioBase):
     idPersona: Optional[int] = None
 
-class DomicilioUpdate(DomicilioBase):
-    pass
 
 class DomicilioOut(DomicilioBase):
     idDomicilio: int
     idPersona: int
-    tipoDomicilio: TipoDomicilioOut  # ✅ igual que contacto
+    tipoDomicilio: TipoDomicilioOut
 
     class Config:
         orm_mode = True
+
+class DomicilioUpdate(BaseModel):
+    idDomicilio: Optional[int]
+    codigoPostal: str
+    pais: str
+    provincia: str
+    ciudad: str
+    barrio: str
+    calle: str
+    numero: str
+    departamento: Optional[str]
+    idtipoDomicilio: int 
+    idPersona: Optional[int]

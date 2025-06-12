@@ -31,9 +31,6 @@ const FormSelectSearch = ({
   const { data, loading, error } = useFetchAll(endpoint)
   const [open, setOpen] = useState(false)
 
-  console.log(`[FormSelectSearch] Endpoint: ${endpoint}`)
-  console.log(`[FormSelectSearch] Data:`, data)
-  console.log(`[FormSelectSearch] Loading:`, loading)
   console.log(`[FormSelectSearch] Error:`, error)
 
   const getValue = (item) => (typeof valueKey === "function" ? valueKey(item) : item[valueKey]);

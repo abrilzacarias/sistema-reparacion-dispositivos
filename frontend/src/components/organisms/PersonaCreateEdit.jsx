@@ -30,6 +30,32 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   const [apiErrors, setApiErrors] = useState({})
   const { setOpen } = useContext(OpenContext)
 
+  const goToEmpleadoTab = () => {
+
+    if (setActiveTab) {
+      setActiveTab("empleado")
+
+      setTimeout(() => setActiveTab("empleado"), 50)
+      setTimeout(() => setActiveTab("empleado"), 100)
+      setTimeout(() => setActiveTab("empleado"), 200)
+
+      setTimeout(() => {
+        const empleadoTab = document.querySelector('[value="empleado"]')
+        if (empleadoTab) {
+          empleadoTab.dispatchEvent(
+            new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+            }),
+          )
+        } else {
+        }
+      }, 150)
+    } else {
+    }
+  }
+
   useEffect(() => {
     if (persona) {
       console.log(persona)
@@ -48,14 +74,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         fechaNacimiento: persona.fechaNacimiento || "",
         correo: contactoCorreo?.descripcionContacto || "",
         telefono: contactoTelefono?.descripcionContacto || "",
-        // Domicilio fields
         codigoPostal: domicilio?.codigoPostal || "",
         pais: domicilio?.pais || "",
         provincia: domicilio?.provincia || "",
         ciudad: domicilio?.ciudad || "",
         barrio: domicilio?.barrio || "",
-        calle: domicilio?.calle || "",
         departamento: domicilio?.departamento || "",
+        calle: domicilio?.calle || "",
+        numero: domicilio?.numero || "",
         idtipoDomicilio: domicilio?.idtipoDomicilio || "",
       })
     } else {
@@ -66,13 +92,13 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         fechaNacimiento: "",
         correo: "",
         telefono: "",
-        // Domicilio fields
         codigoPostal: "",
         pais: "",
         provincia: "",
         ciudad: "",
         barrio: "",
         calle: "",
+        numero: "",
         departamento: "",
         idtipoDomicilio: "",
       })
@@ -84,101 +110,87 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     setApiErrors({})
     setIsLoading(true)
 
-    const { correo, telefono, ...rest } = data
+    try {
+      const { correo, telefono, ...rest } = data
 
-    const isEdit = !!persona?.idPersona
+      const isEdit = !!persona?.idPersona
 
-    let contactos = []
+      let contactos = []
 
-    if (isEdit) {
-      console.log("Editando persona:", persona)
+      if (isEdit) {
+        const contactoCorreoExistente = persona?.contactos?.find(
+          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
+        )
+        const contactoTelefonoExistente = persona?.contactos?.find(
+          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
+        )
 
-      // Buscar contactos existentes
-      const contactoCorreoExistente = persona?.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-      )
-      const contactoTelefonoExistente = persona?.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
-      )
-
-      // Contacto de correo
-      const contactoCorreo = {
-        descripcionContacto: correo,
-        idtipoContacto: 1,
-        esPrimario: true,
-      }
-
-      // Si existe contacto de correo previo, incluir idContacto para actualizar
-      if (contactoCorreoExistente?.idContacto) {
-        contactoCorreo.idContacto = contactoCorreoExistente.idContacto
-        contactoCorreo.idPersona = persona.idPersona
-        console.log("Actualizando contacto de correo existente")
-      } else {
-        console.log("Creando nuevo contacto de correo")
-      }
-
-      // Contacto de teléfono
-      const contactoTelefono = {
-        descripcionContacto: telefono,
-        idtipoContacto: 2,
-        esPrimario: true,
-      }
-
-      // Si existe contacto de teléfono previo, incluir idContacto para actualizar
-      if (contactoTelefonoExistente?.idContacto) {
-        contactoTelefono.idContacto = contactoTelefonoExistente.idContacto
-        contactoTelefono.idPersona = persona.idPersona
-        console.log("Actualizando contacto de teléfono existente")
-      } else {
-        console.log("Creando nuevo contacto de teléfono")
-      }
-
-      contactos = [contactoCorreo, contactoTelefono]
-    } else {
-      // Para creación, siempre crear nuevos contactos
-      contactos = [
-        {
+        const contactoCorreo = {
           descripcionContacto: correo,
           idtipoContacto: 1,
           esPrimario: true,
-        },
-        {
+        }
+
+        if (contactoCorreoExistente?.idContacto) {
+          contactoCorreo.idContacto = contactoCorreoExistente.idContacto
+          contactoCorreo.idPersona = persona.idPersona
+        } else {
+        }
+
+        const contactoTelefono = {
           descripcionContacto: telefono,
           idtipoContacto: 2,
           esPrimario: true,
-        },
-      ]
-    }
+        }
 
-    // Prepare domicilio data
-    const domicilio = {
-      codigoPostal: data.codigoPostal,
-      pais: data.pais,
-      provincia: data.provincia,
-      ciudad: data.ciudad,
-      barrio: data.barrio,
-      calle: data.calle,
-      numero: data.numero,
-      departamento: data.departamento,
-      idtipoDomicilio: data.idtipoDomicilio,
-    }
+        if (contactoTelefonoExistente?.idContacto) {
+          contactoTelefono.idContacto = contactoTelefonoExistente.idContacto
+          contactoTelefono.idPersona = persona.idPersona
+        } else {
+        }
 
-    // If editing and domicilio exists, include idDomicilio
-    if (isEdit && persona?.domicilios?.[0]?.idDomicilio) {
-      domicilio.idDomicilio = persona.domicilios[0].idDomicilio
-      domicilio.idPersona = persona.idPersona
-    }
+        contactos = [contactoCorreo, contactoTelefono]
+      } else {
+        contactos = [
+          {
+            descripcionContacto: correo,
+            idtipoContacto: 1,
+            esPrimario: true,
+          },
+          {
+            descripcionContacto: telefono,
+            idtipoContacto: 2,
+            esPrimario: true,
+          },
+        ]
+      }
 
-    const payload = {
-      ...rest,
-      estadoPersona: persona?.estadoPersona ?? 1,
-      contactos: contactos,
-      domicilios: [domicilio],
-    }
+      const domicilio = {
+        codigoPostal: data.codigoPostal,
+        pais: data.pais,
+        provincia: data.provincia,
+        ciudad: data.ciudad,
+        barrio: data.barrio,
+        calle: data.calle,
+        numero: data.numero,
+        departamento: data.departamento,
+        idtipoDomicilio: data.idtipoDomicilio,
+      }
 
-    console.log("Payload completo:", JSON.stringify(payload, null, 2))
+      if (isEdit && persona?.domicilios?.[0]?.idDomicilio) {
+        domicilio.idDomicilio = persona.domicilios[0].idDomicilio
+        domicilio.idPersona = persona.idPersona
+      }
 
-    try {
+      const payload = {
+        ...rest,
+        estadoPersona: persona?.estadoPersona ?? 1,
+        contactos: contactos,
+        domicilios: [domicilio],
+      }
+
+      console.log("Payload completo:", JSON.stringify(payload, null, 2))
+
       const endpoint = persona ? `${API_URL}/personas/${persona.idPersona}/` : `${API_URL}/personas/`
       const method = persona ? axios.put : axios.post
       const response = await method(endpoint, payload)
@@ -190,23 +202,18 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         setSelectedPersona(responsePersonaActualizada.data)
       }
 
-      if (persona) {
-        setTimeout(() => {
-          setActiveTab("empleado")
-        }, 100)
-      } else {
-        setOpen(false)
-        if (setPersonaId) {
-          setPersonaId(responsePersonaActualizada.data.idPersona)
-        }
+      if (setPersonaId) {
+        setPersonaId(responsePersonaActualizada.data.idPersona)
       }
 
-      if (!persona && refreshPersonas) {
+      if (refreshPersonas) {
         setTimeout(() => {
           persona ? ToastMessageEdit() : ToastMessageCreate()
           refreshPersonas()
         }, 300)
       }
+
+      goToEmpleadoTab()
     } catch (err) {
       console.error("Error al guardar persona:", err)
       console.error("Response data:", err.response?.data)
@@ -295,7 +302,6 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         <ErrorMessage message={errors?.telefono?.message} />
       </div>
 
-      {/* Domicilio fields */}
       <div className="col-span-2 mt-4">
         <div className="max-h-[400px] overflow-y-auto pr-4">
           <div className="grid grid-cols-2 gap-4">
@@ -321,14 +327,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
             <div className="space-y-2">
               <Label>Código Postal</Label>
-              <Input 
-                {...register("codigoPostal", { 
+              <Input
+                {...register("codigoPostal", {
                   required: "Campo requerido",
                   pattern: {
                     value: /^[0-9]+$/,
-                    message: "El código postal debe contener solo números"
-                  }
-                })} 
+                    message: "El código postal debe contener solo números",
+                  },
+                })}
               />
               <ErrorMessage message={errors.codigoPostal?.message || apiErrors?.codigoPostal} />
             </div>
@@ -379,18 +385,18 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       </div>
 
       <div className="col-span-2 flex justify-end gap-4 mt-3">
-        {persona && (
-          <Button type="button" variant="ghost" onClick={() => setActiveTab("empleado")}>
-            Continuar sin actualizar
-          </Button>
-        )}
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={(e) => {
+            e.preventDefault()
+            goToEmpleadoTab()
+          }}
+        >
+          Continuar sin actualizar
+        </Button>
 
-        <ButtonDinamicForms
-          initialData={persona}
-          isLoading={isLoading}
-          register
-          onClick={() => setActiveTab("empleado")}
-        />
+        <ButtonDinamicForms initialData={persona} isLoading={isLoading} register />
       </div>
 
       <div className="col-span-2 flex justify-end">
