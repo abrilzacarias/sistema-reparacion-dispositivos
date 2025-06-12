@@ -12,6 +12,8 @@ import PerfilesPage from "./pages/perfiles/PerfilesPage"
 import PerfilFormPage from "./pages/perfiles/PerfilFormPage"
 import MarcasPage from "./pages/marcas/MarcasPage"
 import ResetPassword from "./pages/login/ResetPassword"
+import DiagnosticoFormPage from "./pages/diagnostico/DiagnosticoFormPage"
+import ConfigPage from "./pages/configuracion/ConfigPage"
 
 function App() {
   return (
@@ -29,16 +31,16 @@ function App() {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/diagnosticos" element={<DiagnosticoPage />} />
+          <Route path="/diagnosticos/nuevo" element={<DiagnosticoFormPage />} />
           <Route path="/empleados" element={<EmpleadoPage />} /> 
           <Route path="/perfiles" element={<PerfilesPage />} />
           <Route path="/perfiles/nuevo" element={<PerfilFormPage />} />
           <Route path="/perfiles/editar" element={<PerfilFormPage />} />
           <Route path="/empleados" element={<EmpleadoPage />} />
-          <Route path="/perfiles/nuevo" element={<PerfilFormPage />} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
           <Route path="/clientes" element={<ClientePage />} />
           <Route path="/repuestos" element={<RepuestosPage />} />
-          <Route path="/configuracion" element={<div>Página de Configuración</div>} />
+          <Route path="/configuracion" element={<ConfigPage />} />
           <Route path="/reparaciones" element={<ReparacionesPage />} />
           <Route path="/marcas" element={<MarcasPage/>} />
         </Route>

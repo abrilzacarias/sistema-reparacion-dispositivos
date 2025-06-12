@@ -8,13 +8,15 @@ import { DataTable } from "@/components/datatable/DataTable";
 import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 import { Button } from "@/components/ui/button";
-
+import { useNavigate } from "react-router-dom";
 // Crear este archivo en @/components/datatable/columns/getColumnsDiagnosticos.js
 import { getColumnsDiagnosticos } from "@/components/datatable/columns/getColumnsDiagnosticos";
 import DiagnosticoCreateEdit from "./DiagnosticoCreateEdit";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import { Plus } from "lucide-react";
 
 const DiagnosticosPage = () => {
+  const navigate = useNavigate();
   const {
     data: diagnosticos,
     refetch,
@@ -43,28 +45,26 @@ const DiagnosticosPage = () => {
         dispositivo: {
           id: diagnosticos[0]?.dispositivo?.idDispositivo,
           modelo: diagnosticos[0]?.dispositivo?.modeloDispositivo,
-          marca: diagnosticos[0]?.dispositivo?.marcaDispositivo?.descripcionMarcaDispositivo
+          marca:
+            diagnosticos[0]?.dispositivo?.marcaDispositivo
+              ?.descripcionMarcaDispositivo,
         },
         empleado: {
           id: diagnosticos[0]?.empleado?.idEmpleado,
-          nombre: `${diagnosticos[0]?.empleado?.persona?.nombre} ${diagnosticos[0]?.empleado?.persona?.apellido}`
-        }
+          nombre: `${diagnosticos[0]?.empleado?.persona?.nombre} ${diagnosticos[0]?.empleado?.persona?.apellido}`,
+        },
       });
       console.groupEnd();
-      
-      // Opcional: Mostrar en formato tabla
-      console.table(diagnosticos.map(d => ({
-        id: d.idDiagnostico,
-        fecha: d.fechaDiagnostico,
-        dispositivo: d.dispositivo?.descripcionDispositivo,
-        tecnico: `${d.empleado?.persona?.nombre} ${d.empleado?.persona?.apellido}`
-      })));
     }
-    
+
     if (isError) {
       console.error("Error al cargar diagnósticos");
     }
   }, [diagnosticos, isError]);
+
+  const handleAddDiagnostico = () => {
+    navigate("/diagnosticos/nuevo");
+  };
 
   if (isError)
     return <ErrorApiRefetch isRefetching={isFetching} refetch={refetch} />;
@@ -96,16 +96,15 @@ const DiagnosticosPage = () => {
                 label: "Exportar",
               }}
             />
-            {/* Botón Agregar Diagnóstico con ModalFormTemplate */}
-            <ModalFormTemplate
-              title="Registrar Diagnóstico"
-              description="Complete los campos para registrar un nuevo diagnóstico."
-              label="Agregar Diagnóstico"
+            <Button
               variant="default"
-              className="ml-2"
+              onClick={handleAddDiagnostico}
+              className="cursor-pointer justify-start data-[state=open]:bg-secondary-foreground"
+              disabled={isLoading}
             >
-              <DiagnosticoCreateEdit refreshDiagnosticos={refetch} />
-            </ModalFormTemplate>
+              <Plus className="h-4 w-4" />
+              Agregar Diagnóstico
+            </Button>
           </div>
         </CrudHeader>
 
