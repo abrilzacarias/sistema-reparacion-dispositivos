@@ -5,7 +5,7 @@ from app.schemas.estadoReparacion import EstadoReparacionOut
 from datetime import date, datetime
 from typing import Optional
 
-class RegistroEstadoReparacionCreate(BaseModel):
+class RegistroEstadoReparacionBase(BaseModel):
     idReparacion: int
     idEstadoReparacion: int
     idEmpleado: int

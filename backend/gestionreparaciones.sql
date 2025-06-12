@@ -213,10 +213,7 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-<<<<<<< HEAD
 INSERT INTO `diagnostico` VALUES (1,'2025-06-07',1,11),(2,'2025-06-07',1,28);
-=======
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -318,10 +315,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-<<<<<<< HEAD
 INSERT INTO `empleado` VALUES (11,'2024-11-09','2024-12-15',4,33,13),(12,'2023-11-16','2024-10-12',5,34,14),(13,'2025-02-20','2024-06-11',6,35,15),(14,'2025-01-21',NULL,4,36,16),(15,'2023-07-06','2024-09-25',5,37,17),(16,'2023-10-29',NULL,6,38,18),(17,'2025-04-22','2025-02-26',4,39,19),(18,'2023-10-03',NULL,5,40,20),(19,'2024-05-13','2025-03-15',6,41,21),(20,'2025-02-04',NULL,4,42,22),(23,'2025-06-07','2025-06-07',1,1,1),(25,'2025-06-07','2025-06-07',1,48,1),(26,'2025-06-07','2025-06-07',1,30,1),(27,'2025-06-07','2025-06-07',1,49,1),(28,'2025-06-07','2025-06-07',4,50,1);
-=======
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -513,11 +507,7 @@ CREATE TABLE `moduloFuncionSistema` (
 
 LOCK TABLES `moduloFuncionSistema` WRITE;
 /*!40000 ALTER TABLE `moduloFuncionSistema` DISABLE KEYS */;
-<<<<<<< HEAD
 INSERT INTO `moduloFuncionSistema` VALUES (1,1,1,'modulo ventas',1);
-=======
-INSERT INTO `moduloFuncionSistema` VALUES (3,1,39,'reparacion/ver-reporte-reparacion',0),(5,1,38,'reparacion/ver-reporte-cliente',0),(6,1,14,'reparacion/visualizar-reparación',0),(7,1,15,'reparacion/agregar-reparación',0),(8,1,16,'reparacion/modificar-reparación',0),(9,1,17,'reparacion/eliminar-reparación',0),(10,1,18,'reparacion/visualizar-tipo-de-reparación',0),(11,1,19,'reparacion/agregar-tipo-de-reparación',0),(12,1,20,'reparacion/modificar-tipo-de-reparación',0),(13,1,21,'reparacion/eliminar-tipo-de-reparación',0),(14,2,33,'diagnóstico/visualizar-diagnóstico',0),(15,2,34,'diagnóstico/agregar-diagnóstico',0),(16,2,35,'diagnóstico/modificar-diagnóstico',0),(17,2,36,'diagnóstico/eliminar-diagnóstico',0),(18,2,42,'diagnóstico/ver-reporte-diagnóstico',0),(19,3,22,'empleados/visualizar-empleado',0),(20,3,23,'empleados/agregar-empleado',0),(21,3,40,'empleados/ver-reporte-empleado',0),(22,3,24,'empleados/modificar-empleado',0),(23,3,25,'empleados/eliminar-empleado',0),(24,4,38,'clientes/ver-reporte-cliente',1),(25,4,10,'clientes/visualizar-cliente',0),(26,4,11,'clientes/agregar-cliente',0),(27,4,12,'clientes/modificar-cliente',0),(28,4,13,'clientes/eliminar-cliente',0),(29,5,2,'repuestos/visualizar-repuesto',1),(30,5,3,'repuestos/crear-repuesto',1),(31,5,4,'repuestos/modificar-repuesto',1),(32,5,37,'repuestos/ver-reporte-repuesto',1),(33,5,5,'repuestos/eliminar-repuesto',1),(34,5,7,'repuestos/modificar-tipo-de-repuesto',1),(35,5,8,'repuestos/eliminar-tipo-de-repuesto',1),(36,5,9,'repuestos/visualizar-tipo-de-repuesto',1),(37,5,6,'repuestos/agregar-tipo-de-repuesto',1),(38,6,41,'perfiles/ver-reporte-perfiles',1),(39,6,26,'perfiles/visualizar-perfiles',1),(40,6,27,'perfiles/agregar-perfiles',1),(41,6,28,'perfiles/modificar-perfiles',1),(42,6,29,'perfiles/eliminar-perfiles',1);
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40000 ALTER TABLE `moduloFuncionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -597,11 +587,7 @@ CREATE TABLE `permisoPerfil` (
 
 LOCK TABLES `permisoPerfil` WRITE;
 /*!40000 ALTER TABLE `permisoPerfil` DISABLE KEYS */;
-<<<<<<< HEAD
-INSERT INTO `permisoPerfil` VALUES (1,1,1,1),(2,1,1,1);
-=======
 INSERT INTO `permisoPerfil` VALUES (3,2,0,3),(5,2,0,5),(6,2,0,6),(7,2,0,7),(8,2,0,8),(9,2,0,9),(10,2,0,10),(11,2,0,11),(12,2,0,12),(13,2,0,13),(22,2,0,14),(23,2,0,15),(24,2,0,16),(25,2,0,17),(26,2,0,18),(32,2,0,3),(33,2,0,5),(34,2,0,6),(35,2,0,7),(36,2,0,8),(37,2,0,9),(38,2,0,10),(39,2,0,11),(40,2,0,12),(41,2,0,13),(42,2,0,14),(43,2,0,15),(44,2,0,16),(45,2,0,17),(46,2,0,19),(47,2,0,20),(48,2,0,21),(49,2,0,22),(50,2,0,23),(51,2,0,3),(52,2,0,5),(53,2,0,6),(54,2,0,7),(55,2,0,8),(56,2,0,9),(57,2,0,10),(58,2,0,11),(59,2,0,12),(60,2,0,13),(61,2,0,14),(62,2,0,15),(63,2,0,16),(64,2,0,17),(65,2,0,19),(66,2,0,20),(67,2,0,21),(68,2,0,22),(69,2,0,23),(70,4,1,3),(71,4,1,5),(72,4,1,6),(73,4,1,7),(74,4,1,8),(75,4,1,9),(76,4,1,10),(77,4,1,11),(78,4,1,12),(79,4,1,13),(80,4,1,14),(81,4,1,15),(82,4,1,16),(83,4,1,17),(84,2,0,3),(85,2,0,5),(86,2,0,6),(87,2,0,7),(88,2,0,8),(89,2,0,9),(90,2,0,10),(91,2,0,11),(92,2,0,12),(93,2,0,13),(94,2,0,14),(95,2,0,15),(96,2,0,16),(97,2,0,17),(98,2,0,18),(99,2,0,3),(100,2,0,5),(101,2,0,6),(102,2,0,7),(103,2,0,8),(104,2,0,9),(105,2,0,10),(106,2,0,11),(107,2,0,12),(108,2,0,13),(109,2,0,16),(110,2,0,17),(111,2,0,18),(112,2,0,19),(113,2,0,20),(114,2,0,21),(115,2,0,22),(116,2,0,23),(117,2,0,3),(118,2,0,5),(119,2,0,6),(120,2,0,7),(121,2,0,8),(122,2,0,9),(123,2,0,10),(124,2,0,11),(125,2,0,12),(126,2,0,13),(127,2,0,16),(128,2,0,18),(129,2,0,19),(130,2,0,20),(131,2,0,21),(132,2,0,22),(133,2,0,23),(134,2,0,3),(135,2,0,5),(136,2,0,6),(137,2,0,7),(138,2,0,8),(139,2,0,9),(140,2,0,10),(141,2,0,11),(142,2,0,12),(143,2,0,13),(144,2,0,14),(145,2,0,19),(146,2,0,20),(147,2,0,21),(148,2,0,22),(149,2,0,23),(150,2,0,3),(151,2,0,5),(152,2,0,6),(153,2,0,7),(154,2,0,8),(155,2,0,9),(156,2,0,10),(157,2,0,11),(158,2,0,12),(159,2,0,13),(160,2,0,19),(161,2,0,20),(162,2,0,21),(163,2,0,22),(164,2,0,23),(165,4,1,3),(166,4,1,5),(167,4,1,6),(168,4,1,7),(169,4,1,8),(170,4,1,9),(171,4,1,10),(172,4,1,11),(173,4,1,12),(174,4,1,13),(175,2,0,3),(176,2,0,5),(177,2,0,6),(178,2,0,7),(179,2,0,8),(180,2,0,9),(181,2,0,10),(182,2,0,11),(183,2,0,12),(184,2,0,13),(185,2,0,19),(186,2,0,20),(187,2,0,21),(188,2,0,22),(189,2,0,23),(190,2,0,19),(194,3,0,3),(200,5,0,25),(201,5,0,26),(202,5,0,27),(203,5,0,28),(204,6,0,14),(205,6,0,15),(206,6,0,16),(207,6,0,17),(208,6,0,18),(210,7,0,3),(211,7,0,7),(287,1,1,3),(288,1,1,5),(289,1,1,6),(290,1,1,7),(291,1,1,8),(292,1,1,9),(293,1,1,10),(294,1,1,11),(295,1,1,12),(296,1,1,13),(297,1,1,14),(298,1,1,15),(299,1,1,16),(300,1,1,17),(301,1,1,19),(302,1,1,20),(303,1,1,21),(304,1,1,22),(305,1,1,23),(306,1,1,25),(307,1,1,26),(308,1,1,27),(309,1,1,28),(310,1,1,29),(311,1,1,30),(312,1,1,31),(313,1,1,32),(314,1,1,33),(315,1,1,34),(316,1,1,35),(317,1,1,37),(318,1,1,38),(319,1,1,39),(320,1,1,40),(321,1,1,41),(322,1,1,42);
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40000 ALTER TABLE `permisoPerfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -620,11 +606,7 @@ CREATE TABLE `persona` (
   `fechaNacimiento` date NOT NULL,
   `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-<<<<<<< HEAD
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-=======
 ) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -633,10 +615,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-<<<<<<< HEAD
 INSERT INTO `persona` VALUES (1,'20-12345678-9','Juan','Pérez','1990-05-21',0),(2,'20-12345678-9','Juan','Pérez','1990-05-21',0),(3,'80376112282','Amor','Vázquez','1975-12-24',1),(4,'37104155812','María Cristina','Lobato','1989-10-15',1),(5,'26003268859','Ruperta','Aparicio','1998-12-10',1),(6,'78236744407','Fulgencio','Alsina','2001-12-13',1),(7,'74572647457','Godofredo','Rosell','1992-11-25',1),(8,'4365511796','Palmira','Canales','1975-12-15',1),(9,'69613662997','Geraldo','Prat','1997-07-11',1),(10,'90934524289','Florentina','Pedrero','1990-05-19',1),(11,'15853288541','Ainoa','Vallejo','2000-03-06',1),(12,'92331841371','Otilia','Pedrero','1980-02-18',1),(23,'29447290809','Ceferino','Agustí','2002-10-10',1),(24,'61038994163','Atilio','Duran','1989-04-07',1),(25,'8052158793','Domingo','Frutos','2006-03-03',1),(26,'84370569271','Heliodoro','Caparrós','1970-09-18',0),(27,'16226921106','Yaiza','Barroso','1970-03-25',1),(28,'24638333369','Cruz','Clavero','1977-08-22',1),(29,'62566823552','Esperanza','Núñez','2006-03-01',1),(30,'53475047708','Emiliana','Hierro','1980-01-10',0),(31,'38175522673','Iris','Viña','1969-08-17',1),(32,'60968348986','Amor','Luís','1974-11-10',1),(33,'9105989460','Nazaret','Artigas','1988-08-28',0),(34,'83122786506','Conrado','Nicolás','1980-06-15',1),(35,'56995308741','Asdrubal','Vives','1994-10-02',0),(36,'48821432834','Lorenzo','Salom','1990-11-23',0),(37,'15364681148','Dan','Batalla','1993-04-30',0),(38,'22923106261','Regina','Montes','1977-04-19',0),(39,'76441561586','Elena','Cuenca','1977-07-27',1),(40,'74572905444','Amancio','Mate','1987-11-04',1),(41,'36535609148','Lupe','Pizarro','2005-06-08',1),(42,'67548003613','Rufina','Bermudez','2000-01-30',1),(43,'20-12345678-9','Brenda','Cano','2003-06-08',1),(44,'20-12345678-9','Juan','Pérez','1990-05-21',1),(46,'20-12345678-9','Jose','Franco','1990-06-21',1),(47,'20-12345678-9','Juan','Pérez','1990-01-01',1),(48,'20-12345678-9','Abril','Zacaria','1990-01-01',0),(49,'20-44923092-9','Martina','Cano','2013-03-21',0);
-=======
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -751,11 +730,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-<<<<<<< HEAD
 INSERT INTO `reparacion` VALUES (1,1,'2025-06-07',NULL,4500,1,11),(2,2,'2025-06-07',NULL,4500,1,11);
-=======
-INSERT INTO `reparacion` VALUES (1,'2025-06-07',NULL,4500,1,11),(2,'2025-06-07',NULL,4500,1,11);
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1026,8 +1001,3 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-<<<<<<< HEAD
-=======
-
--- Dump completed on 2025-06-11 18:11:29
->>>>>>> ca692db6c4f9eb20265cef0d8e1214c013440a9a
