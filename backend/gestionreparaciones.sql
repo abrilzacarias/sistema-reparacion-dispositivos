@@ -139,7 +139,7 @@ CREATE TABLE `detalleDiagnostico` (
   PRIMARY KEY (`idDetalleDiagnostico`),
   KEY `fk_detalleDiagnostico_diagnostico1_idx` (`idDiagnostico`),
   CONSTRAINT `fk_detalleDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +148,7 @@ CREATE TABLE `detalleDiagnostico` (
 
 LOCK TABLES `detalleDiagnostico` WRITE;
 /*!40000 ALTER TABLE `detalleDiagnostico` DISABLE KEYS */;
-INSERT INTO `detalleDiagnostico` VALUES (1,'1',9,1),(2,'false',11,1),(3,'true',11,2),(4,'23532532',11,3),(5,'Pantalla',11,4),(6,'false',12,1),(7,'true',12,2),(8,'44923092',12,3),(9,'Software',12,4),(10,'false',13,1),(11,'true',13,2),(12,'44923092',13,3),(13,'Software',13,4),(14,'false',14,1),(15,'true',14,2),(16,'44923092',14,3),(17,'Software',14,4),(18,'false',15,1),(19,'true',15,2),(20,'29706151',15,3),(21,'Otro',15,4),(22,'false',16,1),(23,'true',16,2),(24,'35346346346',16,3),(25,'Batería',16,4);
+INSERT INTO `detalleDiagnostico` VALUES (1,'1',9,1),(2,'false',11,1),(3,'true',11,2),(4,'23532532',11,3),(5,'Pantalla',11,4),(6,'false',12,1),(7,'true',12,2),(8,'44923092',12,3),(9,'Software',12,4),(10,'false',13,1),(11,'true',13,2),(12,'44923092',13,3),(13,'Software',13,4),(14,'false',14,1),(15,'true',14,2),(16,'44923092',14,3),(17,'Software',14,4),(18,'false',15,1),(19,'true',15,2),(20,'29706151',15,3),(21,'Otro',15,4),(22,'false',16,1),(23,'true',16,2),(24,'35346346346',16,3),(25,'Batería',16,4),(26,'true',17,1),(27,'false',17,2),(28,'523523532',17,3),(29,'Pantalla',17,4),(30,'0-3-6-7-8',17,5),(31,'false',18,1),(32,'true',18,2),(33,'5235235',18,3),(34,'Pantalla',18,4),(35,'{\"tipo\":\"PIN\",\"valor\":\"1234\"}',18,5);
 /*!40000 ALTER TABLE `detalleDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +205,7 @@ CREATE TABLE `diagnostico` (
   KEY `fk_diagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_diagnostico_dispositivo1` FOREIGN KEY (`idDispositivo`) REFERENCES `dispositivo` (`idDispositivo`),
   CONSTRAINT `fk_diagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +214,7 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (3,'2025-06-10',3,29,NULL),(4,'2025-06-10',3,29,NULL),(5,'2025-06-10',3,29,NULL),(6,'2025-06-10',3,29,NULL),(7,'2025-06-10',3,29,NULL),(8,'2025-06-10',3,29,NULL),(9,'2025-06-10',3,29,NULL),(10,'2025-06-12',25,29,NULL),(11,'2025-06-12',26,29,NULL),(12,'2025-06-12',27,29,NULL),(13,'2025-06-12',28,29,NULL),(14,'2025-06-12',29,29,NULL),(15,'2025-06-12',30,29,NULL),(16,'2025-06-12',31,29,NULL);
+INSERT INTO `diagnostico` VALUES (3,'2025-06-10',3,29,NULL),(4,'2025-06-10',3,29,NULL),(5,'2025-06-10',3,29,NULL),(6,'2025-06-10',3,29,NULL),(7,'2025-06-10',3,29,NULL),(8,'2025-06-10',3,29,NULL),(9,'2025-06-10',3,29,NULL),(10,'2025-06-12',25,29,NULL),(11,'2025-06-12',26,29,NULL),(12,'2025-06-12',27,29,NULL),(13,'2025-06-12',28,29,NULL),(14,'2025-06-12',29,29,NULL),(15,'2025-06-12',30,29,NULL),(16,'2025-06-12',31,29,NULL),(17,'2025-06-12',32,29,NULL),(18,'2025-06-12',33,29,NULL);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -238,7 +238,7 @@ CREATE TABLE `dispositivo` (
   CONSTRAINT `fk_dispositivo_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`),
   CONSTRAINT `fk_dispositivo_modeloDispositivo1` FOREIGN KEY (`idModeloDispositivo`) REFERENCES `modeloDispositivo` (`idModeloDispositivo`),
   CONSTRAINT `fk_dispositivo_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,7 +247,7 @@ CREATE TABLE `dispositivo` (
 
 LOCK TABLES `dispositivo` WRITE;
 /*!40000 ALTER TABLE `dispositivo` DISABLE KEYS */;
-INSERT INTO `dispositivo` VALUES (3,3,2,17,1),(4,5,2,17,1),(5,5,2,17,1),(6,5,2,17,1),(7,5,2,17,1),(8,5,2,17,1),(9,5,2,17,1),(10,5,2,17,1),(11,5,2,17,1),(12,3,2,17,1),(13,3,2,17,1),(14,3,2,17,1),(15,3,2,17,1),(16,3,2,17,1),(17,3,2,17,1),(18,3,2,17,1),(19,3,2,17,1),(20,5,2,17,1),(21,3,2,17,1),(22,3,2,17,1),(23,3,2,17,1),(24,3,2,17,1),(25,3,2,17,1),(26,3,2,17,1),(27,5,2,17,1),(28,5,2,17,1),(29,5,2,17,1),(30,5,2,17,1),(31,5,2,17,1);
+INSERT INTO `dispositivo` VALUES (3,3,2,17,1),(4,5,2,17,1),(5,5,2,17,1),(6,5,2,17,1),(7,5,2,17,1),(8,5,2,17,1),(9,5,2,17,1),(10,5,2,17,1),(11,5,2,17,1),(12,3,2,17,1),(13,3,2,17,1),(14,3,2,17,1),(15,3,2,17,1),(16,3,2,17,1),(17,3,2,17,1),(18,3,2,17,1),(19,3,2,17,1),(20,5,2,17,1),(21,3,2,17,1),(22,3,2,17,1),(23,3,2,17,1),(24,3,2,17,1),(25,3,2,17,1),(26,3,2,17,1),(27,5,2,17,1),(28,5,2,17,1),(29,5,2,17,1),(30,5,2,17,1),(31,5,2,17,1),(32,3,2,17,1),(33,5,2,17,1);
 /*!40000 ALTER TABLE `dispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -631,7 +631,7 @@ CREATE TABLE `preguntaDiagnostico` (
   PRIMARY KEY (`idPreguntaDiagnostico`),
   KEY `fk_preguntaDiagnostico_tipoDatoPreguntaDiagnostico1_idx` (`idTipoDatoPreguntaDiagnostico`),
   CONSTRAINT `fk_preguntaDiagnostico_tipoDatoPreguntaDiagnostico1` FOREIGN KEY (`idTipoDatoPreguntaDiagnostico`) REFERENCES `tipoDatoPreguntaDiagnostico` (`idTipoDatoPreguntaDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -640,7 +640,7 @@ CREATE TABLE `preguntaDiagnostico` (
 
 LOCK TABLES `preguntaDiagnostico` WRITE;
 /*!40000 ALTER TABLE `preguntaDiagnostico` DISABLE KEYS */;
-INSERT INTO `preguntaDiagnostico` VALUES (1,'¿Enciende?',1,'null'),(2,'¿Carga?',1,'null'),(3,'IMEI',2,NULL),(4,'¿Qué tipo de problema tiene el dispositivo?',3,'[\"Pantalla\", \"Batería\", \"Software\", \"Otro\"]');
+INSERT INTO `preguntaDiagnostico` VALUES (1,'¿Enciende?',1,'null'),(2,'¿Carga?',1,'null'),(3,'IMEI',2,NULL),(4,'¿Qué tipo de problema tiene el dispositivo?',3,'[\"Pantalla\", \"Batería\", \"Software\", \"Otro\"]'),(5,'¿Tiene bloqueo?',3,'[\"PIN\", \"Contraseña\", \"Patron\", \"Ninguno\"]');
 /*!40000 ALTER TABLE `preguntaDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -802,7 +802,7 @@ CREATE TABLE `tipoDatoPreguntaDiagnostico` (
   `idTipoDatoPreguntaDiagnostico` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoDatoPreguntaDiagnostico` varchar(45) NOT NULL COMMENT '(ej: "texto", "nÃºmero", "opciÃ³n", etc.)',
   PRIMARY KEY (`idTipoDatoPreguntaDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -811,7 +811,7 @@ CREATE TABLE `tipoDatoPreguntaDiagnostico` (
 
 LOCK TABLES `tipoDatoPreguntaDiagnostico` WRITE;
 /*!40000 ALTER TABLE `tipoDatoPreguntaDiagnostico` DISABLE KEYS */;
-INSERT INTO `tipoDatoPreguntaDiagnostico` VALUES (1,'booleano'),(2,'texto'),(3,'opcion');
+INSERT INTO `tipoDatoPreguntaDiagnostico` VALUES (1,'booleano'),(2,'texto'),(3,'opcion'),(4,'patron');
 /*!40000 ALTER TABLE `tipoDatoPreguntaDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -855,7 +855,7 @@ CREATE TABLE `tipoDispositivoSegunPregunta` (
   KEY `fk_tipoDispositivo_has_preguntasDiagnostico_tipoDispositivo_idx` (`idTipoDispositivo`),
   CONSTRAINT `fk_tipoDispositivo_has_preguntasDiagnostico_preguntasDiagnost1` FOREIGN KEY (`idPreguntaDiagnostico`) REFERENCES `preguntaDiagnostico` (`idPreguntaDiagnostico`),
   CONSTRAINT `fk_tipoDispositivo_has_preguntasDiagnostico_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -864,7 +864,7 @@ CREATE TABLE `tipoDispositivoSegunPregunta` (
 
 LOCK TABLES `tipoDispositivoSegunPregunta` WRITE;
 /*!40000 ALTER TABLE `tipoDispositivoSegunPregunta` DISABLE KEYS */;
-INSERT INTO `tipoDispositivoSegunPregunta` VALUES (1,2,1),(2,2,2),(3,2,3),(4,2,4);
+INSERT INTO `tipoDispositivoSegunPregunta` VALUES (1,2,1),(2,2,2),(3,2,3),(4,2,4),(5,2,5);
 /*!40000 ALTER TABLE `tipoDispositivoSegunPregunta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1006,4 +1006,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-12  8:17:04
+-- Dump completed on 2025-06-12 10:32:23
