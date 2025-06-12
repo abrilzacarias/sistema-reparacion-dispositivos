@@ -35,6 +35,12 @@ def update_historial(idHistorial: int, historial: schemas.HistorialAsignacionRep
         raise HTTPException(status_code=404, detail="Historial no encontrado")
     return updated
 
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar historial por ID")
+def delete_historial(id: int, db: Session = Depends(get_db)):
+    success = services.delete_historial(db, id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Historial no encontrado")
+    
 @router.get("/por-reparacion/{idReparacion}", response_model=Page[schemas.HistorialAsignacionReparacionOut], summary="Historial de asignación filtrado por idReparacion")
 def read_historiales_por_reparacion(
     idReparacion: int,

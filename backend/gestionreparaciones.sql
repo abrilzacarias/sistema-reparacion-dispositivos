@@ -736,7 +736,6 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (4,3466,'2025-06-11',NULL,8900,3,29);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 

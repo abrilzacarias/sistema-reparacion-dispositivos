@@ -41,6 +41,13 @@ def update_historial(db: Session, idHistorial: int, historial: HistorialAsignaci
     db.refresh(db_historial)
     return db_historial
 
+def delete_historial(db: Session, id_historial: int):
+    historial = get_historial(db, id_historial)
+    if historial:
+        db.delete(historial)
+        db.commit()
+        return True
+    return False
 def get_historial_asignaciones_por_reparacion(db: Session, id_reparacion: int):
     return db.query(HistorialAsignacionReparacion)\
         .filter(HistorialAsignacionReparacion.idReparacion == id_reparacion)\
