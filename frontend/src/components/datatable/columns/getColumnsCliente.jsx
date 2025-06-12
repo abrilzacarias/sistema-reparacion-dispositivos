@@ -1,4 +1,4 @@
-import {Edit, Ellipsis, List } from "lucide-react";
+import {Edit, Ellipsis, List, Wrench  } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -101,9 +101,22 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                   <ClienteCard cliente={row.original} />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <ModalFormTemplate
+                title="Historial de Reparaciones"
+                description="Listado de todas las reparaciones asociadas al cliente."
+                label="Reparaciones"
+                variant="ghost"
+                icon={Wrench }
+                contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+              >
+                <HistorialReparacionClienteModal idPersona={row.original?.idPersona} nombre={row.original?.persona?.nombre} apellido={row.original?.persona?.apellido} cuit={row.original?.persona?.cuit}/>
+              </ModalFormTemplate>
+            </DropdownMenuItem>
               <DropdownMenuSeparator />
               
-              {/* 👇 CAMBIO PRINCIPAL: Reemplazado ClienteCreateEdit por EditarClienteConTabs */}
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Editar Cliente"
@@ -119,19 +132,6 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                   />
                 </ModalFormTemplate>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-              <ModalFormTemplate
-                title="Historial de Reparaciones"
-                description="Listado de todas las reparaciones asociadas al cliente."
-                label="Historial reparaciones"
-                variant="ghost"
-                icon={List}
-                contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
-              >
-                <HistorialReparacionClienteModal idPersona={row.original?.idPersona} nombre={row.original?.persona?.nombre} apellido={row.original?.persona?.apellido}/>
-              </ModalFormTemplate>
-            </DropdownMenuItem>
 
               <DropdownMenuSeparator />
               

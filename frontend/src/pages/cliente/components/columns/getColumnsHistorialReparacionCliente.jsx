@@ -1,4 +1,4 @@
-import { Calendar, Settings, Wrench } from "lucide-react";
+import { Calendar, Settings, Wrench, User } from "lucide-react";
 
 export const getColumnsHistorialReparacionCliente = () => {
   return [
@@ -50,7 +50,7 @@ export const getColumnsHistorialReparacionCliente = () => {
         const empleadoApellido = row.original?.empleado?.persona?.apellido
         return (
           <div className="flex items-center gap-2 text-left">
-            <Wrench className="w-4 h-4 text-muted-foreground" />
+            <User className="w-4 h-4 text-muted-foreground" />
             <span>{empleadoNombre} {empleadoApellido}</span>
           </div>
         );
