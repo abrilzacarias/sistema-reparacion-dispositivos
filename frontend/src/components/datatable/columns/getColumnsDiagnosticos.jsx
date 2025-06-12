@@ -25,13 +25,6 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
       ),
     },
     {
-      header: "Dispositivo",
-      accessorKey: "dispositivo.descripcionDispositivo",
-      cell: ({ row }) => (
-        <div>{row.original.dispositivo?.descripcionDispositivo || "N/A"}</div>
-      ),
-    },
-    {
       header: "Modelo",
       accessorKey: "dispositivo.modeloDispositivo",
       cell: ({ row }) => (

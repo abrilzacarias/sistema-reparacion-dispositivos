@@ -47,7 +47,7 @@ class TipoDispositivoSchema(BaseModel):
 # Dispositivo
 class DispositivoSchema(BaseModel):
     idDispositivo: int
-    descripcionDispositivo: str
+    #descripcionDispositivo: str
     modeloDispositivo: str
     marcaDispositivo: MarcaDispositivoSchema
     tipoDispositivo: TipoDispositivoSchema

@@ -25,11 +25,12 @@ def get_reparacion(db: Session, id: int):
 def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Reparacion)\
         .options(
-            #selectinload(Reparacion.estadoReparacion),
             selectinload(Reparacion.empleado),
             selectinload(Reparacion.diagnostico),
             selectinload(Reparacion.registroEstadoReparacion)
-        )
+        )\
+        .offset(skip)\
+        .limit(limit)\
 
 
 def create_reparacion(db: Session, reparacion: ReparacionCreate):

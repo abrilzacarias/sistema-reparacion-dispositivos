@@ -14,10 +14,9 @@ from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
 from .contacto import Contacto
-from .tipocontacto import TipoContacto
+from .tipoContacto import TipoContacto
 from .perfil import Perfil
-
-
+from .modeloDispositivo import ModeloDispositivo
 from .diagnostico import Diagnostico
 from .dispositivo import Dispositivo
 from .tipoDispositivo import TipoDispositivo
