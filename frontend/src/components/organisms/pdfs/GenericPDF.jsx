@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 15,
-    color: "#549d96",
+    color: "#0747a1",  
   },
   table: {
     display: "table",
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   tableHeader: {
-    backgroundColor: "#549d96",
+    backgroundColor: "#0747a1",  
     flexDirection: "row",
   },
   headerCell: {
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+
 
 const formatValue = (val) => {
   if (val === null || val === undefined) return "No disponible";
