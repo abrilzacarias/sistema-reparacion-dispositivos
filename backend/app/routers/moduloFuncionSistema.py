@@ -32,6 +32,18 @@ def update_modulo_funcion(id: int, modulo_funcion: schemas.ModuloFuncionSistemaU
         raise HTTPException(status_code=404, detail="Modulo-Funcion no encontrado")
     return updated
 
+
+@router.put("/modulo/{id}/funciones", summary="Actualizar las funciones asociadas a un módulo")
+def update_funciones_modulo(
+    id: int,
+    funciones_update: schemas.ModuloFuncionesUpdateSchema,
+    db: Session = Depends(get_db)
+):
+    result = services.actualizar_funciones_modulo(db, id, funciones_update.funciones_ids)
+    if not result:
+        raise HTTPException(status_code=404, detail="Módulo no encontrado")
+    return {"detail": "Funciones del módulo actualizadas correctamente"}
+
 """
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar un modulo-funcion")
 def delete_modulo_funcion(id: int, db: Session = Depends(get_db)):

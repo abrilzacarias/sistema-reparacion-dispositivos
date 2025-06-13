@@ -25,8 +25,10 @@ def read_marca(idMarcaDispositivo: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=schemas.MarcaDispositivoOut, status_code=status.HTTP_201_CREATED, summary="Crear una nueva marca")
 def create_marca(marca: schemas.MarcaDispositivoCreate, db: Session = Depends(get_db)):
-    print('creando en router')
-    return services.create_marca_dispositivo(db, marca)
+    try:
+        return services.create_marca_dispositivo(db, marca)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/{idMarcaDispositivo}", response_model=schemas.MarcaDispositivoOut, summary="Actualizar una marca")
 def update_marca(idMarcaDispositivo: int, marca: schemas.MarcaDispositivoUpdate, db: Session = Depends(get_db)):

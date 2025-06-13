@@ -24,6 +24,6 @@ class ModuloFuncionSistema(Base):
 
     funcionSistema = relationship('FuncionSistema', back_populates='moduloFuncionSistema')
     moduloSistema = relationship('ModuloSistema', back_populates='moduloFuncionSistema')
-    permisoPerfil = relationship('PermisoPerfil', back_populates='moduloFuncionSistema')
+    permisoPerfil = relationship('PermisoPerfil', cascade="all, delete-orphan", back_populates='moduloFuncionSistema')
 
 

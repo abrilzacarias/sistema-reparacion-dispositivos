@@ -14,6 +14,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit"
 import EmpleadoCreateEdit from "@/pages/empleado/components/EmpleadoCreateEdit"
 import { useState } from "react";
+import EmpleadoDeleteConfirmModal from "@/components/organisms/EmpleadoDeleteConfirmModal"
 
 export const getColEmpleados = ({ refetch }) => {
   return [

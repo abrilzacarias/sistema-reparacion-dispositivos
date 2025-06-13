@@ -19,7 +19,6 @@ from .perfil import Perfil
 from .funcionSistema import FuncionSistema
 from .moduloFuncionSistema import ModuloFuncionSistema
 from .moduloSistema import ModuloSistema
-from .moduloFuncionSistema import ModuloFuncionSistema
 from .permisoPerfil import PermisoPerfil
 from .asignacionUsuarioPermisos import AsignacionUsuarioPermisos
 from .diagnostico import Diagnostico

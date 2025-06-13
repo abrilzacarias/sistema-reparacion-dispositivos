@@ -1,23 +1,25 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 
-import ButtonRefetch from "@/components/atoms/ButtonRefetch"
-import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch"
-import ErrorDuplicateMessage from "@/components/atoms/ErrorDuplicateMessage"
-import { DataTable } from "@/components/datatable/DataTable"
-import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado"
-import CrudHeader from "@/components/molecules/CrudHeader"
-import CrudsTemplate from "@/components/molecules/CrudsTemplate"
-import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown"
-import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
-import SearchPersonas from "@/components/organisms/SearchPersonas"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { usePaginatedQuery } from "@/hooks/usePaginatedQuery"
-import { useSearchPersonas } from "@/hooks/useSearchPersonas"
-import { PlusCircle, Settings } from "lucide-react"
-import PersonaCreateEdit from "../../components/organisms/PersonaCreateEdit"
-import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit"
+import ButtonRefetch from "@/components/atoms/ButtonRefetch";
+import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch";
+import ErrorDuplicateMessage from "@/components/atoms/ErrorDuplicateMessage";
+import { DataTable } from "@/components/datatable/DataTable";
+import { getColEmpleados } from "@/components/datatable/columns/getColumnsEmpleado";
+import CrudHeader from "@/components/molecules/CrudHeader";
+import CrudsTemplate from "@/components/molecules/CrudsTemplate";
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import SearchPersonas from "@/components/organisms/SearchPersonas";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
+import { useSearchPersonas } from "@/hooks/useSearchPersonas";
+import { PlusCircle, Settings } from "lucide-react";
+import PersonaCreateEdit from "../../components/organisms/PersonaCreateEdit";
+import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit";
+import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import { Download } from "lucide-react";
+import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 
 const EmpleadoPage = () => {
   const {
@@ -107,23 +109,24 @@ const EmpleadoPage = () => {
         <CrudHeader title="Gestión de Empleados" subTitle="Listado, registro y modificación del personal contratado.">
           <div className="flex items-center gap-2">
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
+            
+            {/* Exportar */}
             <ExportOptionsDropdown
-              excelComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  Excel
-                </Button>
-              }
               pdfComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  PDF
-                </Button>
+                <ExportPDFButton
+                  data={employees ?? []}
+                  columns={getColEmpleados({ refetch })}
+                  title="Empleados"
+                />
               }
-              formats={{ excel: true, pdf: true }}
               buttonProps={{
                 variant: "outline",
                 size: "sm",
+                className: "gap-2",
                 label: "Exportar",
+                icon: <Download className="h-4 w-4" />,
               }}
+              dropdownLabel="Exportar datos"
             />
 
             <ModalFormTemplate

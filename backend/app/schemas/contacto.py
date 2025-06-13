@@ -12,6 +12,9 @@ class ContactoCreate(BaseModel):
     idtipoContacto: int
     esPrimario: bool
 
+class ContactoUpdate(ContactoCreate):
+    idContacto: Optional[int] = None 
+
 class ContactoOut(ContactoBase):
     idContacto: int
     idPersona: int

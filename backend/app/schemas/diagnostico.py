@@ -2,6 +2,7 @@ from datetime import date
 from pydantic import BaseModel
 from typing import Optional, List
 from app.schemas.modeloDispositivo import ModeloDispositivoOut
+from app.schemas.detalleDiagnostico import DetalleDiagnosticoOut, DetalleDiagnosticoCreate
 
 # PAra llegar a Diagnostico, debo ingresar:
 # persona
@@ -70,9 +71,13 @@ class DiagnosticoBase(BaseModel):
     fechaDiagnostico: date
     idDispositivo: int
     idEmpleado: int
+    detalleDiagnostico: List[DetalleDiagnosticoOut]
 
 class DiagnosticoCreate(DiagnosticoBase):
-    pass
+    fechaDiagnostico: date
+    idDispositivo: int
+    idEmpleado: int
+    detalles: list[DetalleDiagnosticoCreate]
 
 class DiagnosticoUpdate(BaseModel):
     fechaDiagnostico: Optional[date] = None

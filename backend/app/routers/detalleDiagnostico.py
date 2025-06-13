@@ -26,7 +26,7 @@ def read_detalleDiagnostico(detalleDiagnostico_id: int, db: Session = Depends(ge
         raise HTTPException(status_code=404, detail="DetalleDiagnostico not found")
     return detalle
 
-@router.post("/", response_model=DetalleDiagnosticoOut, status_code=status.HTTP_201_CREATED)
+@router.post("/detalle", response_model=DetalleDiagnosticoOut, status_code=status.HTTP_201_CREATED)
 def create_detalle(detalleDiagnostico: DetalleDiagnosticoCreate, db: Session = Depends(get_db)):
     return create_detalleDiagnostico(db, detalleDiagnostico)
 

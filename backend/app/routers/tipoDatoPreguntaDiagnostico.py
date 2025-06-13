@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.models.tipoDatoPreguntaDiagnostico import TipoDatoPreguntaDiagnostico
 from app.schemas.tipoDatoPreguntaDiagnostico import (
@@ -15,9 +17,9 @@ router = APIRouter(
     tags=["tipoDatoPreguntaDiagnostico"]
 )
 
-@router.get("/", response_model=List[TipoDatoPreguntaDiagnosticoOut])
+@router.get("/", response_model=Page[TipoDatoPreguntaDiagnosticoOut])
 def get_all(db: Session = Depends(get_db)):
-    return db.query(TipoDatoPreguntaDiagnostico).all()
+    return paginate(db.query(TipoDatoPreguntaDiagnostico))
 
 @router.get("/{idTipoDatoPreguntaDiagnostico}", response_model=TipoDatoPreguntaDiagnosticoOut)
 def get_by_id(idTipoDatoPreguntaDiagnostico: int, db: Session = Depends(get_db)):

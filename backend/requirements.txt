@@ -13,3 +13,4 @@ fastapi-pagination
 Faker
 requests
 pydantic-settings
+twilio

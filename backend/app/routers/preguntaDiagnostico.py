@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 from app.services.preguntaDiagnostico import verificarTipoDatoPregunta
 from app.models.preguntaDiagnostico import PreguntaDiagnostico
@@ -21,7 +21,12 @@ def get_all(db: Session = Depends(get_db)):
 
 @router.get("/{idPreguntaDiagnostico}", response_model=PreguntaDiagnosticoOut)
 def get_by_id(idPreguntaDiagnostico: int, db: Session = Depends(get_db)):
-    pregunta = db.query(PreguntaDiagnostico).filter(PreguntaDiagnostico.idPreguntaDiagnostico == idPreguntaDiagnostico).first()
+    pregunta = (
+        db.query(PreguntaDiagnostico)
+        .options(joinedload(PreguntaDiagnostico.tipoDatoPreguntaDiagnostico))
+        .filter(PreguntaDiagnostico.idPreguntaDiagnostico == idPreguntaDiagnostico)
+        .first()
+    )
     if not pregunta:
         raise HTTPException(status_code=404, detail="Pregunta no encontrada")
     return pregunta

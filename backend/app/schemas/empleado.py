@@ -28,7 +28,7 @@ class EmpleadoUpdate(BaseModel):
 class EmpleadoOut(EmpleadoBase):
     idEmpleado: int
     persona: PersonaOutReduced
-    usuario: UsuarioOut
+    usuario: Optional[UsuarioOut]
     puesto: PuestoLaboralOut
 
     class Config:

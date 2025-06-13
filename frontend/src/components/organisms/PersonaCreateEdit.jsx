@@ -1,5 +1,5 @@
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
-import ErrorMessage from "@/components/molecules/ErrorMessage"
+import ErrorMessage from "@/components/atoms/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -59,9 +59,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   useEffect(() => {
     if (persona) {
       console.log(persona)
+      console.log("📨 Contactos de persona:", persona.contactos);
+
       const contactoCorreo = persona.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-      )
+        (c) => c.idtipoContacto === 1 && c.esPrimario
+      ) ?? persona.contactos?.find(
+        (c) => c.idtipoContacto === 1
+      );
+
       const contactoTelefono = persona.contactos?.find(
         (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
       )
@@ -103,7 +108,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         idtipoDomicilio: "",
       })
     }
-  }, [persona, reset])
+  }, [persona, reset]);
 
   const onSubmit = async (data) => {
     setError("")
@@ -286,7 +291,8 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
           control={control}
           rules={{
             required: "Campo requerido",
-            validate: (value) => isValidPhoneNumber(value) || "Número de teléfono inválido",
+            validate: (value) =>
+              isValidPhoneNumber(value) || "Número de teléfono inválido",
           }}
           render={({ field }) => (
             <PhoneInput
@@ -296,6 +302,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
               defaultCountry="AR"
               placeholder="Ingrese un número de teléfono"
               className="w-full"
+              onChange={(value) => {
+                // Si empieza con +54 y no con +549, lo modificamos
+                if (value?.startsWith("+54") && !value.startsWith("+549")) {
+                  field.onChange(value.replace("+54", "+549"));
+                } else {
+                  field.onChange(value);
+                }
+              }}
             />
           )}
         />

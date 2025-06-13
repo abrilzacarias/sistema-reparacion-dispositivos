@@ -10,9 +10,10 @@ from app.database import get_db
 
 router = APIRouter(prefix="/modelos", tags=["Modelos de Dispositivo"])
 
-@router.get("/", response_model=Page[schemas.ModeloDispositivoOut], summary="Obtener todos los modelos")
+@router.get("/", response_model=List[schemas.ModeloDispositivoOut], summary="Obtener todos los modelos")
 def read_modelos(db: Session = Depends(get_db)):
-    return paginate(services.get_modelos_dispositivo(db))
+    modelos = services.get_modelos_dispositivo(db)  # supongo que devuelve un Query o lista
+    return modelos  # devolver lista directamente
 
 @router.get("/{idModeloDispositivo}", response_model=schemas.ModeloDispositivoOut, summary="Obtener un modelo por ID")
 def read_modelo(idModeloDispositivo: int, db: Session = Depends(get_db)):

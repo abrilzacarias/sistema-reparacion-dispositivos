@@ -1,4 +1,5 @@
-  import { Ellipsis, List } from "lucide-react";
+import { useState } from "react";
+import { Ellipsis, List } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,16 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
-import DiagnosticoCard from "@/components/organisms/DiagnosticoCard"; // Necesitarás crear este componente
+import DiagnosticoCard from "@/components/organisms/DiagnosticoCard";
 import { Button } from "@/components/ui/button";
+import ReparacionCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
 
+
+//NO SE SI DISPOSITIVO SE TIENE QUE MANDAR COMO OCULTO
 export const getColumnsDiagnosticos = ({ refetch }) => {
   return [
-    {
-      header: "ID",
-      accessorKey: "idDiagnostico",
-      size: 80,
-    },
     {
       header: "Fecha",
       accessorKey: "fechaDiagnostico",
@@ -25,54 +24,47 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
       ),
     },
     {
-      header: "Dispositivo",
-      accessorKey: "dispositivo.idDispositivo",
+      header: "Tipo de Dispositivo",
+      accessorKey: "dispositivo.tipoDispositivo.nombreTipoDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.idDispositivo || "N/A"}</div>
+        <div>
+          {row.original.dispositivo?.tipoDispositivo?.nombreTipoDispositivo || "N/A"}
+        </div>
       ),
     },
     {
       header: "Modelo",
       accessorKey: "dispositivo.modeloDispositivo.descripcionModeloDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo || "N/A"}</div>
+        <div>
+          {row.original.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo || "N/A"}
+        </div>
       ),
     },
     {
       header: "Marca",
-      accessorKey: "dispositivo.modeloDispositivo.idMarcaDispositivo",
+      accessorKey: "dispositivo.modeloDispositivo.marcaDispositivo.descripcionMarcaDispositivo",
       cell: ({ row }) => (
-        <div>{row.original.dispositivo?.modeloDispositivo?.idMarcaDispositivo || "N/A"}</div>
-      ),
-    },
-    {
-      header: "Tipo",
-      accessorKey: "dispositivo.tipoDispositivo.nombreTipoDispositivo",
-      cell: ({ row }) => (
-        <div>{row.original.dispositivo?.tipoDispositivo?.nombreTipoDispositivo || "N/A"}</div>
+        <div>
+          {row.original.dispositivo?.modeloDispositivo?.marcaDispositivo?.descripcionMarcaDispositivo || "N/A"}
+        </div>
       ),
     },
     {
       header: "Cliente",
       accessorKey: "dispositivo.cliente.persona",
-      cell: ({ row }) => (
-        <div>
-          {row.original.dispositivo?.cliente?.persona
-            ? `${row.original.dispositivo.cliente.persona.nombre} ${row.original.dispositivo.cliente.persona.apellido}`
-            : "N/A"}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const persona = row.original.dispositivo?.cliente?.persona;
+        return <div>{persona ? `${persona.nombre} ${persona.apellido}` : "N/A"}</div>;
+      },
     },
     {
       header: "Técnico",
       accessorKey: "empleado.persona",
-      cell: ({ row }) => (
-        <div>
-          {row.original.empleado?.persona
-            ? `${row.original.empleado.persona.nombre} ${row.original.empleado.persona.apellido}`
-            : "N/A"}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const persona = row.original.empleado?.persona;
+        return <div>{persona ? `${persona.nombre} ${persona.apellido}` : "N/A"}</div>;
+      },
     },
     {
       id: "actions",
@@ -106,8 +98,26 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
               <DropdownMenuItem onClick={() => console.log("Editar", row.original)}>
                 Editar
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
               <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>
                 Eliminar
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem asChild>
+                <ModalFormTemplate
+                  title="Crear Reparación"
+                  description="Complete los datos para crear una reparación"
+                  label="Crear Reparación"
+                  variant="ghost"
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                >
+                  <ReparacionCreateEdit
+                    idDiagnostico={row.original.idDiagnostico}
+                    refreshReparaciones={refetch}
+                  />
+                </ModalFormTemplate>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

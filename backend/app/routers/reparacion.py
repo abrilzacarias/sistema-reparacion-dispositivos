@@ -34,7 +34,15 @@ def update_reparacion(id: int, reparacion: ReparacionUpdate, db: Session = Depen
 
 @router.delete("/{id}", response_model=ReparacionOut)
 def delete_reparacion(id: int, db: Session = Depends(get_db)):
-    deleted = reparacion_service.delete_reparacion(db, id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Reparacion no encontrada")
-    return deleted
+    try:
+        deleted = reparacion_service.delete_reparacion(db, id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Reparación no encontrada")
+        return deleted
+    except HTTPException as e:
+        raise e  # ← Esto conserva el mensaje y código original
+    except Exception as e:
+        print(f"Error inesperado al eliminar reparación: {e}")
+        raise HTTPException(status_code=500, detail="Error inesperado al eliminar la reparación.")
+
+
