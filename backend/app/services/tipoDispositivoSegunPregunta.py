@@ -1,11 +1,14 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,joinedload
 from app.models.tipoDispositivoSegunPregunta import TipoDispositivoSegunPregunta
 from app.schemas.tipoDispositivoSegunPregunta import TipoDispositivoSegunPreguntaCreate, TipoDispositivoSegunPreguntaUpdate
 from app.models.preguntaDiagnostico import PreguntaDiagnostico
 from app.models.tipoDatoPreguntaDiagnostico import TipoDatoPreguntaDiagnostico
 
 def get_all(db: Session):
-    return db.query(TipoDispositivoSegunPregunta).all()
+    return db.query(TipoDispositivoSegunPregunta).options(
+        joinedload(TipoDispositivoSegunPregunta.preguntaDiagnostico),
+        joinedload(TipoDispositivoSegunPregunta.tipoDispositivo)
+    )
 
 def get_by_id(db: Session, id: str):
     return db.query(TipoDispositivoSegunPregunta).filter(TipoDispositivoSegunPregunta.idTipoDispositivoSegunPregunta == id).first()
@@ -33,7 +36,6 @@ def delete(db: Session, id: str):
         db.commit()
     return obj
 
-
 def get_by_tipo_dispositivo(db: Session, id_tipo: int):
     return (
         db.query(TipoDispositivoSegunPregunta)
@@ -43,3 +45,22 @@ def get_by_tipo_dispositivo(db: Session, id_tipo: int):
         .order_by(TipoDispositivoSegunPregunta.idTipoDispositivoSegunPregunta)
         .all()
     )
+
+def get_grouped_by_dispositivo(db: Session):
+    registros = db.query(TipoDispositivoSegunPregunta).options(
+        joinedload(TipoDispositivoSegunPregunta.preguntaDiagnostico),
+        joinedload(TipoDispositivoSegunPregunta.tipoDispositivo)
+    ).all()
+
+    agrupado = {}
+    for item in registros:
+        tipo_obj = item.tipoDispositivo
+        nombre = tipo_obj.nombreTipoDispositivo
+        if nombre not in agrupado:
+            agrupado[nombre] = {
+                "tipoDispositivo": tipo_obj,
+                "preguntas": []
+            }
+        agrupado[nombre]["preguntas"].append(item.preguntaDiagnostico.descripcionPreguntaDiagnostico)
+
+    return list(agrupado.values())

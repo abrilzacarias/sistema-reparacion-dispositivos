@@ -21,7 +21,7 @@ class PreguntaDiagnosticoUpdate(PreguntaDiagnosticoBase):
 
 class PreguntaDiagnosticoOut(PreguntaDiagnosticoBase):
     idPreguntaDiagnostico: int
-    esObligatoria: bool = True
+    #esObligatoria: bool = True
     tipoDatoPreguntaDiagnostico: Optional[TipoDatoPreguntaDiagnosticoOut] = None
 
     class Config:

@@ -3,12 +3,27 @@ from sqlalchemy.orm import Session
 from app.schemas.tipoDispositivoSegunPregunta import *
 from app.services import tipoDispositivoSegunPregunta as service
 from app.database import get_db
+from fastapi_pagination import Page, Params
+from fastapi_pagination.ext.sqlalchemy import paginate, create_page
+from typing import List, Optional
+from fastapi_pagination import paginate
 
 router = APIRouter(prefix="/tipo-dispositivo-segun-pregunta", tags=["TipoDispositivoSegunPregunta"])
 
-@router.get("/", response_model=list[TipoDispositivoSegunPreguntaResponse])
+@router.get("/", response_model=list[TipoDispositivoSegunPreguntaConDetalles])
 def listar_todos(db: Session = Depends(get_db)):
-    return service.get_all(db)
+    query = service.get_all(db)
+    return query.all()  # Ejecuta la query, devuelve lista completa sin paginar
+
+@router.get("/paginado", response_model=Page[TipoDispositivoSegunPreguntaConDetalles])
+def listar_paginado(db: Session = Depends(get_db)):
+    query = service.get_all(db)
+    return paginate(query)  # paginate recibe el query y hace la paginación
+
+@router.get("/agrupado-paginado", response_model=Page[TipoDispositivoAgrupadoSchema])
+def listar_agrupado_paginado(db: Session = Depends(get_db)):
+    agrupado = service.get_grouped_by_dispositivo(db)
+    return paginate(agrupado)  # ✅ Esto funciona con listas
 
 @router.get("/{id}", response_model=TipoDispositivoSegunPreguntaResponse)
 def obtener_por_id(id: str, db: Session = Depends(get_db)):
@@ -46,3 +61,5 @@ def obtener_preguntas_por_tipo_dispositivo(id_tipo_dispositivo: int, db: Session
         # No es un error si no hay preguntas, simplemente devuelve lista vacía
         return []
     return preguntas
+
+
