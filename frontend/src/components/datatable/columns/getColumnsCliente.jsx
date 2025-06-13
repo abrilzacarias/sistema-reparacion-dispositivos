@@ -45,23 +45,23 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
     {
       header: "Email",
       accessorFn: (row) => {
-        return row.persona?.contactos?.find(c => c.idtipoContacto === 1)?.descripcionContacto;
+        return row.persona?.contactos?.find(c => c.idtipoContacto === 4)?.descripcionContacto;
       },
       cell: ({ row }) => {
-        const email = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 1)?.descripcionContacto;
+        const email = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 4)?.descripcionContacto;
         return <div>{email || <span className="italic text-muted-foreground">Sin email</span>}</div>;
       },
     },
     {
       header: "Teléfono",
       accessorFn: (row) => {
-        return row.persona?.contactos?.find(c => c.idtipoContacto === 2)?.descripcionContacto;
+        return row.persona?.contactos?.find(c => c.idtipoContacto === 3)?.descripcionContacto;
       },
       cell: ({ row }) => {
-        const tel = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 2)?.descripcionContacto;
+        const tel = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 3)?.descripcionContacto;
         return <div>{tel || <span className="italic text-muted-foreground">Sin teléfono</span>}</div>;
       },
-    },
+    },    
     {
       header: "Observaciones",
       accessorFn: (row) => row.observaciones,

@@ -6,7 +6,6 @@ import ButtonRefetch from "@/components/atoms/ButtonRefetch";
 import ErrorApiRefetch from "@/components/atoms/ErrorApiRefetch";
 import { DataTable } from "@/components/datatable/DataTable";
 import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
-import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 // Crear este archivo en @/components/datatable/columns/getColumnsDiagnosticos.js
@@ -14,6 +13,11 @@ import { getColumnsDiagnosticos } from "@/components/datatable/columns/getColumn
 import DiagnosticoCreateEdit from "./DiagnosticoCreateEdit";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import { Plus } from "lucide-react";
+
+//Exportar
+import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import { Download } from "lucide-react";
+import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 
 const DiagnosticosPage = () => {
   const navigate = useNavigate();
@@ -78,24 +82,26 @@ const DiagnosticosPage = () => {
         >
           <div className="flex items-center gap-2">
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
+            
+            {/* Exportar */}
             <ExportOptionsDropdown
-              excelComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  Excel
-                </Button>
-              }
               pdfComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  PDF
-                </Button>
+                <ExportPDFButton
+                  data={diagnosticos ?? []}
+                  columns={getColumnsDiagnosticos({ refetch })}
+                  title="Diagnosticos"
+                />
               }
-              formats={{ excel: true, pdf: true }}
               buttonProps={{
                 variant: "outline",
                 size: "sm",
+                className: "gap-2",
                 label: "Exportar",
+                icon: <Download className="h-4 w-4" />,
               }}
+              dropdownLabel="Exportar datos"
             />
+
             <Button
               variant="default"
               onClick={handleAddDiagnostico}

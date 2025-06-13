@@ -1,4 +1,4 @@
-import { Download } from "lucide-react"
+import { Download } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,14 +6,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
-// agregar csv si es necesario
 const ExportOptionsDropdown = ({
-  excelComponent,
   pdfComponent,
-  formats = { excel: true, pdf: true },
   buttonProps = {
     variant: "outline",
     size: "icon",
@@ -24,32 +21,27 @@ const ExportOptionsDropdown = ({
   dropdownLabel = "Exportar datos",
   align = "end",
 }) => {
-  const showExcel = formats.excel && excelComponent
-  const showPDF = formats.pdf && pdfComponent
-
-  if (!showExcel && !showPDF) {
-    return null
-  }
+  if (!pdfComponent) return null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={buttonProps.variant} size={buttonProps.size} className={buttonProps.className}>
-          <Download className="h-4 w-4" />
+        <Button
+          variant={buttonProps.variant}
+          size={buttonProps.size}
+          className={buttonProps.className}
+        >
+          {buttonProps.icon ?? <Download className="h-4 w-4" />}
+          {buttonProps.label && <span>{buttonProps.label}</span>}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align}>
         <DropdownMenuLabel>{dropdownLabel}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-
-        {showExcel && <DropdownMenuItem onSelect={(e) => e.preventDefault()}>{excelComponent}</DropdownMenuItem>}
-
-        {showExcel && showPDF && <DropdownMenuSeparator />}
-
-        {showPDF && <DropdownMenuItem>{pdfComponent}</DropdownMenuItem>}
+        <DropdownMenuItem asChild>{pdfComponent}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
-export default ExportOptionsDropdown
+export default ExportOptionsDropdown;

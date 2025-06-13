@@ -6,7 +6,6 @@ import { getColumnsRepuestos } from "@/components/datatable/columns/getColumnsRe
 import { DataTable } from "@/components/datatable/DataTable";
 import CrudHeader from "@/components/molecules/CrudHeader";
 import CrudsTemplate from "@/components/molecules/CrudsTemplate";
-import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +19,11 @@ import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { Plus, Settings, Wrench } from "lucide-react";
 import RepuestosCreateEdit from "./components/RepuestosCreateEdit";
 import TiposRepuestoModal from "./components/TipoRepuestoModal";
+
+//Exportar
+import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import { Download } from "lucide-react";
+import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 
 const RepuestosPage = () => {
   const {
@@ -50,24 +54,26 @@ const RepuestosPage = () => {
         >
           <div className="flex items-center gap-2">
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
+
+            {/* Exportar */}
             <ExportOptionsDropdown
-              excelComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  Excel
-                </Button>
-              }
               pdfComponent={
-                <Button variant="ghost" className="w-full justify-start">
-                  PDF
-                </Button>
+                <ExportPDFButton
+                  data={repuestos ?? []}
+                  columns={getColumnsRepuestos({ refetch })}
+                  title="Repuestos"
+                />
               }
-              formats={{ excel: true, pdf: true }}
               buttonProps={{
                 variant: "outline",
                 size: "sm",
+                className: "gap-2",
                 label: "Exportar",
+                icon: <Download className="h-4 w-4" />,
               }}
+              dropdownLabel="Exportar datos"
             />
+
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
