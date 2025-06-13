@@ -3,10 +3,18 @@ from app.models.perfil import Perfil
 from app.schemas.perfil import PerfilCreate, PerfilUpdate
 
 def get_perfil(db: Session, idPerfil: int):
-    return db.query(Perfil).filter(Perfil.idPerfil == idPerfil).first()
+    return (
+        db.query(Perfil)
+        .filter(
+            Perfil.idPerfil == idPerfil,
+            Perfil.estadoPerfil == 1
+        )
+        .first()
+    )
+
 
 def get_perfiles(db: Session):
-    return db.query(Perfil)
+    return db.query(Perfil).filter(Perfil.estadoPerfil == 1)
 
 def create_perfil(db: Session, perfil: PerfilCreate):
     db_perfil = Perfil(**perfil.dict())

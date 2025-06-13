@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { useContext, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
+import MultiSelectSearch from "./MultiSelectSearch"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -29,6 +30,10 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [apiErrors, setApiErrors] = useState({})
+  const [perfilesSeleccionados, setPerfilesSeleccionados] = useState([])
+
+  console.log(perfilesSeleccionados)
+
   const { open, setOpen } = useContext(OpenContext)
 
   const crearUsuarioAutomatico = async (email) => {
@@ -56,13 +61,17 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
 
       if (!empleado && personaEmail) {
         idUsuario = await crearUsuarioAutomatico(personaEmail)
+        console.log('creand usuario')
+        
       }
+
 
       const empleadoPayload = {
         fechaContratacion: data.fechaContratacion,
         idUsuario: idUsuario,
         idpuestoLaboral: data.idpuestoLaboral,
         idPersona,
+        perfiles: perfilesSeleccionados
       }
 
       console.log("Payload del empleado:", empleadoPayload)
@@ -132,6 +141,19 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
               valueKey="idpuestoLaboral"
             />
           )}
+        />
+        <ErrorMessage message={errors.idpuestoLaboral?.message || apiErrors?.idpuestoLaboral} />
+      </div>
+
+      <div className="col-span-2 space-y-2">
+        <MultiSelectSearch
+          label="Perfiles"
+          endpoint="perfiles"
+          value={perfilesSeleccionados}
+          onChange={setPerfilesSeleccionados}
+          placeholder="Seleccione perfiles..."
+          displayKey="nombrePerfil"
+          valueKey="idPerfil"
         />
         <ErrorMessage message={errors.idpuestoLaboral?.message || apiErrors?.idpuestoLaboral} />
       </div>

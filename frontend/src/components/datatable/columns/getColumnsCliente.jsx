@@ -125,6 +125,7 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                   variant="ghost"
                   icon={Edit}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
+                  contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
                 >
                   <EditarClienteConTabs 
                     cliente={row.original} 

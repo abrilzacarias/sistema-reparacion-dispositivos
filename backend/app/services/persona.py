@@ -41,6 +41,7 @@ def create_persona(db: Session, persona_data: PersonaCreate):
     db.refresh(persona)
 
     for contacto_data in persona_data.contactos:
+        print(contacto_data)
         contacto_existente = db.query(Contacto).filter(
             func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
         ).first()
