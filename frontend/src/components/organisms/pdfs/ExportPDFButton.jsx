@@ -1,11 +1,11 @@
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { Button } from "@/components/ui/button"; 
 import PDF from './GenericPDF';
-// Función para obtener valor profundo según un path con puntos
+
 const getNestedValue = (obj, path) => {
   return path.split('.').reduce((acc, part) => (acc && acc[part] !== undefined) ? acc[part] : null, obj);
 };
 
-// Función para asignar valor profundo según path con puntos
 const setNestedValue = (obj, path, value) => {
   const parts = path.split('.');
   const last = parts.pop();
@@ -16,7 +16,7 @@ const setNestedValue = (obj, path, value) => {
   target[last] = value;
 };
 
-const ExportPDFButton = ({ data, columns, title = "Reporte" }) => {
+const ExportPDFButton = ({ data, columns, title = "Reporte", buttonLabel = "Descargar PDF", buttonProps = {} }) => {
   const filteredColumns = columns.filter(col => col.accessorKey || col.accessorFn);
 
   const dataForPdf = data.map(row => {
@@ -49,7 +49,11 @@ const ExportPDFButton = ({ data, columns, title = "Reporte" }) => {
       document={<PDF title={title} data={dataForPdf} columns={pdfColumns} />}
       fileName={`${title.replace(/\s+/g, '_').toLowerCase()}.pdf`}
     >
-      {({ loading }) => (loading ? "Generando PDF..." : "Descargar PDF")}
+      {({ loading }) => (
+        <Button variant="ghost" size="sm" {...buttonProps}>
+          {loading ? "Generando PDF..." : buttonLabel}
+        </Button>
+      )}
     </PDFDownloadLink>
   );
 };
