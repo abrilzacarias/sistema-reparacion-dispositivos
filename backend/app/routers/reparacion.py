@@ -39,8 +39,10 @@ def delete_reparacion(id: int, db: Session = Depends(get_db)):
         if not deleted:
             raise HTTPException(status_code=404, detail="Reparación no encontrada")
         return deleted
-    except HTTPException:
-        raise  # Relevanta las HTTPException personalizadas del service
-    except Exception:
+    except HTTPException as e:
+        raise e  # ← Esto conserva el mensaje y código original
+    except Exception as e:
+        print(f"Error inesperado al eliminar reparación: {e}")
         raise HTTPException(status_code=500, detail="Error inesperado al eliminar la reparación.")
+
 

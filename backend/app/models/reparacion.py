@@ -16,17 +16,30 @@ class Reparacion(Base):
     )
 
     idReparacion = mapped_column(Integer, primary_key=True)
-    #numeroReparacion = mapped_column(Integer)
-
     fechaIngreso = mapped_column(Date)
     montoTotalReparacion: Mapped[Optional[decimal.Decimal]] = mapped_column(DECIMAL(10, 0), nullable=True)
-
     idDiagnostico = mapped_column(Integer, ForeignKey('diagnostico.idDiagnostico'))
     idEmpleado = mapped_column(Integer, ForeignKey('empleado.idEmpleado'), comment='puede ser que un empleado haga el diagnostico y otro la reparacion')
     fechaEgreso: Mapped[Optional[datetime.date]] = mapped_column(Date)
 
     diagnostico = relationship('Diagnostico', back_populates='reparaciones')
     empleado = relationship('Empleado', back_populates='reparaciones')
-    detalleReparacion = relationship('DetalleReparacion', back_populates='reparacion')  
-    registroEstadoReparacion = relationship("RegistroEstadoReparacion", back_populates="reparacion", cascade="all, delete-orphan")
-    historialAsignacionReparacion = relationship('HistorialAsignacionReparacion', back_populates='reparacion')
+
+    detalleReparacion = relationship(
+        'DetalleReparacion', 
+        back_populates='reparacion',
+        cascade='all, delete-orphan'
+    )
+
+    registroEstadoReparacion = relationship(
+        "RegistroEstadoReparacion", 
+        back_populates="reparacion", 
+        cascade="all, delete-orphan"
+    )
+
+    historialAsignacionReparacion = relationship(
+        'HistorialAsignacionReparacion', 
+        back_populates='reparacion', 
+        cascade='all, delete-orphan'
+    )
+
