@@ -33,11 +33,6 @@ export const getColEmpleados = ({ refetch }) => {
       cell: ({ row }) => <div>{row.original?.puesto?.nombrepuestoLaboral}</div>,
     },
     {
-      header: "Estado Laboral",
-      accessorKey: "persona.estadoPersona",
-      cell: ({ row }) => <div>{row.original?.persona.estadoPersona}</div>,
-    },
-    {
       header: "Contratación",
       accessorKey: "fechaContratacion",
       cell: ({ row }) => <div>{new Date(row.original?.fechaContratacion).toLocaleDateString()}</div>,
