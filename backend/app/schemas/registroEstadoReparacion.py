@@ -4,6 +4,8 @@ from typing import Optional
 from app.schemas.estadoReparacion import EstadoReparacionOut
 from datetime import date, datetime
 from typing import Optional
+# ✅ Importá el schema correcto
+from app.schemas.dispositivo import DispositivoSchema as DispositivoOut
 
 class RegistroEstadoReparacionBase(BaseModel):
     idReparacion: int
@@ -59,18 +61,6 @@ class TipoDispositivoOut(BaseModel):
     class Config:
         orm_mode = True
 
-
-# Dispositivo
-class DispositivoOut(BaseModel):
-    modeloDispositivo: str
-    descripcionDispositivo: str
-    estadoDispositivo: bool
-    tipoDispositivo: TipoDispositivoOut
-    marcaDispositivo: MarcaDispositivoOut
-    cliente: ClienteOut
-
-    class Config:
-        orm_mode = True
 
 
 # Diagnóstico

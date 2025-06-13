@@ -11,7 +11,7 @@ import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
+const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico }) => {
   // Función para obtener el estado más reciente de la reparación
   const getEstadoActual = (reparacion) => {
     if (!reparacion?.registroEstadoReparacion || reparacion.registroEstadoReparacion.length === 0) {
@@ -37,7 +37,8 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
       fechaIngreso: reparacion?.fechaIngreso || new Date().toISOString().split("T")[0], // hoy
       fechaEgreso: reparacion?.fechaEgreso || "",
       //montoTotalReparacion: reparacion?.montoTotalReparacion || "",
-      idDiagnostico: reparacion?.idDiagnostico || "",
+      // Si viene idDiagnostico como prop, lo usa; si no, usa el de la reparación
+      idDiagnostico: idDiagnostico || reparacion?.idDiagnostico || "",
       idEmpleado: reparacion?.idEmpleado || "",
       // Obtener el estado actual de la reparación si existe
       idEstadoReparacion: reparacion ? getEstadoActual(reparacion) : "",
@@ -122,7 +123,6 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
 
-
       <div className="col-span-2 space-y-2">
         <Controller
           name="idDiagnostico"
@@ -139,6 +139,7 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
                 `${diagnostico.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo} de ${diagnostico.dispositivo?.cliente?.persona?.nombre || "Sin nombre"}`
               }
               valueKey="idDiagnostico"
+              disabled={!!idDiagnostico} // Deshabilitar si viene preseleccionado
             />
           )}
         />
