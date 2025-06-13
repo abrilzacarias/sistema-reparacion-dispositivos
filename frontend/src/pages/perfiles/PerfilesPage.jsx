@@ -15,6 +15,7 @@ import { getColFunciones } from "./components/columns/getColumnsFunciones";
 import { getColModulos } from "./components/columns/getColumnsModulos";
 import { getColPerfiles } from "./components/columns/getColumnsPerfiles";
 import PerfilCreateEdit from "./components/PerfilCreateEdit";
+import { tienePermiso } from "@/utils/permisos";
 
 const PerfilesPage = () => {
   const navigate = useNavigate()
@@ -215,6 +216,8 @@ const PerfilesPage = () => {
               refetch={currentData.refetch}
             />
 
+{tienePermiso("Perfiles", "Agregar Perfiles") && (
+  <>
             {tabConfig.component && (
               <Button
                 variant="default"
@@ -225,6 +228,8 @@ const PerfilesPage = () => {
                 <Plus className="h-4 w-4" />
                 {tabConfig.modalLabel}
               </Button>
+            )}
+            </>
             )}
           </div>
         </CrudHeader>

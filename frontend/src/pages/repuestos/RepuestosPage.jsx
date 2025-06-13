@@ -21,9 +21,10 @@ import RepuestosCreateEdit from "./components/RepuestosCreateEdit";
 import TiposRepuestoModal from "./components/TipoRepuestoModal";
 
 //Exportar
-import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import ExportPDFButton from "@/components/organisms/pdfs/ExportPDFButton";
 import { Download } from "lucide-react";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
+import { tienePermiso } from "@/utils/permisos";
 
 const RepuestosPage = () => {
   const {
@@ -56,67 +57,72 @@ const RepuestosPage = () => {
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
 
             {/* Exportar */}
-            <ExportOptionsDropdown
-              pdfComponent={
-                <ExportPDFButton
-                  data={repuestos ?? []}
-                  columns={getColumnsRepuestos({ refetch })}
-                  title="Repuestos"
-                />
-              }
-              buttonProps={{
-                variant: "outline",
-                size: "sm",
-                className: "gap-2",
-                label: "Exportar",
-                icon: <Download className="h-4 w-4" />,
-              }}
-              dropdownLabel="Exportar datos"
-            />
+            {tienePermiso("Repuestos", "Ver Reporte Repuesto") && (
+              <ExportOptionsDropdown
+                pdfComponent={
+                  <ExportPDFButton
+                    data={repuestos ?? []}
+                    columns={getColumnsRepuestos({ refetch })}
+                    title="Repuestos"
+                  />
+                }
+                buttonProps={{
+                  variant: "outline",
+                  size: "sm",
+                  className: "gap-2",
+                  label: "Exportar",
+                  icon: <Download className="h-4 w-4" />,
+                }}
+                dropdownLabel="Exportar datos"
+              />
+            )}
 
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                variant="default"
-                className="flex size-8 p-0 data-[state=open]:bg-secondary-foreground "
-              >
-                <Plus className="size-4 text-secondary" />
-              </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-54">
-                <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-                  <ModalFormTemplate
-                    icon={Settings}
-                    title="Agregar Repuesto"
-                    description="Complete los campos para agregar un nuevo repuesto."
-                    label="Agregar repuesto"
-                    variant="ghost"
-                    className="p-2 m-0 cursor-pointer w-full justify-start"
+            {tienePermiso("Repuestos", "Agregar Tipo de Repuesto") && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="default"
+                    className="flex size-8 p-0 data-[state=open]:bg-secondary-foreground "
                   >
-                    <RepuestosCreateEdit 
-                      refreshRepuestos={refetch}
-                    />
-                  </ModalFormTemplate>
-                </DropdownMenuItem>
-
-                <DropdownMenuSeparator />
-
-                <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-                  <ModalFormTemplate
-                    icon={Wrench}
-                    title="Agregar Tipo de Repuesto"
-                    label="Agregar tipo de repuesto"
-                    variant="ghost"
-                    contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
-                    className="p-2 m-0 cursor-pointer w-full justify-start"
+                    <Plus className="size-4 text-secondary" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-54">
+                  <DropdownMenuItem
+                    asChild
+                    className="w-full flex items-center justify-between"
                   >
-                    <TiposRepuestoModal />
-                  </ModalFormTemplate>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-            
+                    <ModalFormTemplate
+                      icon={Settings}
+                      title="Agregar Repuesto"
+                      description="Complete los campos para agregar un nuevo repuesto."
+                      label="Agregar repuesto"
+                      variant="ghost"
+                      className="p-2 m-0 cursor-pointer w-full justify-start"
+                    >
+                      <RepuestosCreateEdit refreshRepuestos={refetch} />
+                    </ModalFormTemplate>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    asChild
+                    className="w-full flex items-center justify-between"
+                  >
+                    <ModalFormTemplate
+                      icon={Wrench}
+                      title="Agregar Tipo de Repuesto"
+                      label="Agregar tipo de repuesto"
+                      variant="ghost"
+                      contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+                      className="p-2 m-0 cursor-pointer w-full justify-start"
+                    >
+                      <TiposRepuestoModal />
+                    </ModalFormTemplate>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </CrudHeader>
 

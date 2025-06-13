@@ -20,6 +20,7 @@ import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit";
 import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
 import { Download } from "lucide-react";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
+import { tienePermiso } from "@/utils/permisos";
 
 const EmpleadoPage = () => {
   const {
@@ -110,7 +111,8 @@ const EmpleadoPage = () => {
           <div className="flex items-center gap-2">
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
             
-            {/* Exportar */}
+            
+          {tienePermiso("Empleados", "Ver Reporte Empleado") && (
             <ExportOptionsDropdown
               pdfComponent={
                 <ExportPDFButton
@@ -128,7 +130,9 @@ const EmpleadoPage = () => {
               }}
               dropdownLabel="Exportar datos"
             />
+)}
 
+            {tienePermiso("Empleados", "Agregar Empleado") && (
             <ModalFormTemplate
               icon={Plus}
               title="Agregar Empleado"
@@ -210,6 +214,7 @@ const EmpleadoPage = () => {
                 </Tabs>
               )}
             </ModalFormTemplate>
+          )}
           </div>
         </CrudHeader>
 

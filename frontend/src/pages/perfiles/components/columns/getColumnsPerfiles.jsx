@@ -10,6 +10,7 @@ import {
 import { Edit, List, MoreHorizontal, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PerfilCard from "../PerfilCard";
+import { tienePermiso } from "@/utils/permisos";
 
 export const getColPerfiles = ({ refetch, modulos, funciones }) => [
   {
@@ -129,6 +130,7 @@ export const getColPerfiles = ({ refetch, modulos, funciones }) => [
               </ModalFormTemplate>
             </DropdownMenuItem>
 
+{tienePermiso("Perfiles", "Modificar Perfiles") && (
             <DropdownMenuItem
               onClick={() =>
                 navigate("/perfiles/editar", {
@@ -149,7 +151,8 @@ export const getColPerfiles = ({ refetch, modulos, funciones }) => [
                 Editar
               </Button>
             </DropdownMenuItem>
-
+)}
+{tienePermiso("Perfiles", "Eliminar Perfiles") && (
             <DropdownMenuItem asChild>
               <ModalFormTemplate
                 title="¿Estás completamente seguro?"
@@ -166,6 +169,7 @@ export const getColPerfiles = ({ refetch, modulos, funciones }) => [
                 />
               </ModalFormTemplate>
             </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       )

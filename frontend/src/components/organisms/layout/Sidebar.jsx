@@ -27,6 +27,7 @@ import {
   childVariants,
   containerVariants,
 } from "@/lib/variantsErrorApi";
+import { tienePermiso } from "@/utils/permisos"
 
 export function Sidebar() {
   const location = useLocation()
@@ -54,6 +55,21 @@ export function Sidebar() {
     // { path: "/configuracion", label: "Configuración", icon: Settings }
   ]
 
+  const permisoVisualizarMap = {
+    "Inicio": "Visualizar Dashboard",
+    "Diagnóstico": "Visualizar Diagnóstico",
+    "Perfiles": "Visualizar Perfiles",
+    "Empleados": "Visualizar Empleado",
+    "Reparaciones": "Visualizar Reparación",
+    "Clientes": "Visualizar Cliente",
+    "Repuestos": "Visualizar Repuesto",
+    "Marcas": "Visualizar Marca",
+  }
+
+  const filteredMenuItems = menuItems.filter(item =>
+    tienePermiso(item.label, permisoVisualizarMap[item.label] || `Visualizar ${item.label}`)
+  )
+
   // Función para cerrar sidebar en mobile
   const handleNavigate = () => {
     if (mobileOpen) setMobileOpen(false);
@@ -73,7 +89,7 @@ export function Sidebar() {
       {/* Menú de navegación usando SidebarMenuItem (molécula) */}
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
-          {menuItems.map(({ path, label, icon }) => {
+          {filteredMenuItems.map(({ path, label, icon }) => {
             const isActive = location.pathname === path
             return (
               <li key={path}>

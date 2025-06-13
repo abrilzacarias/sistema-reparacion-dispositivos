@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { tienePermiso } from "@/utils/permisos";
 
 const ReparacionesPage = () => {
   const {
@@ -48,6 +49,7 @@ const ReparacionesPage = () => {
         >
           <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
 
+{tienePermiso("Reparaciones", "Agregar Reparación") && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -57,9 +59,7 @@ const ReparacionesPage = () => {
                 <Plus className="size-4 text-secondary" />
               </Button>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent align="end" className="w-54">
-
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   icon={Settings}
@@ -74,6 +74,7 @@ const ReparacionesPage = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          )}
         </CrudHeader>
 
         <Card className="mt-4 border-none bg-secondary dark:bg-background">

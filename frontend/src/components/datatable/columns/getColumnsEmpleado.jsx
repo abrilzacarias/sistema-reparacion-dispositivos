@@ -15,6 +15,7 @@ import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit"
 import EmpleadoCreateEdit from "@/pages/empleado/components/EmpleadoCreateEdit"
 import { useState } from "react";
 import EmpleadoDeleteConfirmModal from "@/components/organisms/EmpleadoDeleteConfirmModal"
+import { tienePermiso } from "@/utils/permisos";
 
 export const getColEmpleados = ({ refetch }) => {
   return [
@@ -81,7 +82,7 @@ export const getColEmpleados = ({ refetch }) => {
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
-
+              {tienePermiso("Empleados", "Modificar Empleado") && (
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   title="Editar Empleado"
@@ -134,10 +135,11 @@ export const getColEmpleados = ({ refetch }) => {
                   </Tabs>
                 </ModalFormTemplate>
               </DropdownMenuItem>
-
+)}
               <DropdownMenuSeparator />
-
+{tienePermiso("Empleados", "Eliminar Empleado") && (
               <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>Eliminar</DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )
