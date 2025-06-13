@@ -75,7 +75,7 @@ const DiagnosticosPage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
+      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <CrudHeader
           title="Gestión de Diagnósticos"
           subTitle="Listado, registro y modificación de diagnósticos."
@@ -109,7 +109,6 @@ const DiagnosticosPage = () => {
               disabled={isLoading}
             >
               <Plus className="h-4 w-4" />
-              Agregar Diagnóstico
             </Button>
           </div>
         </CrudHeader>

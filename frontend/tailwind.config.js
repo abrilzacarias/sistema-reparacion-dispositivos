@@ -6,6 +6,16 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+        'flip': 'flip 1s ease-in-out',
+      },
+      keyframes: {
+        flip: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(360deg)' },
+        }
+      },
       colors: {
         background: "rgb(var(--background))",
         foreground: "rgb(var(--foreground) / <alpha-value>)",

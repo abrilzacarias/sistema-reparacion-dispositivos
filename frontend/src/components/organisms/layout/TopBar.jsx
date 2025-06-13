@@ -2,6 +2,7 @@ import { Bell, Menu, X, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAppContext } from "../../../hooks/useAppContext"
 import { useAuthStore } from "@/stores/authStore";
+import logo from "@/assets/logo.png"
 
 export function TopBar() {
   const { darkMode, toggleDarkMode, sidebarExpanded, toggleSidebar } = useAppContext()

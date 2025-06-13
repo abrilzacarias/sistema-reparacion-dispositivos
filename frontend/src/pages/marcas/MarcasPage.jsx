@@ -28,7 +28,7 @@ const MarcasPage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border">
+      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border overflow-x-auto">
         <CrudHeader
           title="Gestión de Marcas"
           subTitle="Listado, registro y modificación de las marcas de dispositivos."
@@ -39,7 +39,6 @@ const MarcasPage = () => {
             icon={Plus}
             title="Agregar Marca"
             description="Complete los campos para agregar una nueva marca de dispositivo."
-            label="Agregar marca"
           >
             <MarcasCreateEdit refreshMarcas={refetch} />
           </ModalFormTemplate>

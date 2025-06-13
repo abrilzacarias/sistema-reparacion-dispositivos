@@ -15,6 +15,10 @@ import { getColDispositivos } from "../configuracion/components/columns/getColum
 import { getColMarcas } from "../configuracion/components/columns/getColumnsMarcas";
 import { getColModelos } from "../configuracion/components/columns/getColumnsModelos";
 import DispositivoCreateEdit from "../configuracion/components/DispositivoCreateEdit";
+import MarcasCreateEdit from "./components/MarcasCreateEdit";
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import ModelosCreateEdit from "./components/ModelosCreateEdit";
+
 
 const ConfigPage = () => {
   const navigate = useNavigate();
@@ -50,8 +54,9 @@ const ConfigPage = () => {
     hasNextPage: hasNextPageMarcas,
     total: totalMarcas,
   } = usePaginatedQuery({
-    key: "modulos-sistema",
-    endpoint: "modulos-sistema",
+    key: "marcas",
+    endpoint: "marcas",
+    pageSize: 10,
   });
 
   const {
@@ -65,8 +70,8 @@ const ConfigPage = () => {
     hasNextPage: hasNextPageModelos,
     total: totalModelos,
   } = usePaginatedQuery({
-    key: "funciones-sistema",
-    endpoint: "funciones-sistema",
+    key: "modelos",
+    endpoint: "modelos/paginado",
     pageSize: "50",
   });
 
@@ -104,7 +109,7 @@ const ConfigPage = () => {
           isFetching: isFetchingMarcas,
           hasNextPage: hasNextPageMarcas,
           fetchNextPage: fetchNextPageMarcas,
-          total: totalModulos,
+          total: totalMarcas,
           refetch: refetchMarcas,
           isRefetching: isRefetchingMarcas,
         };
@@ -194,7 +199,7 @@ const ConfigPage = () => {
           modalDescription: "Complete los campos para agregar un nuevo tipo de dispositivo.",
           modalLabel: "Agregar Tipo Dispositivo",
           icon: Users,
-          component: <DispositivoCreateEdit refreshPerfiles={refetchDispositivos} marcas={marcas} modelos={modelos} />,
+          component: <DispositivoCreateEdit refreshDispositivos={refetchDispositivos} marcas={marcas} modelos={modelos} />,
         };
       case "marcas":
         return {
@@ -204,7 +209,7 @@ const ConfigPage = () => {
           modalDescription: "Complete los campos para agregar una nueva marca.",
           modalLabel: "Agregar Marca",
           icon: Layers,
-          //component: <DispositivoCreateEdit refreshPerfiles={refetchDispositivos} modulos={modulosSistema} funciones={funcionesSistema} />,
+          component: <MarcasCreateEdit refreshMarcas={refetchMarcas} />, // ✅ CORREGIDO: usar refetchMarcas directamente
         };
       case "modelos":
         return {
@@ -214,17 +219,17 @@ const ConfigPage = () => {
           modalDescription: "Complete los campos para agregar un nuevo modelo.",
           modalLabel: "Agregar Modelo",
           icon: Zap,
-          //component: <DispositivoCreateEdit refreshPerfiles={refetchDispositivos} modulos={modulosSistema} funciones={funcionesSistema} />,
+          component: <ModelosCreateEdit refreshModelos={refetchModelos} /> // ✅ YA ESTABA CORRECTO
         };
       default:
         return {
-          title: "Gestión de Perfiles",
-          subtitle: "Administra los perfiles del sistema.",
-          modalTitle: "Agregar Perfil",
-          modalDescription: "Complete los campos para agregar un nuevo perfil.",
-          modalLabel: "Agregar Perfil",
+          title: "Gestión de Dispositivos",
+          subtitle: "Administra los dispositivos del sistema.",
+          modalTitle: "Agregar Dispositivo",
+          modalDescription: "Complete los campos para agregar un nuevo dispositivo.",
+          modalLabel: "Agregar Dispositivo",
           icon: Users,
-          component: <PerfilCreateEdit refreshPerfiles={refetchDispositivos} modulos={modulosSistema} funciones={funcionesSistema} />,
+          component: <DispositivoCreateEdit refreshDispositivos={refetchDispositivos} marcas={marcas} modelos={modelos} />, // ✅ CORREGIDO: quité la referencia a PerfilCreateEdit que no existe
         };
     }
   };
@@ -242,16 +247,16 @@ const ConfigPage = () => {
             />
 
             {tabConfig.component && (
-              <Button
-                variant="default"
-                onClick={handleAddPerfil}
-                className="cursor-pointer justify-start data-[state=open]:bg-secondary-foreground"
-                disabled={currentData.isLoading || currentData.isFetching}
+              <ModalFormTemplate
+                icon={Plus}
+                title={tabConfig.modalTitle}
+                description={tabConfig.modalDescription}
+                label={tabConfig.modalLabel}
               >
-                <Plus className="h-4 w-4" />
-                {tabConfig.modalLabel}
-              </Button>
+                {tabConfig.component}
+              </ModalFormTemplate>
             )}
+
           </div>
         </CrudHeader>
 
@@ -315,6 +320,7 @@ const ConfigPage = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
 
           <TabsContent value="modelos">
             <Card className="border-none bg-secondary dark:bg-background py-0">

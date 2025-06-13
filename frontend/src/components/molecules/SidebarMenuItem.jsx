@@ -1,18 +1,19 @@
 import { SidebarButton } from "../atoms/SidebarButton";
-import { cloneElement } from "react";
+import { useAppContext } from "@/hooks/useAppContext";
 
-const SidebarMenuItem = ({ icon, label, path, color, bg }) => {
-  const iconWithProps = cloneElement(icon, {
-    className: "w-5 h-5 " + (icon.props.className || ""),
-  });
+const SidebarMenuItem = ({ icon: Icon, label, path, color, bg, onNavigate }) => {
+  // Forzar tamaño y strokeWidth para todos los íconos
+  const iconSize = "h-5 w-5";
+  const strokeWidth = 2;
 
   return (
     <SidebarButton
-      icon={() => iconWithProps}
+      icon={() => <Icon className={iconSize} strokeWidth={strokeWidth} />}
       label={label}
       to={path}
       color={color}
       bg={bg}
+      onNavigate={onNavigate}
     />
   );
 };

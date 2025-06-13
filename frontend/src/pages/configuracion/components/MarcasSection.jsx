@@ -5,7 +5,7 @@ import { Plus, Search, Edit, Trash2 } from "lucide-react"
 import { usePaginatedQuery } from "@/hooks/usePaginatedQuery"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
-// import MarcaCreateEdit from "./MarcaCreateEdit"
+import MarcasCreateEdit from "./MarcasCreateEdit"
 
 export default function MarcasSection() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -122,7 +122,7 @@ export default function MarcasSection() {
         title={selectedMarca ? "Editar Marca" : "Crear Marca"}
         description={selectedMarca ? "Modifica los datos de la marca" : "Completa los datos de la nueva marca"}
       >
-        {/* <MarcaCreateEdit marca={selectedMarca} refreshMarcas={refetch} /> */}
+        <MarcasCreateEdit marca={selectedMarca} refreshMarcas={refetch} /> 
       </ModalFormTemplate>
     </div>
   )
