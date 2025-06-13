@@ -10,6 +10,7 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import DiagnosticoCard from "@/components/organisms/DiagnosticoCard";
 import { Button } from "@/components/ui/button";
+import ReparacionCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
 
 
 //NO SE SI DISPOSITIVO SE TIENE QUE MANDAR COMO OCULTO
