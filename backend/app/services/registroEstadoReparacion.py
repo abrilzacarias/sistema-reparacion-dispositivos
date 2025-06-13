@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session, selectinload
 from datetime import datetime
 from app.models.registroEstadoReparacion import RegistroEstadoReparacion
 from app.schemas import registroEstadoReparacion as schemas
+from app.services.contacto import obtener_telefono_de_persona_o_contactos
+from app.services.mensajes import notificar_cambio_estado_reparacion
 
 def get_registros(db: Session):
     return db.query(RegistroEstadoReparacion).options(
@@ -27,8 +29,11 @@ def create_registro(db: Session, registro: schemas.RegistroEstadoReparacionCreat
     db.commit()
     db.refresh(db_registro)
 
-    # Verificar si el estado es "Entregado"
-    if db_registro.estadoReparacion.descripcionEstadoReparacion == "Entregado":
+    # Notificar siempre el cambio de estado
+    notificar_cambio_estado_reparacion(db, db_registro)
+
+    # Si el estado es "Entregado", actualizar fechaEgreso
+    if db_registro.estadoReparacion.descripcionEstadoReparacion.strip().lower() == "entregado":
         reparacion = db_registro.reparacion  # Ya está cargada por el selectinload
         reparacion.fechaEgreso = datetime.now()
         print(f"🛠️ Estado 'Entregado' detectado, actualizando fechaEgreso a {reparacion.fechaEgreso}")
