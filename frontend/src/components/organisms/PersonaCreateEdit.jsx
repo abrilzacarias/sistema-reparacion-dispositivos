@@ -1,3 +1,5 @@
+                    "use client"
+
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
 import ErrorMessage from "@/components/atoms/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
@@ -31,7 +33,6 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   const { setOpen } = useContext(OpenContext)
 
   const goToEmpleadoTab = () => {
-
     if (setActiveTab) {
       setActiveTab("empleado")
 
@@ -59,22 +60,18 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   useEffect(() => {
     if (persona) {
       console.log(persona)
-      console.log("📨 Contactos de persona:", persona.contactos);
+      console.log("📨 Contactos de persona:", persona.contactos)
 
-      const contactoCorreo = persona.contactos?.find(
-        (c) => c.idtipoContacto === 2 && c.esPrimario
-      ) ?? persona.contactos?.find(
-        (c) => c.idtipoContacto === 2
-      );
+      const contactoCorreo =
+        persona.contactos?.find((c) => c.idtipoContacto === 2 && c.esPrimario) ??
+        persona.contactos?.find((c) => c.idtipoContacto === 2)
 
       const contactoTelefono = persona.contactos?.find(
-  (c) =>
-    c.esPrimario &&
-    (
-      c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "telefono" ||
-      c.tipoContacto?.idtipoContacto === 3
-    )
-);
+        (c) =>
+          c.esPrimario &&
+          (c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "telefono" ||
+            c.tipoContacto?.idtipoContacto === 3),
+      )
 
       const domicilio = persona.domicilios?.[0]
 
@@ -114,7 +111,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         idtipoDomicilio: "",
       })
     }
-  }, [persona, reset]);
+  }, [persona, reset])
 
   const onSubmit = async (data) => {
     setError("")
@@ -132,22 +129,20 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
       if (isEdit) {
         const contactoCorreoExistente = persona?.contactos?.find(
-  (c) =>
-    c.esPrimario &&
-    (
-      c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "email" ||
-      c.tipoContacto.idtipoContacto === 2 || c.idtipoContacto === 2
-    )
-);
+          (c) =>
+            c.esPrimario &&
+            (c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "email" ||
+              c.tipoContacto.idtipoContacto === 2 ||
+              c.idtipoContacto === 2),
+        )
 
         const contactoTelefonoExistente = persona?.contactos?.find(
-  (c) =>
-    c.esPrimario &&
-    (
-      c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "telefono" ||
-      c.tipoContacto?.idtipoContacto === 3 || c.idtipoContacto === 3
-    )
-);
+          (c) =>
+            c.esPrimario &&
+            (c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "telefono" ||
+              c.tipoContacto?.idtipoContacto === 3 ||
+              c.idtipoContacto === 3),
+        )
 
         const contactoCorreo = {
           descripcionContacto: correo,
@@ -251,6 +246,14 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         console.error("Validation errors:", err.response.data)
         return
       }
+
+      // Manejar específicamente el error de CUIT duplicado
+      if (err.response?.data?.cuit) {
+        setApiErrors({ ...apiErrors, cuit: "Este CUIT ya está registrado para otra persona" })
+        setError("El CUIT ingresado ya está en uso por otra persona.")
+        return
+      }
+
       if (err.response?.data) {
         setApiErrors(err.response.data)
         setError("Error al guardar la persona, por favor revise los campos.")
@@ -264,19 +267,43 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 pb-0">
       <div className="space-y-2">
         <Label>Nombre</Label>
-        <Input {...register("nombre", { required: "Campo requerido" })} />
+        <Input
+          {...register("nombre", {
+            required: "Campo requerido",
+            pattern: {
+              value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+              message: "Solo se permiten letras",
+            },
+          })}
+        />
         <ErrorMessage message={errors.nombre?.message || apiErrors?.nombre} />
       </div>
 
       <div className="space-y-2">
         <Label>Apellido</Label>
-        <Input {...register("apellido", { required: "Campo requerido" })} />
+        <Input
+          {...register("apellido", {
+            required: "Campo requerido",
+            pattern: {
+              value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+              message: "Solo se permiten letras",
+            },
+          })}
+        />
         <ErrorMessage message={errors.apellido?.message || apiErrors?.apellido} />
       </div>
 
       <div className="space-y-2">
         <Label>CUIT</Label>
-        <Input {...register("cuit", { required: "Campo requerido" })} />
+        <Input
+          {...register("cuit", {
+            required: "Campo requerido",
+            pattern: {
+              value: /^\d{11}$/,
+              message: "El CUIT debe contener 11 números",
+            },
+          })}
+        />
         <ErrorMessage message={errors.cuit?.message || apiErrors?.cuit} />
       </div>
 
@@ -310,8 +337,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
           control={control}
           rules={{
             required: "Campo requerido",
-            validate: (value) =>
-              isValidPhoneNumber(value) || "Número de teléfono inválido",
+            validate: (value) => isValidPhoneNumber(value) || "Número de teléfono inválido",
           }}
           render={({ field }) => (
             <PhoneInput
@@ -324,9 +350,9 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
               onChange={(value) => {
                 // Si empieza con +54 y no con +549, lo modificamos
                 if (value?.startsWith("+54") && !value.startsWith("+549")) {
-                  field.onChange(value.replace("+54", "+549"));
+                  field.onChange(value.replace("+54", "+549"))
                 } else {
-                  field.onChange(value);
+                  field.onChange(value)
                 }
               }}
             />
@@ -364,7 +390,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
                 {...register("codigoPostal", {
                   required: "Campo requerido",
                   pattern: {
-                    value: /^[0-9]+$/,
+                    value: /^\d+$/,
                     message: "El código postal debe contener solo números",
                   },
                 })}
@@ -374,43 +400,95 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
             <div className="space-y-2">
               <Label>País</Label>
-              <Input {...register("pais", { required: "Campo requerido" })} />
+              <Input
+                {...register("pais", {
+                  required: "Campo requerido",
+                  pattern: {
+                    value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+                    message: "Solo se permiten letras",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.pais?.message || apiErrors?.pais} />
             </div>
 
             <div className="space-y-2">
               <Label>Provincia</Label>
-              <Input {...register("provincia", { required: "Campo requerido" })} />
+              <Input
+                {...register("provincia", {
+                  required: "Campo requerido",
+                  pattern: {
+                    value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+                    message: "Solo se permiten letras",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.provincia?.message || apiErrors?.provincia} />
             </div>
 
             <div className="space-y-2">
               <Label>Ciudad</Label>
-              <Input {...register("ciudad", { required: "Campo requerido" })} />
+              <Input
+                {...register("ciudad", {
+                  required: "Campo requerido",
+                  pattern: {
+                    value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ0-9\s]+$/,
+                    message: "Solo se permiten letras y números",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.ciudad?.message || apiErrors?.ciudad} />
             </div>
 
             <div className="space-y-2">
               <Label>Barrio</Label>
-              <Input {...register("barrio", { required: "Campo requerido" })} />
+              <Input
+                {...register("barrio", {
+                  pattern: {
+                    value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ0-9\s]+$/,
+                    message: "Solo se permiten letras y números",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.barrio?.message || apiErrors?.barrio} />
             </div>
 
             <div className="space-y-2">
               <Label>Calle</Label>
-              <Input {...register("calle", { required: "Campo requerido" })} />
+              <Input
+                {...register("calle", {
+                  pattern: {
+                    value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/,
+                    message: "Solo se permiten letras",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.calle?.message || apiErrors?.calle} />
             </div>
 
             <div className="space-y-2">
               <Label>Número</Label>
-              <Input {...register("numero", { required: "Campo requerido" })} />
+              <Input
+                {...register("numero", {
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Solo se permiten números",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.numero?.message || apiErrors?.numero} />
             </div>
 
             <div className="space-y-2">
               <Label>Departamento</Label>
-              <Input {...register("departamento", { required: "Campo requerido" })} />
+              <Input
+                {...register("departamento", {
+                  pattern: {
+                    value: /^[A-Za-zÁáÉéÍíÓóÚúÑñ0-9\s]+$/,
+                    message: "Solo se permiten letras y números",
+                  },
+                })}
+              />
               <ErrorMessage message={errors.departamento?.message || apiErrors?.departamento} />
             </div>
           </div>
