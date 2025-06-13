@@ -11,10 +11,13 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { useLocation } from "react-router-dom"
- 
+
 import SidebarMenuItem from "@/components/molecules/SidebarMenuItem"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAppContext } from "../../../hooks/useAppContext"
+
+import { tienePermiso } from "@/utils/permisos"
+import { useAuthStore } from "@/stores/authStore"
 
 export function Sidebar() {
   const location = useLocation()
@@ -39,6 +42,24 @@ export function Sidebar() {
     // { path: "/configuracion", label: "Configuración", icon: <Settings className="h-5 w-5" /> }
   ]
 
+  console.log("Permisos combinados:", useAuthStore.getState().permisos);
+
+
+  const permisoVisualizarMap = {
+    "Inicio": "Visualizar Dashboard",
+    "Diagnóstico": "Visualizar Diagnóstico",
+    "Perfiles": "Visualizar Perfiles",
+    "Empleados": "Visualizar Empleado",
+    "Reparaciones": "Visualizar Reparación",
+    "Clientes": "Visualizar Cliente",
+    "Repuestos": "Visualizar Repuesto",
+    "Marcas": "Visualizar Marca",
+  }
+
+  const filteredMenuItems = menuItems.filter(item =>
+    tienePermiso(item.label, permisoVisualizarMap[item.label] || `Visualizar ${item.label}`)
+  )
+
   return (
     <div
       className={`h-screen flex flex-col transition-[width] duration-300 ease-in-out ${sidebarExpanded ? "w-60" : "w-16"} transition-colors duration-300 ${
@@ -57,7 +78,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Selector de rol - solo visible cuando está expandido */}
+      {/* Selector de rol */}
       {sidebarExpanded && (
         <div className="px-4 py-2">
           <p className="text-sm mb-1 text-sidebar-foreground/70">Cambiar de rol</p>
@@ -74,10 +95,10 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* Menú de navegación usando SidebarMenuItem (molécula) */}
+      {/* Menú */}
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
-          {menuItems.map(({ path, label, icon }) => {
+          {filteredMenuItems.map(({ path, label, icon }) => {
             const isActive = location.pathname === path
             return (
               <li key={path}>

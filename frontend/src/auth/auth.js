@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/stores/authStore"
 import axios from "axios"
+import { combinarPermisos } from '@/utils/permisos';
 const API_URL = import.meta.env.VITE_API_URL
 
 //TODO IMPLEMENTAR EL TOKEN EN EL HEADER DE LAS PETICIONES
@@ -22,6 +23,7 @@ async function loginUser(email, password) {
     
     // Guardar token en localStorage
     localStorage.setItem("token", access_token)
+    const permisosCombinados = combinarPermisos(permisos);
     
     // Guardar en Zustand
     const { setAuth } = useAuthStore.getState()
@@ -29,7 +31,7 @@ async function loginUser(email, password) {
       token: access_token,
       tokenType: token_type,
       user,
-      permisos,
+      permisos: permisosCombinados,
       needs_password_change
     })
 

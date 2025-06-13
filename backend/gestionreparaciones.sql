@@ -26,7 +26,7 @@ CREATE TABLE `asignacionUsuarioPermisos` (
   `idasignacionUsuarioPermisos` int NOT NULL AUTO_INCREMENT,
   `idUsuario` int NOT NULL,
   `idpermisoPerfil` int NOT NULL,
-  `estadoAsignacionUsuarioPermisos` tinyint NOT NULL,
+  `estadoAsignacionUsuarioPermisos` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`idasignacionUsuarioPermisos`),
   KEY `fk_asignacionUsuarioPermisos_usuarios1_idx` (`idUsuario`),
   KEY `fk_asignacionUsuarioPermisos_permisosDePerfiles1_idx` (`idpermisoPerfil`),

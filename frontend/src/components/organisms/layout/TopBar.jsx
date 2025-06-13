@@ -1,9 +1,11 @@
 import { Bell, Menu, X, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAppContext } from "../../../hooks/useAppContext"
+import { useAuthStore } from "@/stores/authStore";
 
-export function TopBar({ userName = "Administrador" }) {
+export function TopBar() {
   const { darkMode, toggleDarkMode, sidebarExpanded, toggleSidebar } = useAppContext()
+  const username = useAuthStore.getState().user.username;
 
   return (
     <div
@@ -22,7 +24,7 @@ export function TopBar({ userName = "Administrador" }) {
         >
           {sidebarExpanded ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
-        <h1 className="text-lg font-medium">Bienvenido, {userName}</h1>
+        <h1 className="text-lg font-medium">Bienvenido, {username}</h1>
       </div>
 
       <div className="flex items-center gap-4">
