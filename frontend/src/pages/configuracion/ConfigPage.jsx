@@ -40,30 +40,30 @@ const ConfigPage = () => {
   });
 
   const {
-    data: modulos,
-    refetch: refetchModulos,
-    fetchNextPage: fetchNextPageModulos,
-    isLoading: isLoadingModulos,
-    isError: isErrorModulos,
-    isFetching: isFetchingModulos,
-    isRefetching: isRefetchingModulos,
-    hasNextPage: hasNextPageModulos,
-    total: totalModulos,
+    data: marcas,
+    refetch: refetchMarcas,
+    fetchNextPage: fetchNextPageMarcas,
+    isLoading: isLoadingMarcas,
+    isError: isErrorMarcas,
+    isFetching: isFetchingMarcas,
+    isRefetching: isRefetchingMarcas,
+    hasNextPage: hasNextPageMarcas,
+    total: totalMarcas,
   } = usePaginatedQuery({
     key: "modulos-sistema",
     endpoint: "modulos-sistema",
   });
 
   const {
-    data: funciones,
-    refetch: refetchFunciones,
-    fetchNextPage: fetchNextPageFunciones,
-    isLoading: isLoadingFunciones,
-    isError: isErrorFunciones,
-    isFetching: isFetchingFunciones,
-    isRefetching: isRefetchingFunciones,
-    hasNextPage: hasNextPageFunciones,
-    total: totalFunciones,
+    data: modelos,
+    refetch: refetchModelos,
+    fetchNextPage: fetchNextPageModelos,
+    isLoading: isLoadingModelos,
+    isError: isErrorModelos,
+    isFetching: isFetchingModelos,
+    isRefetching: isRefetchingModelos,
+    hasNextPage: hasNextPageModelos,
+    total: totalModelos,
   } = usePaginatedQuery({
     key: "funciones-sistema",
     endpoint: "funciones-sistema",
@@ -76,11 +76,11 @@ const ConfigPage = () => {
   if (isErrorDispositivos && activeTab === "dispositivos")
     return <ErrorApiRefetch isRefetching={isFetchingDispositivos} refetch={refetchDispositivos} />;
 
-  if (isErrorModulos && activeTab === "marcas")
-    return <ErrorApiRefetch isRefetching={isFetchingModulos} refetch={refetchModulos} />;
+  if (isErrorMarcas && activeTab === "marcas")
+    return <ErrorApiRefetch isRefetching={isFetchingMarcas} refetch={refetchMarcas} />;
 
-  if (isErrorFunciones && activeTab === "modelos")
-    return <ErrorApiRefetch isRefetching={isFetchingFunciones} refetch={refetchFunciones} />;
+  if (isErrorModelos && activeTab === "modelos")
+    return <ErrorApiRefetch isRefetching={isFetchingModelos} refetch={refetchModelos} />;
 
   const getCurrentData = () => {
     switch (activeTab) {
@@ -98,27 +98,27 @@ const ConfigPage = () => {
         };
       case "marcas":
         return {
-          data: modulos,
-          isLoading: isLoadingModulos,
-          isError: isErrorModulos,
-          isFetching: isFetchingModulos,
-          hasNextPage: hasNextPageModulos,
-          fetchNextPage: fetchNextPageModulos,
+          data: marcas,
+          isLoading: isLoadingMarcas,
+          isError: isErrorMarcas,
+          isFetching: isFetchingMarcas,
+          hasNextPage: hasNextPageMarcas,
+          fetchNextPage: fetchNextPageMarcas,
           total: totalModulos,
-          refetch: refetchModulos,
-          isRefetching: isRefetchingModulos,
+          refetch: refetchMarcas,
+          isRefetching: isRefetchingMarcas,
         };
       case "modelos":
         return {
-          data: funciones,
-          isLoading: isLoadingFunciones,
-          isError: isErrorFunciones,
-          isFetching: isFetchingFunciones,
-          hasNextPage: hasNextPageFunciones,
-          fetchNextPage: fetchNextPageFunciones,
-          total: totalFunciones,
-          refetch: refetchFunciones,
-          isRefetching: isRefetchingFunciones,
+          data: modelos,
+          isLoading: isLoadingModelos,
+          isError: isErrorModelos,
+          isFetching: isFetchingModelos,
+          hasNextPage: hasNextPageModelos,
+          fetchNextPage: fetchNextPageModelos,
+          total: totalModelos,
+          refetch: refetchModelos,
+          isRefetching: isRefetchingModelos,
         };
       default:
         return {
@@ -137,14 +137,14 @@ const ConfigPage = () => {
 
   const currentData = getCurrentData();
 
-  const modulosSistema = modulos || [];
-  const funcionesSistema = funciones || [];
+  const marcasDispositivos = marcas || [];
+  const modelosDispositivos = modelos || [];
 
   const handleAddPerfil = () => {
-    navigate("/perfiles/nuevo", {
+    navigate("/dispositivos/nuevo", {
       state: {
-        modulos: modulosSistema,
-        funciones: funcionesSistema,
+        modulos: marcasDispositivos,
+        funciones: modelosDispositivos,
       },
     });
   };
@@ -152,16 +152,16 @@ const ConfigPage = () => {
   const getColumns = () => {
     switch (activeTab) {
       case "dispositivos":
-        return getColDispositivos({ refetch: refetchDispositivos, modulos: modulosSistema, funciones: funcionesSistema });
+        return getColDispositivos({ refetch: refetchDispositivos, marcas: marcasDispositivos, modelos: modelosDispositivos });
       case "marcas":
         return getColMarcas({
-          refetch: refetchModulos,
-          funcionesSistema: funcionesSistema || [],
+          refetch: refetchMarcas,
+          marcasDispositivos: marcasDispositivos || [],
         });
       case "modelos":
-        return getColModelos({ refetch: refetchFunciones });
+        return getColModelos({ refetch: refetchModelos });
       default:
-        return getColDispositivos({ refetch: refetchDispositivos, modulos: modulosSistema, funciones: funcionesSistema });
+        return getColDispositivos({ refetch: refetchDispositivos, marcas: marcasDispositivos, modelos: modelosDispositivos});
     }
   };
 
@@ -194,7 +194,7 @@ const ConfigPage = () => {
           modalDescription: "Complete los campos para agregar un nuevo tipo de dispositivo.",
           modalLabel: "Agregar Tipo Dispositivo",
           icon: Users,
-          component: <DispositivoCreateEdit refreshPerfiles={refetchDispositivos} modulos={modulosSistema} funciones={funcionesSistema} />,
+          component: <DispositivoCreateEdit refreshPerfiles={refetchDispositivos} marcas={marcas} modelos={modelos} />,
         };
       case "marcas":
         return {

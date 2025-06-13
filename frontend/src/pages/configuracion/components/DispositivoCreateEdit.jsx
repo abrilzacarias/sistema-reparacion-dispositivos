@@ -6,7 +6,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import ErrorMessage from "@/components/atoms/ErrorMessage"
-import { Plus, Trash2, Settings, HelpCircle, Type, ToggleLeft, List } from "lucide-react"
+import { Plus, Trash2, Settings, HelpCircle, Type, ToggleLeft, List, MoreHorizontal } from "lucide-react"
 import axios from "axios"
 import { ToastMessageCreate } from "@/components/atoms/ToastMessage"
 import { toast } from "sonner"
@@ -14,13 +14,14 @@ import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export default function DispositivoCreateEdit() {
+export default function DispositivoCreateEdit({ editData = null, isEdit = false }) {
   const {
     register,
     control,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -29,14 +30,16 @@ export default function DispositivoCreateEdit() {
     },
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "preguntas",
   })
 
   const [tiposDato, setTiposDato] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
   const { setOpen } = useContext(OpenContext)
 
+  // Cargar tipos de dato
   useEffect(() => {
     fetch(`${API_URL}/tipoDatoPreguntaDiagnostico`)
       .then((res) => res.json())
@@ -44,38 +47,79 @@ export default function DispositivoCreateEdit() {
       .catch((err) => console.error("Error cargando tipos de dato", err))
   }, [])
 
-  const onSubmit = async (data) => {
-  try {
-    const preguntasFormateadas = data.preguntas.map((pregunta) => {
-      const tipo = tiposDato.find(
-        (t) => t.idTipoDatoPreguntaDiagnostico === pregunta.idTipoDatoPreguntaDiagnostico
-      )
-
-      return {
-        descripcionPreguntaDiagnostico: pregunta.pregunta.trim(),
-        idTipoDatoPreguntaDiagnostico: pregunta.idTipoDatoPreguntaDiagnostico,
-        opcionesPregunta:
-          tipo?.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() === "opcion"
-            ? pregunta.opciones?.map((o) => o.valor.trim()).filter((v) => v)
-            : null,
+  // Cargar datos para edición
+  useEffect(() => {
+    if (isEdit && editData && tiposDato.length > 0) {
+      setIsLoading(true)
+      
+      // Cargar datos básicos
+      setValue("descripcionTipoDispositivo", editData.tipoDispositivo?.nombreTipoDispositivo || "")
+      
+      // Cargar preguntas si existen
+      if (editData.preguntas && editData.preguntas.length > 0) {
+        const preguntasFormateadas = editData.preguntas.map((pregunta, index) => {
+          // Si la pregunta es solo texto (como en tu estructura actual)
+          if (typeof pregunta === 'string') {
+            return {
+              pregunta: pregunta,
+              idTipoDatoPreguntaDiagnostico: null, // Tendrás que definir un tipo por defecto
+              opciones: []
+            }
+          }
+          
+          // Si la pregunta ya tiene estructura completa
+          return {
+            pregunta: pregunta.descripcionPreguntaDiagnostico || pregunta.pregunta || "",
+            idTipoDatoPreguntaDiagnostico: pregunta.idTipoDatoPreguntaDiagnostico || null,
+            opciones: pregunta.opcionesPregunta ? 
+              pregunta.opcionesPregunta.map(op => ({ valor: op })) : 
+              (pregunta.opciones || [])
+          }
+        })
+        
+        replace(preguntasFormateadas)
       }
-    })
-
-    const payload = {
-      nombreTipoDispositivo: data.descripcionTipoDispositivo.trim(),
-      preguntas: preguntasFormateadas,
+      
+      setIsLoading(false)
     }
+  }, [isEdit, editData, tiposDato, setValue, replace])
 
-    await axios.post(`${API_URL}/tipo-dispositivo`, payload)
+  const onSubmit = async (data) => {
+    try {
+      const preguntasFormateadas = data.preguntas.map((pregunta) => {
+        const tipo = tiposDato.find(
+          (t) => t.idTipoDatoPreguntaDiagnostico === pregunta.idTipoDatoPreguntaDiagnostico
+        )
 
-    ToastMessageCreate()
-    setOpen(false)
-  } catch (error) {
-    console.error("Error al crear tipo de dispositivo:", error)
-    toast.error("Ocurrió un error al guardar")
+        return {
+          descripcionPreguntaDiagnostico: pregunta.pregunta.trim(),
+          idTipoDatoPreguntaDiagnostico: pregunta.idTipoDatoPreguntaDiagnostico,
+          opcionesPregunta:
+            tipo?.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() === "opcion"
+              ? pregunta.opciones?.map((o) => o.valor.trim()).filter((v) => v)
+              : null,
+        }
+      })
+
+      const payload = {
+        nombreTipoDispositivo: data.descripcionTipoDispositivo.trim(),
+        preguntas: preguntasFormateadas,
+      }
+
+      if (isEdit && editData?.tipoDispositivo?.idTipoDispositivo) {
+        await axios.put(`${API_URL}/tipo-dispositivo/tipo-dispositivo/${editData.tipoDispositivo.idTipoDispositivo}`, payload)
+        toast.success("Tipo de dispositivo actualizado correctamente")
+      } else {
+        await axios.post(`${API_URL}/tipo-dispositivo`, payload)
+        ToastMessageCreate()
+      }
+
+      setOpen(false)
+    } catch (error) {
+      console.error("Error al guardar tipo de dispositivo:", error)
+      toast.error("Ocurrió un error al guardar")
+    }
   }
-}
-
 
   const agregarPregunta = () => {
     append({
@@ -111,223 +155,245 @@ export default function DispositivoCreateEdit() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <Card className="p-0 border-0 bg-white/80">
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-700 mx-auto mb-4"></div>
+            <p className="text-slate-600">Cargando datos...</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
-        <Card className="p-0 border-0 bg-white/80">
-          <CardContent>
-            <form className="space-y-8">
-              {/* Información básica */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-slate-700">
-                      Descripción del tipo de dispositivo *
-                    </label>
-                    <Input
-                      {...register("descripcionTipoDispositivo", { required: "Campo obligatorio" })}
-                      placeholder="Ej: Televisor, Smartphone, Laptop..."
-                      className="text-base border-slate-300 focus:border-slate-500 focus:ring-slate-500"
-                    />
-                    {errors.descripcionTipoDispositivo && (
-                      <ErrorMessage message={errors.descripcionTipoDispositivo.message} />
-                    )}
-                  </div>
+    <Card className="p-0 border-0 bg-white/80">
+      <CardContent>
+        <form className="space-y-8">
+          {/* Información básica */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700">
+              Descripción del tipo de dispositivo *
+            </label>
+            <Input
+              {...register("descripcionTipoDispositivo", { required: "Campo obligatorio" })}
+              placeholder="Ej: Televisor, Smartphone, Laptop..."
+              className="text-base border-slate-300 focus:border-slate-500 focus:ring-slate-500"
+            />
+            {errors.descripcionTipoDispositivo && (
+              <ErrorMessage message={errors.descripcionTipoDispositivo.message} />
+            )}
+          </div>
 
-              {/* Preguntas de diagnóstico */}
-              <Card className="border-slate-200 shadow-sm">
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-lg text-slate-700 flex items-center gap-2">
-                      <HelpCircle className="w-5 h-5" />
-                      Preguntas de Diagnóstico
-                      <Badge variant="secondary" className="ml-2">
-                        {fields.length} pregunta{fields.length !== 1 ? "s" : ""}
-                      </Badge>
-                    </CardTitle>
-                    <Button
-                      type="button"
-                      onClick={agregarPregunta}
-                      className="bg-slate-700 hover:bg-slate-800 text-white shadow-md"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Agregar pregunta
-                    </Button>
-                  </div>
-                </CardHeader>
-
-                <CardContent>
-                  {fields.length === 0 && (
-                    <div className="text-center py-12 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/50">
-                      <HelpCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                      <p className="text-slate-500 mb-4 text-lg">No hay preguntas configuradas</p>
-                      <p className="text-slate-400 text-sm mb-6">
-                        Agrega preguntas para personalizar el diagnóstico de este tipo de dispositivo
-                      </p>
-                      <Button
-                        type="button"
-                        onClick={agregarPregunta}
-                        variant="outline"
-                        className="border-slate-300 hover:bg-slate-50"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Agregar primera pregunta
-                      </Button>
-                    </div>
-                  )}
-
-                  <div>
-                    {fields.map((field, index) => {
-                      const tipoSeleccionado = tiposDato.find(
-                        (t) =>
-                          t.idTipoDatoPreguntaDiagnostico === watch(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`),
-                      )
-
-                      const esOpcion =
-                        tipoSeleccionado?.descripcionTipoDatoPreguntaDiagnostico?.toLowerCase() === "opcion"
-
-                      return (
-                        <Card
-                          key={field.id}
-                          className="border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200"
-                        >
-                          <CardContent className="px-6">
-                            <div className="space-y-5">
-                              {/* Header de la pregunta */}
-                              <div className="flex justify-between items-start">
-                                <div className="flex items-center gap-3">
-                                  <div>
-                                    <h3 className="font-semibold text-slate-700">Pregunta {index + 1}</h3>
-                                    {tipoSeleccionado && (
-                                      <Badge
-                                        className={`mt-1 ${getTipoColor(
-                                          tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico,
-                                        )}`}
-                                      >
-                                        {getTipoIcon(tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico)}
-                                        <span className="ml-1">
-                                          {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico}
-                                        </span>
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  type="button"
-                                  onClick={() => remove(index)}
-                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                  size="sm"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-
-                              {/* Campo de pregunta */}
-                              <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700">
-                                  Texto de la pregunta *
-                                </label>
-                                <Input
-                                  {...register(`preguntas.${index}.pregunta`, {
-                                    required: "Ingrese una pregunta",
-                                  })}
-                                  placeholder="Escriba la pregunta que se mostrará al técnico..."
-                                  className="text-base border-slate-300 focus:border-slate-500 focus:ring-slate-500"
-                                />
-                                {errors.preguntas?.[index]?.pregunta && (
-                                  <ErrorMessage message={errors.preguntas[index].pregunta.message} />
-                                )}
-                              </div>
-
-                              {/* Selector de tipo */}
-                              <div className="space-y-2">
-                                <label className="block text-sm font-medium text-slate-700">Tipo de respuesta *</label>
-                                <Select
-                                  value={watch(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`)?.toString() || ""}
-                                  onValueChange={(value) => {
-                                    const intVal = Number.parseInt(value)
-                                    setValue(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`, intVal)
-                                    setValue(`preguntas.${index}.opciones`, [])
-                                    if (
-                                      tiposDato.find(
-                                        (t) =>
-                                          t.idTipoDatoPreguntaDiagnostico === intVal &&
-                                          t.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() === "opcion",
-                                      )
-                                    ) {
-                                      setValue(`preguntas.${index}.opciones`, [{ valor: "" }, { valor: "" }])
-                                    }
-                                  }}
-                                >
-                                  <SelectTrigger className="border-slate-300 focus:border-slate-500 focus:ring-slate-500">
-                                    <SelectValue placeholder="Seleccione el tipo de respuesta" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {tiposDato.map((tipo) => (
-                                      <SelectItem
-                                        key={tipo.idTipoDatoPreguntaDiagnostico}
-                                        value={tipo.idTipoDatoPreguntaDiagnostico.toString()}
-                                      >
-                                        <div className="flex items-center gap-2">
-                                          {getTipoIcon(tipo.descripcionTipoDatoPreguntaDiagnostico)}
-                                          {tipo.descripcionTipoDatoPreguntaDiagnostico}
-                                        </div>
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-
-                              {/* Información del tipo seleccionado */}
-                              {tipoSeleccionado && (
-                                <div
-                                  className={`p-4 rounded-lg border ${getTipoColor(
-                                    tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico,
-                                  )}`}
-                                >
-                                  <div className="flex items-center gap-2 mb-2">
-                                    {getTipoIcon(tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico)}
-                                    <span className="font-medium">
-                                      Tipo: {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico}
-                                    </span>
-                                  </div>
-                                  <p className="text-sm opacity-80">
-                                    {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
-                                      "booleano" && "El técnico podrá responder con Sí o No"}
-                                    {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
-                                      "texto" && "El técnico podrá escribir una respuesta libre"}
-                                    {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
-                                      "opcion" && "El técnico podrá seleccionar entre las opciones que configure"}
-                                  </p>
-                                </div>
-                              )}
-
-                              {/* Opciones (solo para tipo opción) */}
-                              {esOpcion && (
-                                <Card className="border-orange-200 bg-orange-50/30">
-                                  <CardContent className="p-4">
-                                    <OpcionesInput control={control} register={register} index={index} />
-                                  </CardContent>
-                                </Card>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Botones de acción */}
-              <div className="flex justify-end gap-4 pt-6 border-t border-slate-200">
-                <Button type="button" variant="outline" className="border-slate-300 hover:bg-slate-50">
-                  Cancelar
-                </Button>
-                <Button type="button" className="bg-slate-700 hover:bg-slate-800 text-white shadow-md px-8" onClick={handleSubmit(onSubmit)}>
-                  Guardar configuración
+          {/* Preguntas de diagnóstico */}
+          <Card className="border-slate-200 shadow-sm">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-lg text-slate-700 flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5" />
+                  Preguntas de Diagnóstico
+                  <Badge variant="secondary" className="ml-2">
+                    {fields.length} pregunta{fields.length !== 1 ? "s" : ""}
+                  </Badge>
+                </CardTitle>
+                <Button
+                  type="button"
+                  onClick={agregarPregunta}
+                  className="bg-slate-700 hover:bg-slate-800 text-white shadow-md"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Agregar pregunta
                 </Button>
               </div>
-            </form>
-          </CardContent>
-        </Card>
+            </CardHeader>
+
+            <CardContent>
+              {fields.length === 0 && (
+                <div className="text-center py-12 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/50">
+                  <HelpCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                  <p className="text-slate-500 mb-4 text-lg">No hay preguntas configuradas</p>
+                  <p className="text-slate-400 text-sm mb-6">
+                    Agrega preguntas para personalizar el diagnóstico de este tipo de dispositivo
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={agregarPregunta}
+                    variant="outline"
+                    className="border-slate-300 hover:bg-slate-50"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Agregar primera pregunta
+                  </Button>
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {fields.map((field, index) => {
+                  const tipoSeleccionado = tiposDato.find(
+                    (t) =>
+                      t.idTipoDatoPreguntaDiagnostico === watch(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`),
+                  )
+
+                  const esOpcion =
+                    tipoSeleccionado?.descripcionTipoDatoPreguntaDiagnostico?.toLowerCase() === "opcion"
+
+                  return (
+                    <Card
+                      key={field.id}
+                      className="border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+                    >
+                      <CardContent className="px-6 py-4">
+                        <div className="space-y-5">
+                          {/* Header de la pregunta */}
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-3">
+                              <div>
+                                <h3 className="font-semibold text-slate-700">Pregunta {index + 1}</h3>
+                                {tipoSeleccionado && (
+                                  <Badge
+                                    className={`mt-1 ${getTipoColor(
+                                      tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico,
+                                    )}`}
+                                  >
+                                    {getTipoIcon(tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico)}
+                                    <span className="ml-1">
+                                      {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico}
+                                    </span>
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              type="button"
+                              onClick={() => remove(index)}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                              size="sm"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+
+                          {/* Campo de pregunta */}
+                          <div className="space-y-2">
+                            <label className="block text-sm font-medium text-slate-700">
+                              Texto de la pregunta *
+                            </label>
+                            <Input
+                              {...register(`preguntas.${index}.pregunta`, {
+                                required: "Ingrese una pregunta",
+                              })}
+                              placeholder="Escriba la pregunta que se mostrará al técnico..."
+                              className="text-base border-slate-300 focus:border-slate-500 focus:ring-slate-500"
+                            />
+                            {errors.preguntas?.[index]?.pregunta && (
+                              <ErrorMessage message={errors.preguntas[index].pregunta.message} />
+                            )}
+                          </div>
+
+                          {/* Selector de tipo */}
+                          <div className="space-y-2">
+                            <label className="block text-sm font-medium text-slate-700">Tipo de respuesta *</label>
+                            <Select
+                              value={watch(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`)?.toString() || ""}
+                              onValueChange={(value) => {
+                                const intVal = Number.parseInt(value)
+                                setValue(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`, intVal)
+                                setValue(`preguntas.${index}.opciones`, [])
+                                if (
+                                  tiposDato.find(
+                                    (t) =>
+                                      t.idTipoDatoPreguntaDiagnostico === intVal &&
+                                      t.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() === "opcion",
+                                  )
+                                ) {
+                                  setValue(`preguntas.${index}.opciones`, [{ valor: "" }, { valor: "" }])
+                                }
+                              }}
+                            >
+                              <SelectTrigger className="border-slate-300 focus:border-slate-500 focus:ring-slate-500">
+                                <SelectValue placeholder="Seleccione el tipo de respuesta" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {tiposDato.map((tipo) => (
+                                  <SelectItem
+                                    key={tipo.idTipoDatoPreguntaDiagnostico}
+                                    value={tipo.idTipoDatoPreguntaDiagnostico.toString()}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      {getTipoIcon(tipo.descripcionTipoDatoPreguntaDiagnostico)}
+                                      {tipo.descripcionTipoDatoPreguntaDiagnostico}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {/* Información del tipo seleccionado */}
+                          {tipoSeleccionado && (
+                            <div
+                              className={`p-4 rounded-lg border ${getTipoColor(
+                                tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico,
+                              )}`}
+                            >
+                              <div className="flex items-center gap-2 mb-2">
+                                {getTipoIcon(tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico)}
+                                <span className="font-medium">
+                                  Tipo: {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico}
+                                </span>
+                              </div>
+                              <p className="text-sm opacity-80">
+                                {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
+                                  "booleano" && "El técnico podrá responder con Sí o No"}
+                                {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
+                                  "texto" && "El técnico podrá escribir una respuesta libre"}
+                                {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
+                                  "opcion" && "El técnico podrá seleccionar entre las opciones que configure"}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Opciones (solo para tipo opción) */}
+                          {esOpcion && (
+                            <Card className="border-orange-200 bg-orange-50/30">
+                              <CardContent className="p-4">
+                                <OpcionesInput control={control} register={register} index={index} />
+                              </CardContent>
+                            </Card>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Botones de acción */}
+          <div className="flex justify-end gap-4 pt-6 border-t border-slate-200">
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="border-slate-300 hover:bg-slate-50"
+              onClick={() => setOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button 
+              type="button" 
+              className="bg-slate-700 hover:bg-slate-800 text-white shadow-md px-8" 
+              onClick={handleSubmit(onSubmit)}
+            >
+              {isEdit ? 'Actualizar configuración' : 'Guardar configuración'}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -404,13 +470,11 @@ function OpcionesInput({ control, register, index }) {
         <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
           <p className="text-xs font-medium text-orange-800 mb-2">Vista previa:</p>
           <div className="flex flex-wrap gap-2">
-            {fields
-              .filter((_, idx) => register(`preguntas.${index}.opciones.${idx}.valor`))
-              .map((_, idx) => (
-                <Badge key={idx} variant="secondary" className="bg-orange-100 text-orange-800">
-                  Opción {idx + 1}
-                </Badge>
-              ))}
+            {fields.map((_, idx) => (
+              <Badge key={idx} variant="secondary" className="bg-orange-100 text-orange-800">
+                Opción {idx + 1}
+              </Badge>
+            ))}
           </div>
         </div>
       )}

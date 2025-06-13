@@ -19,7 +19,7 @@ class TipoDispositivoSegunPreguntaResponse(TipoDispositivoSegunPreguntaBase):
 
 class TipoDispositivoAgrupadoSchema(BaseModel):
     tipoDispositivo: TipoDispositivoRead
-    preguntas: List[str]
+    preguntas: List[PreguntaDiagnosticoOut]
 
 
 class TipoDispositivoSegunPreguntaConDetalles(BaseModel):

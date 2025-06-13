@@ -61,6 +61,6 @@ def get_grouped_by_dispositivo(db: Session):
                 "tipoDispositivo": tipo_obj,
                 "preguntas": []
             }
-        agrupado[nombre]["preguntas"].append(item.preguntaDiagnostico.descripcionPreguntaDiagnostico)
+        agrupado[nombre]["preguntas"].append(item.preguntaDiagnostico)
 
     return list(agrupado.values())
