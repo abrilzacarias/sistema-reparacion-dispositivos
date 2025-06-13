@@ -20,7 +20,7 @@ const DiagnosticoFormPage = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate("/diagnostico")}
+          onClick={() => navigate("/diagnosticos")}
           className="rounded-full"
         >
           <ArrowLeft className="w-5 h-5" />

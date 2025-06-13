@@ -15,7 +15,7 @@ import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import { Plus } from "lucide-react";
 
 //Exportar
-import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import ExportPDFButton from "@/components/organisms/pdfs/ExportPDFButton";
 import { Download } from "lucide-react";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
 import { tienePermiso } from "@/utils/permisos";
@@ -83,37 +83,37 @@ const DiagnosticosPage = () => {
         >
           <div className="flex items-center gap-2">
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
-            
+
             {/* Exportar */}
             {tienePermiso("Diagnóstico", "Ver Reporte Diagnóstico") && (
-            <ExportOptionsDropdown
-              pdfComponent={
-                <ExportPDFButton
-                  data={diagnosticos ?? []}
-                  columns={getColumnsDiagnosticos({ refetch })}
-                  title="Diagnosticos"
-                />
-              }
-              buttonProps={{
-                variant: "outline",
-                size: "sm",
-                className: "gap-2",
-                label: "Exportar",
-                icon: <Download className="h-4 w-4" />,
-              }}
-              dropdownLabel="Exportar datos"
-            />
-)}
+              <ExportOptionsDropdown
+                pdfComponent={
+                  <ExportPDFButton
+                    data={diagnosticos ?? []}
+                    columns={getColumnsDiagnosticos({ refetch })}
+                    title="Diagnosticos"
+                  />
+                }
+                buttonProps={{
+                  variant: "outline",
+                  size: "sm",
+                  className: "gap-2",
+                  label: "Exportar",
+                  icon: <Download className="h-4 w-4" />,
+                }}
+                dropdownLabel="Exportar datos"
+              />
+            )}
 
-{tienePermiso("Diagnóstico", "Agregar Diagnóstico") && (
-            <Button
-              variant="default"
-              onClick={handleAddDiagnostico}
-              className="cursor-pointer justify-start data-[state=open]:bg-secondary-foreground"
-              disabled={isLoading}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
+            {tienePermiso("Diagnóstico", "Agregar Diagnóstico") && (
+              <Button
+                variant="default"
+                onClick={handleAddDiagnostico}
+                className="cursor-pointer justify-start data-[state=open]:bg-secondary-foreground"
+                disabled={isLoading}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
             )}
           </div>
         </CrudHeader>

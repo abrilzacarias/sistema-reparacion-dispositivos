@@ -197,7 +197,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         throw new Error(`Error al guardar diagnóstico: ${errorData}`);
       }
 
-      console.log("✅ Diagnóstico guardado con éxito");
       if (refreshDiagnosticos) refreshDiagnosticos();
       if (!isEditMode) {
         reset();
@@ -219,46 +218,8 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   };
 
   return (
-    <Tabs defaultValue="diagnostico" className="w-full">
-      <TabsList className="mb-6 w-full">
-        <TabsTrigger value="cliente" className="flex-1 rounded-md rounded-r-none">Cliente</TabsTrigger>
-        <TabsTrigger value="diagnostico" className="flex-1 rounded-md rounded-l-none">Diagnóstico</TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="cliente">
-        <div className="p-6 text-center text-muted-foreground">
-          Información de cliente (placeholder)
-        </div>
-      </TabsContent>
-
-      <TabsContent value="diagnostico">
-        {console.log("🔍 Valores del formulario:", {
-          idEmpleado: watch("idEmpleado"),
-          idTipoDispositivo: watch("idTipoDispositivo"),
-          idMarcaDispositivo: watch("idMarcaDispositivo"),
-          idModeloDispositivo: watch("idModeloDispositivo"),
-          fechaDiagnostico: watch("fechaDiagnostico"),
-          descripcion: watch("descripcion"),
-          deviceQuestions: watch("deviceQuestions")
-        })}
-        
-        {/* Panel de debug visual */}
-{/*
-  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
-    <strong>🐛 Debug - Estado actual:</strong>
-    <div className="grid grid-cols-2 gap-2 mt-2">
-      <div>Empleado: <code>{watch("idEmpleado") || "sin seleccionar"}</code></div>
-      <div>Tipo Dispositivo: <code>{watch("idTipoDispositivo") || "sin seleccionar"}</code></div>
-      <div>Preguntas cargadas: <code>{questions.length}</code></div>
-      <div>Respuestas: <code>{Array.isArray(watch("deviceQuestions")) ? watch("deviceQuestions").length : 0}</code></div>
-      <div>Modo: <code>{isEditMode ? 'Edición' : 'Creación'}</code></div>
-      <div>ID Diagnóstico: <code>{diagnostico?.idDiagnostico || 'N/A'}</code></div>
-    </div>
-  </div>
-*/}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
           <div className="grid grid-cols-2 gap-4">
-            <div>
               <FormSelectSearch
                 label="Técnico *"
                 endpoint="empleados"
@@ -269,11 +230,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 {...register("idEmpleado", { required: "Seleccione un técnico" })}
               />
               <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
               <FormSelectSearch
                 label="Cliente *"
                 endpoint="clientes"
@@ -284,7 +241,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 {...register("idCliente", { required: "Seleccione un cliente" })}
               />
               <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
-            </div>
           </div>          
 
           <div className="border rounded-lg p-4 bg-gray-50/50">
@@ -412,9 +368,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
             />
           </div>
         </form>
-      </TabsContent>
-
-    </Tabs>
   );
 };
 

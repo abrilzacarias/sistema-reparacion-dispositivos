@@ -237,7 +237,7 @@ const ClientePage = () => {
           </div>
         </CrudHeader>
 
-        <Card className="mt-4">
+        <Card className="mt-4 border-none bg-secondary dark:bg-background">
           <CardContent className="p-0">
             <DataTable
               data={clientes}
