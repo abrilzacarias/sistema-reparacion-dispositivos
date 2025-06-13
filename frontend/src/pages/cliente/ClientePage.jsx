@@ -66,7 +66,6 @@ const ClientePage = () => {
   const [activeTab, setActiveTab] = useState("persona");
   const [isErrorApi, setIsErrorApi] = useState(false);
 
-  // Hook búsqueda personas
   const {
     personas,
     totalPersonas,
@@ -78,19 +77,13 @@ const ClientePage = () => {
 
   // Corregir el manejo del handleSearchTarget
   const handleSearchTarget = (event) => {
-    console.log("🟡 handleSearchTarget ejecutado:", event.target.value);
     resetQuery();
     setSearchTarget("");
     setSelectedPersona("");
     setSearchTarget(event.target.value);
   };
 
-  // Corregir la función startSearch
   const startSearch = () => {
-    console.log("🔍 startSearch ejecutado! searchTarget:", searchTarget);
-    console.log("🔍 searchTarget.trim():", searchTarget.trim());
-    console.log("🔍 Condición:", searchTarget.trim() !== "");
-
     if (searchTarget.trim() !== "") {
       console.log("✅ Condición cumplida, ejecutando búsqueda...");
       resetQuery();
@@ -121,9 +114,6 @@ const ClientePage = () => {
       setIsErrorApi(false);
     }
   }, [selectedPersona]);
-
-  // Debug: Verificar que startSearch existe
-  console.log("🔧 Debug - startSearch function:", typeof startSearch);
 
   return (
     <CrudsTemplate>
