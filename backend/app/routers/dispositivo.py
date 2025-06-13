@@ -30,3 +30,4 @@ def eliminar_dispositivo(id: int, db: Session = Depends(get_db)):
     if not success:
         raise HTTPException(status_code=404, detail="Dispositivo no encontrado o ya eliminado")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
