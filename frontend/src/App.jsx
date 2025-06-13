@@ -101,15 +101,6 @@ function App() {
   }
 />
 
-<Route
-  path="/marcas"
-  element={
-    <ProtectedRoute modulo="Marcas" funcion="Ver">
-      <MarcasPage />
-    </ProtectedRoute>
-  }
-/>
-
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />
