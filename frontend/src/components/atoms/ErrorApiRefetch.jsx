@@ -63,7 +63,6 @@ const ErrorApiRefetch = ({ refetch, isRefetching }) => {
               onHoverEnd={() => setIsHovered(false)}
             >
               <Button
-
                 variant={isRefetching ? "outline" : "outline"}
                 className={`
                   mx-auto py-5 rounded-lg font-medium  shadow-none   

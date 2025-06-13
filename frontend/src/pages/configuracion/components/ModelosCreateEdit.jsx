@@ -18,8 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
-import { usePaginatedQuery } from "@/hooks/usePaginatedQuery"; // 💡 tu hook personalizado
+import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -28,13 +27,14 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
     register,
     handleSubmit,
     setValue,
-    control, // <--- agrega esto
+    control,
     formState: { errors },
     } = useForm({
     mode: "onChange",
     defaultValues: {
         descripcionModeloDispositivo: modelo?.descripcionModeloDispositivo || "",
-        idMarcaDispositivo: modelo?.idMarcaDispositivo?.toString() || "",
+        idMarcaDispositivo: modelo?.idMarcaDispositivo?.toString() || 
+                           modelo?.marcaDispositivo?.idMarcaDispositivo?.toString() || "",
     },
     });
 
@@ -43,7 +43,7 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
   const [apiErrors, setApiErrors] = useState({});
   const { setOpen } = useContext(OpenContext);
 
-  // ✅ Traer marcas usando el hook usePaginatedQuery
+  // ✅ Usar usePaginatedQuery con paginación deshabilitada
   const {
     data: marcas = [],
     isLoading: marcasLoading,
@@ -51,6 +51,17 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
   } = usePaginatedQuery({
     key: "marcas",
     endpoint: "marcas",
+    enablePagination: false, // ← Clave: deshabilitar paginación
+  });
+
+  // 🔍 Debug: Ver qué datos estamos recibiendo
+  console.log("🔍 Debug marcas:", {
+    marcas,
+    isArray: Array.isArray(marcas),
+    length: marcas?.length,
+    firstItem: marcas?.[0],
+    marcasLoading,
+    marcasError
   });
 
   const onSubmit = async (data) => {
@@ -117,10 +128,11 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
             control={control}
             name="idMarcaDispositivo"
             rules={{ required: "Campo requerido" }}
-            defaultValue={modelo?.idMarcaDispositivo?.toString() || ""}
+            defaultValue={modelo?.idMarcaDispositivo?.toString() || 
+                         modelo?.marcaDispositivo?.idMarcaDispositivo?.toString() || ""}
             render={({ field }) => (
                 <Select
-                {...field}
+                value={field.value || ""} // ← Agregar value explícito
                 onValueChange={(value) => field.onChange(value)}
                 >
                 <SelectTrigger>

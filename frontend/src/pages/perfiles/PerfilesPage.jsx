@@ -178,9 +178,6 @@ const PerfilesPage = () => {
         return {
           title: "Gestión de Perfiles",
           subtitle: "Administra los perfiles de usuario del sistema.",
-          modalTitle: "Agregar Perfil",
-          modalDescription: "Complete los campos para agregar un nuevo perfil.",
-          modalLabel: "Agregar Perfil",
           icon: Users,
           component: <PerfilCreateEdit refreshPerfiles={refetchPerfiles} modulos={modulosSistema} funciones={funcionesSistema} />,
         }
@@ -188,27 +185,18 @@ const PerfilesPage = () => {
         return {
           title: "Gestión de Módulos",
           subtitle: "Administra los módulos disponibles en el sistema.",
-          modalTitle: "Agregar Módulo",
-          modalDescription: "Complete los campos para agregar un nuevo módulo.",
-          modalLabel: "Agregar Módulo",
           icon: Layers,
         }
       case "funciones":
         return {
           title: "Gestión de Funciones",
           subtitle: "Administra las funciones de cada módulo.",
-          modalTitle: "Agregar Función",
-          modalDescription: "Complete los campos para agregar una nueva función.",
-          modalLabel: "Agregar Función",
           icon: Zap,
         }
       default:
         return {
           title: "Gestión de Perfiles",
           subtitle: "Administra los perfiles de usuario del sistema.",
-          modalTitle: "Agregar Perfil",
-          modalDescription: "Complete los campos para agregar un nuevo perfil.",
-          modalLabel: "Agregar Perfil",
           icon: Users,
           component: <PerfilCreateEdit refreshPerfiles={refetchPerfiles} modulos={modulosSistema} funciones={funcionesSistema} />,
         }
@@ -219,7 +207,7 @@ const PerfilesPage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
+      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <CrudHeader title={tabConfig.title} subTitle={tabConfig.subtitle}>
           <div className="flex items-center gap-2">
             <ButtonRefetch
