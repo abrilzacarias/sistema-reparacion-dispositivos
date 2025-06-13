@@ -19,6 +19,11 @@ import { PlusCircle, Settings } from "lucide-react";
 import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit";
 import ClienteCreateEdit from "./components/ClienteCreateEdit";
 
+// Exportar
+import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import { Download } from "lucide-react";
+import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
+
 const ClientePage = () => {
   // Paginación
   const pageSize = 10;
@@ -123,6 +128,30 @@ const ClientePage = () => {
         <CrudHeader title="Gestión de Clientes" subTitle="Listado y registro de clientes.">
           <div className="flex gap-2">
             <ButtonRefetch isFetching={isLoading} refetch={() => fetchClientes(page)} />
+            
+            {/* Exportar */}
+            <ExportOptionsDropdown
+              pdfComponent={
+                <ExportPDFButton
+                  data={clientes}
+                  columns={getColumnsCliente({ refetch: () => fetchClientes(page) })}
+                  title="Clientes"
+                />
+              }
+              data={clientes} 
+              columns={getColumnsCliente({ refetch: () => fetchClientes(page) })}
+              title="Clientes"
+              buttonProps={{
+                variant: "outline",
+                size: "sm",
+                className: "gap-2",
+                label: "Exportar",
+                icon: <Download className="h-4 w-4" />,
+              }}
+              dropdownLabel="Exportar datos"
+            />
+            
+
             <ModalFormTemplate
               icon={Settings}
               title="Agregar Cliente"

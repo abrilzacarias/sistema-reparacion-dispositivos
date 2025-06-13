@@ -11,11 +11,9 @@ from app.database import get_db
 router = APIRouter(prefix="/marcas", tags=["Marcas de Dispositivos"])
 
 # Obtener todas las marcas (sin repuestos para evitar sobrecarga)
-
-@router.get("/", response_model=List[schemas.MarcaDispositivoOut], summary="Obtener todos los modelos")
-def read_modelos(db: Session = Depends(get_db)):
-    modelos = services.get_marca_dispositivos(db)
-    return modelos
+@router.get("/", response_model=Page[schemas.MarcaDispositivoOut], summary="Obtener todas las marcas")
+def read_marcas(db: Session = Depends(get_db)):
+    return paginate(services.get_marca_dispositivos(db))
 
 # Obtener marca específica CON sus repuestos
 @router.get("/{idMarcaDispositivo}", response_model=schemas.MarcaDispositivoWithRepuestos, summary="Obtener una marca por ID con sus repuestos")

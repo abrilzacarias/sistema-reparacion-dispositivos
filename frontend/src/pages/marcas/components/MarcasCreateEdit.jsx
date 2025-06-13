@@ -1,41 +1,102 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useContext, useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import ErrorMessage from "@/components/atoms/ErrorMessage";
+import {
+  ToastMessageCreate,
+  ToastMessageEdit,
+} from "@/components/atoms/ToastMessage";
+import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
+import { OpenContext } from "@/components/organisms/ModalFormTemplate";
 
-const MarcasCreateEdit = ({ marca, refreshMarcas, onClose }) => {
-  const { register, handleSubmit, reset } = useForm({
+const API_URL = import.meta.env.VITE_API_URL;
+
+const MarcasCreateEdit = ({ marca, refreshMarcas }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
     defaultValues: {
       descripcionMarcaDispositivo: marca?.descripcionMarcaDispositivo || "",
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [apiErrors, setApiErrors] = useState({});
+  const { setOpen } = useContext(OpenContext);
+
   const onSubmit = async (data) => {
-    const API_URL = import.meta.env.VITE_API_URL;
+    setError("");
+    setApiErrors({});
+    setIsLoading(true);
+
     try {
-      if (marca) {
-        await axios.put(`${API_URL}/marcas/${marca.idMarcaDispositivo}`, data);
-      } else {
-        await axios.post(`${API_URL}/marcas`, data);
-      }
+      const endpoint = marca
+        ? `${API_URL}/marcas/${marca.idMarcaDispositivo}/`
+        : `${API_URL}/marcas/`;
+
+      const method = marca ? axios.put : axios.post;
+
+      await method(endpoint, data);
+
+      marca ? ToastMessageEdit() : ToastMessageCreate();
+
       refreshMarcas();
-      onClose?.();
-    } catch (error) {
-      console.error("Error al guardar marca:", error);
+      setOpen(false);
+    } catch (err) {
+      console.error("Error al guardar marca:", err);
+      if (err.status === 500) {
+        setError("Error del servidor, por favor intente más tarde.");
+        return;
+      }
+      if (err?.response?.status === 422) {
+        setError("Error, intente nuevamente más tarde.");
+        return;
+      }
+      if (err.response?.data) {
+        setApiErrors(err.response.data);
+        setError("Error al guardar la marca, por favor revise los campos.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <label>Descripción de la Marca</label>
-        <input
-          {...register("descripcionMarcaDispositivo")}
-          className="input"
-          required
+    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+      <div className="col-span-2 space-y-2">
+        <Label>Descripción de la Marca</Label>
+        <Input
+          {...register("descripcionMarcaDispositivo", {
+            required: "Campo requerido",
+            minLength: { value: 3, message: "Mínimo 3 caracteres" },
+            maxLength: { value: 100, message: "Máximo 100 caracteres" },
+          })}
+        />
+        <ErrorMessage
+          message={
+            errors.descripcionMarcaDispositivo?.message ||
+            apiErrors?.descripcionMarcaDispositivo
+          }
         />
       </div>
-      <button type="submit" className="btn btn-primary">
-        {marca ? "Guardar cambios" : "Crear marca"}
-      </button>
+
+      <div className="col-span-2 flex justify-end mt-3">
+        <ButtonDinamicForms
+          initialData={marca}
+          isLoading={isLoading}
+          register
+        />
+      </div>
+
+      <div className="col-span-2 flex justify-end">
+        <ErrorMessage message={apiErrors?.detail || error} />
+      </div>
     </form>
   );
 };
