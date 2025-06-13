@@ -1,5 +1,3 @@
-                    "use client"
-
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms"
 import ErrorMessage from "@/components/atoms/ErrorMessage"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
@@ -122,8 +120,6 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
     try {
       const { correo, telefono, ...rest } = data
-      console.log("Datos del formulario:", data)
-      console.log("CUIT a enviar:", data.cuit)
 
       const isEdit = !!persona?.idPersona
 
