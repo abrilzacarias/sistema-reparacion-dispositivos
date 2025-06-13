@@ -13,20 +13,24 @@ import { Button } from "@/components/ui/button";
 import ReparacionesCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
 import DetalleReparacionModal from "@/pages/reparaciones/components/DetalleReparacionModal";
 import HistorialAsignacionReparacionModal from "@/pages/reparaciones/components/HistorialAsignacionReparacionModal"; // asegurate del path
+import { tienePermiso } from "@/utils/permisos";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
 
 export const getColumnsReparaciones = ({ refetch }) => {
   const handleDelete = async (reparacion, refetch) => {
     if (!window.confirm(`¿Seguro que querés eliminar esta reparación?`)) return;
     try {
-      const res = await axios.delete(`${API_URL}/reparaciones/${reparacion.idReparacion}`);
+      const res = await axios.delete(
+        `${API_URL}/reparaciones/${reparacion.idReparacion}`
+      );
       toast.success("Reparación eliminada con éxito");
       refetch?.();
     } catch (error) {
       console.error("Error eliminando reparación:", error);
-      const errorMsg = error.response?.data?.detail || "No se puede eliminar una reparacion con detalles.";
+      const errorMsg =
+        error.response?.data?.detail ||
+        "No se puede eliminar una reparacion con detalles.";
       toast.error(errorMsg);
     }
   };
@@ -35,17 +39,27 @@ export const getColumnsReparaciones = ({ refetch }) => {
     {
       header: "N° Reparación",
       accessorKey: "idReparacion",
-      cell: ({ row }) => <div className="ml-4">{row.original.idReparacion}</div>,
+      cell: ({ row }) => (
+        <div className="ml-4">{row.original.idReparacion}</div>
+      ),
     },
     {
       header: "Cliente",
-      accessorFn: row => {
+      accessorFn: (row) => {
         const persona = row.diagnostico?.dispositivo?.cliente?.persona;
-        return persona ? `${persona.nombre ?? ""} ${persona.apellido ?? ""}`.trim() : "Sin cliente";
+        return persona
+          ? `${persona.nombre ?? ""} ${persona.apellido ?? ""}`.trim()
+          : "Sin cliente";
       },
       cell: ({ row }) => {
         const persona = row.original.diagnostico?.dispositivo?.cliente?.persona;
-        return <div>{persona ? `${persona.nombre} ${persona.apellido}`.trim() : "Sin cliente"}</div>;
+        return (
+          <div>
+            {persona
+              ? `${persona.nombre} ${persona.apellido}`.trim()
+              : "Sin cliente"}
+          </div>
+        );
       },
     },
     {
@@ -63,38 +77,63 @@ export const getColumnsReparaciones = ({ refetch }) => {
       accessorKey: "montoTotalReparacion",
       cell: ({ row }) => {
         const monto = row.original.montoTotalReparacion;
-        return <div>{monto != null ? `$${parseFloat(monto).toFixed(2)}` : "$0.0"}</div>;
+        return (
+          <div>
+            {monto != null ? `$${parseFloat(monto).toFixed(2)}` : "$0.0"}
+          </div>
+        );
       },
     },
     {
       header: "Estado",
-      accessorFn: row => {
+      accessorFn: (row) => {
         const estados = row.registroEstadoReparacion ?? [];
-        const ultimo = estados.reduce((prev, curr) =>
-          new Date(prev.fechaHoraRegistroEstadoReparacion) > new Date(curr.fechaHoraRegistroEstadoReparacion)
-            ? prev
-            : curr, {});
-        return ultimo.estadoReparacion?.descripcionEstadoReparacion ?? "Sin estado";
+        const ultimo = estados.reduce(
+          (prev, curr) =>
+            new Date(prev.fechaHoraRegistroEstadoReparacion) >
+            new Date(curr.fechaHoraRegistroEstadoReparacion)
+              ? prev
+              : curr,
+          {}
+        );
+        return (
+          ultimo.estadoReparacion?.descripcionEstadoReparacion ?? "Sin estado"
+        );
       },
       cell: ({ row }) => {
         const estados = row.original.registroEstadoReparacion;
         if (!estados?.length) return <div>Sin estado</div>;
         const ultimoEstado = estados.reduce((prev, curr) =>
-          new Date(prev.fechaHoraRegistroEstadoReparacion) > new Date(curr.fechaHoraRegistroEstadoReparacion)
+          new Date(prev.fechaHoraRegistroEstadoReparacion) >
+          new Date(curr.fechaHoraRegistroEstadoReparacion)
             ? prev
-            : curr);
-        return <div>{ultimoEstado.estadoReparacion?.descripcionEstadoReparacion ?? "Sin estado"}</div>;
+            : curr
+        );
+        return (
+          <div>
+            {ultimoEstado.estadoReparacion?.descripcionEstadoReparacion ??
+              "Sin estado"}
+          </div>
+        );
       },
     },
     {
       header: "Empleado",
-      accessorFn: row => {
+      accessorFn: (row) => {
         const persona = row.empleado?.persona;
-        return persona ? `${persona.nombre ?? ""} ${persona.apellido ?? ""}`.trim() : "Sin asignar";
+        return persona
+          ? `${persona.nombre ?? ""} ${persona.apellido ?? ""}`.trim()
+          : "Sin asignar";
       },
       cell: ({ row }) => {
         const persona = row.original.empleado?.persona;
-        return <div>{persona ? `${persona.nombre} ${persona.apellido}`.trim() : "Sin asignar"}</div>;
+        return (
+          <div>
+            {persona
+              ? `${persona.nombre} ${persona.apellido}`.trim()
+              : "Sin asignar"}
+          </div>
+        );
       },
     },
     {
@@ -104,7 +143,10 @@ export const getColumnsReparaciones = ({ refetch }) => {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
+              <Button
+                variant="ghost"
+                className="flex size-8 p-0 data-[state=open]:bg-muted"
+              >
                 <Ellipsis className="size-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -130,18 +172,23 @@ export const getColumnsReparaciones = ({ refetch }) => {
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem asChild>
-                <ModalFormTemplate
-                  title="Editar Reparación"
-                  description="Modifique los campos necesarios para actualizar la reparación."
-                  label="Editar"
-                  variant="ghost"
-                  icon={Edit}
-                  className="p-2 m-0 cursor-pointer w-full justify-start"
-                >
-                  <ReparacionesCreateEdit reparacion={reparacion} refreshReparaciones={refetch} />
-                </ModalFormTemplate>
-              </DropdownMenuItem>
+              {tienePermiso("Reparaciones", "Modificar Reparación") && (
+                <DropdownMenuItem asChild>
+                  <ModalFormTemplate
+                    title="Editar Reparación"
+                    description="Modifique los campos necesarios para actualizar la reparación."
+                    label="Editar"
+                    variant="ghost"
+                    icon={Edit}
+                    className="p-2 m-0 cursor-pointer w-full justify-start"
+                  >
+                    <ReparacionesCreateEdit
+                      reparacion={reparacion}
+                      refreshReparaciones={refetch}
+                    />
+                  </ModalFormTemplate>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
@@ -153,15 +200,20 @@ export const getColumnsReparaciones = ({ refetch }) => {
                   contentClassName="max-w-4xl max-h-[90vh] overflow-y-auto"
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
-                  <HistorialAsignacionReparacionModal idReparacion={reparacion.idReparacion} />
+                  <HistorialAsignacionReparacionModal
+                    idReparacion={reparacion.idReparacion}
+                  />
                 </ModalFormTemplate>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={() => handleDelete(reparacion, refetch)}>
-                Eliminar
-              </DropdownMenuItem>
-
+              {tienePermiso("Reparaciones", "Eliminar Reparación") && (
+                <DropdownMenuItem
+                  onClick={() => handleDelete(reparacion, refetch)}
+                >
+                  Eliminar
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -170,5 +222,3 @@ export const getColumnsReparaciones = ({ refetch }) => {
     },
   ];
 };
-
-

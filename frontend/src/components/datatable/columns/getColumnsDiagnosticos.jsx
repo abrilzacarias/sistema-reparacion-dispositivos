@@ -95,22 +95,13 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={() => console.log("Editar", row.original)}>
-                Editar
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>
-                Eliminar
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Crear Reparación"
                   description="Complete los datos para crear una reparación"
                   label="Crear Reparación"
                   variant="ghost"
+                  icon={List}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
                   <ReparacionCreateEdit

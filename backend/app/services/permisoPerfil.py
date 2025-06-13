@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from app.models import PermisoPerfil, ModuloFuncionSistema, Perfil
+from app.models import PermisoPerfil, ModuloFuncionSistema, Perfil, AsignacionUsuarioPermisos, Usuario
 from app.schemas import permisoPerfil as schemas
 from collections import defaultdict
 from typing import List
@@ -79,18 +79,93 @@ def create_permisos_perfil(db: Session, permisos: List[schemas.PermisoPerfilCrea
 
     id_perfil = permisos[0].idPerfil
 
-    db.query(PermisoPerfil).filter(PermisoPerfil.idPerfil == id_perfil).delete()
-    db.commit()
+    # Obtener todos los usuarios que tienen asignado algún permiso de este perfil
+    usuarios_con_perfil = db.query(AsignacionUsuarioPermisos.idUsuario).join(PermisoPerfil).filter(
+        PermisoPerfil.idPerfil == id_perfil
+    ).distinct().all()
+    ids_usuarios_perfil = [u.idUsuario for u in usuarios_con_perfil]
+
+    # Obtener permisos actuales del perfil
+    permisos_actuales = db.query(PermisoPerfil).filter(PermisoPerfil.idPerfil == id_perfil).all()
+    permisos_actuales_map = {p.idmoduloFuncionSistema: p for p in permisos_actuales}
+    ids_actuales = set(permisos_actuales_map.keys())
+
+    # Mapeo de nuevos permisos
+    ids_nuevos = set(p.idmoduloFuncionSistema for p in permisos)
+
+    # Identificar qué permisos eliminar y qué agregar
+    ids_a_eliminar = ids_actuales - ids_nuevos
+    ids_a_agregar = ids_nuevos - ids_actuales
+
+    # Guardar asignaciones existentes antes de borrar
+    usuarios_por_funcion = {}
+    if ids_a_eliminar:
+        permisos_a_eliminar = [permisos_actuales_map[idfunc] for idfunc in ids_a_eliminar]
+        ids_permisos_a_eliminar = [p.idpermisoPerfil for p in permisos_a_eliminar]
+
+        asignaciones = db.query(AsignacionUsuarioPermisos).filter(
+            AsignacionUsuarioPermisos.idpermisoPerfil.in_(ids_permisos_a_eliminar)
+        ).all()
+
+        for a in asignaciones:
+            permiso = next((p for p in permisos_a_eliminar if p.idpermisoPerfil == a.idpermisoPerfil), None)
+            if permiso:
+                usuarios_por_funcion.setdefault(permiso.idmoduloFuncionSistema, set()).add(a.idUsuario)
+
+        # Eliminar asignaciones y permisos
+        db.query(AsignacionUsuarioPermisos).filter(
+            AsignacionUsuarioPermisos.idpermisoPerfil.in_(ids_permisos_a_eliminar)
+        ).delete(synchronize_session=False)
+
+        db.query(PermisoPerfil).filter(
+            PermisoPerfil.idpermisoPerfil.in_(ids_permisos_a_eliminar)
+        ).delete(synchronize_session=False)
 
     resultados = []
 
     for permiso in permisos:
-        db_permiso = PermisoPerfil(**permiso.model_dump())
-        db.add(db_permiso)
-        db.commit()
-        db.refresh(db_permiso)
-        resultados.append(db_permiso)
+        if permiso.idmoduloFuncionSistema in ids_a_agregar:
+            # Verificamos que el idmoduloFuncionSistema exista
+            existe = db.query(ModuloFuncionSistema).filter(
+                ModuloFuncionSistema.idmoduloFuncionSistema == permiso.idmoduloFuncionSistema
+            ).first()
+            if not existe:
+                raise ValueError(f"idmoduloFuncionSistema {permiso.idmoduloFuncionSistema} no existe")
 
+            # Agregar nuevo permiso
+            db_permiso = PermisoPerfil(
+                idPerfil=permiso.idPerfil,
+                idmoduloFuncionSistema=permiso.idmoduloFuncionSistema,
+                estadoPermisoPerfil=permiso.estadoPermisoPerfil,
+            )
+            db.add(db_permiso)
+            db.commit()
+            db.refresh(db_permiso)
+            resultados.append(db_permiso)
+
+            # Restaurar asignaciones anteriores si las había
+            usuarios_previos = usuarios_por_funcion.get(permiso.idmoduloFuncionSistema, set())
+            for idusuario in usuarios_previos:
+                nueva_asignacion = AsignacionUsuarioPermisos(
+                    idUsuario=idusuario,
+                    idpermisoPerfil=db_permiso.idpermisoPerfil
+                )
+                db.add(nueva_asignacion)
+
+            # También asignar a todos los usuarios del perfil (si corresponde)
+            for idusuario in ids_usuarios_perfil:
+                if idusuario not in usuarios_previos:
+                    nueva_asignacion = AsignacionUsuarioPermisos(
+                        idUsuario=idusuario,
+                        idpermisoPerfil=db_permiso.idpermisoPerfil
+                    )
+                    db.add(nueva_asignacion)
+
+        else:
+            # Ya existe el permiso, lo dejamos como está
+            resultados.append(permisos_actuales_map[permiso.idmoduloFuncionSistema])
+
+    db.commit()
     return resultados
 
 def update_permiso_perfil(db: Session, id_permiso: int, permiso: schemas.PermisoPerfilUpdate):

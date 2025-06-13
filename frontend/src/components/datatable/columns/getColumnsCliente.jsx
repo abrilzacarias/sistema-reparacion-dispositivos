@@ -1,4 +1,4 @@
-import {Edit, Ellipsis, List, Wrench  } from "lucide-react";
+import { Edit, Ellipsis, List, Wrench } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +15,7 @@ import HistorialReparacionClienteModal from "@/pages/cliente/components/Historia
 
 // 👇 NUEVA IMPORTACIÓN
 import EditarClienteConTabs from "@/pages/cliente/components/EditarClienteConTabs";
+import { tienePermiso } from "@/utils/permisos";
 
 export const getColumnsCliente = ({ refetch, onEdit }) => {
   return [
@@ -22,12 +23,14 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
       header: "Nombre",
       accessorKey: "persona.nombre",
       id: "persona.nombre",
-      cell: ({ row }) => <div className="ml-10">{row.original?.persona?.nombre}</div>,
+      cell: ({ row }) => (
+        <div className="ml-10">{row.original?.persona?.nombre}</div>
+      ),
     },
     {
-      id: 'apellido',
-      header: 'Apellido',
-      accessorFn: row => row.persona?.apellido || 'Sin apellido',
+      id: "apellido",
+      header: "Apellido",
+      accessorFn: (row) => row.persona?.apellido || "Sin apellido",
     },
     {
       header: "CUIT",
@@ -39,29 +42,55 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
       accessorFn: (row) => row.persona?.fechaNacimiento,
       cell: ({ row }) => {
         const fechaNacimiento = row.original?.persona?.fechaNacimiento;
-        return <div>{fechaNacimiento || <span className="italic text-muted-foreground">Sin fecha de nacimiento</span>}</div>;
+        return (
+          <div>
+            {fechaNacimiento || (
+              <span className="italic text-muted-foreground">
+                Sin fecha de nacimiento
+              </span>
+            )}
+          </div>
+        );
       },
-    },    
+    },
     {
       header: "Email",
       accessorFn: (row) => {
-        return row.persona?.contactos?.find(c => c.idtipoContacto === 2)?.descripcionContacto;
+        return row.persona?.contactos?.find((c) => c.idtipoContacto === 4)
+          ?.descripcionContacto;
       },
       cell: ({ row }) => {
-        const email = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 2)?.descripcionContacto;
-        return <div>{email || <span className="italic text-muted-foreground">Sin email</span>}</div>;
+        const email = row.original?.persona?.contactos?.find(
+          (c) => c.idtipoContacto === 4
+        )?.descripcionContacto;
+        return (
+          <div>
+            {email || (
+              <span className="italic text-muted-foreground">Sin email</span>
+            )}
+          </div>
+        );
       },
     },
     {
       header: "Teléfono",
       accessorFn: (row) => {
-        return row.persona?.contactos?.find(c => c.idtipoContacto === 3)?.descripcionContacto;
+        return row.persona?.contactos?.find((c) => c.idtipoContacto === 3)
+          ?.descripcionContacto;
       },
       cell: ({ row }) => {
-        const tel = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 3)?.descripcionContacto;
-        return <div>{tel || <span className="italic text-muted-foreground">Sin teléfono</span>}</div>;
+        const tel = row.original?.persona?.contactos?.find(
+          (c) => c.idtipoContacto === 3
+        )?.descripcionContacto;
+        return (
+          <div>
+            {tel || (
+              <span className="italic text-muted-foreground">Sin teléfono</span>
+            )}
+          </div>
+        );
       },
-    },    
+    },
     {
       header: "Observaciones",
       accessorFn: (row) => row.observaciones,
@@ -69,11 +98,17 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
         const obs = row.original?.observaciones;
         return (
           <div>
-            {obs
-              ? obs.length > 30
-                ? obs.slice(0, 30) + "..."
-                : obs
-              : <span className="text-muted-foreground italic">Sin observaciones</span>}
+            {obs ? (
+              obs.length > 30 ? (
+                obs.slice(0, 30) + "..."
+              ) : (
+                obs
+              )
+            ) : (
+              <span className="text-muted-foreground italic">
+                Sin observaciones
+              </span>
+            )}
           </div>
         );
       },
@@ -84,12 +119,18 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
+              <Button
+                variant="ghost"
+                className="flex size-8 p-0 data-[state=open]:bg-muted"
+              >
                 <Ellipsis className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-36">
-              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+              <DropdownMenuItem
+                asChild
+                className="w-full flex items-center justify-between"
+              >
                 <ModalFormTemplate
                   title="Detalles del Cliente"
                   description="Información completa del cliente seleccionado"
@@ -101,44 +142,57 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                   <ClienteCard cliente={row.original} />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
 
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-              <ModalFormTemplate
-                title="Historial de Reparaciones"
-                description="Listado de todas las reparaciones asociadas al cliente."
-                label="Reparaciones"
-                variant="ghost"
-                icon={Wrench }
-                contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+              <DropdownMenuItem
+                asChild
+                className="w-full flex items-center justify-between"
               >
-                <HistorialReparacionClienteModal idPersona={row.original?.idPersona} nombre={row.original?.persona?.nombre} apellido={row.original?.persona?.apellido} cuit={row.original?.persona?.cuit}/>
-              </ModalFormTemplate>
-            </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              
-              <DropdownMenuItem asChild>
                 <ModalFormTemplate
-                  title="Editar Cliente"
-                  description="Editar datos de cliente y persona asociada."
-                  label="Editar"
+                  title="Historial de Reparaciones"
+                  description="Listado de todas las reparaciones asociadas al cliente."
+                  label="Reparaciones"
                   variant="ghost"
-                  icon={Edit}
-                  className="p-2 m-0 cursor-pointer w-full justify-start"
-                  contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
+                  icon={Wrench}
+                  contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
                 >
-                  <EditarClienteConTabs 
-                    cliente={row.original} 
-                    refreshClientes={refetch} 
+                  <HistorialReparacionClienteModal
+                    idPersona={row.original?.idPersona}
+                    nombre={row.original?.persona?.nombre}
+                    apellido={row.original?.persona?.apellido}
+                    cuit={row.original?.persona?.cuit}
                   />
                 </ModalFormTemplate>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {tienePermiso("Clientes", "Modificar Cliente") && (
+                <DropdownMenuItem asChild>
+                  <ModalFormTemplate
+                    title="Editar Cliente"
+                    description="Editar datos de cliente y persona asociada."
+                    label="Editar"
+                    variant="ghost"
+                    icon={Edit}
+                    className="p-2 m-0 cursor-pointer w-full justify-start"
+                    contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
+                  >
+                    <EditarClienteConTabs
+                      cliente={row.original}
+                      refreshClientes={refetch}
+                    />
+                  </ModalFormTemplate>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuSeparator />
-              
-              <DropdownMenuItem asChild>
-                <ClienteDeleteConfirmModal cliente={row.original} refetch={refetch} />
-              </DropdownMenuItem>
+              {tienePermiso("Clientes", "Eliminar Cliente") && (
+                <DropdownMenuItem asChild>
+                  <ClienteDeleteConfirmModal
+                    cliente={row.original}
+                    refetch={refetch}
+                  />
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );

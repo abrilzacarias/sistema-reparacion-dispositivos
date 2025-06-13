@@ -20,9 +20,10 @@ import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit";
 import ClienteCreateEdit from "./components/ClienteCreateEdit";
 
 // Exportar
-import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
+import ExportPDFButton from "@/components/organisms/pdfs/ExportPDFButton";
 import { Download } from "lucide-react";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
+import { tienePermiso } from "@/utils/permisos";
 
 const ClientePage = () => {
   // Paginación
@@ -41,7 +42,9 @@ const ClientePage = () => {
       setErrorAxios(null);
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
       const skip = newPage * pageSize;
-      const resp = await axios.get(`${API_URL}/clientes/?skip=${skip}&limit=${pageSize}`);
+      const resp = await axios.get(
+        `${API_URL}/clientes/?skip=${skip}&limit=${pageSize}`
+      );
       setClientes(resp.data);
       setPage(newPage);
     } catch (err) {
@@ -87,7 +90,7 @@ const ClientePage = () => {
     console.log("🔍 startSearch ejecutado! searchTarget:", searchTarget);
     console.log("🔍 searchTarget.trim():", searchTarget.trim());
     console.log("🔍 Condición:", searchTarget.trim() !== "");
-    
+
     if (searchTarget.trim() !== "") {
       console.log("✅ Condición cumplida, ejecutando búsqueda...");
       resetQuery();
@@ -125,108 +128,122 @@ const ClientePage = () => {
   return (
     <CrudsTemplate>
       <div className="bg-secondary dark:bg-background p-4 rounded shadow-sm border overflow-x-auto">
-        <CrudHeader title="Gestión de Clientes" subTitle="Listado y registro de clientes.">
+        <CrudHeader
+          title="Gestión de Clientes"
+          subTitle="Listado y registro de clientes."
+        >
           <div className="flex gap-2">
-            <ButtonRefetch isFetching={isLoading} refetch={() => fetchClientes(page)} />
-            
-            {/* Exportar */}
-            <ExportOptionsDropdown
-              pdfComponent={
-                <ExportPDFButton
-                  data={clientes}
-                  columns={getColumnsCliente({ refetch: () => fetchClientes(page) })}
-                  title="Clientes"
-                />
-              }
-              data={clientes} 
-              columns={getColumnsCliente({ refetch: () => fetchClientes(page) })}
-              title="Clientes"
-              buttonProps={{
-                variant: "outline",
-                size: "sm",
-                className: "gap-2",
-                label: "Exportar",
-                icon: <Download className="h-4 w-4" />,
-              }}
-              dropdownLabel="Exportar datos"
+            <ButtonRefetch
+              isFetching={isLoading}
+              refetch={() => fetchClientes(page)}
             />
-            
 
-            <ModalFormTemplate
-              icon={Plus}
-              title="Agregar Cliente"
-              description="Complete los campos para agregar un nuevo cliente."
-            >
-              <SearchPersonas
-                setSelectedPersona={setSelectedPersona}
-                selectedPersona={selectedPersona}
-                startSearch={startSearch}
-                personaId={personaId}
-                data={personas}
-                isLoading={loadingPersonas}
-                setPersonaId={setPersonaId}
-                error={errorPersonas}
-                handleChange={handleSearchTarget}
-                setSearch={setSearchTarget}
-                search={searchTarget}
-                variant="modal"
-                label="Filtrar persona por nombre, apellido o CUIT"
-              />
-              <ErrorDuplicateMessage message={isErrorApi} />
-              {(!selectedPersona || isErrorApi) && (
-                <ModalFormTemplate
-                  title="Crear Nueva Persona"
-                  description="Ingresar datos de persona."
-                  icon={PlusCircle}
-                  label="Crear Persona"
-                  variant="default"
-                  className="border w-[40%] lg:w-[30%] mt-6 rounded-md justify-center flex mx-auto"
-                >
-                  <PersonaCreateEdit
-                    refreshPersonas={refetchPersonas}
-                    setSelectedPersona={setSelectedPersona}
-                    setPersonaId={setPersonaId}
+            {/* Exportar */}
+            {tienePermiso("Clientes", "Ver Reporte Cliente") && (
+              <ExportOptionsDropdown
+                pdfComponent={
+                  <ExportPDFButton
+                    data={clientes}
+                    columns={getColumnsCliente({
+                      refetch: () => fetchClientes(page),
+                    })}
+                    title="Clientes"
                   />
-                </ModalFormTemplate>
-              )}
-              {!isErrorApi && (
-                <Tabs 
-                  value={activeTab} 
-                  onValueChange={setActiveTab} 
-                  className={`mt-4 ${selectedPersona?.idPersona ? "" : "hidden"}`}
-                >
-                  <TabsList className="w-full">
-                    <TabsTrigger 
-                      value="persona"
-                      className="w-1/2 rounded-md rounded-r-none"
-                    >
-                      Datos de Persona
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="cliente"
-                      className="w-1/2 rounded-md rounded-l-none"
-                    >
-                      Datos de Cliente
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="persona">
+                }
+                data={clientes}
+                columns={getColumnsCliente({
+                  refetch: () => fetchClientes(page),
+                })}
+                title="Clientes"
+                buttonProps={{
+                  variant: "outline",
+                  size: "sm",
+                  className: "gap-2",
+                  label: "Exportar",
+                  icon: <Download className="h-4 w-4" />,
+                }}
+                dropdownLabel="Exportar datos"
+              />
+            )}
+            {tienePermiso("Clientes", "Agregar Cliente") && (
+              <ModalFormTemplate
+                icon={Plus}
+                title="Agregar Cliente"
+                description="Complete los campos para agregar un nuevo cliente."
+              >
+                <SearchPersonas
+                  setSelectedPersona={setSelectedPersona}
+                  selectedPersona={selectedPersona}
+                  startSearch={startSearch}
+                  personaId={personaId}
+                  data={personas}
+                  isLoading={loadingPersonas}
+                  setPersonaId={setPersonaId}
+                  error={errorPersonas}
+                  handleChange={handleSearchTarget}
+                  setSearch={setSearchTarget}
+                  search={searchTarget}
+                  variant="modal"
+                  label="Filtrar persona por nombre, apellido o CUIT"
+                />
+                <ErrorDuplicateMessage message={isErrorApi} />
+                {(!selectedPersona || isErrorApi) && (
+                  <ModalFormTemplate
+                    title="Crear Nueva Persona"
+                    description="Ingresar datos de persona."
+                    icon={PlusCircle}
+                    label="Crear Persona"
+                    variant="default"
+                    className="border w-[40%] lg:w-[30%] mt-6 rounded-md justify-center flex mx-auto"
+                  >
                     <PersonaCreateEdit
-                      key={selectedPersona?.idPersona || "new"}
-                      persona={selectedPersona}
-                      setSelectedPersona={setSelectedPersona}
                       refreshPersonas={refetchPersonas}
-                      setActiveTab={setActiveTab}
+                      setSelectedPersona={setSelectedPersona}
+                      setPersonaId={setPersonaId}
                     />
-                  </TabsContent>
-                  <TabsContent value="cliente">
-                    <ClienteCreateEdit
-                      refreshClientes={() => fetchClientes(page)}
-                      personaId={personaId}
-                    />
-                  </TabsContent>
-                </Tabs>
-              )}
-            </ModalFormTemplate>
+                  </ModalFormTemplate>
+                )}
+                {!isErrorApi && (
+                  <Tabs
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                    className={`mt-4 ${
+                      selectedPersona?.idPersona ? "" : "hidden"
+                    }`}
+                  >
+                    <TabsList className="w-full">
+                      <TabsTrigger
+                        value="persona"
+                        className="w-1/2 rounded-md rounded-r-none"
+                      >
+                        Datos de Persona
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="cliente"
+                        className="w-1/2 rounded-md rounded-l-none"
+                      >
+                        Datos de Cliente
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="persona">
+                      <PersonaCreateEdit
+                        key={selectedPersona?.idPersona || "new"}
+                        persona={selectedPersona}
+                        setSelectedPersona={setSelectedPersona}
+                        refreshPersonas={refetchPersonas}
+                        setActiveTab={setActiveTab}
+                      />
+                    </TabsContent>
+                    <TabsContent value="cliente">
+                      <ClienteCreateEdit
+                        refreshClientes={() => fetchClientes(page)}
+                        personaId={personaId}
+                      />
+                    </TabsContent>
+                  </Tabs>
+                )}
+              </ModalFormTemplate>
+            )}
           </div>
         </CrudHeader>
 
@@ -234,7 +251,9 @@ const ClientePage = () => {
           <CardContent className="p-0">
             <DataTable
               data={clientes}
-              columns={getColumnsCliente({ refetch: () => fetchClientes(page) })}
+              columns={getColumnsCliente({
+                refetch: () => fetchClientes(page),
+              })}
               refetch={() => fetchClientes(page)}
               isLoading={isLoading}
               searchTarget="persona.nombre"

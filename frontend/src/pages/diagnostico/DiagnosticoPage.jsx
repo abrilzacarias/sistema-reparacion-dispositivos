@@ -18,6 +18,7 @@ import { Plus } from "lucide-react";
 import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
 import { Download } from "lucide-react";
 import ExportOptionsDropdown from "@/components/molecules/ExportOptionsDropdown";
+import { tienePermiso } from "@/utils/permisos";
 
 const DiagnosticosPage = () => {
   const navigate = useNavigate();
@@ -84,6 +85,7 @@ const DiagnosticosPage = () => {
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
             
             {/* Exportar */}
+            {tienePermiso("Diagnóstico", "Ver Reporte Diagnóstico") && (
             <ExportOptionsDropdown
               pdfComponent={
                 <ExportPDFButton
@@ -101,7 +103,9 @@ const DiagnosticosPage = () => {
               }}
               dropdownLabel="Exportar datos"
             />
+)}
 
+{tienePermiso("Diagnóstico", "Agregar Diagnóstico") && (
             <Button
               variant="default"
               onClick={handleAddDiagnostico}
@@ -110,6 +114,7 @@ const DiagnosticosPage = () => {
             >
               <Plus className="h-4 w-4" />
             </Button>
+            )}
           </div>
         </CrudHeader>
 
