@@ -15,7 +15,7 @@ import SearchPersonas from "@/components/organisms/SearchPersonas";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchPersonas } from "@/hooks/useSearchPersonas";
-import { PlusCircle, Settings } from "lucide-react";
+import { Plus, PlusCircle, Settings } from "lucide-react";
 import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit";
 import ClienteCreateEdit from "./components/ClienteCreateEdit";
 
@@ -124,7 +124,7 @@ const ClientePage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded shadow-sm border">
+      <div className="bg-secondary dark:bg-background p-4 rounded shadow-sm border overflow-x-auto">
         <CrudHeader title="Gestión de Clientes" subTitle="Listado y registro de clientes.">
           <div className="flex gap-2">
             <ButtonRefetch isFetching={isLoading} refetch={() => fetchClientes(page)} />
@@ -153,11 +153,9 @@ const ClientePage = () => {
             
 
             <ModalFormTemplate
-              icon={Settings}
+              icon={Plus}
               title="Agregar Cliente"
               description="Complete los campos para agregar un nuevo cliente."
-              label="Agregar Cliente"
-              contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
             >
               <SearchPersonas
                 setSelectedPersona={setSelectedPersona}

@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { useSearchPersonas } from "@/hooks/useSearchPersonas";
-import { PlusCircle, Settings } from "lucide-react";
+import { Plus, PlusCircle, Settings } from "lucide-react";
 import PersonaCreateEdit from "../../components/organisms/PersonaCreateEdit";
 import EmpleadoCreateEdit from "./components/EmpleadoCreateEdit";
 import ExportPDFButton from '@/components/organisms/pdfs/ExportPDFButton';
@@ -105,7 +105,7 @@ const EmpleadoPage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
+      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <CrudHeader title="Gestión de Empleados" subTitle="Listado, registro y modificación del personal contratado.">
           <div className="flex items-center gap-2">
             <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
@@ -130,10 +130,9 @@ const EmpleadoPage = () => {
             />
 
             <ModalFormTemplate
-              icon={Settings}
+              icon={Plus}
               title="Agregar Empleado"
               description="Complete los campos para agregar un nuevo empleado."
-              label="Agregar Empleado"
               variant="default"
               className="p-2 m-0 cursor-pointer w-full justify-start"
               contentClassName="max-w-2xl max-h-[90vh] overflow-y-auto"

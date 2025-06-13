@@ -125,6 +125,8 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
     try {
       const { correo, telefono, ...rest } = data
+      console.log("Datos del formulario:", data)
+      console.log("CUIT a enviar:", data.cuit)
 
       const isEdit = !!persona?.idPersona
 
@@ -264,19 +266,43 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 pb-0">
       <div className="space-y-2">
         <Label>Nombre</Label>
-        <Input {...register("nombre", { required: "Campo requerido" })} />
+        <Input {...register("nombre", { 
+          required: "Campo requerido",
+          pattern: {
+            value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            message: "El nombre solo puede contener letras"
+          }
+        })} />
         <ErrorMessage message={errors.nombre?.message || apiErrors?.nombre} />
       </div>
 
       <div className="space-y-2">
         <Label>Apellido</Label>
-        <Input {...register("apellido", { required: "Campo requerido" })} />
+        <Input {...register("apellido", { 
+          required: "Campo requerido",
+          pattern: {
+            value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+            message: "El apellido solo puede contener letras"
+          }
+        })} />
         <ErrorMessage message={errors.apellido?.message || apiErrors?.apellido} />
       </div>
 
       <div className="space-y-2">
         <Label>CUIT</Label>
-        <Input {...register("cuit", { required: "Campo requerido" })} />
+        <Input {...register("cuit", { 
+          required: "Campo requerido",
+          pattern: {
+            value: /^\d{11}$/,
+            message: "El CUIT debe contener exactamente 11 números"
+          },
+          validate: (value) => {
+            console.log("Validando CUIT:", value);
+            const normalized = value.replace(/[-\s]/g, '');
+            console.log("CUIT normalizado:", normalized);
+            return normalized.length === 11 || "El CUIT debe contener exactamente 11 números";
+          }
+        })} />
         <ErrorMessage message={errors.cuit?.message || apiErrors?.cuit} />
       </div>
 
@@ -374,43 +400,81 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
             <div className="space-y-2">
               <Label>País</Label>
-              <Input {...register("pais", { required: "Campo requerido" })} />
+              <Input {...register("pais", { 
+                required: "Campo requerido",
+                pattern: {
+                  value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+                  message: "El país solo puede contener letras"
+                }
+              })} />
               <ErrorMessage message={errors.pais?.message || apiErrors?.pais} />
             </div>
 
             <div className="space-y-2">
               <Label>Provincia</Label>
-              <Input {...register("provincia", { required: "Campo requerido" })} />
+              <Input {...register("provincia", { 
+                required: "Campo requerido",
+                pattern: {
+                  value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+                  message: "La provincia solo puede contener letras"
+                }
+              })} />
               <ErrorMessage message={errors.provincia?.message || apiErrors?.provincia} />
             </div>
 
             <div className="space-y-2">
               <Label>Ciudad</Label>
-              <Input {...register("ciudad", { required: "Campo requerido" })} />
+              <Input {...register("ciudad", { 
+                required: "Campo requerido",
+                pattern: {
+                  value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/,
+                  message: "La ciudad puede contener letras y números"
+                }
+              })} />
               <ErrorMessage message={errors.ciudad?.message || apiErrors?.ciudad} />
             </div>
 
             <div className="space-y-2">
               <Label>Barrio</Label>
-              <Input {...register("barrio", { required: "Campo requerido" })} />
+              <Input {...register("barrio", { 
+                pattern: {
+                  value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/,
+                  message: "El barrio puede contener letras y números"
+                }
+              })} />
               <ErrorMessage message={errors.barrio?.message || apiErrors?.barrio} />
             </div>
 
             <div className="space-y-2">
               <Label>Calle</Label>
-              <Input {...register("calle", { required: "Campo requerido" })} />
+              <Input {...register("calle", { 
+                pattern: {
+                  value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+                  message: "La calle solo puede contener letras"
+                }
+              })} />
               <ErrorMessage message={errors.calle?.message || apiErrors?.calle} />
             </div>
 
             <div className="space-y-2">
               <Label>Número</Label>
-              <Input {...register("numero", { required: "Campo requerido" })} />
+              <Input {...register("numero", { 
+                pattern: {
+                  value: /^\d+$/,
+                  message: "El número solo puede contener dígitos"
+                }
+              })} />
               <ErrorMessage message={errors.numero?.message || apiErrors?.numero} />
             </div>
 
             <div className="space-y-2">
               <Label>Departamento</Label>
-              <Input {...register("departamento", { required: "Campo requerido" })} />
+              <Input {...register("departamento", { 
+                pattern: {
+                  value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/,
+                  message: "El departamento puede contener letras y números"
+                }
+              })} />
               <ErrorMessage message={errors.departamento?.message || apiErrors?.departamento} />
             </div>
           </div>
