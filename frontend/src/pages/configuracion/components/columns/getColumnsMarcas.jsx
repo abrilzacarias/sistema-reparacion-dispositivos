@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Edit, MoreHorizontal } from "lucide-react"
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate"
+import MarcasCreateEdit from "../MarcasCreateEdit"
 // import MarcaEdit from "./MarcaEdit" // descomentar cuando tengas el componente
 
 export const getColMarcas = ({ refetch }) => [
@@ -33,7 +34,7 @@ export const getColMarcas = ({ refetch }) => [
                 className="p-2 m-0 cursor-pointer w-full justify-start"
                 contentClassName="sm:max-w-[500px]"
               >
-                {/* <MarcaEdit marca={marca} refreshMarcas={refetch} /> */}
+                {<MarcasCreateEdit marca={marca} refreshMarcas={refetch} />}
               </ModalFormTemplate>
             </DropdownMenuItem>
           </DropdownMenuContent>
