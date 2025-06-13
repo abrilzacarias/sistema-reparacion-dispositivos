@@ -22,7 +22,13 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
     const estadoMasReciente = reparacion.registroEstadoReparacion
       .sort((a, b) => new Date(b.fechaHoraRegistroEstadoReparacion) - new Date(a.fechaHoraRegistroEstadoReparacion))[0]
     
-    return estadoMasReciente.idEstadoReparacion
+    // Verificar que el estado más reciente tenga idEstadoReparacion
+    if (estadoMasReciente?.idEstadoReparacion) {
+      return estadoMasReciente.idEstadoReparacion
+    }
+    
+    console.warn("El registro de estado no contiene idEstadoReparacion válido:", estadoMasReciente)
+    return ""
   }
 
   const {
@@ -33,10 +39,8 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      //numeroReparacion: reparacion?.numeroReparacion || "",
-      fechaIngreso: reparacion?.fechaIngreso || new Date().toISOString().split("T")[0], // hoy
+      fechaIngreso: reparacion?.fechaIngreso || new Date().toISOString().split("T")[0],
       fechaEgreso: reparacion?.fechaEgreso || "",
-      //montoTotalReparacion: reparacion?.montoTotalReparacion || "",
       // Si viene idDiagnostico como prop, lo usa; si no, usa el de la reparación
       idDiagnostico: idDiagnostico || reparacion?.idDiagnostico || "",
       idEmpleado: reparacion?.idEmpleado || "",
@@ -72,10 +76,8 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
     try {
       // Preparar datos para la reparación (sin idEstadoReparacion)
       const reparacionData = {
-        //numeroReparacion: data.numeroReparacion,
         fechaIngreso: data.fechaIngreso,
         fechaEgreso: data.fechaEgreso || null,
-        //montoTotalReparacion: data.montoTotalReparacion,
         idDiagnostico: data.idDiagnostico,
         idEmpleado: data.idEmpleado,
       }
@@ -92,6 +94,7 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
       const estadoActual = reparacion ? getEstadoActual(reparacion) : null
       const estadoSeleccionado = parseInt(data.idEstadoReparacion)
       
+      // Comparar valores numéricos para evitar problemas de tipo
       if (!reparacion || estadoActual !== estadoSeleccionado) {
         await axios.post(`${API_URL}/registro-estado-reparacion/`, {
           idReparacion: reparacionResponse.idReparacion,
@@ -122,7 +125,6 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
-
       <div className="col-span-2 space-y-2">
         <Controller
           name="idDiagnostico"
@@ -139,7 +141,7 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
                 `${diagnostico.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo} de ${diagnostico.dispositivo?.cliente?.persona?.nombre || "Sin nombre"}`
               }
               valueKey="idDiagnostico"
-              disabled={!!idDiagnostico} // Deshabilitar si viene preseleccionado
+              disabled={!!idDiagnostico}
             />
           )}
         />
@@ -202,5 +204,4 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
 }
 
 export default ReparacionesCreateEdit
-
 
