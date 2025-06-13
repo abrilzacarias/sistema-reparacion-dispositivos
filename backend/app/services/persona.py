@@ -21,13 +21,25 @@ def get_personas(db: Session, search: str = None):
     return query
 
 def create_persona(db: Session, persona_data: PersonaCreate):
+    # Normalizar el CUIT eliminando guiones y espacios
+    cuit_normalizado = persona_data.cuit.replace("-", "").replace(" ", "")
+    print(f"CUIT normalizado recibido: {cuit_normalizado}")
+    
+    # Buscar persona existente con el CUIT normalizado
     persona_existente = db.query(Persona).filter(
-        Persona.cuit == persona_data.cuit,
+        func.replace(func.replace(Persona.cuit, "-", ""), " ", "") == cuit_normalizado,
         Persona.estadoPersona == 1
     ).first()
 
     if persona_existente:
+        print(f"Persona existente encontrada con CUIT: {persona_existente.cuit}")
         raise HTTPException(status_code=400, detail="Ya existe una persona con ese CUIT.")
+
+    # Debug: Imprimir todos los CUITs en la base de datos
+    todos_cuits = db.query(Persona.cuit).all()
+    print("Todos los CUITs en la base de datos:")
+    for cuit in todos_cuits:
+        print(f"- {cuit[0]}")
 
     persona = Persona(
         cuit=persona_data.cuit,
@@ -81,9 +93,12 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     if not persona:
         raise HTTPException(status_code=404, detail="Persona no encontrada.")
 
+    # Normalizar el CUIT eliminando guiones y espacios
+    cuit_normalizado = persona_data.cuit.replace("-", "").replace(" ", "")
+
     # Verificar CUIT duplicado
     persona_con_mismo_cuit = db.query(Persona).filter(
-        Persona.cuit == persona_data.cuit,
+        func.replace(func.replace(Persona.cuit, "-", ""), " ", "") == cuit_normalizado,
         Persona.idPersona != idPersona,
         Persona.estadoPersona == 1
     ).first()

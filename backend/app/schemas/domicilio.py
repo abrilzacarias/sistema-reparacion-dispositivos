@@ -8,10 +8,10 @@ class DomicilioBase(BaseModel):
     pais: Optional[str]
     provincia: Optional[str]
     ciudad: Optional[str]
-    barrio: str
-    calle: str
-    numero: str
-    departamento: str
+    barrio: Optional[str]
+    calle: Optional[str]
+    numero: Optional[str]
+    departamento: Optional[str]
     idtipoDomicilio: int
 
 class DomicilioCreate(DomicilioBase):
@@ -32,9 +32,9 @@ class DomicilioUpdate(BaseModel):
     pais: str
     provincia: str
     ciudad: str
-    barrio: str
-    calle: str
-    numero: str
+    barrio: Optional[str]
+    calle: Optional[str]
+    numero: Optional[str]
     departamento: Optional[str]
     idtipoDomicilio: int 
     idPersona: Optional[int]
