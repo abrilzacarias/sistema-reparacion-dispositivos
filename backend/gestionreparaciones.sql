@@ -32,7 +32,7 @@ CREATE TABLE `asignacionUsuarioPermisos` (
   KEY `fk_asignacionUsuarioPermisos_permisosDePerfiles1_idx` (`idpermisoPerfil`),
   CONSTRAINT `fk_asignacionUsuarioPermisos_permisosDePerfiles1` FOREIGN KEY (`idpermisoPerfil`) REFERENCES `permisoPerfil` (`idpermisoPerfil`),
   CONSTRAINT `fk_asignacionUsuarioPermisos_usuarios1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +41,7 @@ CREATE TABLE `asignacionUsuarioPermisos` (
 
 LOCK TABLES `asignacionUsuarioPermisos` WRITE;
 /*!40000 ALTER TABLE `asignacionUsuarioPermisos` DISABLE KEYS */;
+INSERT INTO `asignacionUsuarioPermisos` VALUES (3,28,323,1),(4,28,324,1),(5,28,325,1),(6,28,326,1),(7,28,327,1),(8,28,328,1),(9,28,329,1),(10,28,330,1),(11,28,331,1),(16,28,336,1),(18,28,338,1),(19,28,339,1),(21,28,341,1),(22,28,342,1),(23,28,343,1),(24,28,344,1),(25,28,345,1),(26,28,346,1),(27,28,347,1),(28,28,348,1),(29,28,349,1),(30,28,350,1),(31,28,351,1),(32,28,352,1),(33,28,353,1),(34,28,354,1),(35,28,355,1),(36,28,356,1),(37,28,70,1),(38,28,71,1),(39,28,72,1),(40,28,73,1),(41,28,74,1),(42,28,75,1),(43,28,76,1),(44,28,77,1),(45,28,78,1),(46,28,79,1),(51,28,165,1),(52,28,166,1),(53,28,167,1),(54,28,168,1),(55,28,169,1),(56,28,170,1),(57,28,171,1),(58,28,172,1),(59,28,173,1),(60,28,174,1),(61,29,70,1),(62,29,71,1),(63,29,72,1),(64,29,73,1),(65,29,74,1),(66,29,75,1),(67,29,76,1),(68,29,77,1),(69,29,78,1),(70,29,79,1),(75,29,165,1),(76,29,166,1),(77,29,167,1),(78,29,168,1),(79,29,169,1),(80,29,170,1),(81,29,171,1),(82,29,172,1),(83,29,173,1),(84,29,174,1),(89,28,390,1),(90,28,391,1),(91,28,392,1),(92,28,393,1),(93,28,394,1),(94,28,395,1),(95,28,396,1),(96,28,397,1),(97,30,366,1),(98,30,367,1),(99,30,368,1),(100,30,369,1),(101,30,370,1),(102,30,371,1),(103,30,372,1),(104,30,373,1),(105,30,374,1),(106,30,375,1),(107,30,376,1),(108,30,377,1),(109,30,378,1),(110,30,379,1),(111,30,380,1),(112,30,381,1),(113,30,382,1),(114,30,383,1),(115,30,384,1),(116,30,385,1),(117,30,386,1),(118,30,387,1),(119,30,388,1),(120,30,389,1),(121,28,398,1),(122,29,398,1),(123,28,399,1),(124,29,399,1),(125,28,400,1),(126,29,400,1),(127,28,401,1),(128,29,401,1),(129,28,402,1),(130,29,402,1),(131,28,403,1),(132,29,403,1),(133,28,404,1),(134,29,404,1),(135,28,405,1),(136,29,405,1),(137,28,406,1),(138,29,406,1);
 /*!40000 ALTER TABLE `asignacionUsuarioPermisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +90,7 @@ CREATE TABLE `contacto` (
   KEY `fk_contacto_personas1_idx` (`idPersona`),
   CONSTRAINT `fk_contacto_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_contacto_tipoContacto1` FOREIGN KEY (`idtipoContacto`) REFERENCES `tipoContacto` (`idtipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +99,7 @@ CREATE TABLE `contacto` (
 
 LOCK TABLES `contacto` WRITE;
 /*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-INSERT INTO `contacto` VALUES (25,'+5493704259037',3,62,1);
+INSERT INTO `contacto` VALUES (25,'+5493704259037',3,62,1),(28,'abrilzacaria15@gmail.com',2,65,1),(29,'+5492616862550',3,65,1),(30,'abrilzacarias6@gmail.com',2,67,1),(31,'+5492616862552',3,67,1),(32,'abrilzacaria5@gmail.com',2,68,1),(33,'+5492616862551',3,68,1),(34,'abrilzacarias15@gmail.com',2,69,1),(35,'+5492616862522',3,69,1),(36,'abbz1504@gmail.com',2,71,1),(37,'+5492616862220',3,71,1),(38,'consortiumsolutionsarg@gmail.com',2,72,1),(39,'+5492616862228',3,72,1),(40,'abrilzacari9@gmail.com',2,73,1),(41,'+5492616832220',3,73,1),(42,'pauladvillalba@gmail.com',2,74,1),(43,'+5492616862500',3,74,1),(44,'nazab@gmail.com',2,75,1),(45,'+5492616762228',3,75,1),(46,'consortiusmsolutionsarg@gmail.com',2,76,1),(47,'+5492643362221',3,76,1),(48,'ppaulitaaaa2904@gmail.com',2,77,1),(49,'+5492643362226',3,77,1);
 /*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,7 +276,7 @@ CREATE TABLE `domicilio` (
   KEY `fk_domicilio_tipoDomicilio1_idx` (`idtipoDomicilio`),
   CONSTRAINT `fk_domicilio_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_domicilio_tipoDomicilio1` FOREIGN KEY (`idtipoDomicilio`) REFERENCES `tipoDomicilio` (`idtipoDomicilio`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -284,6 +285,7 @@ CREATE TABLE `domicilio` (
 
 LOCK TABLES `domicilio` WRITE;
 /*!40000 ALTER TABLE `domicilio` DISABLE KEYS */;
+INSERT INTO `domicilio` VALUES (3,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,65),(4,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,67),(5,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,68),(6,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,69),(7,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,71),(8,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,72),(9,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,73),(10,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,74),(11,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,75),(12,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,76),(13,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,77);
 /*!40000 ALTER TABLE `domicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +310,7 @@ CREATE TABLE `empleado` (
   CONSTRAINT `fk_empleado_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_empleado_puestoLaboral1` FOREIGN KEY (`idpuestoLaboral`) REFERENCES `puestoLaboral` (`idpuestoLaboral`),
   CONSTRAINT `fk_empleado_usuario1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +319,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (29,'2025-06-10',NULL,7,61,23);
+INSERT INTO `empleado` VALUES (29,'2025-06-10',NULL,7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13',NULL,7,74,29),(33,'2025-06-13',NULL,7,77,30);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,7 +334,7 @@ CREATE TABLE `estadoReparacion` (
   `idEstadoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionEstadoReparacion` varchar(70) NOT NULL,
   PRIMARY KEY (`idEstadoReparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,7 +343,7 @@ CREATE TABLE `estadoReparacion` (
 
 LOCK TABLES `estadoReparacion` WRITE;
 /*!40000 ALTER TABLE `estadoReparacion` DISABLE KEYS */;
-INSERT INTO `estadoReparacion` VALUES (2,'Presupuestado'),(3,'En Curso'),(4,'Pendiente');
+INSERT INTO `estadoReparacion` VALUES (2,'Presupuestado'),(3,'En Curso'),(4,'Pendiente'),(5,'Entregado');
 /*!40000 ALTER TABLE `estadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,7 +359,7 @@ CREATE TABLE `funcionSistema` (
   `descripcionFuncionSistema` varchar(45) NOT NULL,
   `estadoFuncionSistema` tinyint NOT NULL COMMENT 'ACTIVO O NO',
   PRIMARY KEY (`idfuncionSistema`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +368,7 @@ CREATE TABLE `funcionSistema` (
 
 LOCK TABLES `funcionSistema` WRITE;
 /*!40000 ALTER TABLE `funcionSistema` DISABLE KEYS */;
-INSERT INTO `funcionSistema` VALUES (2,'Visualizar Repuesto',1),(3,'Crear Repuesto',1),(4,'Modificar Repuesto',1),(5,'Eliminar Repuesto',1),(6,'Agregar Tipo de Repuesto',1),(7,'Modificar Tipo de Repuesto',1),(8,'Eliminar Tipo de Repuesto',1),(9,'Visualizar Tipo de Repuesto',1),(10,'Visualizar Cliente',1),(11,'Agregar Cliente',1),(12,'Modificar Cliente',1),(13,'Eliminar Cliente',1),(14,'Visualizar Reparación',1),(15,'Agregar Reparación',1),(16,'Modificar Reparación',1),(17,'Eliminar Reparación',1),(18,'Visualizar Tipo de Reparación',1),(19,'Agregar Tipo de Reparación',1),(20,'Modificar Tipo de Reparación',1),(21,'Eliminar Tipo de Reparación',1),(22,'Visualizar Empleado',1),(23,'Agregar Empleado',1),(24,'Modificar Empleado',1),(25,'Eliminar Empleado',1),(26,'Visualizar Perfiles',1),(27,'Agregar Perfiles',1),(28,'Modificar Perfiles',1),(29,'Eliminar Perfiles',1),(30,'Visualizar Módulos',1),(31,'Modificar Módulos',1),(32,'Visualizar Funciones',1),(33,'Visualizar Diagnóstico',1),(34,'Agregar Diagnóstico',1),(35,'Modificar Diagnóstico',1),(36,'Eliminar Diagnóstico',1),(37,'Ver Reporte Repuesto',1),(38,'Ver Reporte Cliente',1),(39,'Ver Reporte Reparación',1),(40,'Ver Reporte Empleado',1),(41,'Ver Reporte Perfiles',1),(42,'Ver Reporte Diagnóstico',1);
+INSERT INTO `funcionSistema` VALUES (2,'Visualizar Repuesto',1),(3,'Crear Repuesto',1),(4,'Modificar Repuesto',1),(5,'Eliminar Repuesto',1),(6,'Agregar Tipo de Repuesto',1),(7,'Modificar Tipo de Repuesto',1),(8,'Eliminar Tipo de Repuesto',1),(9,'Visualizar Tipo de Repuesto',1),(10,'Visualizar Cliente',1),(11,'Agregar Cliente',1),(12,'Modificar Cliente',1),(13,'Eliminar Cliente',1),(14,'Visualizar Reparación',1),(15,'Agregar Reparación',1),(16,'Modificar Reparación',1),(17,'Eliminar Reparación',1),(18,'Visualizar Tipo de Reparación',1),(19,'Agregar Tipo de Reparación',1),(20,'Modificar Tipo de Reparación',1),(21,'Eliminar Tipo de Reparación',1),(22,'Visualizar Empleado',1),(23,'Agregar Empleado',1),(24,'Modificar Empleado',1),(25,'Eliminar Empleado',1),(26,'Visualizar Perfiles',1),(27,'Agregar Perfiles',1),(28,'Modificar Perfiles',1),(29,'Eliminar Perfiles',1),(30,'Visualizar Módulos',1),(31,'Modificar Módulos',1),(32,'Visualizar Funciones',1),(33,'Visualizar Diagnóstico',1),(34,'Agregar Diagnóstico',1),(35,'Modificar Diagnóstico',1),(36,'Eliminar Diagnóstico',1),(37,'Ver Reporte Repuesto',1),(38,'Ver Reporte Cliente',1),(39,'Ver Reporte Reparación',1),(40,'Ver Reporte Empleado',1),(41,'Ver Reporte Perfiles',1),(42,'Ver Reporte Diagnóstico',1),(43,'Visualizar Dashboard',1);
 /*!40000 ALTER TABLE `funcionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -501,7 +503,7 @@ CREATE TABLE `moduloFuncionSistema` (
   KEY `fk_moduloFuncionSistema_funcionSistema1_idx` (`idfuncionSistema`),
   CONSTRAINT `fk_moduloFuncionSistema_funcionSistema1` FOREIGN KEY (`idfuncionSistema`) REFERENCES `funcionSistema` (`idfuncionSistema`),
   CONSTRAINT `fk_moduloFuncionSistema_moduloSistema1` FOREIGN KEY (`idmoduloSistema`) REFERENCES `moduloSistema` (`idmoduloSistema`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -510,7 +512,7 @@ CREATE TABLE `moduloFuncionSistema` (
 
 LOCK TABLES `moduloFuncionSistema` WRITE;
 /*!40000 ALTER TABLE `moduloFuncionSistema` DISABLE KEYS */;
-INSERT INTO `moduloFuncionSistema` VALUES (3,1,39,'reparacion/ver-reporte-reparacion',0),(5,1,38,'reparacion/ver-reporte-cliente',0),(6,1,14,'reparacion/visualizar-reparación',0),(7,1,15,'reparacion/agregar-reparación',0),(8,1,16,'reparacion/modificar-reparación',0),(9,1,17,'reparacion/eliminar-reparación',0),(10,1,18,'reparacion/visualizar-tipo-de-reparación',0),(11,1,19,'reparacion/agregar-tipo-de-reparación',0),(12,1,20,'reparacion/modificar-tipo-de-reparación',0),(13,1,21,'reparacion/eliminar-tipo-de-reparación',0),(14,2,33,'diagnóstico/visualizar-diagnóstico',0),(15,2,34,'diagnóstico/agregar-diagnóstico',0),(16,2,35,'diagnóstico/modificar-diagnóstico',0),(17,2,36,'diagnóstico/eliminar-diagnóstico',0),(18,2,42,'diagnóstico/ver-reporte-diagnóstico',0),(19,3,22,'empleados/visualizar-empleado',0),(20,3,23,'empleados/agregar-empleado',0),(21,3,40,'empleados/ver-reporte-empleado',0),(22,3,24,'empleados/modificar-empleado',0),(23,3,25,'empleados/eliminar-empleado',0),(24,4,38,'clientes/ver-reporte-cliente',1),(25,4,10,'clientes/visualizar-cliente',0),(26,4,11,'clientes/agregar-cliente',0),(27,4,12,'clientes/modificar-cliente',0),(28,4,13,'clientes/eliminar-cliente',0),(29,5,2,'repuestos/visualizar-repuesto',1),(30,5,3,'repuestos/crear-repuesto',1),(31,5,4,'repuestos/modificar-repuesto',1),(32,5,37,'repuestos/ver-reporte-repuesto',1),(33,5,5,'repuestos/eliminar-repuesto',1),(34,5,7,'repuestos/modificar-tipo-de-repuesto',1),(35,5,8,'repuestos/eliminar-tipo-de-repuesto',1),(36,5,9,'repuestos/visualizar-tipo-de-repuesto',1),(37,5,6,'repuestos/agregar-tipo-de-repuesto',1),(38,6,41,'perfiles/ver-reporte-perfiles',1),(39,6,26,'perfiles/visualizar-perfiles',1),(40,6,27,'perfiles/agregar-perfiles',1),(41,6,28,'perfiles/modificar-perfiles',1),(42,6,29,'perfiles/eliminar-perfiles',1);
+INSERT INTO `moduloFuncionSistema` VALUES (3,1,39,'reparacion/ver-reporte-reparacion',0),(5,1,38,'reparacion/ver-reporte-cliente',0),(6,1,14,'reparacion/visualizar-reparación',0),(7,1,15,'reparacion/agregar-reparación',0),(8,1,16,'reparacion/modificar-reparación',0),(9,1,17,'reparacion/eliminar-reparación',0),(10,1,18,'reparacion/visualizar-tipo-de-reparación',0),(11,1,19,'reparacion/agregar-tipo-de-reparación',0),(12,1,20,'reparacion/modificar-tipo-de-reparación',0),(13,1,21,'reparacion/eliminar-tipo-de-reparación',0),(14,2,33,'diagnóstico/visualizar-diagnóstico',0),(15,2,34,'diagnóstico/agregar-diagnóstico',0),(16,2,35,'diagnóstico/modificar-diagnóstico',0),(17,2,36,'diagnóstico/eliminar-diagnóstico',0),(18,2,42,'diagnóstico/ver-reporte-diagnóstico',0),(19,3,22,'empleados/visualizar-empleado',0),(20,3,23,'empleados/agregar-empleado',0),(21,3,40,'empleados/ver-reporte-empleado',0),(22,3,24,'empleados/modificar-empleado',0),(23,3,25,'empleados/eliminar-empleado',0),(24,4,38,'clientes/ver-reporte-cliente',1),(25,4,10,'clientes/visualizar-cliente',0),(26,4,11,'clientes/agregar-cliente',0),(27,4,12,'clientes/modificar-cliente',0),(28,4,13,'clientes/eliminar-cliente',0),(29,5,2,'repuestos/visualizar-repuesto',1),(30,5,3,'repuestos/crear-repuesto',1),(31,5,4,'repuestos/modificar-repuesto',1),(32,5,37,'repuestos/ver-reporte-repuesto',1),(33,5,5,'repuestos/eliminar-repuesto',1),(34,5,7,'repuestos/modificar-tipo-de-repuesto',1),(35,5,8,'repuestos/eliminar-tipo-de-repuesto',1),(36,5,9,'repuestos/visualizar-tipo-de-repuesto',1),(37,5,6,'repuestos/agregar-tipo-de-repuesto',1),(38,6,41,'perfiles/ver-reporte-perfiles',1),(39,6,26,'perfiles/visualizar-perfiles',1),(40,6,27,'perfiles/agregar-perfiles',1),(41,6,28,'perfiles/modificar-perfiles',1),(42,6,29,'perfiles/eliminar-perfiles',1),(43,7,43,'/dashboard',1);
 /*!40000 ALTER TABLE `moduloFuncionSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -526,7 +528,7 @@ CREATE TABLE `moduloSistema` (
   `descripcionModuloSistema` varchar(45) NOT NULL,
   `estadoModuloSistema` tinyint NOT NULL,
   PRIMARY KEY (`idmoduloSistema`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -535,7 +537,7 @@ CREATE TABLE `moduloSistema` (
 
 LOCK TABLES `moduloSistema` WRITE;
 /*!40000 ALTER TABLE `moduloSistema` DISABLE KEYS */;
-INSERT INTO `moduloSistema` VALUES (1,'Reparación',1),(2,'Diagnóstico',1),(3,'Empleados',1),(4,'Clientes',1),(5,'Repuestos',1),(6,'Perfiles',1);
+INSERT INTO `moduloSistema` VALUES (1,'Reparaciones',1),(2,'Diagnóstico',1),(3,'Empleados',1),(4,'Clientes',1),(5,'Repuestos',1),(6,'Perfiles',1),(7,'Inicio',1);
 /*!40000 ALTER TABLE `moduloSistema` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -549,9 +551,9 @@ DROP TABLE IF EXISTS `perfil`;
 CREATE TABLE `perfil` (
   `idPerfil` int NOT NULL AUTO_INCREMENT,
   `nombrePerfil` varchar(45) NOT NULL,
-  `estadoPerfil` tinyint NOT NULL,
+  `estadoPerfil` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`idPerfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -560,7 +562,7 @@ CREATE TABLE `perfil` (
 
 LOCK TABLES `perfil` WRITE;
 /*!40000 ALTER TABLE `perfil` DISABLE KEYS */;
-INSERT INTO `perfil` VALUES (1,'Administrador',1),(2,'Supervisor',0),(3,'Supervisor Oficial',0),(4,'Recepcionista',1),(5,'Temporal',0),(6,'Supervisoraa',0),(7,'Temporal2',0);
+INSERT INTO `perfil` VALUES (1,'Administrador',1),(2,'Supervisor',0),(3,'Supervisor Oficial',0),(4,'Recepcionista',1),(5,'Temporal',0),(6,'Supervisoraa',0),(7,'Temporal2',0),(8,'Técnico',1);
 /*!40000 ALTER TABLE `perfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -581,7 +583,7 @@ CREATE TABLE `permisoPerfil` (
   KEY `fk_permisoPerfil_moduloFuncionSistema1_idx` (`idmoduloFuncionSistema`),
   CONSTRAINT `fk_permisoPerfil_moduloFuncionSistema1` FOREIGN KEY (`idmoduloFuncionSistema`) REFERENCES `moduloFuncionSistema` (`idmoduloFuncionSistema`),
   CONSTRAINT `fk_permisosDePerfiles_perfiles1` FOREIGN KEY (`idPerfil`) REFERENCES `perfil` (`idPerfil`)
-) ENGINE=InnoDB AUTO_INCREMENT=323 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=407 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -590,7 +592,7 @@ CREATE TABLE `permisoPerfil` (
 
 LOCK TABLES `permisoPerfil` WRITE;
 /*!40000 ALTER TABLE `permisoPerfil` DISABLE KEYS */;
-INSERT INTO `permisoPerfil` VALUES (3,2,0,3),(5,2,0,5),(6,2,0,6),(7,2,0,7),(8,2,0,8),(9,2,0,9),(10,2,0,10),(11,2,0,11),(12,2,0,12),(13,2,0,13),(22,2,0,14),(23,2,0,15),(24,2,0,16),(25,2,0,17),(26,2,0,18),(32,2,0,3),(33,2,0,5),(34,2,0,6),(35,2,0,7),(36,2,0,8),(37,2,0,9),(38,2,0,10),(39,2,0,11),(40,2,0,12),(41,2,0,13),(42,2,0,14),(43,2,0,15),(44,2,0,16),(45,2,0,17),(46,2,0,19),(47,2,0,20),(48,2,0,21),(49,2,0,22),(50,2,0,23),(51,2,0,3),(52,2,0,5),(53,2,0,6),(54,2,0,7),(55,2,0,8),(56,2,0,9),(57,2,0,10),(58,2,0,11),(59,2,0,12),(60,2,0,13),(61,2,0,14),(62,2,0,15),(63,2,0,16),(64,2,0,17),(65,2,0,19),(66,2,0,20),(67,2,0,21),(68,2,0,22),(69,2,0,23),(70,4,1,3),(71,4,1,5),(72,4,1,6),(73,4,1,7),(74,4,1,8),(75,4,1,9),(76,4,1,10),(77,4,1,11),(78,4,1,12),(79,4,1,13),(80,4,1,14),(81,4,1,15),(82,4,1,16),(83,4,1,17),(84,2,0,3),(85,2,0,5),(86,2,0,6),(87,2,0,7),(88,2,0,8),(89,2,0,9),(90,2,0,10),(91,2,0,11),(92,2,0,12),(93,2,0,13),(94,2,0,14),(95,2,0,15),(96,2,0,16),(97,2,0,17),(98,2,0,18),(99,2,0,3),(100,2,0,5),(101,2,0,6),(102,2,0,7),(103,2,0,8),(104,2,0,9),(105,2,0,10),(106,2,0,11),(107,2,0,12),(108,2,0,13),(109,2,0,16),(110,2,0,17),(111,2,0,18),(112,2,0,19),(113,2,0,20),(114,2,0,21),(115,2,0,22),(116,2,0,23),(117,2,0,3),(118,2,0,5),(119,2,0,6),(120,2,0,7),(121,2,0,8),(122,2,0,9),(123,2,0,10),(124,2,0,11),(125,2,0,12),(126,2,0,13),(127,2,0,16),(128,2,0,18),(129,2,0,19),(130,2,0,20),(131,2,0,21),(132,2,0,22),(133,2,0,23),(134,2,0,3),(135,2,0,5),(136,2,0,6),(137,2,0,7),(138,2,0,8),(139,2,0,9),(140,2,0,10),(141,2,0,11),(142,2,0,12),(143,2,0,13),(144,2,0,14),(145,2,0,19),(146,2,0,20),(147,2,0,21),(148,2,0,22),(149,2,0,23),(150,2,0,3),(151,2,0,5),(152,2,0,6),(153,2,0,7),(154,2,0,8),(155,2,0,9),(156,2,0,10),(157,2,0,11),(158,2,0,12),(159,2,0,13),(160,2,0,19),(161,2,0,20),(162,2,0,21),(163,2,0,22),(164,2,0,23),(165,4,1,3),(166,4,1,5),(167,4,1,6),(168,4,1,7),(169,4,1,8),(170,4,1,9),(171,4,1,10),(172,4,1,11),(173,4,1,12),(174,4,1,13),(175,2,0,3),(176,2,0,5),(177,2,0,6),(178,2,0,7),(179,2,0,8),(180,2,0,9),(181,2,0,10),(182,2,0,11),(183,2,0,12),(184,2,0,13),(185,2,0,19),(186,2,0,20),(187,2,0,21),(188,2,0,22),(189,2,0,23),(190,2,0,19),(194,3,0,3),(200,5,0,25),(201,5,0,26),(202,5,0,27),(203,5,0,28),(204,6,0,14),(205,6,0,15),(206,6,0,16),(207,6,0,17),(208,6,0,18),(210,7,0,3),(211,7,0,7),(287,1,1,3),(288,1,1,5),(289,1,1,6),(290,1,1,7),(291,1,1,8),(292,1,1,9),(293,1,1,10),(294,1,1,11),(295,1,1,12),(296,1,1,13),(297,1,1,14),(298,1,1,15),(299,1,1,16),(300,1,1,17),(301,1,1,19),(302,1,1,20),(303,1,1,21),(304,1,1,22),(305,1,1,23),(306,1,1,25),(307,1,1,26),(308,1,1,27),(309,1,1,28),(310,1,1,29),(311,1,1,30),(312,1,1,31),(313,1,1,32),(314,1,1,33),(315,1,1,34),(316,1,1,35),(317,1,1,37),(318,1,1,38),(319,1,1,39),(320,1,1,40),(321,1,1,41),(322,1,1,42);
+INSERT INTO `permisoPerfil` VALUES (3,2,0,3),(5,2,0,5),(6,2,0,6),(7,2,0,7),(8,2,0,8),(9,2,0,9),(10,2,0,10),(11,2,0,11),(12,2,0,12),(13,2,0,13),(22,2,0,14),(23,2,0,15),(24,2,0,16),(25,2,0,17),(26,2,0,18),(32,2,0,3),(33,2,0,5),(34,2,0,6),(35,2,0,7),(36,2,0,8),(37,2,0,9),(38,2,0,10),(39,2,0,11),(40,2,0,12),(41,2,0,13),(42,2,0,14),(43,2,0,15),(44,2,0,16),(45,2,0,17),(46,2,0,19),(47,2,0,20),(48,2,0,21),(49,2,0,22),(50,2,0,23),(51,2,0,3),(52,2,0,5),(53,2,0,6),(54,2,0,7),(55,2,0,8),(56,2,0,9),(57,2,0,10),(58,2,0,11),(59,2,0,12),(60,2,0,13),(61,2,0,14),(62,2,0,15),(63,2,0,16),(64,2,0,17),(65,2,0,19),(66,2,0,20),(67,2,0,21),(68,2,0,22),(69,2,0,23),(70,4,1,3),(71,4,1,5),(72,4,1,6),(73,4,1,7),(74,4,1,8),(75,4,1,9),(76,4,1,10),(77,4,1,11),(78,4,1,12),(79,4,1,13),(84,2,0,3),(85,2,0,5),(86,2,0,6),(87,2,0,7),(88,2,0,8),(89,2,0,9),(90,2,0,10),(91,2,0,11),(92,2,0,12),(93,2,0,13),(94,2,0,14),(95,2,0,15),(96,2,0,16),(97,2,0,17),(98,2,0,18),(99,2,0,3),(100,2,0,5),(101,2,0,6),(102,2,0,7),(103,2,0,8),(104,2,0,9),(105,2,0,10),(106,2,0,11),(107,2,0,12),(108,2,0,13),(109,2,0,16),(110,2,0,17),(111,2,0,18),(112,2,0,19),(113,2,0,20),(114,2,0,21),(115,2,0,22),(116,2,0,23),(117,2,0,3),(118,2,0,5),(119,2,0,6),(120,2,0,7),(121,2,0,8),(122,2,0,9),(123,2,0,10),(124,2,0,11),(125,2,0,12),(126,2,0,13),(127,2,0,16),(128,2,0,18),(129,2,0,19),(130,2,0,20),(131,2,0,21),(132,2,0,22),(133,2,0,23),(134,2,0,3),(135,2,0,5),(136,2,0,6),(137,2,0,7),(138,2,0,8),(139,2,0,9),(140,2,0,10),(141,2,0,11),(142,2,0,12),(143,2,0,13),(144,2,0,14),(145,2,0,19),(146,2,0,20),(147,2,0,21),(148,2,0,22),(149,2,0,23),(150,2,0,3),(151,2,0,5),(152,2,0,6),(153,2,0,7),(154,2,0,8),(155,2,0,9),(156,2,0,10),(157,2,0,11),(158,2,0,12),(159,2,0,13),(160,2,0,19),(161,2,0,20),(162,2,0,21),(163,2,0,22),(164,2,0,23),(165,4,1,3),(166,4,1,5),(167,4,1,6),(168,4,1,7),(169,4,1,8),(170,4,1,9),(171,4,1,10),(172,4,1,11),(173,4,1,12),(174,4,1,13),(175,2,0,3),(176,2,0,5),(177,2,0,6),(178,2,0,7),(179,2,0,8),(180,2,0,9),(181,2,0,10),(182,2,0,11),(183,2,0,12),(184,2,0,13),(185,2,0,19),(186,2,0,20),(187,2,0,21),(188,2,0,22),(189,2,0,23),(190,2,0,19),(194,3,0,3),(200,5,0,25),(201,5,0,26),(202,5,0,27),(203,5,0,28),(204,6,0,14),(205,6,0,15),(206,6,0,16),(207,6,0,17),(208,6,0,18),(210,7,0,3),(211,7,0,7),(323,1,1,3),(324,1,1,6),(325,1,1,7),(326,1,1,8),(327,1,1,9),(328,1,1,10),(329,1,1,11),(330,1,1,12),(331,1,1,13),(336,1,1,19),(338,1,1,21),(339,1,1,22),(341,1,1,25),(342,1,1,28),(343,1,1,29),(344,1,1,30),(345,1,1,31),(346,1,1,32),(347,1,1,33),(348,1,1,34),(349,1,1,35),(350,1,1,37),(351,1,1,38),(352,1,1,39),(353,1,1,40),(354,1,1,41),(355,1,1,42),(356,1,1,27),(357,1,1,26),(366,8,1,3),(367,8,1,5),(368,8,1,6),(369,8,1,7),(370,8,1,8),(371,8,1,9),(372,8,1,10),(373,8,1,11),(374,8,1,12),(375,8,1,13),(376,8,1,14),(377,8,1,15),(378,8,1,16),(379,8,1,17),(380,8,1,18),(381,8,1,29),(382,8,1,30),(383,8,1,31),(384,8,1,32),(385,8,1,33),(386,8,1,34),(387,8,1,35),(388,8,1,36),(389,8,1,37),(390,1,1,43),(391,1,1,14),(392,1,1,15),(393,1,1,16),(394,1,1,17),(395,1,1,18),(396,1,1,20),(397,1,1,23),(398,4,1,14),(399,4,1,15),(400,4,1,16),(401,4,1,17),(402,4,1,18),(403,4,1,25),(404,4,1,26),(405,4,1,27),(406,4,1,28);
 /*!40000 ALTER TABLE `permisoPerfil` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -609,7 +611,7 @@ CREATE TABLE `persona` (
   `fechaNacimiento` date NOT NULL,
   `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -618,7 +620,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1);
+INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -760,7 +762,7 @@ CREATE TABLE `repuesto` (
   KEY `fk_respuestos_tipoRepuesto1_idx` (`idTipoRepuesto`),
   CONSTRAINT `fk_repuestos_marca1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`),
   CONSTRAINT `fk_respuestos_tipoRepuesto1` FOREIGN KEY (`idTipoRepuesto`) REFERENCES `tipoRepuesto` (`idTipoRepuesto`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -769,6 +771,7 @@ CREATE TABLE `repuesto` (
 
 LOCK TABLES `repuesto` WRITE;
 /*!40000 ALTER TABLE `repuesto` DISABLE KEYS */;
+INSERT INTO `repuesto` VALUES (3,'Pantalla premium',200,9,10,2,1);
 /*!40000 ALTER TABLE `repuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -792,7 +795,7 @@ CREATE TABLE `tipoContacto` (
 
 LOCK TABLES `tipoContacto` WRITE;
 /*!40000 ALTER TABLE `tipoContacto` DISABLE KEYS */;
-INSERT INTO `tipoContacto` VALUES (3,'Telefono');
+INSERT INTO `tipoContacto` VALUES (2,'email'),(3,'telefono');
 /*!40000 ALTER TABLE `tipoContacto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -884,7 +887,7 @@ CREATE TABLE `tipoDomicilio` (
   `idtipoDomicilio` int NOT NULL AUTO_INCREMENT,
   `descripciontipoDomicilio` varchar(45) NOT NULL,
   PRIMARY KEY (`idtipoDomicilio`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -893,6 +896,7 @@ CREATE TABLE `tipoDomicilio` (
 
 LOCK TABLES `tipoDomicilio` WRITE;
 /*!40000 ALTER TABLE `tipoDomicilio` DISABLE KEYS */;
+INSERT INTO `tipoDomicilio` VALUES (1,'Laboral'),(2,'Personal');
 /*!40000 ALTER TABLE `tipoDomicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -930,7 +934,7 @@ CREATE TABLE `tipoRepuesto` (
   `idTipoRepuesto` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoRepuesto` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoRepuesto`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -939,6 +943,7 @@ CREATE TABLE `tipoRepuesto` (
 
 LOCK TABLES `tipoRepuesto` WRITE;
 /*!40000 ALTER TABLE `tipoRepuesto` DISABLE KEYS */;
+INSERT INTO `tipoRepuesto` VALUES (2,'Pantalla'),(3,'Bateria'),(4,'Display');
 /*!40000 ALTER TABLE `tipoRepuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -956,7 +961,7 @@ CREATE TABLE `usuario` (
   `email` varchar(100) NOT NULL,
   `needs_password_change` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -965,7 +970,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com',0);
+INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com',0),(24,'abrilzacarias15','$2b$12$tITGiERylyQ4DCz1UNkMT.6xirtGKWpmJafMyQ/m6t4DYwBgfwZGW','abrilzacarias15@gmail.com',1),(25,'abrilzacaria15','$2b$12$QZywH6EVy62OdObQd2GESuBsPCjGSKgs12q9OlfVoCMHhfLDAIKT2','abrilzacaria15@gmail.com',1),(26,'abrilzacarias6','$2b$12$ba2Rjia/zqW1tz4u6hVJDO1.rshbo0nkkz8XDzMkkxtNMn5pdviOG','abrilzacarias6@gmail.com',1),(27,'abbz1504','$2b$12$T3K8FVZu3MuYohr80hd8vuKWcCGK9o2aqDOt9cSTiMM7fqD0O6k4i','abbz1504@gmail.com',1),(28,'consortiumsolutionsarg','$2b$12$9FTqnVbRXpX8OxMsQKzv6eR8P7aaWPdzJ71kx8786cDpyie6f2Uba','consortiumsolutionsarg@gmail.com',0),(29,'pauladvillalba','$2b$12$P8cppfLP3wfAQXjAusP07u6REX8KF1ka1Ruz1Ktgp1GwrQWQv7oD2','pauladvillalba@gmail.com',0),(30,'ppaulitaaaa2904','$2b$12$/NX6.XU3ZfWM4eciqwh8yOSRDjYYJbFuvNk9HlY6MlDZz8MAt7BPq','ppaulitaaaa2904@gmail.com',0);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1012,4 +1017,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-12 17:40:59
+-- Dump completed on 2025-06-13 12:57:15
