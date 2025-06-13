@@ -29,14 +29,14 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           className={`relative ${darkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
         >
           <Bell className="h-5 w-5" />
           <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-        </Button>
+        </Button> */}
 
         <Button
           variant="ghost"

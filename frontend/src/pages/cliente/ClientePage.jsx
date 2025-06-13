@@ -85,7 +85,6 @@ const ClientePage = () => {
 
   const startSearch = () => {
     if (searchTarget.trim() !== "") {
-      console.log("✅ Condición cumplida, ejecutando búsqueda...");
       resetQuery();
       setSelectedPersona(
         totalPersonas === 1
@@ -108,7 +107,7 @@ const ClientePage = () => {
   useEffect(() => {
     if (selectedPersona?.cliente) {
       setIsErrorApi(
-        `La persona ${selectedPersona.nombre} ${selectedPersona.apellido} ya es Cliente.`
+        `La persona ${selectedPersona.nombre} ${selectedPersona.apellido} ya es un cliente.`
       );
     } else {
       setIsErrorApi(false);
@@ -117,7 +116,7 @@ const ClientePage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded shadow-sm border overflow-x-auto">
+      <div className="bg-secondary dark:bg-background p-4  rounded-lg  shadow-sm border overflow-x-auto">
         <CrudHeader
           title="Gestión de Clientes"
           subTitle="Listado y registro de clientes."
