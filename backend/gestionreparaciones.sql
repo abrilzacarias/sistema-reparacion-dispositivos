@@ -719,7 +719,7 @@ CREATE TABLE `reparacion` (
   `idReparacion` int NOT NULL AUTO_INCREMENT,
   `fechaIngreso` date NOT NULL,
   `fechaEgreso` date DEFAULT NULL,
-  `montoTotalReparacion` decimal(10,0) NOT NULL,
+  `montoTotalReparacion` decimal(10,0) DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
   `idEmpleado` int NOT NULL COMMENT 'puede ser que un empleado haga el diagnostico y otro la reparacion',
   PRIMARY KEY (`idReparacion`),
@@ -736,7 +736,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (1,1,'2025-06-07',NULL,4500,1,11),(2,2,'2025-06-07',NULL,4500,1,11);
+
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 

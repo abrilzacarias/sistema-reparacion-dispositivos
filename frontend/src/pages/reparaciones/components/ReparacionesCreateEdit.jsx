@@ -136,7 +136,7 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones }) => {
               setValue={field.onChange}
               placeholder="Seleccione un diagnóstico..."
               displayKey={(diagnostico) =>
-                `${diagnostico.dispositivo?.descripcionDispositivo} de ${diagnostico.dispositivo?.cliente?.persona?.nombre || "Sin nombre"}`
+                `${diagnostico.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo} de ${diagnostico.dispositivo?.cliente?.persona?.nombre || "Sin nombre"}`
               }
               valueKey="idDiagnostico"
             />
