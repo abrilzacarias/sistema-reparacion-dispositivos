@@ -6,6 +6,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from app.database import get_db
 from app.schemas import empleado as schemas
 from app.services import empleado as services
+from app.models import Empleado, Perfil
 
 router = APIRouter(prefix="/empleados", tags=["Empleados"])
 
@@ -25,8 +26,12 @@ def read_empleado(idEmpleado: int, db: Session = Depends(get_db)):
     return empleado
 
 @router.post("/", response_model=schemas.EmpleadoOut, status_code=status.HTTP_201_CREATED, summary="Crear nuevo empleado")
-def create_empleado(empleado: schemas.EmpleadoCreate, db: Session = Depends(get_db)):
-    return services.create_empleado(db, empleado)
+def create_empleado(
+    empleado_data: schemas.EmpleadoCreate,
+    db: Session = Depends(get_db) 
+):
+    return services.create_empleado(db, empleado_data)
+
 
 @router.put("/{idEmpleado}", response_model=schemas.EmpleadoOut, summary="Actualizar empleado existente")
 def update_empleado(idEmpleado: int, empleado: schemas.EmpleadoUpdate, db: Session = Depends(get_db)):

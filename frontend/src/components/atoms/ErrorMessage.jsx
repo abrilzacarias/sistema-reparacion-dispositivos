@@ -17,7 +17,7 @@ const ErrorMessage = ({ message,  }) => {
         className="w-full flex items-center justify-center"
       >
         <motion.div
-          className="flex items-center gap-1 text-red-400  bg-red-50 dark:bg-red-900/10 mt-3 rounded-md"
+          className="flex items-center gap-1 text-red-400  bg-red-50 dark:bg-red-900/10 rounded-md"
           animate={{
             scale: [1, 1.03, 1],
            

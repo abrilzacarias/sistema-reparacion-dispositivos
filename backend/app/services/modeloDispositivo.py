@@ -15,7 +15,10 @@ def get_modelo_dispositivo(db: Session, id_modelo: int):
     ).first()
 
 def create_modelo_dispositivo(db: Session, modelo: schemas.ModeloDispositivoCreate):
-    db_modelo = models.ModeloDispositivo(**modelo.dict())
+    data = modelo.dict()
+    if "estadoModeloDispositivo" not in data or data["estadoModeloDispositivo"] is None:
+        data["estadoModeloDispositivo"] = True
+    db_modelo = models.ModeloDispositivo(**data)
     db.add(db_modelo)
     db.commit()
     db.refresh(db_modelo)

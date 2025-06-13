@@ -62,14 +62,20 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       console.log("📨 Contactos de persona:", persona.contactos);
 
       const contactoCorreo = persona.contactos?.find(
-        (c) => c.idtipoContacto === 1 && c.esPrimario
+        (c) => c.idtipoContacto === 2 && c.esPrimario
       ) ?? persona.contactos?.find(
-        (c) => c.idtipoContacto === 1
+        (c) => c.idtipoContacto === 2
       );
 
       const contactoTelefono = persona.contactos?.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
-      )
+  (c) =>
+    c.esPrimario &&
+    (
+      c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "telefono" ||
+      c.tipoContacto?.idtipoContacto === 3
+    )
+);
+
       const domicilio = persona.domicilios?.[0]
 
       reset({
@@ -115,6 +121,8 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
     setApiErrors({})
     setIsLoading(true)
 
+    console.log(persona?.contactos)
+
     try {
       const { correo, telefono, ...rest } = data
       console.log("Datos del formulario:", data)
@@ -126,15 +134,26 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
       if (isEdit) {
         const contactoCorreoExistente = persona?.contactos?.find(
-          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
-        )
+  (c) =>
+    c.esPrimario &&
+    (
+      c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "email" ||
+      c.tipoContacto.idtipoContacto === 2 || c.idtipoContacto === 2
+    )
+);
+
         const contactoTelefonoExistente = persona?.contactos?.find(
-          (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "telefono" && c.esPrimario,
-        )
+  (c) =>
+    c.esPrimario &&
+    (
+      c.tipoContacto?.descripcionTipoContacto?.toLowerCase() === "telefono" ||
+      c.tipoContacto?.idtipoContacto === 3 || c.idtipoContacto === 3
+    )
+);
 
         const contactoCorreo = {
           descripcionContacto: correo,
-          idtipoContacto: 1,
+          idtipoContacto: 2,
           esPrimario: true,
         }
 
@@ -146,7 +165,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
 
         const contactoTelefono = {
           descripcionContacto: telefono,
-          idtipoContacto: 2,
+          idtipoContacto: 3,
           esPrimario: true,
         }
 
@@ -161,12 +180,12 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         contactos = [
           {
             descripcionContacto: correo,
-            idtipoContacto: 1,
+            idtipoContacto: 2,
             esPrimario: true,
           },
           {
             descripcionContacto: telefono,
-            idtipoContacto: 2,
+            idtipoContacto: 3,
             esPrimario: true,
           },
         ]
@@ -244,7 +263,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 mt-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 pb-0">
       <div className="space-y-2">
         <Label>Nombre</Label>
         <Input {...register("nombre", { 
@@ -342,9 +361,9 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         <ErrorMessage message={errors?.telefono?.message} />
       </div>
 
-      <div className="col-span-2 mt-4">
+      <div className="col-span-2">
         <div className="max-h-[400px] overflow-y-auto pr-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Controller
                 name="idtipoDomicilio"
@@ -462,7 +481,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
         </div>
       </div>
 
-      <div className="col-span-2 flex justify-end gap-4 mt-3">
+      <div className="col-span-2 flex justify-end gap-4">
         <Button
           type="button"
           variant="ghost"

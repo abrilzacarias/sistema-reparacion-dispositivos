@@ -81,7 +81,7 @@ const EmpleadoPage = () => {
   useEffect(() => {
     if (selectedPersona?.contactos) {
       const contactoCorreo = selectedPersona.contactos.find(
-        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "correo" && c.esPrimario,
+        (c) => c.tipoContacto.descripcionTipoContacto.toLowerCase() === "email" && c.esPrimario,
       )
       const email = contactoCorreo?.descripcionContacto || ""
       setPersonaEmail(email)
@@ -135,6 +135,7 @@ const EmpleadoPage = () => {
               description="Complete los campos para agregar un nuevo empleado."
               variant="default"
               className="p-2 m-0 cursor-pointer w-full justify-start"
+              contentClassName="max-w-2xl max-h-[90vh] overflow-y-auto"
             >
               <SearchPersonas
                 setSelectedPersona={setSelectedPersona}
@@ -162,6 +163,7 @@ const EmpleadoPage = () => {
                   label="Crear Persona"
                   variant="default"
                   className="border w-[40%] lg:w-[30%] mt-6 rounded-md justify-center flex mx-auto"
+                  contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
                 >
                   <PersonaCreateEdit
                     refreshPersonas={refetchPersonas}

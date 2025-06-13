@@ -156,6 +156,7 @@ const ClientePage = () => {
               icon={Plus}
               title="Agregar Cliente"
               description="Complete los campos para agregar un nuevo cliente."
+              contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
             >
               <SearchPersonas
                 setSelectedPersona={setSelectedPersona}

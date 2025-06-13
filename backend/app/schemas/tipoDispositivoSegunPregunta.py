@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from app.schemas.preguntaDiagnostico import PreguntaDiagnosticoOut  # importá esto
+from app.schemas.tipoDispositivo import TipoDispositivoRead
 
 class TipoDispositivoSegunPreguntaBase(BaseModel):
     idTipoDispositivo: int
@@ -16,11 +17,17 @@ class TipoDispositivoSegunPreguntaUpdate(BaseModel):
 class TipoDispositivoSegunPreguntaResponse(TipoDispositivoSegunPreguntaBase):
     idTipoDispositivoSegunPregunta: int
 
+class TipoDispositivoAgrupadoSchema(BaseModel):
+    tipoDispositivo: TipoDispositivoRead
+    preguntas: List[PreguntaDiagnosticoOut]
+
+
 class TipoDispositivoSegunPreguntaConDetalles(BaseModel):
     idTipoDispositivoSegunPregunta: int
     idTipoDispositivo: int
     idPreguntaDiagnostico: int
     preguntaDiagnostico: Optional[PreguntaDiagnosticoOut] = None
+    tipoDispositivo: Optional[TipoDispositivoRead] = None  # Acá incluís el objeto completo
     
     class Config:
         orm_mode = True

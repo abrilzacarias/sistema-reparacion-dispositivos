@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+from typing import Optional, List
 
 from app.schemas.persona import PersonaOutReduced
 from app.schemas.usuario import UsuarioOut
@@ -16,7 +16,7 @@ class EmpleadoBase(BaseModel):
     idpuestoLaboral: int
 
 class EmpleadoCreate(EmpleadoBase):
-    pass
+    perfiles: List[int] = []
 
 class EmpleadoUpdate(BaseModel):
     fechaContratacion: Optional[date] = None

@@ -6,7 +6,7 @@ class ModeloDispositivo(Base):
     __tablename__ = "modeloDispositivo"
     idModeloDispositivo = Column(Integer, primary_key=True, index=True)
     descripcionModeloDispositivo = Column(String)
-    estadoModeloDispositivo = Column(Boolean)
+    estadoModeloDispositivo = Column(Boolean, default=True, nullable=False)
     idMarcaDispositivo = Column(Integer, ForeignKey("marcaDispositivo.idMarcaDispositivo"))
     
     marcaDispositivo = relationship("MarcaDispositivo", back_populates="modeloDispositivo")

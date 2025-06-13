@@ -31,9 +31,7 @@ export const getColumnsNotifications = () => [
       // Ojo que la configuración espera claves como 'info', 'success' etc. Si tus tipos son diferentes,
       // podrías mapearlos o usar un default.
       const notiType = tipoToNotificationType(tipo);
-      console.log("TIPO:", tipo, "→", notiType); // 👈 Agregá esto
       const config = notificationTypeConfig[notiType] || notificationTypeConfig.info;
-      console.log(config.name);  // Muestra solo el nombre
       const IconComponent = config.icon;
       return (
         <div className="flex justify-center">

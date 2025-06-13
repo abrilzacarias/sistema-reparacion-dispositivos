@@ -5,6 +5,7 @@ from app.services import tipoDispositivo as tipo_service
 from app.database import get_db
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
+from app.schemas.tipoDispositivo import TipoDispositivoUpdate, TipoDispositivoOut
 
 router = APIRouter(
     prefix="/tipo-dispositivo",
@@ -31,3 +32,10 @@ def eliminar_tipo(id: int, db: Session = Depends(get_db)):
     success = tipo_service.delete(db, id)
     if not success:
         raise HTTPException(status_code=404, detail="Tipo de dispositivo no encontrado")
+
+@router.put("/tipo-dispositivo/{id}", response_model=TipoDispositivoOut)
+def actualizar_tipo_dispositivo(id: int, tipo_dispositivo: TipoDispositivoUpdate, db: Session = Depends(get_db)):
+    actualizado = tipo_service.actualizar_tipo_dispositivo(db, id, tipo_dispositivo)
+    if not actualizado:
+        raise HTTPException(status_code=404, detail="Tipo de dispositivo no encontrado")
+    return actualizado
