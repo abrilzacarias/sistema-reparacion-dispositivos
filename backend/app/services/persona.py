@@ -56,6 +56,21 @@ def create_persona(db: Session, persona_data: PersonaCreate):
         )
         db.add(contacto)
 
+    for domicilio_data in persona_data.domicilios:
+        domicilio = Domicilio(
+            codigoPostal=domicilio_data.codigoPostal,
+            pais=domicilio_data.pais,
+            provincia=domicilio_data.provincia,
+            ciudad=domicilio_data.ciudad,
+            barrio=domicilio_data.barrio,
+            calle=domicilio_data.calle,
+            numero=domicilio_data.numero,
+            departamento=domicilio_data.departamento,
+            idtipoDomicilio=domicilio_data.idtipoDomicilio,
+            idPersona=persona.idPersona
+        )
+        db.add(domicilio)
+
     db.commit()
     return persona
 
@@ -110,16 +125,6 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
                 contacto.descripcionContacto = contacto_data.descripcionContacto
                 contacto.idtipoContacto = contacto_data.idtipoContacto
                 contacto.esPrimario = contacto_data.esPrimario
-            else:
-                print(f"Contacto con ID {contacto_data.idContacto} no encontrado, creando nuevo")
-                # Si no se encuentra el contacto con ese ID, crear uno nuevo
-                nuevo_contacto = Contacto(
-                    descripcionContacto=contacto_data.descripcionContacto,
-                    idtipoContacto=contacto_data.idtipoContacto,
-                    esPrimario=contacto_data.esPrimario,
-                    idPersona=idPersona
-                )
-                db.add(nuevo_contacto)
         else:
             # No tiene idContacto, verificar si ya existe un contacto del mismo tipo
             contacto_existente = db.query(Contacto).filter(
@@ -143,7 +148,36 @@ def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
                 )
                 db.add(nuevo_contacto)
 
+    for domicilio_data in persona_data.domicilios:
+        if domicilio_data.idDomicilio:
+            domicilio = db.query(Domicilio).filter(Domicilio.idDomicilio == domicilio_data.idDomicilio).first()
+            if domicilio:
+                domicilio.codigoPostal = domicilio_data.codigoPostal
+                domicilio.pais = domicilio_data.pais
+                domicilio.provincia = domicilio_data.provincia
+                domicilio.ciudad = domicilio_data.ciudad
+                domicilio.barrio = domicilio_data.barrio
+                domicilio.calle = domicilio_data.calle
+                domicilio.numero = domicilio_data.numero
+                domicilio.departamento = domicilio_data.departamento
+                domicilio.idtipoDomicilio = domicilio_data.idtipoDomicilio
+        else:
+            nuevo_domicilio = Domicilio(
+                codigoPostal=domicilio_data.codigoPostal,
+                pais=domicilio_data.pais,
+                provincia=domicilio_data.provincia,
+                ciudad=domicilio_data.ciudad,
+                barrio=domicilio_data.barrio,
+                calle=domicilio_data.calle,
+                numero=domicilio_data.numero,
+                departamento=domicilio_data.departamento,
+                idtipoDomicilio=domicilio_data.idtipoDomicilio,
+                idPersona=idPersona
+            )
+            db.add(nuevo_domicilio)
+
     db.commit()
+    db.refresh(persona)
     return persona
 
 def delete_persona(db: Session, id_persona: int) -> bool:

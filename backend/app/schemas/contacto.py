@@ -22,3 +22,10 @@ class ContactoOut(ContactoBase):
 
     class Config:
         orm_mode = True
+
+class ContactoUpdate(BaseModel):
+    idContacto: Optional[int]
+    descripcionContacto: str
+    idtipoContacto: int
+    esPrimario: bool
+    idPersona: Optional[int]

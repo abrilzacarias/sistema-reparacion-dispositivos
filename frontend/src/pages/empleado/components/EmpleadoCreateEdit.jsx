@@ -55,7 +55,6 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
       let idUsuario = data.idUsuario
 
       if (!empleado && personaEmail) {
-        console.log("Creando usuario automático para nuevo empleado")
         idUsuario = await crearUsuarioAutomatico(personaEmail)
       }
 
@@ -69,6 +68,7 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
       console.log("Payload del empleado:", empleadoPayload)
 
       const endpoint = empleado ? `${API_URL}/empleados/${empleado.idEmpleado}/` : `${API_URL}/empleados/`
+      console.log(endpoint)
       const method = empleado ? axios.put : axios.post
 
       await method(endpoint, empleadoPayload)

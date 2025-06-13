@@ -3,7 +3,7 @@ from app.models import TipoDomicilio
 from app.schemas import tipoDomicilio as schemas
 
 def get_tipos_domicilio(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(TipoDomicilio).offset(skip).limit(limit).all()
+    return db.query(TipoDomicilio)
 
 def get_tipo_domicilio(db: Session, id_tipo_domicilio: int):
     return db.query(TipoDomicilio).filter(TipoDomicilio.idtipoDomicilio == id_tipo_domicilio).first()
