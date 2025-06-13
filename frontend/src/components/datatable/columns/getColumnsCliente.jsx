@@ -45,10 +45,10 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
     {
       header: "Email",
       accessorFn: (row) => {
-        return row.persona?.contactos?.find(c => c.idtipoContacto === 4)?.descripcionContacto;
+        return row.persona?.contactos?.find(c => c.idtipoContacto === 2)?.descripcionContacto;
       },
       cell: ({ row }) => {
-        const email = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 4)?.descripcionContacto;
+        const email = row.original?.persona?.contactos?.find(c => c.idtipoContacto === 2)?.descripcionContacto;
         return <div>{email || <span className="italic text-muted-foreground">Sin email</span>}</div>;
       },
     },
