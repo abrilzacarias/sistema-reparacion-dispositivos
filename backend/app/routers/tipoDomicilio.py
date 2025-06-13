@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from fastapi_pagination import Page
+from fastapi_pagination.ext.sqlalchemy import paginate
 
 from app.schemas import tipoDomicilio as schemas
 from app.services import tipoDomicilio as services
@@ -8,9 +10,10 @@ from app.database import get_db
 
 router = APIRouter(prefix="/tipo-domicilios", tags=["TipoDomicilios"])
 
-@router.get("/", response_model=List[schemas.TipoDomicilioOut], summary="Listar tipos de domicilio")
-def read_tipos_domicilio(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return services.get_tipos_domicilio(db, skip, limit)
+@router.get("/", response_model=Page[schemas.TipoDomicilioOut], summary="Listar tipos de domicilio")
+def read_tipos_domicilio(db: Session = Depends(get_db)):
+    query = services.get_tipos_domicilio(db)
+    return paginate(query)
 
 @router.get("/{idtipoDomicilio}", response_model=schemas.TipoDomicilioOut, summary="Obtener tipo de domicilio por ID")
 def read_tipo_domicilio(idtipoDomicilio: int, db: Session = Depends(get_db)):

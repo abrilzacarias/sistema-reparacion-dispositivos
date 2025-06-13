@@ -5,6 +5,9 @@ from typing import List
 from app.schemas import persona as schemas
 from app.services import persona as persona_service
 from app.database import get_db
+from app.services.contacto import update_contacto
+from app.services.domicilio import update_domicilio
+from app.schemas.persona import PersonaOut, PersonaUpdate
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 

@@ -5,6 +5,8 @@ from typing import Optional
 from app.schemas.persona import PersonaOutReduced
 from app.schemas.usuario import UsuarioOut
 from app.schemas.puestoLaboral import PuestoLaboralOut
+from app.schemas.domicilio import DomicilioOut
+from app.schemas.contacto import ContactoOut
 
 class EmpleadoBase(BaseModel):
     fechaContratacion: date
