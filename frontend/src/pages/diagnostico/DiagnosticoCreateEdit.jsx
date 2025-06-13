@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
 import ErrorMessage from "@/components/atoms/ErrorMessage";
@@ -8,10 +9,50 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DeviceQuestionsDynamic from "./DeviceQuestionsDynamic";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import TipoDispositivoCreateEdit from "./components/TipoDispositivoCreateEdit";
+import MarcasCreateEdit from "../configuracion/components/MarcasCreateEdit";
+import ModelosCreateEdit from "../configuracion/components/ModelosCreateEdit"
 import { Plus } from "lucide-react";
+
+// Función para obtener marcas
+const fetchMarcas = async () => {
+  const response = await fetch("http://localhost:8000/marcas");
+  if (!response.ok) {
+    throw new Error("Error fetching marcas");
+  }
+  return response.json();
+};
+
+// ← AGREGAR FUNCIÓN PARA OBTENER MODELOS
+const fetchModelos = async () => {
+  const response = await fetch("http://localhost:8000/modelos");
+  if (!response.ok) {
+    throw new Error("Error fetching modelos");
+  }
+  return response.json();
+};
 
 const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   const isEditMode = !!diagnostico;
+
+  // TanStack Query para marcas
+  const {
+    data: marcas,
+    refetch: refetchMarcas,
+    isLoading: isLoadingMarcas,
+  } = useQuery({
+    queryKey: ["marcas"],
+    queryFn: fetchMarcas,
+  });
+
+  // ← AGREGAR QUERY PARA MODELOS
+  const {
+    data: modelos,
+    refetch: refetchModelos,
+    isLoading: isLoadingModelos,
+  } = useQuery({
+    queryKey: ["modelos"],
+    queryFn: fetchModelos,
+  });
 
   const {
     register,
@@ -54,7 +95,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     setIsLoading(true);
     setError("");
     setApiErrors({});
-
+    
     try {
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
@@ -172,7 +213,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     }
   };
 
-
   const handleDeviceQuestionsChange = (newAnswers) => {
     console.log("🔄 Actualizando respuestas en formulario:", newAnswers);
     setValue("deviceQuestions", newAnswers, { shouldDirty: true });
@@ -203,18 +243,19 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         })}
         
         {/* Panel de debug visual */}
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
-          <strong>🐛 Debug - Estado actual:</strong>
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            <div>Empleado: <code>{watch("idEmpleado") || "sin seleccionar"}</code></div>
-            <div>Tipo Dispositivo: <code>{watch("idTipoDispositivo") || "sin seleccionar"}</code></div>
-            <div>Preguntas cargadas: <code>{questions.length}</code></div>
-            <div>Respuestas: <code>{Array.isArray(watch("deviceQuestions")) ? watch("deviceQuestions").length : 0}</code></div>
-            <div>Modo: <code>{isEditMode ? 'Edición' : 'Creación'}</code></div>
-            <div>ID Diagnóstico: <code>{diagnostico?.idDiagnostico || 'N/A'}</code></div>
-          </div>
-        </div>
-
+{/*
+  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+    <strong>🐛 Debug - Estado actual:</strong>
+    <div className="grid grid-cols-2 gap-2 mt-2">
+      <div>Empleado: <code>{watch("idEmpleado") || "sin seleccionar"}</code></div>
+      <div>Tipo Dispositivo: <code>{watch("idTipoDispositivo") || "sin seleccionar"}</code></div>
+      <div>Preguntas cargadas: <code>{questions.length}</code></div>
+      <div>Respuestas: <code>{Array.isArray(watch("deviceQuestions")) ? watch("deviceQuestions").length : 0}</code></div>
+      <div>Modo: <code>{isEditMode ? 'Edición' : 'Creación'}</code></div>
+      <div>ID Diagnóstico: <code>{diagnostico?.idDiagnostico || 'N/A'}</code></div>
+    </div>
+  </div>
+*/}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -281,30 +322,58 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 </div>
               </div>
 
-              <div>
-                <FormSelectSearch
-                  label="Marca *"
-                  endpoint="marcas"
-                  valueKey="idMarcaDispositivo"
-                  displayKey={(d) => d.descripcionMarcaDispositivo || ""}
-                  value={watch("idMarcaDispositivo")}
-                  setValue={(value) => setValue("idMarcaDispositivo", value)}
-                  {...register("idMarcaDispositivo", { required: "Seleccione una marca" })}
-                />
-                {errors.idMarcaDispositivo && <ErrorMessage message={errors.idMarcaDispositivo.message} />}
+              {/* ← MODIFICAR ESTA SECCIÓN PARA MARCA */}
+              <div className="col-span-2">
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <FormSelectSearch
+                      label="Marca *"
+                      endpoint="marcas"
+                      valueKey="idMarcaDispositivo"
+                      displayKey={(d) => d.descripcionMarcaDispositivo || ""}
+                      value={watch("idMarcaDispositivo")}
+                      setValue={(value) => setValue("idMarcaDispositivo", value)}
+                      {...register("idMarcaDispositivo", { required: "Seleccione una marca" })}
+                    />
+                    <ErrorMessage message={errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo} />
+                  </div>
+                  <ModalFormTemplate
+                    icon={Plus}
+                    title="Agregar Marca"
+                    description="Complete los campos para agregar una nueva marca de dispositivo."
+                    variant="default"
+                    className="p-2 m-0 cursor-pointer"
+                  >
+                    <MarcasCreateEdit refreshMarcas={refetchMarcas} />
+                  </ModalFormTemplate>
+                </div>
               </div>
 
-              <div>
-                <FormSelectSearch
-                  label="Modelo *"
-                  endpoint="modelos"
-                  valueKey="idModeloDispositivo"
-                  displayKey={(d) => d.descripcionModeloDispositivo || ""}
-                  value={watch("idModeloDispositivo")}
-                  setValue={(value) => setValue("idModeloDispositivo", value)}
-                  {...register("idModeloDispositivo", { required: "Seleccione un modelo" })}
-                />
-                {errors.idModeloDispositivo && <ErrorMessage message={errors.idModeloDispositivo.message} />}
+              {/* ← MODIFICAR ESTA SECCIÓN PARA MODELO */}
+              <div className="col-span-2">
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <FormSelectSearch
+                      label="Modelo *"
+                      endpoint="modelos"
+                      valueKey="idModeloDispositivo"
+                      displayKey={(d) => d.descripcionModeloDispositivo || ""}
+                      value={watch("idModeloDispositivo")}
+                      setValue={(value) => setValue("idModeloDispositivo", value)}
+                      {...register("idModeloDispositivo", { required: "Seleccione un modelo" })}
+                    />
+                    <ErrorMessage message={errors.idModeloDispositivo?.message || apiErrors?.idModeloDispositivo} />
+                  </div>
+                  <ModalFormTemplate
+                    icon={Plus}
+                    title="Agregar Modelo"
+                    description="Complete los campos para agregar un nuevo modelo de dispositivo."
+                    variant="default"
+                    className="p-2 m-0 cursor-pointer"
+                  >
+                    <ModelosCreateEdit refreshModelos={refetchModelos} />
+                  </ModalFormTemplate>
+                </div>
               </div>
             </div>
 
