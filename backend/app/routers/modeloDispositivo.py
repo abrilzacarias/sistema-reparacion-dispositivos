@@ -7,6 +7,9 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from app.schemas import modeloDispositivo as schemas
 from app.services import modeloDispositivo as services
 from app.database import get_db
+from fastapi_pagination import paginate, Params
+from fastapi_pagination.bases import AbstractPage
+from fastapi_pagination.ext.sqlalchemy import paginate as sqlalchemy_paginate
 
 router = APIRouter(prefix="/modelos", tags=["Modelos de Dispositivo"])
 
@@ -14,6 +17,16 @@ router = APIRouter(prefix="/modelos", tags=["Modelos de Dispositivo"])
 def read_modelos(db: Session = Depends(get_db)):
     modelos = services.get_modelos_dispositivo(db)  # supongo que devuelve un Query o lista
     return modelos  # devolver lista directamente
+
+
+@router.get("/paginado", response_model=Page[schemas.ModeloDispositivoOut], summary="Obtener todos los modelos")
+def read_modelos(
+    db: Session = Depends(get_db),
+    params: Params = Depends()
+):
+    query = services.get_modelos_dispositivo(db)
+    return sqlalchemy_paginate(query, params)
+
 
 @router.get("/{idModeloDispositivo}", response_model=schemas.ModeloDispositivoOut, summary="Obtener un modelo por ID")
 def read_modelo(idModeloDispositivo: int, db: Session = Depends(get_db)):

@@ -7,7 +7,7 @@ class ModeloDispositivoBase(BaseModel):
     idMarcaDispositivo: int
 
 class ModeloDispositivoCreate(ModeloDispositivoBase):
-    pass
+    estadoModeloDispositivo: Optional[bool] = True
 
 class ModeloDispositivoUpdate(ModeloDispositivoBase):
     pass
