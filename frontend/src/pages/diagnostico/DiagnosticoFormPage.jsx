@@ -14,10 +14,6 @@ const DiagnosticoFormPage = () => {
   //const perfil = state?.perfil ?? null
   const modo = "crear"
 
-  /* if (!modulos.length || !funciones.length) {
-    return <div className="p-4">Faltan datos. Regrese a la página de Perfiles.</div>
-  } */
-
   return (
     <div className="p-4 pt-0">
       <div className="flex items-center mb-4 gap-2">

@@ -89,7 +89,7 @@ export const DataTablePagination = ({
           </div>
           <Button
             variant="outline"
-            className="bg-aqua-700/80 h-8 w-8 p-0 text-white hover:bg-aqua-700/40 hover:text-white"
+            className="bg-primary text-primary-foreground h-8 w-8 p-0 hover:bg-primary/80 hover:text-primary-foreground"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
@@ -98,7 +98,7 @@ export const DataTablePagination = ({
           </Button>
           <Button
             variant="outline"
-            className="bg-aqua-700/80 h-8 w-8 p-0 text-white hover:bg-aqua-700/40 hover:text-white"
+            className="bg-primary text-primary-foreground h-8 w-8 p-0 hover:bg-primary/80 hover:text-primary-foreground"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -107,7 +107,7 @@ export const DataTablePagination = ({
           </Button>
           <Button
             variant="outline"
-            className="bg-aqua-700/80 h-8 w-8 p-0 text-white hover:bg-aqua-700/40 hover:text-white"
+            className="bg-primary text-primary-foreground h-8 w-8 p-0 hover:bg-primary/80 hover:text-primary-foreground"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
@@ -116,7 +116,7 @@ export const DataTablePagination = ({
           </Button>
           <Button
             variant="outline"
-            className="bg-aqua-700/80 h-8 w-8 p-0 text-white hover:bg-aqua-700/40 hover:text-white"
+            className="bg-primary text-primary-foreground h-8 w-8 p-0 hover:bg-primary/80 hover:text-primary-foreground"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >

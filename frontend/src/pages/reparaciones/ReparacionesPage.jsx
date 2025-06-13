@@ -41,7 +41,7 @@ const ReparacionesPage = () => {
 
   return (
     <CrudsTemplate>
-      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border">
+      <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border overflow-x-auto">
         <CrudHeader
           title="Gestión de Reparaciones"
           subTitle="Listado, registro y modificación de las reparaciones."
