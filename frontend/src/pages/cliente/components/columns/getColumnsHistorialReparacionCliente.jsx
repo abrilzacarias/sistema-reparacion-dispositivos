@@ -23,7 +23,7 @@ export const getColumnsHistorialReparacionCliente = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-2 text-left">
           <Settings className="w-4 h-4 text-muted-foreground" />
-          <span>{row.original.diagnostico?.dispositivo?.descripcionDispositivo ?? "Equipo no registrado"}</span>
+          <span>{row.original.diagnostico?.dispositivo?.modeloDispositivo?.descripcionModeloDispositivo ?? "Equipo no registrado"}</span>
         </div>
       ),
     },
