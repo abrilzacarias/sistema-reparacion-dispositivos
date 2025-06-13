@@ -719,7 +719,7 @@ CREATE TABLE `reparacion` (
   `idReparacion` int NOT NULL AUTO_INCREMENT,
   `fechaIngreso` date NOT NULL,
   `fechaEgreso` date DEFAULT NULL,
-  `montoTotalReparacion` decimal(10,0) NOT NULL,
+  `montoTotalReparacion` decimal(10,0) DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
   `idEmpleado` int NOT NULL COMMENT 'puede ser que un empleado haga el diagnostico y otro la reparacion',
   PRIMARY KEY (`idReparacion`),

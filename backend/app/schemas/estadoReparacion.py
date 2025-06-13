@@ -13,6 +13,7 @@ class EstadoReparacionUpdate(EstadoReparacionBase):
 
 class EstadoReparacionOut(EstadoReparacionBase):
     idEstadoReparacion: int
+    descripcionEstadoReparacion: str
 
     class Config:
         orm_mode = True

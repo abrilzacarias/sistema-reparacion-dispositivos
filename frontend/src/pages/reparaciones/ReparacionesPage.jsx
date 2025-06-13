@@ -59,20 +59,6 @@ const ReparacionesPage = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-54">
-              <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-                <ModalFormTemplate
-                  icon={Wrench}
-                  title="Agregar Reparación"
-                  description="Complete los campos para agregar una nueva reparación."
-                  label="Agregar reparación"
-                  variant="ghost"
-                  className="p-2 m-0 cursor-pointer w-full justify-start"
-                >
-                  <ReparacionesCreateEdit refreshReparaciones={refetch} />
-                </ModalFormTemplate>
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
 
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
