@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -59,7 +59,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`idCliente`),
   KEY `fk_cliente_persona1_idx` (`idPersona`),
   CONSTRAINT `fk_cliente_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (17,'cliente dario',62);
+INSERT INTO `cliente` VALUES (17,'cliente dario',62),(18,'cliente marcelo',79);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +90,7 @@ CREATE TABLE `contacto` (
   KEY `fk_contacto_personas1_idx` (`idPersona`),
   CONSTRAINT `fk_contacto_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_contacto_tipoContacto1` FOREIGN KEY (`idtipoContacto`) REFERENCES `tipoContacto` (`idtipoContacto`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `contacto` (
 
 LOCK TABLES `contacto` WRITE;
 /*!40000 ALTER TABLE `contacto` DISABLE KEYS */;
-INSERT INTO `contacto` VALUES (25,'+5493704259037',3,62,1),(28,'abrilzacaria15@gmail.com',2,65,1),(29,'+5492616862550',3,65,1),(30,'abrilzacarias6@gmail.com',2,67,1),(31,'+5492616862552',3,67,1),(32,'abrilzacaria5@gmail.com',2,68,1),(33,'+5492616862551',3,68,1),(34,'abrilzacarias15@gmail.com',2,69,1),(35,'+5492616862522',3,69,1),(36,'abbz1504@gmail.com',2,71,1),(37,'+5492616862220',3,71,1),(38,'consortiumsolutionsarg@gmail.com',2,72,1),(39,'+5492616862228',3,72,1),(40,'abrilzacari9@gmail.com',2,73,1),(41,'+5492616832220',3,73,1),(42,'pauladvillalba@gmail.com',2,74,1),(43,'+5492616862500',3,74,1),(44,'nazab@gmail.com',2,75,1),(45,'+5492616762228',3,75,1),(46,'consortiusmsolutionsarg@gmail.com',2,76,1),(47,'+5492643362221',3,76,1),(48,'ppaulitaaaa2904@gmail.com',2,77,1),(49,'+5492643362226',3,77,1),(50,'victoriavmcortitrabajos@gmail.com',2,78,1),(51,'+5493704030415',3,78,1);
+INSERT INTO `contacto` VALUES (25,'+5493704259037',3,62,1),(28,'abrilzacaria15@gmail.com',2,65,1),(29,'+5492616862550',3,65,1),(30,'abrilzacarias6@gmail.com',2,67,1),(31,'+5492616862552',3,67,1),(32,'abrilzacaria5@gmail.com',2,68,1),(33,'+5492616862551',3,68,1),(34,'abrilzacarias15@gmail.com',2,69,1),(35,'+5492616862522',3,69,1),(36,'abbz1504@gmail.com',2,71,1),(37,'+5492616862220',3,71,1),(38,'consortiumsolutionsarg@gmail.com',2,72,1),(39,'+5492616862228',3,72,1),(40,'abrilzacari9@gmail.com',2,73,1),(41,'+5492616832220',3,73,1),(42,'pauladvillalba@gmail.com',2,74,1),(43,'+5492616862500',3,74,1),(44,'nazab@gmail.com',2,75,1),(45,'+5492616762228',3,75,1),(46,'consortiusmsolutionsarg@gmail.com',2,76,1),(47,'+5492643362221',3,76,1),(48,'ppaulitaaaa2904@gmail.com',2,77,1),(49,'+5492643362226',3,77,1),(50,'victoriavmcortitrabajos@gmail.com',2,78,1),(51,'+5493704030415',3,78,1),(52,'marcelo@acosta.com',2,79,1),(53,'+5493704989808',3,79,1);
 /*!40000 ALTER TABLE `contacto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,7 +276,7 @@ CREATE TABLE `domicilio` (
   KEY `fk_domicilio_tipoDomicilio1_idx` (`idtipoDomicilio`),
   CONSTRAINT `fk_domicilio_personas1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_domicilio_tipoDomicilio1` FOREIGN KEY (`idtipoDomicilio`) REFERENCES `tipoDomicilio` (`idtipoDomicilio`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,7 +285,7 @@ CREATE TABLE `domicilio` (
 
 LOCK TABLES `domicilio` WRITE;
 /*!40000 ALTER TABLE `domicilio` DISABLE KEYS */;
-INSERT INTO `domicilio` VALUES (3,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,65),(4,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,67),(5,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,68),(6,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,69),(7,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,71),(8,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,72),(9,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,73),(10,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,74),(11,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,75),(12,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,76),(13,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,77),(14,'3600','Argentina','Formosa','Formosa','Federacion','Centro','1398','Formosa',2,78);
+INSERT INTO `domicilio` VALUES (3,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,65),(4,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,67),(5,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,68),(6,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,69),(7,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,71),(8,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,72),(9,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,73),(10,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,74),(11,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,75),(12,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',1,76),(13,'3600','Argentina','Formosa','Formosa','Federacion','joaquin de los santos','1398','Formosa',2,77),(14,'3600','Argentina','Formosa','Formosa','Federacion','Centro','1398','Formosa',2,78),(15,'3600','argentina','formosa','formosa editado','simon','constituyente','30','',2,79);
 /*!40000 ALTER TABLE `domicilio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,7 +420,7 @@ CREATE TABLE `historialAsignacionReparacion` (
   KEY `fk_historialAsignacionReparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionReparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionReparacion_reparacion1` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -429,6 +429,7 @@ CREATE TABLE `historialAsignacionReparacion` (
 
 LOCK TABLES `historialAsignacionReparacion` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionReparacion` DISABLE KEYS */;
+INSERT INTO `historialAsignacionReparacion` VALUES (1,'2025-06-13',NULL,5,31);
 /*!40000 ALTER TABLE `historialAsignacionReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -611,7 +612,7 @@ CREATE TABLE `persona` (
   `fechaNacimiento` date NOT NULL,
   `estadoPersona` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idPersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -620,7 +621,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',1);
+INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',1),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -697,7 +698,7 @@ CREATE TABLE `registroEstadoReparacion` (
   CONSTRAINT `fk_registro_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
   CONSTRAINT `fk_registro_estado_reparacion` FOREIGN KEY (`idEstadoReparacion`) REFERENCES `estadoReparacion` (`idEstadoReparacion`),
   CONSTRAINT `fk_registro_reparacion` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -706,7 +707,7 @@ CREATE TABLE `registroEstadoReparacion` (
 
 LOCK TABLES `registroEstadoReparacion` WRITE;
 /*!40000 ALTER TABLE `registroEstadoReparacion` DISABLE KEYS */;
-INSERT INTO `registroEstadoReparacion` VALUES (3,4,2,'2025-06-11 12:20:01',29),(4,4,2,'2025-06-11 12:20:01',29),(5,4,3,'2025-06-11 12:20:01',29),(6,4,4,'2025-06-11 12:20:01',29),(7,4,4,'2025-06-11 12:20:01',29),(8,4,4,'2025-06-11 12:20:01',29),(9,4,4,'2025-06-11 12:20:01',29),(10,4,4,'2025-06-11 12:20:01',29),(11,4,3,'2025-06-11 12:20:01',29),(12,4,4,'2025-06-11 12:20:01',29),(13,4,4,'2025-06-11 12:20:01',29),(14,4,4,'2025-06-11 12:20:01',29),(15,4,4,'2025-06-11 12:20:01',29),(17,4,2,'2025-06-11 12:20:01',29),(21,4,4,'2025-06-11 17:50:19',29);
+INSERT INTO `registroEstadoReparacion` VALUES (3,4,2,'2025-06-11 12:20:01',29),(4,4,2,'2025-06-11 12:20:01',29),(5,4,3,'2025-06-11 12:20:01',29),(6,4,4,'2025-06-11 12:20:01',29),(7,4,4,'2025-06-11 12:20:01',29),(8,4,4,'2025-06-11 12:20:01',29),(9,4,4,'2025-06-11 12:20:01',29),(10,4,4,'2025-06-11 12:20:01',29),(11,4,3,'2025-06-11 12:20:01',29),(12,4,4,'2025-06-11 12:20:01',29),(13,4,4,'2025-06-11 12:20:01',29),(14,4,4,'2025-06-11 12:20:01',29),(15,4,4,'2025-06-11 12:20:01',29),(17,4,2,'2025-06-11 12:20:01',29),(21,4,4,'2025-06-11 17:50:19',29),(22,5,3,'2025-06-13 16:34:05',31),(23,5,5,'2025-06-13 16:34:23',31);
 /*!40000 ALTER TABLE `registroEstadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -719,17 +720,18 @@ DROP TABLE IF EXISTS `reparacion`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reparacion` (
   `idReparacion` int NOT NULL AUTO_INCREMENT,
-  `fechaIngreso` date NOT NULL,
-  `fechaEgreso` date DEFAULT NULL,
+  `fechaIngreso` datetime DEFAULT NULL,
+  `fechaEgreso` datetime DEFAULT NULL,
   `montoTotalReparacion` decimal(10,0) DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
   `idEmpleado` int NOT NULL COMMENT 'puede ser que un empleado haga el diagnostico y otro la reparacion',
+  `fechaEstimadaEntrega` datetime DEFAULT NULL,
   PRIMARY KEY (`idReparacion`),
   KEY `fk_reparacion_diagnostico1_idx` (`idDiagnostico`),
   KEY `fk_reparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_reparacion_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_reparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -738,7 +740,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (4,'2025-06-11',NULL,8900,3,29);
+INSERT INTO `reparacion` VALUES (4,'2025-06-11 00:00:00',NULL,8900,3,29,NULL),(5,'2025-06-13 00:00:00','2025-06-13 00:00:00',NULL,3,31,NULL);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -757,6 +759,7 @@ CREATE TABLE `repuesto` (
   `idMarcaDispositivo` int NOT NULL,
   `idTipoRepuesto` int NOT NULL,
   `estadoRepuesto` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
+  `stockMinimo` int DEFAULT NULL,
   PRIMARY KEY (`idRepuesto`),
   KEY `fk_repuestos_marca1_idx` (`idMarcaDispositivo`),
   KEY `fk_respuestos_tipoRepuesto1_idx` (`idTipoRepuesto`),
@@ -771,7 +774,7 @@ CREATE TABLE `repuesto` (
 
 LOCK TABLES `repuesto` WRITE;
 /*!40000 ALTER TABLE `repuesto` DISABLE KEYS */;
-INSERT INTO `repuesto` VALUES (3,'Pantalla premium',200,9,10,2,1);
+INSERT INTO `repuesto` VALUES (3,'Pantalla premium',200,9,10,2,1,5);
 /*!40000 ALTER TABLE `repuesto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -961,7 +964,7 @@ CREATE TABLE `usuario` (
   `email` varchar(100) NOT NULL,
   `needs_password_change` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -970,7 +973,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com',0),(24,'abrilzacarias15','$2b$12$tITGiERylyQ4DCz1UNkMT.6xirtGKWpmJafMyQ/m6t4DYwBgfwZGW','abrilzacarias15@gmail.com',1),(25,'abrilzacaria15','$2b$12$QZywH6EVy62OdObQd2GESuBsPCjGSKgs12q9OlfVoCMHhfLDAIKT2','abrilzacaria15@gmail.com',1),(26,'abrilzacarias6','$2b$12$ba2Rjia/zqW1tz4u6hVJDO1.rshbo0nkkz8XDzMkkxtNMn5pdviOG','abrilzacarias6@gmail.com',1),(27,'abbz1504','$2b$12$T3K8FVZu3MuYohr80hd8vuKWcCGK9o2aqDOt9cSTiMM7fqD0O6k4i','abbz1504@gmail.com',1),(28,'consortiumsolutionsarg','$2b$12$9FTqnVbRXpX8OxMsQKzv6eR8P7aaWPdzJ71kx8786cDpyie6f2Uba','consortiumsolutionsarg@gmail.com',0),(29,'pauladvillalba','$2b$12$P8cppfLP3wfAQXjAusP07u6REX8KF1ka1Ruz1Ktgp1GwrQWQv7oD2','pauladvillalba@gmail.com',0),(30,'ppaulitaaaa2904','$2b$12$/NX6.XU3ZfWM4eciqwh8yOSRDjYYJbFuvNk9HlY6MlDZz8MAt7BPq','ppaulitaaaa2904@gmail.com',0),(31,'victoriavmcortitrabajos','$2b$12$YSDGJgLmfao5PHcRorKr7ufuNCg4Ypg39mZdTzLtEXCTH1z0ltS9.','victoriavmcortitrabajos@gmail.com',0);
+INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com',0),(24,'abrilzacarias15','$2b$12$tITGiERylyQ4DCz1UNkMT.6xirtGKWpmJafMyQ/m6t4DYwBgfwZGW','abrilzacarias15@gmail.com',1),(25,'abrilzacaria15','$2b$12$QZywH6EVy62OdObQd2GESuBsPCjGSKgs12q9OlfVoCMHhfLDAIKT2','abrilzacaria15@gmail.com',1),(26,'abrilzacarias6','$2b$12$ba2Rjia/zqW1tz4u6hVJDO1.rshbo0nkkz8XDzMkkxtNMn5pdviOG','abrilzacarias6@gmail.com',1),(27,'abbz1504','$2b$12$T3K8FVZu3MuYohr80hd8vuKWcCGK9o2aqDOt9cSTiMM7fqD0O6k4i','abbz1504@gmail.com',1),(28,'consortiumsolutionsarg','$2b$12$9FTqnVbRXpX8OxMsQKzv6eR8P7aaWPdzJ71kx8786cDpyie6f2Uba','consortiumsolutionsarg@gmail.com',0),(29,'pauladvillalba','$2b$12$P8cppfLP3wfAQXjAusP07u6REX8KF1ka1Ruz1Ktgp1GwrQWQv7oD2','pauladvillalba@gmail.com',0),(30,'ppaulitaaaa2904','$2b$12$/NX6.XU3ZfWM4eciqwh8yOSRDjYYJbFuvNk9HlY6MlDZz8MAt7BPq','ppaulitaaaa2904@gmail.com',0),(31,'victoriavmcortitrabajos','$2b$12$YSDGJgLmfao5PHcRorKr7ufuNCg4Ypg39mZdTzLtEXCTH1z0ltS9.','victoriavmcortitrabajos@gmail.com',0),(32,'mari','$2b$12$wCgNUNkHdAt.5..6AOytDu5NcUhT1KY9ssW1EzRH5ZS3/EPcmTnCS','acostagm6@gmail.com',1);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1017,4 +1020,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-13 13:19:40
+-- Dump completed on 2025-06-14 15:54:51
