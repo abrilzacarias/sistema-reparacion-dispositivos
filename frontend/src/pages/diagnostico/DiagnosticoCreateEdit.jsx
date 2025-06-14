@@ -12,6 +12,8 @@ import TipoDispositivoCreateEdit from "./components/TipoDispositivoCreateEdit";
 import MarcasCreateEdit from "../configuracion/components/MarcasCreateEdit";
 import ModelosCreateEdit from "../configuracion/components/ModelosCreateEdit"
 import { Plus } from "lucide-react";
+import { ToastMessageCreate } from "@/components/atoms/ToastMessage";
+import { useNavigate } from "react-router-dom";
 
 // Función para obtener marcas
 const fetchMarcas = async () => {
@@ -33,6 +35,7 @@ const fetchModelos = async () => {
 
 const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   const isEditMode = !!diagnostico;
+  const navigate = useNavigate();
 
   // TanStack Query para marcas
   const {
@@ -204,6 +207,8 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       }
       setError("");
 
+      ToastMessageCreate()
+      navigate("/diagnosticos")
     } catch (err) {
       console.error("❌ Error general:", err);
       setError(err.message || "Ocurrió un error al guardar el diagnóstico");
@@ -219,7 +224,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
   return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 w-full gap-4">
               <FormSelectSearch
                 label="Técnico *"
                 endpoint="empleados"

@@ -252,6 +252,7 @@ const ConfigPage = () => {
                 title={tabConfig.modalTitle}
                 description={tabConfig.modalDescription}
                 label={tabConfig.modalLabel}
+                contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
               >
                 {tabConfig.component}
               </ModalFormTemplate>

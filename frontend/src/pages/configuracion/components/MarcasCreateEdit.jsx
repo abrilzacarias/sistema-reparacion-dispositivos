@@ -74,7 +74,7 @@ const MarcasCreateEdit = ({ marca, refreshMarcas }) => {
         <Input
           {...register("descripcionMarcaDispositivo", {
             required: "Campo requerido",
-            minLength: { value: 3, message: "Mínimo 3 caracteres" },
+            minLength: { value: 2, message: "Mínimo 2 caracteres" },
             maxLength: { value: 100, message: "Máximo 100 caracteres" },
           })}
         />
