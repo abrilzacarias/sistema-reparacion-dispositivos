@@ -39,11 +39,16 @@ def update_cliente(db: Session, idCliente: int, data: ClienteUpdate) -> ClienteO
 
 def get_cliente(db: Session, idCliente: int) -> ClienteOut:
     cliente = (
-        db.query(Cliente)
-        .join(Persona)
-        .filter(Cliente.idCliente == idCliente, Persona.estadoPersona == True)
-        .first()
+    db.query(Cliente)
+    .options(
+        joinedload(Cliente.persona)
+        .joinedload(Persona.domicilios),
+        joinedload(Cliente.persona)
+        .joinedload(Persona.contactos)
     )
+    .filter(Cliente.idCliente == idCliente, Cliente.persona.has(Persona.estadoPersona == True))
+    .first()
+)
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     

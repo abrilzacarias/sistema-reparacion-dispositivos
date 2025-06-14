@@ -56,12 +56,12 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
     {
       header: "Email",
       accessorFn: (row) => {
-        return row.persona?.contactos?.find((c) => c.idtipoContacto === 4)
+        return row.persona?.contactos?.find((c) => c.idtipoContacto === 2)
           ?.descripcionContacto;
       },
       cell: ({ row }) => {
         const email = row.original?.persona?.contactos?.find(
-          (c) => c.idtipoContacto === 4
+          (c) => c.idtipoContacto === 2
         )?.descripcionContacto;
         return (
           <div>

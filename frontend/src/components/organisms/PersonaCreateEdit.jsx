@@ -58,6 +58,7 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
   useEffect(() => {
     if (persona) {
       console.log(persona)
+      console.log("🧍 Persona recibida:", JSON.stringify(persona, null, 2));
       console.log("📨 Contactos de persona:", persona.contactos)
 
       const contactoCorreo =

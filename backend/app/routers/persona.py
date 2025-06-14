@@ -25,6 +25,7 @@ def read_personas(
 @router.get("/{idPersona}", response_model=schemas.PersonaOut, summary="Obtener persona por id")
 def read_persona(idPersona: int, db: Session = Depends(get_db)):
     persona = persona_service.get_persona(db, idPersona)
+    print(persona)
     if persona is None:
         raise HTTPException(status_code=404, detail="Persona no encontrada")
     return persona
