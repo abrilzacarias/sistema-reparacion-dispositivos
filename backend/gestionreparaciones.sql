@@ -215,7 +215,7 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,33,NULL);
+INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,34,NULL);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,7 +390,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
   KEY `fk_historialAsignacionDiagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,6 +399,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
 
 LOCK TABLES `historialAsignacionDiagnostico` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` DISABLE KEYS */;
+INSERT INTO `historialAsignacionDiagnostico` VALUES (3,'2025-06-15','2025-06-15',19,32),(4,'2025-06-15','2025-06-15',19,33),(5,'2025-06-15','2025-06-15',19,32),(6,'2025-06-15','2025-06-15',19,31),(7,'2025-06-15',NULL,19,33),(8,'2025-06-15',NULL,19,34);
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -624,6 +625,29 @@ LOCK TABLES `persona` WRITE;
 INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',1),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_fecha_finalizacion` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
+    -- Verificamos si el estadoPersona cambió de 1 (activo) a 0 (inactivo)
+    IF OLD.estadoPersona = 1 AND NEW.estadoPersona = 0 THEN
+        -- Actualizamos fechaFinalizacion si la persona es un empleado
+        UPDATE empleado
+        SET fechaFinalizacion = CURRENT_DATE
+        WHERE idPersona = NEW.idPersona;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `preguntaDiagnostico`
@@ -1040,6 +1064,10 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping routines for database 'gestionreparaciones'
+--
+
+--
 -- Final view structure for view `vista_notificaciones`
 --
 
@@ -1066,4 +1094,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-15  3:41:21
+-- Dump completed on 2025-06-15 18:32:22
