@@ -3,6 +3,9 @@ from app.models import Diagnostico as Diagnostico
 from app.schemas import diagnostico as schemas
 from app.models.detalleDiagnostico import DetalleDiagnostico
 from app.schemas.diagnostico import DiagnosticoCreate
+from datetime import date
+from app.services.historialAsignacionDiagnostico import create_historial
+from app.schemas.historialAsignacionDiagnostico import HistorialAsignacionDiagnosticoCreate
 
 def obtener_diagnosticos(db: Session):
     return db.query(Diagnostico) 
@@ -43,14 +46,31 @@ def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
 
     return nuevo_diagnostico
 
-def update_diagnostico(db: Session, idDiagnostico: int, diagnostico: schemas.DiagnosticoUpdate):
+def update_diagnostico(
+    db: Session,
+    idDiagnostico: int,
+    diagnostico: schemas.DiagnosticoUpdate,
+    idEmpleado: int  # 👈 importante para el historial
+):
     db_diagnostico = get_diagnostico(db, idDiagnostico)
     if db_diagnostico:
         update_data = diagnostico.dict(exclude_unset=True)
         for field, value in update_data.items():
             setattr(db_diagnostico, field, value)
+
         db.commit()
         db.refresh(db_diagnostico)
+
+        # 👉 Crear historial de asignación
+        hoy = date.today()
+        historial_data = HistorialAsignacionDiagnosticoCreate(
+            fechaInicioAsignacionDiagnostico=hoy,
+            fechaFinAsignacionDiagnostico=None,
+            idDiagnostico=idDiagnostico,
+            idEmpleado=idEmpleado
+        )
+        create_historial(db, historial_data)
+
     return db_diagnostico
 
 def delete_diagnostico(db: Session, idDiagnostico: int):

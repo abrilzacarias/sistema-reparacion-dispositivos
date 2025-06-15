@@ -25,7 +25,7 @@ const fetchMarcas = async () => {
   return response.json();
 };
 
-// ← AGREGAR FUNCIÓN PARA OBTENER MODELOS
+// Función para obtener modelos
 const fetchModelos = async () => {
   const response = await fetch("http://localhost:8000/modelos");
   if (!response.ok) {
@@ -48,7 +48,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     queryFn: fetchMarcas,
   });
 
-  // ← AGREGAR QUERY PARA MODELOS
+  // Query para modelos
   const {
     data: modelos,
     refetch: refetchModelos,
@@ -103,17 +103,21 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     try {
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
-      if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
-      if (!data.idMarcaDispositivo) validationErrors.idMarcaDispositivo = "Marca es requerida";
-      if (!data.idModeloDispositivo) validationErrors.idModeloDispositivo = "Modelo es requerido";
-      if (!data.idCliente) validationErrors.idCliente = "Cliente es requerido";
-      if (!data.fechaDiagnostico) validationErrors.fechaDiagnostico = "Fecha es requerida";
+      
+      // En modo edición, solo validamos el técnico
+      if (!isEditMode) {
+        if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
+        if (!data.idMarcaDispositivo) validationErrors.idMarcaDispositivo = "Marca es requerida";
+        if (!data.idModeloDispositivo) validationErrors.idModeloDispositivo = "Modelo es requerido";
+        if (!data.idCliente) validationErrors.idCliente = "Cliente es requerido";
+        if (!data.fechaDiagnostico) validationErrors.fechaDiagnostico = "Fecha es requerida";
 
-      if (questions.length > 0) {
-        if (!data.deviceQuestions || !Array.isArray(data.deviceQuestions)) {
-          validationErrors.deviceQuestions = "No hay respuestas válidas para procesar";
-        } else if (data.deviceQuestions.length !== questions.length) {
-          validationErrors.deviceQuestions = `Se esperaban ${questions.length} respuestas, pero se recibieron ${data.deviceQuestions.length}`;
+        if (questions.length > 0) {
+          if (!data.deviceQuestions || !Array.isArray(data.deviceQuestions)) {
+            validationErrors.deviceQuestions = "No hay respuestas válidas para procesar";
+          } else if (data.deviceQuestions.length !== questions.length) {
+            validationErrors.deviceQuestions = `Se esperaban ${questions.length} respuestas, pero se recibieron ${data.deviceQuestions.length}`;
+          }
         }
       }
 
@@ -149,58 +153,119 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         console.log("✅ Dispositivo creado con ID:", dispositivoId);
       }
 
-      const idDiagnostico = isEditMode ? diagnostico.idDiagnostico : 0;
-
-      const detalles = data.deviceQuestions.map((respuesta, index) => {
-        const pregunta = questions[index];
-        if (!pregunta || !respuesta) return null;
-        return {
-          idDiagnostico: idDiagnostico, 
-          idDetalleDiagnostico: 0,
-          valorDiagnostico: String(respuesta.valorDiagnostico || ""),
-          idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+      // Preparar datos del diagnóstico
+      let diagnosticoData;
+      
+      if (isEditMode) {
+        // Solo enviamos los datos necesarios para la edición
+        diagnosticoData = {
+          fechaDiagnostico: diagnostico.fechaDiagnostico,
+          descripcion: diagnostico.descripcion,
+          idDispositivo: diagnostico.dispositivo?.idDispositivo,
+          idEmpleado: data.idEmpleado,
         };
-      }).filter(Boolean);
+      } else {
+        // Lógica completa para creación
+        const idDiagnostico = 0;
+        const detalles = data.deviceQuestions.map((respuesta, index) => {
+          const pregunta = questions[index];
+          if (!pregunta || !respuesta) return null;
+          return {
+            idDiagnostico: idDiagnostico, 
+            idDetalleDiagnostico: 0,
+            valorDiagnostico: String(respuesta.valorDiagnostico || ""),
+            idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+          };
+        }).filter(Boolean);
 
-      const diagnosticoData = {
-        fechaDiagnostico: data.fechaDiagnostico,
-        descripcion: data.descripcion,
-        idDispositivo: dispositivoId,
-        idEmpleado: data.idEmpleado,
-        detalleDiagnostico: detalles.map(d => ({
-          idDiagnostico: d.idDiagnostico || 0,
-          idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
-          valorDiagnostico: d.valorDiagnostico,
-          idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
-        })),
-        detalles: detalles.map(d => ({
-          idDiagnostico: d.idDiagnostico || 0,
-          idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
-          valorDiagnostico: d.valorDiagnostico,
-          idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
-        })),
-      };
+        diagnosticoData = {
+          fechaDiagnostico: data.fechaDiagnostico,
+          descripcion: data.descripcion,
+          idDispositivo: dispositivoId,
+          idEmpleado: data.idEmpleado,
+          detalleDiagnostico: detalles.map(d => ({
+            idDiagnostico: d.idDiagnostico || 0,
+            idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
+            valorDiagnostico: d.valorDiagnostico,
+            idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
+          })),
+          detalles: detalles.map(d => ({
+            idDiagnostico: d.idDiagnostico || 0,
+            idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
+            valorDiagnostico: d.valorDiagnostico,
+            idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
+          })),
+        };
+      }
 
       console.log("🧪 Enviando:", JSON.stringify(diagnosticoData, null, 2));
 
-      const url = isEditMode
-        ? `http://localhost:8000/diagnostico/diagnostico/${diagnostico.idDiagnostico}`
-        : "http://localhost:8000/diagnostico/diagnostico";
-
-      const method = isEditMode ? "PUT" : "POST";
+      // Set the correct URL based on API documentation
+      let url;
+      let method;
+      
+      if (isEditMode) {
+        // Use the exact endpoint from API documentation: PUT /diagnostico/{idDiagnostico}
+        url = `http://localhost:8000/diagnostico/${diagnostico.idDiagnostico}`;
+        method = "PUT";
+        console.log(`📝 Edit mode: Using API documented endpoint: ${url}`);
+      } else {
+        // For creation, keep the original endpoint
+        url = "http://localhost:8000/diagnostico/diagnostico";
+        method = "POST";
+        console.log(`🆕 Create mode: Using endpoint: ${url}`);
+      }
 
       console.log(`📡 Enviando ${method} a:`, url);
+      
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(diagnosticoData),
       });
 
+      console.log(`📊 Response status: ${response.status}`);
+      console.log(`📊 Response headers:`, response.headers);
+
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(`Error al guardar diagnóstico: ${errorData}`);
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        
+        try {
+          const errorData = await response.text();
+          console.log("🔍 Error response body:", errorData);
+          
+          // Try to parse as JSON first
+          try {
+            const jsonError = JSON.parse(errorData);
+            errorMessage = jsonError.detail || jsonError.message || errorMessage;
+          } catch {
+            // If not JSON, use the text as is
+            errorMessage = errorData || errorMessage;
+          }
+        } catch (e) {
+          console.error("Error reading response:", e);
+        }
+        
+        // Provide specific error messages for common HTTP status codes
+        if (response.status === 404) {
+          if (isEditMode) {
+            errorMessage = `El diagnóstico con ID ${diagnostico.idDiagnostico} no fue encontrado. Posiblemente fue eliminado o el endpoint de actualización no existe.`;
+          } else {
+            errorMessage = "El endpoint para crear diagnósticos no fue encontrado.";
+          }
+        } else if (response.status === 400) {
+          errorMessage = `Datos inválidos: ${errorMessage}`;
+        } else if (response.status === 500) {
+          errorMessage = "Error interno del servidor. Verifique los logs del backend.";
+        }
+        
+        throw new Error(errorMessage);
       }
 
+      // Success handling
       if (refreshDiagnosticos) refreshDiagnosticos();
       if (!isEditMode) {
         reset();
@@ -208,8 +273,9 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       }
       setError("");
 
-      ToastMessageCreate()
-      navigate("/diagnosticos")
+      ToastMessageCreate();
+      navigate("/diagnosticos");
+      
     } catch (err) {
       console.error("❌ Error general:", err);
       setError(err.message || "Ocurrió un error al guardar el diagnóstico");
@@ -224,30 +290,48 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   };
 
   return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
+      {/* En modo edición: solo mostrar el select del técnico */}
+      {isEditMode ? (
+        <div className="space-y-4">
+          
+          <FormSelectSearch
+            label="Técnico *"
+            endpoint="empleados"
+            valueKey="idEmpleado"
+            displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+            value={watch("idEmpleado")}
+            setValue={(value) => setValue("idEmpleado", value)}
+            {...register("idEmpleado", { required: "Seleccione un técnico" })}
+          />
+          <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+        </div>
+      ) : (
+        /* En modo creación: mostrar todos los campos */
+        <>
           <div className="grid grid-cols-2 w-full gap-4">
-              <FormSelectSearch
-                label="Técnico *"
-                endpoint="empleados"
-                valueKey="idEmpleado"
-                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-                value={watch("idEmpleado")}
-                setValue={(value) => setValue("idEmpleado", value)}
-                {...register("idEmpleado", { required: "Seleccione un técnico" })}
-              />
-              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            <FormSelectSearch
+              label="Técnico *"
+              endpoint="empleados"
+              valueKey="idEmpleado"
+              displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+              value={watch("idEmpleado")}
+              setValue={(value) => setValue("idEmpleado", value)}
+              {...register("idEmpleado", { required: "Seleccione un técnico" })}
+            />
+            <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
 
-              <FormSelectSearch
-                label="Cliente *"
-                endpoint="clientes"
-                valueKey="idCliente"
-                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-                value={watch("idCliente")}
-                setValue={(value) => setValue("idCliente", value)}
-                {...register("idCliente", { required: "Seleccione un cliente" })}
-              />
-              <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
-          </div>          
+            <FormSelectSearch
+              label="Cliente *"
+              endpoint="clientes"
+              valueKey="idCliente"
+              displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+              value={watch("idCliente")}
+              setValue={(value) => setValue("idCliente", value)}
+              {...register("idCliente", { required: "Seleccione un cliente" })}
+            />
+            <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
+          </div>
 
           <div className="border rounded-lg p-4 bg-gray-50/50">
             <h3 className="font-medium text-sm text-muted-foreground mb-3 border-b pb-2">
@@ -284,7 +368,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 </div>
               </div>
 
-              {/* ← MODIFICAR ESTA SECCIÓN PARA MARCA */}
               <div className="col-span-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
@@ -311,7 +394,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 </div>
               </div>
 
-              {/* ← MODIFICAR ESTA SECCIÓN PARA MODELO */}
               <div className="col-span-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
@@ -351,29 +433,31 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
               </div>
             )}
           </div>
+        </>
+      )}
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <ErrorMessage message={error} />
-            </div>
-          )}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <ErrorMessage message={error} />
+        </div>
+      )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => reset()}
-              disabled={isLoading}
-            >
-              Limpiar
-            </Button>
-            <ButtonDinamicForms 
-              initialData={diagnostico} 
-              isLoading={isLoading} 
-              register 
-            />
-          </div>
-        </form>
+      <div className="flex justify-end gap-3 pt-4 border-t">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => reset()}
+          disabled={isLoading}
+        >
+          {isEditMode ? "Cancelar" : "Limpiar"}
+        </Button>
+        <ButtonDinamicForms 
+          initialData={diagnostico} 
+          isLoading={isLoading} 
+          register 
+        />
+      </div>
+    </form>
   );
 };
 

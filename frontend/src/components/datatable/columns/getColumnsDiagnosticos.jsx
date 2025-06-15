@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Ellipsis, List } from "lucide-react";
+import { Edit, Ellipsis, List, UserCheck } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,9 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import DiagnosticoCard from "@/components/organisms/DiagnosticoCard";
 import { Button } from "@/components/ui/button";
-import ReparacionCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
-
+import HistorialAsignacionDiagnosticoModal from "@/pages/diagnostico/components/HistorialAsignacionDiagnosticoModal";
+import DiagnosticoCreateEdit from "@/pages/diagnostico/DiagnosticoCreateEdit";
+import ReparacionesCreateEdit from "@/pages/reparaciones/components/ReparacionesCreateEdit";
 
 //NO SE SI DISPOSITIVO SE TIENE QUE MANDAR COMO OCULTO
 export const getColumnsDiagnosticos = ({ refetch }) => {
@@ -92,9 +93,37 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
                   <DiagnosticoCard diagnostico={row.original} />
                 </ModalFormTemplate>
               </DropdownMenuItem>
-
+                {/* Editar diagnóstico */}
+                <DropdownMenuItem asChild className="w-full flex items-center justify-between">
+                  <ModalFormTemplate
+                    title="Editar diagnóstico"
+                    description="Modifique los datos del diagnóstico"
+                    label="Editar"
+                    variant="ghost"
+                    icon={Edit}
+                    className="p-2 m-0 cursor-pointer w-full justify-start"
+                  >
+                    <DiagnosticoCreateEdit
+                      diagnostico={row.original}
+                      onUpdate={refetch} // o cualquier función para refrescar la lista
+                    />
+                  </ModalFormTemplate>
+                </DropdownMenuItem>
               <DropdownMenuSeparator />
-
+              <DropdownMenuItem asChild>
+                <ModalFormTemplate
+                  title="Historial de Asignación"
+                  label="Historial asignación"
+                  variant="ghost"
+                  icon={UserCheck}
+                  contentClassName="max-w-4xl max-h-[90vh] overflow-y-auto"
+                  className="p-2 m-0 cursor-pointer w-full justify-start"
+                >
+                <HistorialAsignacionDiagnosticoModal
+                  idDiagnostico={row.original.idDiagnostico}
+                />
+                </ModalFormTemplate>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Crear Reparación"
@@ -104,7 +133,7 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
                   icon={List}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
-                  <ReparacionCreateEdit
+                  <ReparacionesCreateEdit
                     idDiagnostico={row.original.idDiagnostico}
                     refreshReparaciones={refetch}
                   />

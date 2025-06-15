@@ -1,5 +1,5 @@
 from typing import List, Optional
-from sqlalchemy import DECIMAL, Date, ForeignKeyConstraint, Index, Integer, JSON, String, text
+from sqlalchemy import DECIMAL, Date, ForeignKeyConstraint, Index, Integer, JSON, String, text, Column
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 import datetime
@@ -18,7 +18,7 @@ class HistorialAsignacionDiagnostico(Base):
     fechaInicioAsignacionDiagnostico = mapped_column(Date)
     idDiagnostico = mapped_column(Integer)
     idEmpleado = mapped_column(Integer)
-    fechaFinAsignacionDiagnostico = mapped_column(Date)
+    fechaFinAsignacionDiagnostico = Column(Date, nullable=True)
 
     diagnostico = relationship('Diagnostico', back_populates='historialAsignacionDiagnostico')
     empleado = relationship('Empleado', back_populates='historialAsignacionDiagnostico')
