@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DeviceQuestionsDynamic from "./DeviceQuestionsDynamic";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import TipoDispositivoCreateEdit from "./components/TipoDispositivoCreateEdit";
+import DispositivoCreateEdit from "../configuracion/components/DispositivoCreateEdit";
 import MarcasCreateEdit from "../configuracion/components/MarcasCreateEdit";
 import ModelosCreateEdit from "../configuracion/components/ModelosCreateEdit"
 import { Plus } from "lucide-react";
@@ -278,7 +279,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     className="p-2 m-0 cursor-pointer"
                     contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
                   >
-                    <TipoDispositivoCreateEdit />
+                    <DispositivoCreateEdit />
                   </ModalFormTemplate>
                 </div>
               </div>

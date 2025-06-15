@@ -318,15 +318,18 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = [], onChange, diagnos
           </div>
         );
 
-      case 'patron':
+      case 'numero':
+      case 'número':
         return (
-          <div className="mt-3 pl-4 border-l-2 border-purple-200 bg-purple-50 p-3 rounded-r">
+          <div className="mt-3 pl-4 border-l-2 border-blue-200 bg-blue-50 p-3 rounded-r">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Configure su patrón:
+              Ingrese un valor numérico:
             </label>
-            <PatternLockInput
-              value={getAdditionalFieldValue(questionIndex, 'pattern')}
-              onChange={(pattern) => handleAdditionalFieldChange(questionIndex, 'pattern', pattern)}
+            <input
+              type="number"
+              value={getAdditionalFieldValue(questionIndex, 'numero')}
+              onChange={(e) => handleAdditionalFieldChange(questionIndex, 'numero', e.target.value)}
+              className="border border-gray-300 rounded px-3 py-2 w-full"
             />
           </div>
         );
@@ -368,6 +371,7 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = [], onChange, diagnos
         );
 
       case 'NUMERO':
+      case 'NÚMERO':
       case 'NUMBER':
         return (
           <input

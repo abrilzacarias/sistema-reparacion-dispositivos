@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, JSON, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -17,9 +17,10 @@ class PreguntaDiagnostico(Base):
     descripcionPreguntaDiagnostico = Column(String(90), nullable=False)
     idTipoDatoPreguntaDiagnostico = Column(Integer, ForeignKey('tipoDatoPreguntaDiagnostico.idTipoDatoPreguntaDiagnostico'), nullable=False)
     opcionesPregunta = Column(JSON, nullable=True, comment='Ejemplo: ["Limpio", "Sucio", "Muy sucio"]')
+    estadoPreguntaDiagnostico = Column(Boolean, default=True, nullable=False)  # nuevo campo
 
     # Relaciones
-    idTipoDatoPreguntaDiagnostico = Column(Integer, ForeignKey('tipoDatoPreguntaDiagnostico.idTipoDatoPreguntaDiagnostico'))
+    #idTipoDatoPreguntaDiagnostico = Column(Integer, ForeignKey('tipoDatoPreguntaDiagnostico.idTipoDatoPreguntaDiagnostico'))
     tipoDatoPreguntaDiagnostico = relationship('TipoDatoPreguntaDiagnostico', back_populates='preguntasDiagnostico')
     tipoDispositivoSegunPregunta = relationship('TipoDispositivoSegunPregunta', back_populates='preguntaDiagnostico', cascade='all, delete-orphan')
 

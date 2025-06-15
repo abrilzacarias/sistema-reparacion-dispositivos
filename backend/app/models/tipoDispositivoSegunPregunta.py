@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, ForeignKeyConstraint, Index, Column
+from sqlalchemy import Integer, String, ForeignKeyConstraint, Index, Column, Boolean
 from sqlalchemy.orm import mapped_column, relationship
 from app.database import Base
 
@@ -14,7 +14,7 @@ class TipoDispositivoSegunPregunta(Base):
     idTipoDispositivoSegunPregunta = Column(Integer, primary_key=True, index=True)
     idTipoDispositivo = mapped_column(Integer, nullable=False)
     idPreguntaDiagnostico = mapped_column(Integer, nullable=False)
-
+    estadoTipoDispositivoSegunPregunta = Column(Boolean, default=True)  # <-- NUEVO campo
     preguntaDiagnostico = relationship('PreguntaDiagnostico', back_populates='tipoDispositivoSegunPregunta')
     tipoDispositivo = relationship('TipoDispositivo', back_populates='tipoDispositivoSegunPregunta')
     detalleDiagnostico = relationship('DetalleDiagnostico', back_populates='tipoDispositivoSegunPregunta')

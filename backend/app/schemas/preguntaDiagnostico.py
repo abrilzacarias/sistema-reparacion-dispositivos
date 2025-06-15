@@ -17,7 +17,10 @@ class PreguntaDiagnosticoCreate(PreguntaDiagnosticoBase):
     pass
 
 class PreguntaDiagnosticoUpdate(PreguntaDiagnosticoBase):
-    pass
+    idPreguntaDiagnostico: Optional[int] = None  # ID existente si es actualización
+    descripcionPreguntaDiagnostico: str
+    idTipoDatoPreguntaDiagnostico: int
+    opcionesPregunta: Optional[List[str]] = None
 
 class PreguntaDiagnosticoOut(PreguntaDiagnosticoBase):
     idPreguntaDiagnostico: int

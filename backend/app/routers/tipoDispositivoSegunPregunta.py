@@ -43,12 +43,14 @@ def actualizar(id: str, entrada: TipoDispositivoSegunPreguntaUpdate, db: Session
         raise HTTPException(status_code=404, detail="No encontrado")
     return obj
 
-@router.delete("/{id}")
-def eliminar(id: str, db: Session = Depends(get_db)):
-    obj = service.delete(db, id)
+@router.delete("/{id}", status_code=204)
+def eliminar_tipo_segun_pregunta(id: int, db: Session = Depends(get_db)):
+    obj = service.get_by_id(db, id)
     if not obj:
         raise HTTPException(status_code=404, detail="No encontrado")
-    return {"message": "Eliminado correctamente"}
+    
+    obj.estadoTipoDispositivoSegunPregunta = False
+    db.commit()
 
 @router.get("/por-tipo-dispositivo/{id_tipo_dispositivo}", response_model=list[TipoDispositivoSegunPreguntaResponse])
 def obtener_preguntas_por_tipo_dispositivo(id_tipo_dispositivo: int, db: Session = Depends(get_db)):

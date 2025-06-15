@@ -6,7 +6,7 @@ from app.models import TipoDatoPreguntaDiagnostico
 
 
 def get_all(db: Session):
-    return db.query(PreguntaDiagnostico).all()
+    return db.query(PreguntaDiagnostico).filter_by(estadoPreguntaDiagnostico=True)
 
 def get_by_id(db: Session, id: int):
     return db.query(PreguntaDiagnostico).filter(PreguntaDiagnostico.idPreguntaDiagnostico == id).first()
