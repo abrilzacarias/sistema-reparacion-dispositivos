@@ -14,12 +14,15 @@ import PerfilFormPage from "./pages/perfiles/PerfilFormPage";
 import ResetPassword from "./pages/login/ResetPassword";
 import DiagnosticoFormPage from "./pages/diagnostico/DiagnosticoFormPage";
 import ConfigPage from "./pages/configuracion/ConfigPage";
+import Index from "./pages/index/Index";
+
 
 function App() {
   return (
     <div className="min-h-screen dark:bg-gray-900">
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/usuarios/reset-password" element={<ResetPassword />} />
 
         <Route
