@@ -4,10 +4,8 @@ from app.schemas.tipoDispositivo import TipoDispositivoCreate
 from app.schemas.tipoDispositivo import TipoDispositivoUpdate  # define un schema para update con preguntas
 from app.models.detalleDiagnostico import DetalleDiagnostico
 
-
-
 def get_all(db: Session):
-    return db.query(TipoDispositivo)
+    return db.query(TipoDispositivo).filter(TipoDispositivo.estadoDispositivo == True)
 
 def get_by_id(db: Session, id: int):
     return db.query(TipoDispositivo).filter(TipoDispositivo.idTipoDispositivo == id).first()
@@ -18,23 +16,27 @@ def create(db: Session, tipo_dispositivo: TipoDispositivoCreate):
     db.commit()
     db.refresh(db_tipo)
 
-    for pregunta in tipo_dispositivo.preguntas:
-        db_pregunta = PreguntaDiagnostico(
-            descripcionPreguntaDiagnostico=pregunta.descripcionPreguntaDiagnostico,
-            idTipoDatoPreguntaDiagnostico=pregunta.idTipoDatoPreguntaDiagnostico,
-            opcionesPregunta=pregunta.opcionesPregunta if pregunta.opcionesPregunta else None,
-        )
-        db.add(db_pregunta)
-        db.commit()
-        db.refresh(db_pregunta)
+    # Solo agregar preguntas si hay alguna
+    if tipo_dispositivo.preguntas:
+        for pregunta in tipo_dispositivo.preguntas:
+            db_pregunta = PreguntaDiagnostico(
+                descripcionPreguntaDiagnostico=pregunta.descripcionPreguntaDiagnostico,
+                idTipoDatoPreguntaDiagnostico=pregunta.idTipoDatoPreguntaDiagnostico,
+                opcionesPregunta=pregunta.opcionesPregunta if pregunta.opcionesPregunta else None,
+            )
+            db.add(db_pregunta)
+            db.commit()
+            db.refresh(db_pregunta)
 
-        relacion = TipoDispositivoSegunPregunta(
-            idTipoDispositivo=db_tipo.idTipoDispositivo,
-            idPreguntaDiagnostico=db_pregunta.idPreguntaDiagnostico
-        )
-        db.add(relacion)
+            relacion = TipoDispositivoSegunPregunta(
+                idTipoDispositivo=db_tipo.idTipoDispositivo,
+                idPreguntaDiagnostico=db_pregunta.idPreguntaDiagnostico
+            )
+            db.add(relacion)
+
     db.commit()
     return db_tipo
+
 
 def delete(db: Session, id: int):
     db_tipo = get_by_id(db, id)
@@ -47,68 +49,74 @@ def delete(db: Session, id: int):
 def actualizar_tipo_dispositivo(db: Session, id: int, tipo_dispositivo_data: TipoDispositivoUpdate):
     db_tipo = get_by_id(db, id)
     if not db_tipo:
-        return None  # O lanzar excepción
+        return None
 
-    # Actualizar nombreTipoDispositivo
     if tipo_dispositivo_data.nombreTipoDispositivo:
         db_tipo.nombreTipoDispositivo = tipo_dispositivo_data.nombreTipoDispositivo
 
-    # Si se envían nuevas preguntas
     if tipo_dispositivo_data.preguntas is not None:
-        # Obtener relaciones existentes
-        relaciones = db.query(TipoDispositivoSegunPregunta).filter_by(idTipoDispositivo=id).all()
+        nuevas_preguntas_data = tipo_dispositivo_data.preguntas
 
-        for relacion in relaciones:
-            # Verificar si la relación está siendo usada en algún diagnóstico
-            uso = db.query(DetalleDiagnostico).filter_by(
-                idTipoDispositivoSegunPregunta=relacion.idTipoDispositivoSegunPregunta
-            ).first()
+        relaciones_existentes = db.query(TipoDispositivoSegunPregunta).filter_by(idTipoDispositivo=id).all()
+        preguntas_existentes = []
 
-            if not uso:
-                # Eliminar la pregunta y la relación si no están en uso
-                pregunta = db.query(PreguntaDiagnostico).filter_by(
-                    idPreguntaDiagnostico=relacion.idPreguntaDiagnostico
+        for relacion in relaciones_existentes:
+            pregunta = db.query(PreguntaDiagnostico).filter_by(idPreguntaDiagnostico=relacion.idPreguntaDiagnostico).first()
+            if pregunta:
+                preguntas_existentes.append({
+                    'relacion': relacion,
+                    'pregunta': pregunta
+                })
+
+        preguntas_procesadas = []
+
+        for idx, nueva_pregunta in enumerate(nuevas_preguntas_data):
+            if idx < len(preguntas_existentes):
+                pregunta_existente = preguntas_existentes[idx]['pregunta']
+                
+                # REACTIVAR la pregunta si estaba desactivada
+                pregunta_existente.estadoPreguntaDiagnostico = True
+
+                pregunta_existente.descripcionPreguntaDiagnostico = nueva_pregunta.descripcionPreguntaDiagnostico.strip()
+                pregunta_existente.idTipoDatoPreguntaDiagnostico = nueva_pregunta.idTipoDatoPreguntaDiagnostico
+                pregunta_existente.opcionesPregunta = nueva_pregunta.opcionesPregunta if nueva_pregunta.opcionesPregunta else None
+                
+                preguntas_procesadas.append(pregunta_existente)
+            else:
+                db_pregunta = PreguntaDiagnostico(
+                    descripcionPreguntaDiagnostico=nueva_pregunta.descripcionPreguntaDiagnostico.strip(),
+                    idTipoDatoPreguntaDiagnostico=nueva_pregunta.idTipoDatoPreguntaDiagnostico,
+                    opcionesPregunta=nueva_pregunta.opcionesPregunta if nueva_pregunta.opcionesPregunta else None,
+                )
+                db.add(db_pregunta)
+                db.commit()
+                db.refresh(db_pregunta)
+
+                relacion = TipoDispositivoSegunPregunta(
+                    idTipoDispositivo=db_tipo.idTipoDispositivo,
+                    idPreguntaDiagnostico=db_pregunta.idPreguntaDiagnostico
+                )
+                db.add(relacion)
+                preguntas_procesadas.append(db_pregunta)
+
+        # **Eliminar preguntas sobrantes solo si no están en uso, pero NO eliminar el tipo aunque quede sin preguntas**
+        if len(preguntas_existentes) > len(nuevas_preguntas_data):
+            for i in range(len(nuevas_preguntas_data), len(preguntas_existentes)):
+                relacion_a_eliminar = preguntas_existentes[i]['relacion']
+                pregunta_a_eliminar = preguntas_existentes[i]['pregunta']
+
+                uso = db.query(DetalleDiagnostico).filter_by(
+                    idTipoDispositivoSegunPregunta=relacion_a_eliminar.idTipoDispositivoSegunPregunta
                 ).first()
-                if pregunta:
-                    db.delete(pregunta)
-                db.delete(relacion)
-        db.commit()
 
-        # Volver a cargar las relaciones después del borrado
-        preguntas_existentes = db.query(PreguntaDiagnostico).join(TipoDispositivoSegunPregunta).filter(
-            TipoDispositivoSegunPregunta.idTipoDispositivo == db_tipo.idTipoDispositivo
-        ).all()
-
-        # Crear nuevas preguntas y relaciones si no existen
-        for pregunta in tipo_dispositivo_data.preguntas:
-            ya_existe = next((
-                p for p in preguntas_existentes
-                if p.descripcionPreguntaDiagnostico.strip().lower() == pregunta.descripcionPreguntaDiagnostico.strip().lower()
-                and p.idTipoDatoPreguntaDiagnostico == pregunta.idTipoDatoPreguntaDiagnostico
-            ), None)
-
-            if ya_existe:
-                continue  # No la insertes de nuevo
-
-            # Crear nueva pregunta
-            db_pregunta = PreguntaDiagnostico(
-                descripcionPreguntaDiagnostico=pregunta.descripcionPreguntaDiagnostico.strip(),
-                idTipoDatoPreguntaDiagnostico=pregunta.idTipoDatoPreguntaDiagnostico,
-                opcionesPregunta=pregunta.opcionesPregunta if pregunta.opcionesPregunta else None,
-            )
-            db.add(db_pregunta)
-            db.commit()
-            db.refresh(db_pregunta)
-
-            # Crear relación
-            relacion = TipoDispositivoSegunPregunta(
-                idTipoDispositivo=db_tipo.idTipoDispositivo,
-                idPreguntaDiagnostico=db_pregunta.idPreguntaDiagnostico
-            )
-            db.add(relacion)
+                if not uso:
+                    # Desactivar relación en lugar de borrarla
+                    relacion_a_eliminar.estadoTipoDispositivoSegunPregunta = False
+                    
+                    # Desactivar pregunta también si querés
+                    pregunta_a_eliminar.estadoPreguntaDiagnostico = False
 
         db.commit()
 
-    db.commit()
     db.refresh(db_tipo)
     return db_tipo

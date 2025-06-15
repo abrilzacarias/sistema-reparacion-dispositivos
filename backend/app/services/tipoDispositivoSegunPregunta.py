@@ -3,9 +3,15 @@ from app.models.tipoDispositivoSegunPregunta import TipoDispositivoSegunPregunta
 from app.schemas.tipoDispositivoSegunPregunta import TipoDispositivoSegunPreguntaCreate, TipoDispositivoSegunPreguntaUpdate
 from app.models.preguntaDiagnostico import PreguntaDiagnostico
 from app.models.tipoDatoPreguntaDiagnostico import TipoDatoPreguntaDiagnostico
+from app.models.tipoDispositivo import TipoDispositivo
 
 def get_all(db: Session):
-    return db.query(TipoDispositivoSegunPregunta).options(
+    return db.query(TipoDispositivoSegunPregunta).join(
+        TipoDispositivoSegunPregunta.tipoDispositivo
+    ).filter(
+        TipoDispositivo.estadoDispositivo == True,
+        TipoDispositivoSegunPregunta.estadoTipoDispositivoSegunPregunta == True   # <-- filtro para estado activo
+    ).options(
         joinedload(TipoDispositivoSegunPregunta.preguntaDiagnostico),
         joinedload(TipoDispositivoSegunPregunta.tipoDispositivo)
     )
@@ -46,21 +52,31 @@ def get_by_tipo_dispositivo(db: Session, id_tipo: int):
         .all()
     )
 
+
 def get_grouped_by_dispositivo(db: Session):
-    registros = db.query(TipoDispositivoSegunPregunta).options(
-        joinedload(TipoDispositivoSegunPregunta.preguntaDiagnostico),
-        joinedload(TipoDispositivoSegunPregunta.tipoDispositivo)
+    dispositivos = db.query(TipoDispositivo).filter(
+        TipoDispositivo.estadoDispositivo == True
+    ).options(
+        joinedload(TipoDispositivo.tipoDispositivoSegunPregunta.and_(
+            TipoDispositivoSegunPregunta.estadoTipoDispositivoSegunPregunta == True
+        )).joinedload(
+            TipoDispositivoSegunPregunta.preguntaDiagnostico
+        ).joinedload(
+            PreguntaDiagnostico.tipoDatoPreguntaDiagnostico
+        )
     ).all()
 
-    agrupado = {}
-    for item in registros:
-        tipo_obj = item.tipoDispositivo
-        nombre = tipo_obj.nombreTipoDispositivo
-        if nombre not in agrupado:
-            agrupado[nombre] = {
-                "tipoDispositivo": tipo_obj,
-                "preguntas": []
-            }
-        agrupado[nombre]["preguntas"].append(item.preguntaDiagnostico)
+    resultado = []
+    for disp in dispositivos:
+        preguntas = []
+        for relacion in disp.tipoDispositivoSegunPregunta:
+            if relacion.preguntaDiagnostico:
+                preguntas.append(relacion.preguntaDiagnostico)
 
-    return list(agrupado.values())
+        resultado.append({
+            "tipoDispositivo": disp,
+            "preguntas": preguntas
+        })
+
+    return resultado
+

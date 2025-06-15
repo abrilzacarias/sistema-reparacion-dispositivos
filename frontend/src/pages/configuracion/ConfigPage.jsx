@@ -9,7 +9,7 @@ import CrudsTemplate from "@/components/molecules/CrudsTemplate";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
-import { Layers, Plus, Users, Zap } from "lucide-react";
+import { Layers, MonitorSmartphone, BadgeCent, PackageCheck, Plus, Users, Zap, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getColDispositivos } from "../configuracion/components/columns/getColumnsDispositivos";
 import { getColMarcas } from "../configuracion/components/columns/getColumnsMarcas";
@@ -198,7 +198,7 @@ const ConfigPage = () => {
           modalTitle: "Agregar Tipo Dispositivo",
           modalDescription: "Complete los campos para agregar un nuevo tipo de dispositivo.",
           modalLabel: "Agregar Tipo Dispositivo",
-          icon: Users,
+          icon: MonitorSmartphone,
           component: <DispositivoCreateEdit refreshDispositivos={refetchDispositivos} marcas={marcas} modelos={modelos} />,
         };
       case "marcas":
@@ -208,7 +208,7 @@ const ConfigPage = () => {
           modalTitle: "Agregar Marca",
           modalDescription: "Complete los campos para agregar una nueva marca.",
           modalLabel: "Agregar Marca",
-          icon: Layers,
+          icon: BadgeCent, 
           component: <MarcasCreateEdit refreshMarcas={refetchMarcas} />, // ✅ CORREGIDO: usar refetchMarcas directamente
         };
       case "modelos":
@@ -218,7 +218,7 @@ const ConfigPage = () => {
           modalTitle: "Agregar Modelo",
           modalDescription: "Complete los campos para agregar un nuevo modelo.",
           modalLabel: "Agregar Modelo",
-          icon: Zap,
+          icon: PackageCheck,
           component: <ModelosCreateEdit refreshModelos={refetchModelos} /> // ✅ YA ESTABA CORRECTO
         };
       default:
@@ -228,7 +228,7 @@ const ConfigPage = () => {
           modalTitle: "Agregar Dispositivo",
           modalDescription: "Complete los campos para agregar un nuevo dispositivo.",
           modalLabel: "Agregar Dispositivo",
-          icon: Users,
+          icon: MonitorSmartphone,
           component: <DispositivoCreateEdit refreshDispositivos={refetchDispositivos} marcas={marcas} modelos={modelos} />, // ✅ CORREGIDO: quité la referencia a PerfilCreateEdit que no existe
         };
     }
@@ -268,18 +268,18 @@ const ConfigPage = () => {
               value="dispositivos"
               className="flex-1 rounded-md rounded-r-none"
             >
-              <Users className="h-4 w-4 mr-2" />
+              <MonitorSmartphone className="h-4 w-4 mr-2" />
               Dispositivos
             </TabsTrigger>
             <TabsTrigger value="marcas" className="flex-1">
-              <Layers className="h-4 w-4 mr-2" />
+              <BadgeCent className="h-4 w-4 mr-2" />
               Marcas
             </TabsTrigger>
             <TabsTrigger
               value="modelos"
               className="flex-1 rounded-md rounded-l-none"
             >
-              <Zap className="h-4 w-4 mr-2" />
+              <PackageCheck  className="h-4 w-4 mr-2" />
               Modelos
             </TabsTrigger>
           </TabsList>

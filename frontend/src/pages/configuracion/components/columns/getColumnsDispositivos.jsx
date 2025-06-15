@@ -72,18 +72,6 @@ export const getColDispositivos = ({ refetch }) => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild className="w-full flex items-center justify-between">
-              <ModalFormTemplate
-                title="Detalles del dispositivo"
-                description="Información completa del dispositivo seleccionado"
-                label="Ver detalles"
-                variant="ghost"
-                icon={List}
-                className="p-2 m-0 cursor-pointer w-full justify-start"
-              >
-                <DispositivoCard dispositivo={dispositivo} />
-              </ModalFormTemplate>
-            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <ModalFormTemplate
                 title="Editar tipo de dispositivo"
