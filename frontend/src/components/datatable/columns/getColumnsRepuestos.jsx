@@ -40,6 +40,46 @@ export const getColumnsRepuestos = ({ refetch }) => {
       cell: ({ row }) => <div>{row.original.cantidadRepuesto}</div>,
     },
     {
+      header: "Stock Mínimo",
+      accessorKey: "stockMinimo",
+      cell: ({ row }) => {
+        const cantidad = row.original.cantidadRepuesto;
+        const stockMinimo = row.original.stockMinimo;
+        
+        // Si no hay stock mínimo definido
+        if (!stockMinimo && stockMinimo !== 0) {
+          return (
+            <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
+              No definido
+            </span>
+          );
+        }
+        
+        // Calcular el estado del stock
+        const porcentajeStock = (cantidad / stockMinimo) * 100;
+        
+        if (cantidad < stockMinimo) {
+          return (
+            <span className="text-xs text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/30 px-2 py-1 rounded-full font-medium">
+              Stock bajo
+            </span>
+          );
+        } else if (porcentajeStock <= 120) { // Entre 100% y 120% del stock mínimo
+          return (
+            <span className="text-xs text-yellow-700 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30 px-2 py-1 rounded-full font-medium">
+              Stock justo
+            </span>
+          );
+        } else {
+          return (
+            <span className="text-xs text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30 px-2 py-1 rounded-full font-medium">
+              Stock óptimo
+            </span>
+          );
+        }
+      },
+    },
+    {
       header: "Marca",
       accessorKey: "marca.descripcionMarcaDispositivo",
       cell: ({ row }) => (
