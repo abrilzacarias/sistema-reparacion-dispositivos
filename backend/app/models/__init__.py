@@ -14,7 +14,7 @@ from .cliente import Cliente
 from .domicilio import Domicilio
 from .tipoDomicilio import TipoDomicilio
 from .contacto import Contacto
-from .tipocontacto import TipoContacto
+from .tipoContacto import TipoContacto
 from .perfil import Perfil
 from .funcionSistema import FuncionSistema
 from .moduloFuncionSistema import ModuloFuncionSistema

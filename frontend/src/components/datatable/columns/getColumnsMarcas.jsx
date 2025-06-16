@@ -6,9 +6,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
-import MarcasCreateEdit from "@/pages/marcas/components/MarcasCreateEdit";
 import MarcasDeleteConfirmModal from "@/components/organisms/MarcasDeleteConfirmModal";
 import { Button } from "@/components/ui/button";
+import MarcasCreateEdit from "@/pages/configuracion/components/MarcasCreateEdit";
 
 export const getColumnsMarcas = ({ refetch }) => [
   {
