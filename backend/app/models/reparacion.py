@@ -19,7 +19,13 @@ class Reparacion(Base):
     fechaIngreso = mapped_column(DateTime)
     montoTotalReparacion: Mapped[Optional[decimal.Decimal]] = mapped_column(DECIMAL(10, 0), nullable=True)
     idDiagnostico = mapped_column(Integer, ForeignKey('diagnostico.idDiagnostico'))
-    idEmpleado = mapped_column(Integer, ForeignKey('empleado.idEmpleado'), comment='puede ser que un empleado haga el diagnostico y otro la reparacion')
+    idEmpleado: Mapped[Optional[int]] = mapped_column(
+    Integer,
+    ForeignKey('empleado.idEmpleado'),
+    nullable=True,
+    comment='puede ser que un empleado haga el diagnostico y otro la reparacion'
+)
+
     fechaEgreso: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
 
     diagnostico = relationship('Diagnostico', back_populates='reparaciones')

@@ -120,6 +120,8 @@ const EstadoBadge = ({ estado }) => {
   );
 };
 
+// Código corregido completo para las columnas de reparaciones
+
 export const getColumnsReparaciones = ({ refetch }) => {
   const handleDelete = async (reparacion, refetch) => {
     let isConfirmed = false;
@@ -278,15 +280,29 @@ export const getColumnsReparaciones = ({ refetch }) => {
       },
       cell: ({ row }) => {
         const persona = row.original.empleado?.persona;
+
+        // Si no hay empleado o persona, mostrar "Sin asignar"
+        if (!row.original.empleado || !persona) {
+          return (
+            <div className="text-sm">
+              <span className="text-gray-500 dark:text-gray-400 italic">Sin asignar</span>
+            </div>
+          );
+        }
+
+        const nombre = persona?.nombre?.trim() ?? "";
+        const apellido = persona?.apellido?.trim() ?? "";
+        const iniciales = `${nombre.length > 0 ? nombre[0] : ""}${apellido.length > 0 ? apellido[0] : ""}`.toUpperCase();
+
         return (
           <div className="text-sm">
-            {persona ? (
+            {nombre || apellido ? (
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-medium">
-                  {persona.nombre?.[0]?.toUpperCase()}{persona.apellido?.[0]?.toUpperCase()}
+                  {iniciales}
                 </div>
                 <span className="font-medium">
-                  {`${persona.nombre} ${persona.apellido}`.trim()}
+                  {`${nombre} ${apellido}`.trim()}
                 </span>
               </div>
             ) : (
@@ -294,7 +310,7 @@ export const getColumnsReparaciones = ({ refetch }) => {
             )}
           </div>
         );
-      },
+      }
     },
     {
       id: "actions",
@@ -322,9 +338,9 @@ export const getColumnsReparaciones = ({ refetch }) => {
                 >
                   <DetalleReparacionModal
                     idReparacion={reparacion.idReparacion}
-                    cliente={reparacion.diagnostico.dispositivo.cliente.persona}
-                    dispositivo={reparacion.diagnostico.dispositivo}
-                    empleado={reparacion.empleado.persona}
+                    cliente={reparacion.diagnostico?.dispositivo?.cliente?.persona}
+                    dispositivo={reparacion.diagnostico?.dispositivo}
+                    empleado={reparacion.empleado?.persona}
                     fechaIngreso={reparacion.fechaIngreso}
                   />
                 </ModalFormTemplate>

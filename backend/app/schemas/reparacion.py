@@ -12,7 +12,7 @@ class ReparacionBase(BaseModel):
     fechaEgreso: Optional[datetime] = None
     montoTotalReparacion: Optional[Decimal] = None
     idDiagnostico: int
-    idEmpleado: int
+    idEmpleado: Optional[int] = None
 
 class ReparacionCreate(ReparacionBase):
     pass
@@ -25,7 +25,7 @@ class ReparacionUpdate(ReparacionBase):
 class ReparacionOut(ReparacionBase):
     idReparacion: int
     diagnostico: DiagnosticoSchema
-    empleado: EmpleadoOut
+    empleado: Optional[EmpleadoOut] = None
     registroEstadoReparacion: List[RegistroEstadoReparacionOut]
 
     class Config:

@@ -782,7 +782,7 @@ CREATE TABLE `reparacion` (
   `fechaEgreso` datetime DEFAULT NULL,
   `montoTotalReparacion` decimal(10,0) DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
-  `idEmpleado` int NOT NULL COMMENT 'puede ser que un empleado haga el diagnostico y otro la reparacion',
+  `idEmpleado` int DEFAULT NULL COMMENT 'puede ser que un empleado haga el diagnostico y otro la reparacion',
   `fechaEstimadaEntrega` datetime DEFAULT NULL,
   PRIMARY KEY (`idReparacion`),
   KEY `fk_reparacion_diagnostico1_idx` (`idDiagnostico`),
