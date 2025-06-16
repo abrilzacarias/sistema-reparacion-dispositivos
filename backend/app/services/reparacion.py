@@ -82,7 +82,7 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
             .order_by(HistorialAsignacionReparacion.fechaInicioAsignacionReparacion.desc())\
             .first()
         if historial_anterior:
-            historial_anterior.fechaFinAsignacionReparacion = datetime.now()
+            historial_anterior.fechaFinAsignacionReparacion = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
             db.add(historial_anterior)
 
         # Crear nuevo registro de asignación con fechaInicioAsignacion
@@ -101,7 +101,7 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
             idReparacion=id,
             idEstadoReparacion=id_estado,
             idEmpleado=id_empleado_estado,
-            fechaHoraRegistroEstadoReparacion=datetime.now()
+            fechaHoraRegistroEstadoReparacion=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
         )
         db.add(nuevo_estado_registro)
 
@@ -128,7 +128,7 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
 
     # Lógica de fechaEgreso
     if descripcion_estado == "Entregado":
-        db_reparacion.fechaEgreso = datetime.now()
+        db_reparacion.fechaEgreso = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
     else:
         db_reparacion.fechaEgreso = None
 
