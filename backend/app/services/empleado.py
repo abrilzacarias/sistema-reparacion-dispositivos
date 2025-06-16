@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy import or_, func
 
 def get_empleados(db: Session, search: str = None):
-    query = db.query(Empleado).filter(Empleado.fechaFinalizacion == None)  # Solo activos
+    query = db.query(Empleado)
     if search:
         search = f"%{search.lower()}%"
         query = query.filter(
