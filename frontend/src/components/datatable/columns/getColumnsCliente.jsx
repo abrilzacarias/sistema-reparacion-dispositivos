@@ -1,4 +1,5 @@
-import { Edit, Ellipsis, List, Wrench, Trash2 } from "lucide-react";
+import ModalDeactivateItem from "@/components/molecules/DeleteConfirmButton";
+import { Edit, Ellipsis, List, Wrench, Trash2, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -166,6 +167,7 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
     {
       id: "actions",
       cell: function Cell({ row }) {
+        const cliente = row.original
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -236,13 +238,22 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
 
               <DropdownMenuSeparator />
               {tienePermiso("Clientes", "Eliminar Cliente") && (
-                <DropdownMenuItem
-                  onClick={() => handleDelete(row.original)}
-                  className="text-red-600 focus:text-red-600 focus:bg-red-50"
+              <DropdownMenuItem asChild>
+                <ModalFormTemplate
+                  title="¿Estás completamente seguro?"
+                  description=" Esta acción no se puede deshacer."
+                  label="Eliminar"
+                  variant="ghost"
+                  icon={Trash}
+                  className="m-0 text-red-900 dark:text-red-500 cursor-pointer w-full p-2 justify-start"
                 >
-                  <Trash2 className="size-4 mr-2" />
-                  Eliminar
-                </DropdownMenuItem>
+                  <ModalDeactivateItem
+                    endpoint="clientes"
+                    id={cliente.idCliente}
+                    refetch={refetch}
+                  />
+                </ModalFormTemplate>
+            </DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
