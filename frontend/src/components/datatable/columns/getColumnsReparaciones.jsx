@@ -122,20 +122,60 @@ const EstadoBadge = ({ estado }) => {
 
 export const getColumnsReparaciones = ({ refetch }) => {
   const handleDelete = async (reparacion, refetch) => {
-    if (!window.confirm(`¿Seguro que querés eliminar esta reparación?`)) return;
-    try {
-      const res = await axios.delete(
-        `${API_URL}/reparaciones/${reparacion.idReparacion}`
-      );
-      toast.success("Reparación eliminada con éxito");
-      refetch?.();
-    } catch (error) {
-      console.error("Error eliminando reparación:", error);
-      const errorMsg =
-        error.response?.data?.detail ||
-        "No se puede eliminar una reparacion con detalles.";
-      toast.error(errorMsg);
-    }
+    let isConfirmed = false;
+    
+    const confirmToast = toast(
+      <div className="flex flex-col gap-2">
+        <div className="font-medium">¿Eliminar reparación?</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">
+          Reparación N° {reparacion.idReparacion}
+        </div>
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={() => {
+              isConfirmed = true;
+              toast.dismiss(confirmToast);
+              executeDelete();
+            }}
+            className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors"
+          >
+            Eliminar
+          </button>
+          <button
+            onClick={() => {
+              toast.dismiss(confirmToast);
+              toast.info("Eliminación cancelada");
+            }}
+            className="px-3 py-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded text-sm hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>,
+      {
+        duration: Infinity,
+      }
+    );
+
+    const executeDelete = async () => {
+      const loadingToast = toast.loading("Eliminando reparación...");
+      
+      try {
+        const res = await axios.delete(
+          `${API_URL}/reparaciones/${reparacion.idReparacion}`
+        );
+        toast.dismiss(loadingToast);
+        toast.success("Reparación eliminada con éxito");
+        refetch?.();
+      } catch (error) {
+        toast.dismiss(loadingToast);
+        console.error("Error eliminando reparación:", error);
+        const errorMsg =
+          error.response?.data?.detail ||
+          "No se puede eliminar una reparación con detalles.";
+        toast.error(errorMsg);
+      }
+    };
   };
 
   return [
