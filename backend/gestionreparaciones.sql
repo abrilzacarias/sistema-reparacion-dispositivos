@@ -140,7 +140,7 @@ CREATE TABLE `detalleDiagnostico` (
   PRIMARY KEY (`idDetalleDiagnostico`),
   KEY `fk_detalleDiagnostico_diagnostico1_idx` (`idDiagnostico`),
   CONSTRAINT `fk_detalleDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE `detalleDiagnostico` (
 
 LOCK TABLES `detalleDiagnostico` WRITE;
 /*!40000 ALTER TABLE `detalleDiagnostico` DISABLE KEYS */;
-INSERT INTO `detalleDiagnostico` VALUES (36,'true',19,20);
+INSERT INTO `detalleDiagnostico` VALUES (36,'true',19,20),(37,'false',20,22),(38,'No prende',20,24),(39,'false',21,22),(40,'no prende',21,24);
 /*!40000 ALTER TABLE `detalleDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,14 +199,14 @@ CREATE TABLE `diagnostico` (
   `idDiagnostico` int NOT NULL AUTO_INCREMENT,
   `fechaDiagnostico` date NOT NULL,
   `idDispositivo` int NOT NULL,
-  `idEmpleado` int NOT NULL,
+  `idEmpleado` int DEFAULT NULL,
   `descripcionDiagnostico` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idDiagnostico`),
   KEY `fk_diagnostico_dispositivo1_idx` (`idDispositivo`),
   KEY `fk_diagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_diagnostico_dispositivo1` FOREIGN KEY (`idDispositivo`) REFERENCES `dispositivo` (`idDispositivo`),
   CONSTRAINT `fk_diagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +215,7 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,34,NULL);
+INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,32,NULL),(20,'2025-06-16',35,32,NULL),(21,'2025-06-16',36,31,NULL);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +239,7 @@ CREATE TABLE `dispositivo` (
   CONSTRAINT `fk_dispositivo_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`),
   CONSTRAINT `fk_dispositivo_modeloDispositivo1` FOREIGN KEY (`idModeloDispositivo`) REFERENCES `modeloDispositivo` (`idModeloDispositivo`),
   CONSTRAINT `fk_dispositivo_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,7 +248,7 @@ CREATE TABLE `dispositivo` (
 
 LOCK TABLES `dispositivo` WRITE;
 /*!40000 ALTER TABLE `dispositivo` DISABLE KEYS */;
-INSERT INTO `dispositivo` VALUES (34,3,4,17,1);
+INSERT INTO `dispositivo` VALUES (34,3,4,17,1),(35,5,3,18,1),(36,5,3,17,1);
 /*!40000 ALTER TABLE `dispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +319,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (29,'2025-06-10',NULL,7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13',NULL,7,74,29),(33,'2025-06-13',NULL,7,77,30),(34,'2025-06-13',NULL,8,78,31);
+INSERT INTO `empleado` VALUES (29,'2025-06-10',NULL,7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13',NULL,7,74,29),(33,'2025-06-13',NULL,7,77,30),(34,'2025-06-13','2025-06-16',8,78,31);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,8 +381,8 @@ DROP TABLE IF EXISTS `historialAsignacionDiagnostico`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historialAsignacionDiagnostico` (
   `idHistorialAsignacionDiagnostico` int NOT NULL AUTO_INCREMENT,
-  `fechaInicioAsignacionDiagnostico` date NOT NULL,
-  `fechaFinAsignacionDiagnostico` date DEFAULT NULL,
+  `fechaInicioAsignacionDiagnostico` datetime NOT NULL,
+  `fechaFinAsignacionDiagnostico` datetime DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
   `idEmpleado` int NOT NULL,
   PRIMARY KEY (`idHistorialAsignacionDiagnostico`),
@@ -390,7 +390,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
   KEY `fk_historialAsignacionDiagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,7 +399,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
 
 LOCK TABLES `historialAsignacionDiagnostico` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` DISABLE KEYS */;
-INSERT INTO `historialAsignacionDiagnostico` VALUES (3,'2025-06-15','2025-06-15',19,32),(4,'2025-06-15','2025-06-15',19,33),(5,'2025-06-15','2025-06-15',19,32),(6,'2025-06-15','2025-06-15',19,31),(7,'2025-06-15',NULL,19,33),(8,'2025-06-15',NULL,19,34);
+INSERT INTO `historialAsignacionDiagnostico` VALUES (3,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,32),(4,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,33),(5,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,32),(6,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,31),(7,'2025-06-15 00:00:00',NULL,19,33),(8,'2025-06-15 00:00:00',NULL,19,34),(9,'2025-06-16 00:00:00',NULL,19,31),(10,'2025-06-16 00:00:00',NULL,19,34),(11,'2025-06-16 00:00:00',NULL,19,31),(12,'2025-06-16 00:00:00',NULL,19,32),(13,'2025-06-16 00:00:00',NULL,20,32),(14,'2025-06-16 01:45:35',NULL,20,31),(15,'2025-06-16 01:45:40',NULL,20,32),(16,'2025-06-16 01:49:31',NULL,20,33),(17,'2025-06-16 01:57:57',NULL,20,32),(18,'2025-06-15 22:57:38',NULL,21,31);
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -622,7 +622,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',1),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
+INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',0),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -635,12 +635,24 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_fecha_finalizacion` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
-    -- Verificamos si el estadoPersona cambió de 1 (activo) a 0 (inactivo)
+    -- Si la persona fue desactivada
     IF OLD.estadoPersona = 1 AND NEW.estadoPersona = 0 THEN
-        -- Actualizamos fechaFinalizacion si la persona es un empleado
+
+        -- Actualizar la fecha de finalización del empleado
         UPDATE empleado
         SET fechaFinalizacion = CURRENT_DATE
         WHERE idPersona = NEW.idPersona;
+
+        -- Establecer idEmpleado en NULL en los diagnósticos si corresponde
+        UPDATE diagnostico
+        SET idEmpleado = NULL
+        WHERE idEmpleado = (
+            SELECT idEmpleado
+            FROM empleado
+            WHERE idPersona = NEW.idPersona
+            LIMIT 1
+        );
+
     END IF;
 END */;;
 DELIMITER ;
@@ -1094,4 +1106,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-15 18:32:22
+-- Dump completed on 2025-06-15 23:15:43
