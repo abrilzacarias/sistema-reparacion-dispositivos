@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -32,7 +32,7 @@ CREATE TABLE `asignacionUsuarioPermisos` (
   KEY `fk_asignacionUsuarioPermisos_permisosDePerfiles1_idx` (`idpermisoPerfil`),
   CONSTRAINT `fk_asignacionUsuarioPermisos_permisosDePerfiles1` FOREIGN KEY (`idpermisoPerfil`) REFERENCES `permisoPerfil` (`idpermisoPerfil`),
   CONSTRAINT `fk_asignacionUsuarioPermisos_usuarios1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `asignacionUsuarioPermisos` (
 
 LOCK TABLES `asignacionUsuarioPermisos` WRITE;
 /*!40000 ALTER TABLE `asignacionUsuarioPermisos` DISABLE KEYS */;
-INSERT INTO `asignacionUsuarioPermisos` VALUES (3,28,323,1),(4,28,324,1),(5,28,325,1),(6,28,326,1),(7,28,327,1),(8,28,328,1),(9,28,329,1),(10,28,330,1),(11,28,331,1),(16,28,336,1),(18,28,338,1),(19,28,339,1),(21,28,341,1),(22,28,342,1),(23,28,343,1),(24,28,344,1),(25,28,345,1),(26,28,346,1),(27,28,347,1),(28,28,348,1),(29,28,349,1),(30,28,350,1),(31,28,351,1),(32,28,352,1),(33,28,353,1),(34,28,354,1),(35,28,355,1),(36,28,356,1),(37,28,70,1),(38,28,71,1),(39,28,72,1),(40,28,73,1),(41,28,74,1),(42,28,75,1),(43,28,76,1),(44,28,77,1),(45,28,78,1),(46,28,79,1),(51,28,165,1),(52,28,166,1),(53,28,167,1),(54,28,168,1),(55,28,169,1),(56,28,170,1),(57,28,171,1),(58,28,172,1),(59,28,173,1),(60,28,174,1),(61,29,70,1),(62,29,71,1),(63,29,72,1),(64,29,73,1),(65,29,74,1),(66,29,75,1),(67,29,76,1),(68,29,77,1),(69,29,78,1),(70,29,79,1),(75,29,165,1),(76,29,166,1),(77,29,167,1),(78,29,168,1),(79,29,169,1),(80,29,170,1),(81,29,171,1),(82,29,172,1),(83,29,173,1),(84,29,174,1),(89,28,390,1),(90,28,391,1),(91,28,392,1),(92,28,393,1),(93,28,394,1),(94,28,395,1),(95,28,396,1),(96,28,397,1),(97,30,366,1),(98,30,367,1),(99,30,368,1),(100,30,369,1),(101,30,370,1),(102,30,371,1),(103,30,372,1),(104,30,373,1),(105,30,374,1),(106,30,375,1),(107,30,376,1),(108,30,377,1),(109,30,378,1),(110,30,379,1),(111,30,380,1),(112,30,381,1),(113,30,382,1),(114,30,383,1),(115,30,384,1),(116,30,385,1),(117,30,386,1),(118,30,387,1),(119,30,388,1),(120,30,389,1),(121,28,398,1),(122,29,398,1),(123,28,399,1),(124,29,399,1),(125,28,400,1),(126,29,400,1),(127,28,401,1),(128,29,401,1),(129,28,402,1),(130,29,402,1),(131,28,403,1),(132,29,403,1),(133,28,404,1),(134,29,404,1),(135,28,405,1),(136,29,405,1),(137,28,406,1),(138,29,406,1),(139,31,323,1),(140,31,324,1),(141,31,325,1),(142,31,326,1),(143,31,327,1),(144,31,328,1),(145,31,329,1),(146,31,330,1),(147,31,331,1),(148,31,336,1),(149,31,338,1),(150,31,339,1),(151,31,341,1),(152,31,342,1),(153,31,343,1),(154,31,344,1),(155,31,345,1),(156,31,346,1),(157,31,347,1),(158,31,348,1),(159,31,349,1),(160,31,350,1),(161,31,351,1),(162,31,352,1),(163,31,353,1),(164,31,354,1),(165,31,355,1),(166,31,356,1),(167,31,357,1),(168,31,390,1),(169,31,391,1),(170,31,392,1),(171,31,393,1),(172,31,394,1),(173,31,395,1),(174,31,396,1),(175,31,397,1),(176,31,366,1),(177,31,367,1),(178,31,368,1),(179,31,369,1),(180,31,370,1),(181,31,371,1),(182,31,372,1),(183,31,373,1),(184,31,374,1),(185,31,375,1),(186,31,376,1),(187,31,377,1),(188,31,378,1),(189,31,379,1),(190,31,380,1),(191,31,381,1),(192,31,382,1),(193,31,383,1),(194,31,384,1),(195,31,385,1),(196,31,386,1),(197,31,387,1),(198,31,388,1),(199,31,389,1);
+INSERT INTO `asignacionUsuarioPermisos` VALUES (3,28,323,1),(4,28,324,1),(5,28,325,1),(6,28,326,1),(7,28,327,1),(8,28,328,1),(9,28,329,1),(10,28,330,1),(11,28,331,1),(16,28,336,1),(18,28,338,1),(19,28,339,1),(21,28,341,1),(22,28,342,1),(23,28,343,1),(24,28,344,1),(25,28,345,1),(26,28,346,1),(27,28,347,1),(28,28,348,1),(29,28,349,1),(30,28,350,1),(31,28,351,1),(32,28,352,1),(33,28,353,1),(34,28,354,1),(35,28,355,1),(36,28,356,1),(37,28,70,1),(38,28,71,1),(39,28,72,1),(40,28,73,1),(41,28,74,1),(42,28,75,1),(43,28,76,1),(44,28,77,1),(45,28,78,1),(46,28,79,1),(51,28,165,1),(52,28,166,1),(53,28,167,1),(54,28,168,1),(55,28,169,1),(56,28,170,1),(57,28,171,1),(58,28,172,1),(59,28,173,1),(60,28,174,1),(61,29,70,1),(62,29,71,1),(63,29,72,1),(64,29,73,1),(65,29,74,1),(66,29,75,1),(67,29,76,1),(68,29,77,1),(69,29,78,1),(70,29,79,1),(75,29,165,1),(76,29,166,1),(77,29,167,1),(78,29,168,1),(79,29,169,1),(80,29,170,1),(81,29,171,1),(82,29,172,1),(83,29,173,1),(84,29,174,1),(89,28,390,1),(90,28,391,1),(91,28,392,1),(92,28,393,1),(93,28,394,1),(94,28,395,1),(95,28,396,1),(96,28,397,1),(97,30,366,1),(98,30,367,1),(99,30,368,1),(100,30,369,1),(101,30,370,1),(102,30,371,1),(103,30,372,1),(104,30,373,1),(105,30,374,1),(106,30,375,1),(107,30,376,1),(108,30,377,1),(109,30,378,1),(110,30,379,1),(111,30,380,1),(112,30,381,1),(113,30,382,1),(114,30,383,1),(115,30,384,1),(116,30,385,1),(117,30,386,1),(118,30,387,1),(119,30,388,1),(120,30,389,1),(121,28,398,1),(122,29,398,1),(123,28,399,1),(124,29,399,1),(125,28,400,1),(126,29,400,1),(127,28,401,1),(128,29,401,1),(129,28,402,1),(130,29,402,1),(131,28,403,1),(132,29,403,1),(133,28,404,1),(134,29,404,1),(135,28,405,1),(136,29,405,1),(137,28,406,1),(138,29,406,1),(139,31,323,1),(140,31,324,1),(141,31,325,1),(142,31,326,1),(143,31,327,1),(144,31,328,1),(145,31,329,1),(146,31,330,1),(147,31,331,1),(148,31,336,1),(149,31,338,1),(150,31,339,1),(151,31,341,1),(152,31,342,1),(153,31,343,1),(154,31,344,1),(155,31,345,1),(156,31,346,1),(157,31,347,1),(158,31,348,1),(159,31,349,1),(160,31,350,1),(161,31,351,1),(162,31,352,1),(163,31,353,1),(164,31,354,1),(165,31,355,1),(166,31,356,1),(167,31,357,1),(168,31,390,1),(169,31,391,1),(170,31,392,1),(171,31,393,1),(172,31,394,1),(173,31,395,1),(174,31,396,1),(175,31,397,1),(176,31,366,1),(177,31,367,1),(178,31,368,1),(179,31,369,1),(180,31,370,1),(181,31,371,1),(182,31,372,1),(183,31,373,1),(184,31,374,1),(185,31,375,1),(186,31,376,1),(187,31,377,1),(188,31,378,1),(189,31,379,1),(190,31,380,1),(191,31,381,1),(192,31,382,1),(193,31,383,1),(194,31,384,1),(195,31,385,1),(196,31,386,1),(197,31,387,1),(198,31,388,1),(199,31,389,1),(200,33,366,1),(201,33,367,1),(202,33,368,1),(203,33,369,1),(204,33,370,1),(205,33,371,1),(206,33,372,1),(207,33,373,1),(208,33,374,1),(209,33,375,1),(210,33,376,1),(211,33,377,1),(212,33,378,1),(213,33,379,1),(214,33,380,1),(215,33,381,1),(216,33,382,1),(217,33,383,1),(218,33,384,1),(219,33,385,1),(220,33,386,1),(221,33,387,1),(222,33,388,1),(223,33,389,1);
 /*!40000 ALTER TABLE `asignacionUsuarioPermisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +215,7 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,32,NULL),(20,'2025-06-16',35,32,NULL),(21,'2025-06-16',36,31,NULL);
+INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,NULL,NULL),(20,'2025-06-16',35,NULL,NULL),(21,'2025-06-16',36,31,NULL);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -310,7 +310,7 @@ CREATE TABLE `empleado` (
   CONSTRAINT `fk_empleado_persona1` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`idPersona`),
   CONSTRAINT `fk_empleado_puestoLaboral1` FOREIGN KEY (`idpuestoLaboral`) REFERENCES `puestoLaboral` (`idpuestoLaboral`),
   CONSTRAINT `fk_empleado_usuario1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -319,7 +319,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (29,'2025-06-10',NULL,7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13',NULL,7,74,29),(33,'2025-06-13',NULL,7,77,30),(34,'2025-06-13','2025-06-16',8,78,31);
+INSERT INTO `empleado` VALUES (29,'2025-06-10','2025-06-16',7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13','2025-06-16',7,74,29),(33,'2025-06-13','2025-06-16',7,77,30),(34,'2025-06-13','2025-06-16',8,78,31),(35,'2025-06-03','2025-06-16',7,75,33);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,7 +421,7 @@ CREATE TABLE `historialAsignacionReparacion` (
   KEY `fk_historialAsignacionReparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionReparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionReparacion_reparacion1` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -430,7 +430,7 @@ CREATE TABLE `historialAsignacionReparacion` (
 
 LOCK TABLES `historialAsignacionReparacion` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionReparacion` DISABLE KEYS */;
-INSERT INTO `historialAsignacionReparacion` VALUES (2,'2025-06-15',NULL,6,31);
+INSERT INTO `historialAsignacionReparacion` VALUES (2,'2025-06-15','2025-06-16',6,31),(3,'2025-06-16','2025-06-16',7,29),(5,'2025-06-16',NULL,7,31),(6,'2025-06-16',NULL,6,35);
 /*!40000 ALTER TABLE `historialAsignacionReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -622,7 +622,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',0),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
+INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',0),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',0),(75,'12412412412','Nazareno','Bareiro','2025-06-13',0),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',0),(78,'74520389124','Victoria','Maidana','2002-02-18',0),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -635,23 +635,31 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_fecha_finalizacion` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
-    -- Si la persona fue desactivada
+    DECLARE v_idEmpleado INT;
+
+    -- Solo ejecutar si la persona fue desactivada
     IF OLD.estadoPersona = 1 AND NEW.estadoPersona = 0 THEN
+
+        -- Obtener el idEmpleado correspondiente a la persona
+        SELECT idEmpleado INTO v_idEmpleado
+        FROM empleado
+        WHERE idPersona = NEW.idPersona
+        LIMIT 1;
 
         -- Actualizar la fecha de finalización del empleado
         UPDATE empleado
         SET fechaFinalizacion = CURRENT_DATE
-        WHERE idPersona = NEW.idPersona;
+        WHERE idEmpleado = v_idEmpleado;
 
-        -- Establecer idEmpleado en NULL en los diagnósticos si corresponde
+        -- Establecer idEmpleado en NULL en los diagnósticos
         UPDATE diagnostico
         SET idEmpleado = NULL
-        WHERE idEmpleado = (
-            SELECT idEmpleado
-            FROM empleado
-            WHERE idPersona = NEW.idPersona
-            LIMIT 1
-        );
+        WHERE idEmpleado = v_idEmpleado;
+
+        -- Establecer idEmpleado en NULL en las reparaciones
+        UPDATE reparacion
+        SET idEmpleado = NULL
+        WHERE idEmpleado = v_idEmpleado;
 
     END IF;
 END */;;
@@ -756,7 +764,7 @@ CREATE TABLE `registroEstadoReparacion` (
   CONSTRAINT `fk_registro_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
   CONSTRAINT `fk_registro_estado_reparacion` FOREIGN KEY (`idEstadoReparacion`) REFERENCES `estadoReparacion` (`idEstadoReparacion`),
   CONSTRAINT `fk_registro_reparacion` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -765,7 +773,7 @@ CREATE TABLE `registroEstadoReparacion` (
 
 LOCK TABLES `registroEstadoReparacion` WRITE;
 /*!40000 ALTER TABLE `registroEstadoReparacion` DISABLE KEYS */;
-INSERT INTO `registroEstadoReparacion` VALUES (24,6,2,'2025-06-15 06:08:35',31);
+INSERT INTO `registroEstadoReparacion` VALUES (24,6,2,'2025-06-15 06:08:35',31),(25,7,3,'2025-06-16 19:41:24',29);
 /*!40000 ALTER TABLE `registroEstadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -789,7 +797,7 @@ CREATE TABLE `reparacion` (
   KEY `fk_reparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_reparacion_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_reparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -798,7 +806,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (6,'2025-06-15 00:00:00',NULL,NULL,19,31,NULL);
+INSERT INTO `reparacion` VALUES (6,'2025-06-15 00:00:00',NULL,NULL,19,NULL,NULL),(7,'2025-06-16 19:38:27',NULL,NULL,19,31,NULL);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1046,7 +1054,7 @@ CREATE TABLE `usuario` (
   `email` varchar(100) NOT NULL,
   `needs_password_change` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1055,7 +1063,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com',0),(24,'abrilzacarias15','$2b$12$tITGiERylyQ4DCz1UNkMT.6xirtGKWpmJafMyQ/m6t4DYwBgfwZGW','abrilzacarias15@gmail.com',1),(25,'abrilzacaria15','$2b$12$QZywH6EVy62OdObQd2GESuBsPCjGSKgs12q9OlfVoCMHhfLDAIKT2','abrilzacaria15@gmail.com',1),(26,'abrilzacarias6','$2b$12$ba2Rjia/zqW1tz4u6hVJDO1.rshbo0nkkz8XDzMkkxtNMn5pdviOG','abrilzacarias6@gmail.com',1),(27,'abbz1504','$2b$12$T3K8FVZu3MuYohr80hd8vuKWcCGK9o2aqDOt9cSTiMM7fqD0O6k4i','abbz1504@gmail.com',1),(28,'consortiumsolutionsarg','$2b$12$9FTqnVbRXpX8OxMsQKzv6eR8P7aaWPdzJ71kx8786cDpyie6f2Uba','consortiumsolutionsarg@gmail.com',0),(29,'pauladvillalba','$2b$12$P8cppfLP3wfAQXjAusP07u6REX8KF1ka1Ruz1Ktgp1GwrQWQv7oD2','pauladvillalba@gmail.com',0),(30,'ppaulitaaaa2904','$2b$12$/NX6.XU3ZfWM4eciqwh8yOSRDjYYJbFuvNk9HlY6MlDZz8MAt7BPq','ppaulitaaaa2904@gmail.com',0),(31,'victoriavmcortitrabajos','$2b$12$YSDGJgLmfao5PHcRorKr7ufuNCg4Ypg39mZdTzLtEXCTH1z0ltS9.','victoriavmcortitrabajos@gmail.com',0),(32,'mari','$2b$12$wCgNUNkHdAt.5..6AOytDu5NcUhT1KY9ssW1EzRH5ZS3/EPcmTnCS','acostagm6@gmail.com',1);
+INSERT INTO `usuario` VALUES (23,'admin','$2b$12$EF91DBXtJ8z85.SjXP7fLes/vQMUxcnx6N4rXaiXcZJzHrwFQ3xOS','admin@admin.com',0),(24,'abrilzacarias15','$2b$12$tITGiERylyQ4DCz1UNkMT.6xirtGKWpmJafMyQ/m6t4DYwBgfwZGW','abrilzacarias15@gmail.com',1),(25,'abrilzacaria15','$2b$12$QZywH6EVy62OdObQd2GESuBsPCjGSKgs12q9OlfVoCMHhfLDAIKT2','abrilzacaria15@gmail.com',1),(26,'abrilzacarias6','$2b$12$ba2Rjia/zqW1tz4u6hVJDO1.rshbo0nkkz8XDzMkkxtNMn5pdviOG','abrilzacarias6@gmail.com',1),(27,'abbz1504','$2b$12$T3K8FVZu3MuYohr80hd8vuKWcCGK9o2aqDOt9cSTiMM7fqD0O6k4i','abbz1504@gmail.com',1),(28,'consortiumsolutionsarg','$2b$12$9FTqnVbRXpX8OxMsQKzv6eR8P7aaWPdzJ71kx8786cDpyie6f2Uba','consortiumsolutionsarg@gmail.com',0),(29,'pauladvillalba','$2b$12$P8cppfLP3wfAQXjAusP07u6REX8KF1ka1Ruz1Ktgp1GwrQWQv7oD2','pauladvillalba@gmail.com',0),(30,'ppaulitaaaa2904','$2b$12$/NX6.XU3ZfWM4eciqwh8yOSRDjYYJbFuvNk9HlY6MlDZz8MAt7BPq','ppaulitaaaa2904@gmail.com',0),(31,'victoriavmcortitrabajos','$2b$12$YSDGJgLmfao5PHcRorKr7ufuNCg4Ypg39mZdTzLtEXCTH1z0ltS9.','victoriavmcortitrabajos@gmail.com',0),(32,'mari','$2b$12$wCgNUNkHdAt.5..6AOytDu5NcUhT1KY9ssW1EzRH5ZS3/EPcmTnCS','acostagm6@gmail.com',1),(33,'nazab','$2b$12$TpYrnc4hkEwcsNokuCwYGe/Dpsd4IA8Jizr8cPAMdeIt1BEGHSIZi','nazab@gmail.com',1);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1074,10 +1082,6 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `fecha`,
  1 AS `accion`*/;
 SET character_set_client = @saved_cs_client;
-
---
--- Dumping routines for database 'gestionreparaciones'
---
 
 --
 -- Final view structure for view `vista_notificaciones`
@@ -1106,4 +1110,5 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-15 23:15:43
+-- Dump completed on 2025-06-16 18:00:04
+
