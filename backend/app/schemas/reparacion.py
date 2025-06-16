@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from datetime import date
+from datetime import datetime, date
 from decimal import Decimal
 from app.schemas.empleado import EmpleadoOut
 from app.schemas.diagnostico import DiagnosticoSchema
@@ -8,8 +8,8 @@ from app.schemas.registroEstadoReparacion import RegistroEstadoReparacionOut
 
 
 class ReparacionBase(BaseModel):
-    fechaIngreso: date
-    fechaEgreso: Optional[date] = None
+    fechaIngreso: datetime
+    fechaEgreso: Optional[datetime] = None
     montoTotalReparacion: Optional[Decimal] = None
     idDiagnostico: int
     idEmpleado: int

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from decimal import Decimal
-from datetime import date
+from datetime import date, datetime
 
 class DetalleReparacionBase(BaseModel):
     montoTotalDetalleReparacion: Optional[Decimal] = None
@@ -28,9 +28,9 @@ class DetalleReparacionUpdate(BaseModel):
 class ReparacionSchema(BaseModel):
     idReparacion: int
     #numeroReparacion: int
-    fechaIngreso: date
+    fechaIngreso: datetime
     montoTotalReparacion: Optional[Decimal] = None
-    fechaEgreso: Optional[date] = None
+    fechaEgreso: Optional[datetime] = None
 
     class Config:
         orm_mode = True
