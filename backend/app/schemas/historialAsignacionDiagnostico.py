@@ -1,17 +1,17 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import datetime
 from typing import Optional
 from app.schemas.empleado import EmpleadoOut
 
 class HistorialAsignacionDiagnosticoBase(BaseModel):
-    fechaInicioAsignacionDiagnostico: date
+    fechaInicioAsignacionDiagnostico: datetime
     idDiagnostico: int
     idEmpleado: int
-    fechaFinAsignacionDiagnostico: Optional[date] = None
+    fechaFinAsignacionDiagnostico: Optional[datetime] = None
 
 class HistorialAsignacionDiagnosticoCreate(HistorialAsignacionDiagnosticoBase):
-    fechaInicioAsignacionDiagnostico: date
-    fechaFinAsignacionDiagnostico: Optional[date] = None  # ✅ ahora permite None
+    fechaInicioAsignacionDiagnostico: datetime  # <- datetime, no date
+    fechaFinAsignacionDiagnostico: Optional[datetime] = None
     idDiagnostico: int
     idEmpleado: int
 

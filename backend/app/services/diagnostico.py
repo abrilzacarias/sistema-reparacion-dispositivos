@@ -3,9 +3,10 @@ from app.models import Diagnostico as Diagnostico
 from app.schemas import diagnostico as schemas
 from app.models.detalleDiagnostico import DetalleDiagnostico
 from app.schemas.diagnostico import DiagnosticoCreate
-from datetime import date
+from datetime import datetime
 from app.services.historialAsignacionDiagnostico import create_historial
 from app.schemas.historialAsignacionDiagnostico import HistorialAsignacionDiagnosticoCreate
+
 
 def obtener_diagnosticos(db: Session):
     return db.query(Diagnostico) 
@@ -21,6 +22,8 @@ def obtener_diagnosticos(db: Session):
 
 def get_diagnostico(db: Session, idDiagnostico: int):
     return obtener_diagnosticos(db).filter(Diagnostico.idDiagnostico == idDiagnostico).first()
+
+from datetime import datetime
 
 def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
     # 1. Crear el objeto Diagnostico
@@ -44,7 +47,18 @@ def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
 
     db.commit()
 
+    # 3. Crear historial de asignación con fecha y hora actual
+    
+    historial_data = HistorialAsignacionDiagnosticoCreate(
+        fechaInicioAsignacionDiagnostico=datetime.now(),
+        fechaFinAsignacionDiagnostico=None,
+        idDiagnostico=nuevo_diagnostico.idDiagnostico,
+        idEmpleado=nuevo_diagnostico.idEmpleado
+    )
+    create_historial(db, historial_data)  # asegurate que esta función exista y haga el insert
+    
     return nuevo_diagnostico
+
 
 def update_diagnostico(
     db: Session,
@@ -62,9 +76,8 @@ def update_diagnostico(
         db.refresh(db_diagnostico)
 
         # 👉 Crear historial de asignación
-        hoy = date.today()
         historial_data = HistorialAsignacionDiagnosticoCreate(
-            fechaInicioAsignacionDiagnostico=hoy,
+            fechaInicioAsignacionDiagnostico=datetime.now(),
             fechaFinAsignacionDiagnostico=None,
             idDiagnostico=idDiagnostico,
             idEmpleado=idEmpleado

@@ -70,7 +70,7 @@ class DiagnosticoSchema(BaseModel):
 class DiagnosticoBase(BaseModel):
     fechaDiagnostico: date
     idDispositivo: int
-    idEmpleado: int
+    idEmpleado: Optional[int]
     detalleDiagnostico: List[DetalleDiagnosticoOut]
 
 class DiagnosticoCreate(DiagnosticoBase):
@@ -87,7 +87,7 @@ class DiagnosticoUpdate(BaseModel):
 class DiagnosticoSchema(DiagnosticoBase):
     idDiagnostico: int
     dispositivo: DispositivoSchema
-    empleado: EmpleadoSchema
+    empleado: Optional[EmpleadoSchema]
 
     class Config:
         orm_mode = True
