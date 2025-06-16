@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Date, String
+from sqlalchemy import Column, Integer, ForeignKey, Date, String, Boolean
 from sqlalchemy.orm import relationship, Mapped
 from app.database import Base
 
@@ -13,6 +13,7 @@ class Diagnostico(Base):
     dispositivo = relationship("Dispositivo", back_populates="diagnosticos")
     descripcionDiagnostico = Column(String(100), nullable=True)
     idEmpleado = Column(Integer, ForeignKey('empleado.idEmpleado'), nullable=True)
+    estadoDiagnostico = Column(Boolean, default=True, nullable=False)  # tinyint(1) en SQL = Boolean en SQLAlchemy
     empleado = relationship("Empleado", back_populates="diagnosticos")
     reparaciones = relationship("Reparacion", back_populates="diagnostico")
 

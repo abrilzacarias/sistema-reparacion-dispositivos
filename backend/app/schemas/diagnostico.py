@@ -94,6 +94,7 @@ class DiagnosticoSchema(DiagnosticoBase):
     dispositivo: DispositivoSchema
     empleado: Optional[EmpleadoSchema]
     descripcionDiagnostico: Optional[str]  # 👈 NUEVO
+    estadoDiagnostico: Optional[int]  # 👈 lo agregás acá
 
     class Config:
         orm_mode = True

@@ -10,7 +10,10 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 def obtener_diagnosticos(db: Session):
-    return db.query(Diagnostico) 
+    return (
+        db.query(Diagnostico)
+        .filter(Diagnostico.estadoDiagnostico == 1)
+    )
     # return db.query(Diagnostico).options(
     #     selectinload(Diagnostico.dispositivo),
     #     selectinload(Diagnostico.dispositivo.marcaDispositivo),
@@ -22,9 +25,12 @@ def obtener_diagnosticos(db: Session):
     # ).order_by(Diagnostico.fechaDiagnostico.desc())
 
 def get_diagnostico(db: Session, idDiagnostico: int):
-    return obtener_diagnosticos(db).filter(Diagnostico.idDiagnostico == idDiagnostico).first()
-
-from datetime import datetime
+    return db.query(Diagnostico)\
+        .filter(
+            Diagnostico.idDiagnostico == idDiagnostico,
+            Diagnostico.estadoDiagnostico == 1
+        )\
+        .first()
 
 def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
     # 1. Crear el objeto Diagnostico
