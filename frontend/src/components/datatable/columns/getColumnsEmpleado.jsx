@@ -137,8 +137,13 @@ export const getColEmpleados = ({ refetch }) => {
               </DropdownMenuItem>
 )}
               <DropdownMenuSeparator />
-{tienePermiso("Empleados", "Eliminar Empleado") && (
-              <DropdownMenuItem onClick={() => console.log("Eliminar", row.original)}>Eliminar</DropdownMenuItem>
+              {tienePermiso("Empleados", "Eliminar Empleado") && (
+                <DropdownMenuItem className="p-0 m-0 w-full">
+                  <EmpleadoDeleteConfirmModal 
+                    empleado={row.original} 
+                    refetch={refetch}
+                  />
+                </DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
