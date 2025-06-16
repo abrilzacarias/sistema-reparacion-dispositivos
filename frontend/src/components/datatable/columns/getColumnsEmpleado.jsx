@@ -1,4 +1,5 @@
-import { Ellipsis, List, Trash2 } from "lucide-react"
+import ModalDeactivateItem from "@/components/molecules/DeleteConfirmButton";
+import { Ellipsis, List, Trash2, Edit, Trash } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,6 +107,7 @@ export const getColEmpleados = ({ refetch }) => {
       id: "actions",
       cell: function Cell({ row }) {
         const [activeTab, setActiveTab] = useState("persona");
+        const empleado = row.original
 
         return (
           <DropdownMenu>
@@ -131,7 +133,6 @@ export const getColEmpleados = ({ refetch }) => {
                 </ModalFormTemplate>
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
               {tienePermiso("Empleados", "Modificar Empleado") && (
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
@@ -139,6 +140,7 @@ export const getColEmpleados = ({ refetch }) => {
                   description="Modifique los datos del empleado seleccionado"
                   label="Editar"
                   variant="ghost"
+                  icon={Edit}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
                   <Tabs
@@ -186,15 +188,24 @@ export const getColEmpleados = ({ refetch }) => {
                 </ModalFormTemplate>
               </DropdownMenuItem>
 )}
-              <DropdownMenuSeparator />
               {tienePermiso("Empleados", "Eliminar Empleado") && (
-                <DropdownMenuItem
-                  onClick={() => handleDelete(row.original)}
-                  className="text-red-600 focus:text-red-600 focus:bg-red-50"
-                >
-                  <Trash2 className="size-4 mr-2" />
-                  Eliminar
-                </DropdownMenuItem>
+<DropdownMenuItem asChild>
+              <ModalFormTemplate
+                title="¿Estás completamente seguro?"
+                description=" Esta acción no se puede deshacer."
+                label="Eliminar"
+                variant="ghost"
+                icon={Trash}
+                className="m-0 text-red-900 dark:text-red-500 cursor-pointer w-full p-2 justify-start"
+              >
+                <ModalDeactivateItem
+                  endpoint="empleados"
+                  id={empleado.idEmpleado}
+                  refetch={refetch}
+                />
+              </ModalFormTemplate>
+            </DropdownMenuItem>
+                
               )}
             </DropdownMenuContent>
           </DropdownMenu>

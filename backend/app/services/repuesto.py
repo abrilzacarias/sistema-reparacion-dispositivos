@@ -3,7 +3,9 @@ from app.models import repuesto as models
 from app.schemas import repuesto as schemas
 
 def get_repuestos(db: Session):
-    return db.query(models.Repuesto).options(selectinload(models.Repuesto.marca), selectinload(models.Repuesto.tipo))
+    return db.query(models.Repuesto)\
+             .options(selectinload(models.Repuesto.marca), selectinload(models.Repuesto.tipo))\
+             .filter(models.Repuesto.estadoRepuesto == 1)
 
 def get_repuesto(db: Session, idRepuesto: int):
     return db.query(models.Repuesto).filter(

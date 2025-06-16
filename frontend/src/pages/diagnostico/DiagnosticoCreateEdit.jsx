@@ -70,7 +70,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     mode: "onChange",
     defaultValues: {
       fechaDiagnostico: isEditMode ? diagnostico.fechaDiagnostico : new Date().toISOString().split("T")[0],
-      descripcion: isEditMode ? diagnostico.descripcion : "",
+      descripcionDiagnostico: isEditMode ? diagnostico.descripcionDiagnostico : "",
       idDispositivo: isEditMode ? diagnostico.dispositivo?.idDispositivo : "",
       idEmpleado: isEditMode ? diagnostico.empleado?.idEmpleado : "",
       idCliente: isEditMode ? diagnostico.dispositivo?.cliente?.idCliente : "",
@@ -103,7 +103,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     try {
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
-      if (!data.descripcion.trim()) validationErrors.descripcion = "Descripción es requerida";
+      if (!data.descripcionDiagnostico.trim()) validationErrors.descripcionDiagnostico = "Descripción es requerida";
       
       // En modo edición, validamos técnico y descripción
       if (!isEditMode) {
@@ -161,7 +161,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         // En modo edición incluimos la descripción
         diagnosticoData = {
           fechaDiagnostico: diagnostico.fechaDiagnostico,
-          descripcion: data.descripcion,
+          descripcionDiagnostico: data.descripcionDiagnostico,
           idDispositivo: diagnostico.dispositivo?.idDispositivo,
           idEmpleado: data.idEmpleado,
         };
@@ -181,7 +181,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
         diagnosticoData = {
           fechaDiagnostico: data.fechaDiagnostico,
-          descripcion: data.descripcion,
+          descripcionDiagnostico: data.descripcionDiagnostico,
           idDispositivo: dispositivoId,
           idEmpleado: data.idEmpleado,
           detalleDiagnostico: detalles.map(d => ({
@@ -314,7 +314,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 Descripción del Diagnóstico *
               </label>
               <textarea
-                {...register("descripcion", { 
+                {...register("descripcionDiagnostico", { 
                   required: "La descripción es requerida",
                   minLength: { value: 10, message: "La descripción debe tener al menos 10 caracteres" }
                 })}
@@ -322,7 +322,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 placeholder="Ingrese una descripción detallada del diagnóstico realizado..."
                 rows={4}
               />
-              <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
+              <ErrorMessage message={errors.descripcionDiagnostico?.message || apiErrors?.descripcionDiagnostico} />
             </div>
           </div>
         </div>
@@ -464,7 +464,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
               Descripción del Diagnóstico *
             </label>
             <textarea
-              {...register("descripcion", { 
+              {...register("descripcionDiagnostico", { 
                 required: "La descripción es requerida",
                 minLength: { value: 10, message: "La descripción debe tener al menos 10 caracteres" }
               })}
@@ -472,7 +472,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
               placeholder="Ingrese una descripción detallada del diagnóstico realizado..."
               rows={4}
             />
-            <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
+            <ErrorMessage message={errors.descripcionDiagnostico?.message || apiErrors?.descripcionDiagnostico} />
           </div>
         </>
       )}

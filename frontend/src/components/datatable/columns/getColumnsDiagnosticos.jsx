@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Edit, Ellipsis, List, UserCheck } from "lucide-react";
+import { Edit, Ellipsis, List, UserCheck, Wrench  } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -130,7 +130,7 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
                   description="Complete los datos para crear una reparación"
                   label="Crear Reparación"
                   variant="ghost"
-                  icon={List}
+                  icon={Wrench}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
                 >
                   <ReparacionesCreateEdit
