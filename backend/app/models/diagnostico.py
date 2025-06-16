@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Date
+from sqlalchemy import Column, Integer, ForeignKey, Date, String
 from sqlalchemy.orm import relationship, Mapped
 from app.database import Base
 
@@ -11,7 +11,7 @@ class Diagnostico(Base):
     # Recibe de Dispositivo, Empleado
     idDispositivo = Column(Integer, ForeignKey('dispositivo.idDispositivo'), nullable=False)
     dispositivo = relationship("Dispositivo", back_populates="diagnosticos")
-
+    descripcionDiagnostico = Column(String(100), nullable=True)
     idEmpleado = Column(Integer, ForeignKey('empleado.idEmpleado'), nullable=True)
     empleado = relationship("Empleado", back_populates="diagnosticos")
     reparaciones = relationship("Reparacion", back_populates="diagnostico")

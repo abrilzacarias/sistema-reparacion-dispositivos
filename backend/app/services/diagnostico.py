@@ -30,7 +30,8 @@ def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
     nuevo_diagnostico = Diagnostico(
         fechaDiagnostico=diagnostico.fechaDiagnostico,
         idDispositivo=diagnostico.idDispositivo,
-        idEmpleado=diagnostico.idEmpleado
+        idEmpleado=diagnostico.idEmpleado,
+        descripcionDiagnostico=diagnostico.descripcionDiagnostico  # 👈 NUEVO
     )
     db.add(nuevo_diagnostico)
     db.commit()

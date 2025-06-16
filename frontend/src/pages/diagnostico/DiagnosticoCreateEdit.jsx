@@ -103,8 +103,9 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     try {
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
+      if (!data.descripcion.trim()) validationErrors.descripcion = "Descripción es requerida";
       
-      // En modo edición, solo validamos el técnico
+      // En modo edición, validamos técnico y descripción
       if (!isEditMode) {
         if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
         if (!data.idMarcaDispositivo) validationErrors.idMarcaDispositivo = "Marca es requerida";
@@ -157,10 +158,10 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       let diagnosticoData;
       
       if (isEditMode) {
-        // Solo enviamos los datos necesarios para la edición
+        // En modo edición incluimos la descripción
         diagnosticoData = {
           fechaDiagnostico: diagnostico.fechaDiagnostico,
-          descripcion: diagnostico.descripcion,
+          descripcion: data.descripcion,
           idDispositivo: diagnostico.dispositivo?.idDispositivo,
           idEmpleado: data.idEmpleado,
         };
@@ -291,46 +292,69 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
-      {/* En modo edición: solo mostrar el select del técnico */}
+      {/* En modo edición: mostrar técnico y descripción */}
       {isEditMode ? (
         <div className="space-y-4">
-          
-          <FormSelectSearch
-            label="Técnico *"
-            endpoint="empleados"
-            valueKey="idEmpleado"
-            displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-            value={watch("idEmpleado")}
-            setValue={(value) => setValue("idEmpleado", value)}
-            {...register("idEmpleado", { required: "Seleccione un técnico" })}
-          />
-          <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <FormSelectSearch
+                label="Técnico *"
+                endpoint="empleados"
+                valueKey="idEmpleado"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idEmpleado")}
+                setValue={(value) => setValue("idEmpleado", value)}
+                {...register("idEmpleado", { required: "Seleccione un técnico" })}
+              />
+              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Descripción del Diagnóstico *
+              </label>
+              <textarea
+                {...register("descripcion", { 
+                  required: "La descripción es requerida",
+                  minLength: { value: 10, message: "La descripción debe tener al menos 10 caracteres" }
+                })}
+                className="w-full p-3 border border-gray-300 rounded-md resize-vertical min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ingrese una descripción detallada del diagnóstico realizado..."
+                rows={4}
+              />
+              <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
+            </div>
+          </div>
         </div>
       ) : (
         /* En modo creación: mostrar todos los campos */
         <>
           <div className="grid grid-cols-2 w-full gap-4">
-            <FormSelectSearch
-              label="Técnico *"
-              endpoint="empleados"
-              valueKey="idEmpleado"
-              displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-              value={watch("idEmpleado")}
-              setValue={(value) => setValue("idEmpleado", value)}
-              {...register("idEmpleado", { required: "Seleccione un técnico" })}
-            />
-            <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            <div>
+              <FormSelectSearch
+                label="Técnico *"
+                endpoint="empleados"
+                valueKey="idEmpleado"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idEmpleado")}
+                setValue={(value) => setValue("idEmpleado", value)}
+                {...register("idEmpleado", { required: "Seleccione un técnico" })}
+              />
+              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            </div>
 
-            <FormSelectSearch
-              label="Cliente *"
-              endpoint="clientes"
-              valueKey="idCliente"
-              displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-              value={watch("idCliente")}
-              setValue={(value) => setValue("idCliente", value)}
-              {...register("idCliente", { required: "Seleccione un cliente" })}
-            />
-            <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
+            <div>
+              <FormSelectSearch
+                label="Cliente *"
+                endpoint="clientes"
+                valueKey="idCliente"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idCliente")}
+                setValue={(value) => setValue("idCliente", value)}
+                {...register("idCliente", { required: "Seleccione un cliente" })}
+              />
+              <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
+            </div>
           </div>
 
           <div className="border rounded-lg p-4 bg-gray-50/50">
@@ -432,6 +456,23 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 />
               </div>
             )}
+          </div>
+
+          {/* Campo de descripción para modo creación - Al final después de toda la información del dispositivo */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción del Diagnóstico *
+            </label>
+            <textarea
+              {...register("descripcion", { 
+                required: "La descripción es requerida",
+                minLength: { value: 10, message: "La descripción debe tener al menos 10 caracteres" }
+              })}
+              className="w-full p-3 border border-gray-300 rounded-md resize-vertical min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Ingrese una descripción detallada del diagnóstico realizado..."
+              rows={4}
+            />
+            <ErrorMessage message={errors.descripcion?.message || apiErrors?.descripcion} />
           </div>
         </>
       )}
