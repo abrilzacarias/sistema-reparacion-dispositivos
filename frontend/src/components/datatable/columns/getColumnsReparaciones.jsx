@@ -1,4 +1,4 @@
-import { Edit, Ellipsis, List, UserCheck } from "lucide-react";
+import { Edit, Ellipsis, List, UserCheck, Trash2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import {
@@ -372,6 +372,7 @@ export const getColumnsReparaciones = ({ refetch }) => {
                   onClick={() => handleDelete(reparacion, refetch)}
                   className="text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
                 >
+                  <Trash2 className="size-4 mr-2" />
                   Eliminar
                 </DropdownMenuItem>
               )}

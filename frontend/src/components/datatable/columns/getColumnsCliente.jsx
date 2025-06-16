@@ -1,4 +1,4 @@
-import { Edit, Ellipsis, List, Wrench } from "lucide-react";
+import { Edit, Ellipsis, List, Wrench, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,17 +23,35 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const getColumnsCliente = ({ refetch, onEdit }) => {
   
   const handleDelete = async (cliente) => {
-    const confirmToast = toast("¿Seguro que querés eliminar este cliente?", {
+    toast("¿Seguro que querés eliminar este cliente?", {
+      description: `${cliente.persona?.nombre} ${cliente.persona?.apellido}`,
+      duration: 10000, // 10 segundos para dar tiempo a decidir
       action: {
         label: "Eliminar",
         onClick: async () => {
           try {
+            // Toast de loading mientras se elimina
+            const loadingToast = toast.loading("Eliminando cliente...");
+            
             await axios.delete(`${API_URL}/clientes/${cliente.idCliente}`);
-            toast.success("Cliente eliminado con éxito");
+            
+            // Dismiss del loading toast
+            toast.dismiss(loadingToast);
+            
+            // Toast de éxito
+            toast.success("Cliente eliminado con éxito", {
+              description: `${cliente.persona?.nombre} ${cliente.persona?.apellido} ha sido eliminado`
+            });
+            
             refetch?.();
           } catch (error) {
             console.error("Error eliminando cliente:", error);
-            toast.error("Error al eliminar. Intente nuevamente.");
+            
+            // Toast de error con más detalles
+            toast.error("Error al eliminar cliente", {
+              description: error.response?.data?.message || "Intente nuevamente más tarde",
+              duration: 5000
+            });
           }
         },
         style: {
@@ -43,7 +61,9 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
       },
       cancel: {
         label: "Cancelar",
-        onClick: () => toast.dismiss(),
+        onClick: () => {
+          toast.info("Eliminación cancelada");
+        }
       },
     });
   };
@@ -218,7 +238,9 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
               {tienePermiso("Clientes", "Eliminar Cliente") && (
                 <DropdownMenuItem
                   onClick={() => handleDelete(row.original)}
+                  className="text-red-600 focus:text-red-600 focus:bg-red-50"
                 >
+                  <Trash2 className="size-4 mr-2" />
                   Eliminar
                 </DropdownMenuItem>
               )}

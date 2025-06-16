@@ -1,4 +1,4 @@
-import { Ellipsis, List } from "lucide-react"
+import { Ellipsis, List, Trash2 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,10 +14,60 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import PersonaCreateEdit from "@/components/organisms/PersonaCreateEdit"
 import EmpleadoCreateEdit from "@/pages/empleado/components/EmpleadoCreateEdit"
 import { useState } from "react";
-import EmpleadoDeleteConfirmModal from "@/components/organisms/EmpleadoDeleteConfirmModal"
 import { tienePermiso } from "@/utils/permisos";
+import { toast } from "sonner";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getColEmpleados = ({ refetch }) => {
+  
+  const handleDelete = async (empleado) => {
+    toast("¿Seguro que querés eliminar este empleado?", {
+      description: `${empleado.persona?.nombre} ${empleado.persona?.apellido} - ${empleado.puesto?.nombrepuestoLaboral}`,
+      duration: 10000, // 10 segundos para dar tiempo a decidir
+      action: {
+        label: "Eliminar",
+        onClick: async () => {
+          try {
+            // Toast de loading mientras se elimina
+            const loadingToast = toast.loading("Eliminando empleado...");
+            
+            await axios.delete(`${API_URL}/empleados/${empleado.idEmpleado}`);
+            
+            // Dismiss del loading toast
+            toast.dismiss(loadingToast);
+            
+            // Toast de éxito
+            toast.success("Empleado eliminado con éxito", {
+              description: `${empleado.persona?.nombre} ${empleado.persona?.apellido} ha sido eliminado`
+            });
+            
+            refetch?.();
+          } catch (error) {
+            console.error("Error eliminando empleado:", error);
+            
+            // Toast de error con más detalles
+            toast.error("Error al eliminar empleado", {
+              description: error.response?.data?.message || "Intente nuevamente más tarde",
+              duration: 5000
+            });
+          }
+        },
+        style: {
+          backgroundColor: '#ef4444',
+          color: 'white'
+        }
+      },
+      cancel: {
+        label: "Cancelar",
+        onClick: () => {
+          toast.info("Eliminación cancelada");
+        }
+      },
+    });
+  };
+
   return [
     {
       header: "Nombre",
@@ -138,11 +188,12 @@ export const getColEmpleados = ({ refetch }) => {
 )}
               <DropdownMenuSeparator />
               {tienePermiso("Empleados", "Eliminar Empleado") && (
-                <DropdownMenuItem className="p-0 m-0 w-full">
-                  <EmpleadoDeleteConfirmModal 
-                    empleado={row.original} 
-                    refetch={refetch}
-                  />
+                <DropdownMenuItem
+                  onClick={() => handleDelete(row.original)}
+                  className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                >
+                  <Trash2 className="size-4 mr-2" />
+                  Eliminar
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
