@@ -9,15 +9,45 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import ClienteCard from "@/components/organisms/ClienteCard";
 import { Button } from "@/components/ui/button";
-import ClienteDeleteConfirmModal from "@/components/organisms/ClienteDeleteConfirmModal";
 import ClienteCreateEdit from "@/pages/cliente/components/ClienteCreateEdit";
 import HistorialReparacionClienteModal from "@/pages/cliente/components/HistorialReparacionClienteModal";
 
 // 👇 NUEVA IMPORTACIÓN
 import EditarClienteConTabs from "@/pages/cliente/components/EditarClienteConTabs";
 import { tienePermiso } from "@/utils/permisos";
+import { toast } from "sonner";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getColumnsCliente = ({ refetch, onEdit }) => {
+  
+  const handleDelete = async (cliente) => {
+    const confirmToast = toast("¿Seguro que querés eliminar este cliente?", {
+      action: {
+        label: "Eliminar",
+        onClick: async () => {
+          try {
+            await axios.delete(`${API_URL}/clientes/${cliente.idCliente}`);
+            toast.success("Cliente eliminado con éxito");
+            refetch?.();
+          } catch (error) {
+            console.error("Error eliminando cliente:", error);
+            toast.error("Error al eliminar. Intente nuevamente.");
+          }
+        },
+        style: {
+          backgroundColor: '#ef4444',
+          color: 'white'
+        }
+      },
+      cancel: {
+        label: "Cancelar",
+        onClick: () => toast.dismiss(),
+      },
+    });
+  };
+
   return [
     {
       header: "Nombre",
@@ -186,11 +216,10 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
 
               <DropdownMenuSeparator />
               {tienePermiso("Clientes", "Eliminar Cliente") && (
-                <DropdownMenuItem asChild>
-                  <ClienteDeleteConfirmModal
-                    cliente={row.original}
-                    refetch={refetch}
-                  />
+                <DropdownMenuItem
+                  onClick={() => handleDelete(row.original)}
+                >
+                  Eliminar
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
