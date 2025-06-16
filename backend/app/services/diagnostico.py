@@ -3,10 +3,11 @@ from app.models import Diagnostico as Diagnostico
 from app.schemas import diagnostico as schemas
 from app.models.detalleDiagnostico import DetalleDiagnostico
 from app.schemas.diagnostico import DiagnosticoCreate
-from datetime import datetime
 from app.services.historialAsignacionDiagnostico import create_historial
 from app.schemas.historialAsignacionDiagnostico import HistorialAsignacionDiagnosticoCreate
-
+#Formato Argentina PAPA!! Aguanteeee messi, y el vino sin soda asi pega más
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def obtener_diagnosticos(db: Session):
     return db.query(Diagnostico) 
@@ -51,7 +52,7 @@ def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
     # 3. Crear historial de asignación con fecha y hora actual
     
     historial_data = HistorialAsignacionDiagnosticoCreate(
-        fechaInicioAsignacionDiagnostico=datetime.now(),
+        fechaInicioAsignacionDiagnostico=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),        
         fechaFinAsignacionDiagnostico=None,
         idDiagnostico=nuevo_diagnostico.idDiagnostico,
         idEmpleado=nuevo_diagnostico.idEmpleado
@@ -78,7 +79,7 @@ def update_diagnostico(
 
         # 👉 Crear historial de asignación
         historial_data = HistorialAsignacionDiagnosticoCreate(
-            fechaInicioAsignacionDiagnostico=datetime.now(),
+            fechaInicioAsignacionDiagnostico=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
             fechaFinAsignacionDiagnostico=None,
             idDiagnostico=idDiagnostico,
             idEmpleado=idEmpleado
