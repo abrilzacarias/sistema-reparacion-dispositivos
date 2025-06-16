@@ -382,26 +382,7 @@ export const getColumnsReparaciones = ({ refetch }) => {
                   />
                 </ModalFormTemplate>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
 
-              {tienePermiso("Reparaciones", "Eliminar Reparación") && (
-              <DropdownMenuItem asChild>
-                <ModalFormTemplate
-                  title="¿Estás completamente seguro?"
-                  description=" Esta acción no se puede deshacer."
-                  label="Eliminar"
-                  variant="ghost"
-                  icon={Trash}
-                  className="m-0 text-red-900 dark:text-red-500 cursor-pointer w-full p-2 justify-start"
-                >
-                  <ModalDeactivateItem
-                    endpoint="reparaciones"
-                    id={reparacion.idReparacion}
-                    refetch={refetch}
-                  />
-                </ModalFormTemplate>
-            </DropdownMenuItem>
-              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
