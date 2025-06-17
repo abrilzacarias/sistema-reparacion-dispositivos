@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from .tipoDispositivoSegunPregunta import TipoDispositivoSegunPreguntaConDetalles
 
 class DetalleDiagnosticoBase(BaseModel):
     valorDiagnostico: str
@@ -16,6 +17,7 @@ class DetalleDiagnosticoUpdate(DetalleDiagnosticoBase):
 
 class DetalleDiagnosticoOut(DetalleDiagnosticoBase):
     idDetalleDiagnostico: int
+    tipoDispositivoSegunPregunta: TipoDispositivoSegunPreguntaConDetalles
 
     class Config:
         orm_mode = True

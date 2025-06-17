@@ -15,6 +15,7 @@ import ReparacionesCreateEdit from "@/pages/reparaciones/components/Reparaciones
 import DetalleReparacionModal from "@/pages/reparaciones/components/DetalleReparacionModal";
 import HistorialAsignacionReparacionModal from "@/pages/reparaciones/components/HistorialAsignacionReparacionModal";
 import { tienePermiso } from "@/utils/permisos";
+import { formatearFechaHora } from "@/utils/fechahora";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -37,27 +38,6 @@ const formatearFecha = (fechaISO) => {
   });
 };
 
-// Función para formatear fecha y hora (sin conversión de zona horaria)
-const formatearFechaHora = (fechaISO) => {
-  if (!fechaISO) return "-";
-  
-  // Remover la Z o información de zona horaria para tratarla como local
-  const fechaLocal = fechaISO.replace('Z', '').replace(/[+-]\d{2}:\d{2}$/, '');
-  const fecha = new Date(fechaLocal);
-  
-  // Verificar si la fecha es válida
-  if (isNaN(fecha.getTime())) return "-";
-  
-  // Formatear fecha y hora en formato DD/MM/YYYY HH:mm
-  return fecha.toLocaleString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false // Para formato 24 horas
-  });
-};
 
 // Función para obtener el color y estilo del estado
 const getEstadoBadgeStyle = (estado) => {
@@ -327,7 +307,7 @@ export const getColumnsReparaciones = ({ refetch }) => {
                 <Ellipsis className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuContent align="end" className="w-46">
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Detalles de Reparación"

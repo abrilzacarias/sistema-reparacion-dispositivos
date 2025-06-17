@@ -7,11 +7,17 @@ export const getColumnsHistorialAsignacion = () => {
       id: "fechaAsignacion",
       accessorFn: row => row.fechaInicioAsignacionReparacion,
       cell: ({ row }) => {
-        const fecha = new Date(row.original.fechaInicioAsignacionReparacion);
+        const fecha = new Date(row.original.fechaInicioAsignacionReparacion + "Z").toLocaleString("es-AR", {
+            timeZone: "America/Argentina/Buenos_Aires",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+
         return (
           <div className="flex items-center gap-2 text-left">
             <Calendar className="w-4 h-4 text-muted-foreground" />
-            <span>{fecha.toLocaleString()}</span>
+            <span>{fecha}</span>
           </div>
         );
       },

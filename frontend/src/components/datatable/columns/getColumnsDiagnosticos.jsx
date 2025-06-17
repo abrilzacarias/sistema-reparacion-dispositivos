@@ -60,6 +60,58 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
       },
     },
     {
+      header: "Preguntas",
+      accessorKey: "detallesDiagnostico",
+      cell: ({ row }) => {
+        const detalles = row.original.detalleDiagnostico || [];
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center w-auto justify-center gap-2 m-auto text-xs"
+              >
+                Preguntas
+                <span className="bg-blue-600 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                  {detalles.length}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="max-h-64 overflow-auto">
+              {detalles.length > 0 ? (
+                detalles.map((detalle, index) => (
+                  <DropdownMenuItem key={index} className="flex flex-col items-start gap-1 text-xs">
+                    <span className="font-medium">
+                      {detalle.tipoDispositivoSegunPregunta?.preguntaDiagnostico?.descripcionPreguntaDiagnostico || "Pregunta desconocida"}
+                    </span>
+                    {(() => {
+                        const valor = detalle.valorDiagnostico;
+                        let respuestaFormateada = valor;
+
+                        if (valor === "true") respuestaFormateada = "Sí";
+                        else if (valor === "false") respuestaFormateada = "No";
+
+                        return (
+                          <span className="text-muted-foreground">
+                            Respuesta: {respuestaFormateada}
+                          </span>
+                        );
+                      })()}
+                  </DropdownMenuItem>
+                ))
+              ) : (
+                <DropdownMenuItem disabled className="text-xs">
+                  Sin preguntas
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+    {
       header: "Técnico",
       accessorKey: "empleado.persona",
       cell: ({ row }) => {
@@ -80,7 +132,7 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
                 <Ellipsis className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuContent align="end" className="w-46">
               <DropdownMenuItem asChild className="w-full flex items-center justify-between">
                 <ModalFormTemplate
                   title="Detalles del diagnóstico"
@@ -89,6 +141,7 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
                   variant="ghost"
                   icon={List}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
+                  contentClassName="max-w-4xl max-h-[90vh] overflow-y-auto"
                 >
                   <DiagnosticoCard diagnostico={row.original} />
                 </ModalFormTemplate>
@@ -102,10 +155,11 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
                     variant="ghost"
                     icon={Edit}
                     className="p-2 m-0 cursor-pointer w-full justify-start"
+                    contentClassName="max-w-4xl max-h-[90vh] overflow-y-auto"
                   >
                     <DiagnosticoCreateEdit
                       diagnostico={row.original}
-                      onUpdate={refetch} // o cualquier función para refrescar la lista
+                      refreshDiagnosticos={refetch}
                     />
                   </ModalFormTemplate>
                 </DropdownMenuItem>

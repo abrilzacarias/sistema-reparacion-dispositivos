@@ -1,3 +1,4 @@
+import { formatearFechaHora } from "@/utils/fechahora";
 import { Calendar, UserCheck } from "lucide-react";
 
 export const getColumnsHistorialAsignacion = () => {
@@ -7,11 +8,10 @@ export const getColumnsHistorialAsignacion = () => {
       id: "fechaAsignacion",
       accessorFn: row => row.fechaInicioAsignacionDiagnostico,
       cell: ({ row }) => {
-        const fecha = new Date(row.original.fechaInicioAsignacionDiagnostico);
         return (
           <div className="flex items-center gap-2 text-left">
             <Calendar className="w-4 h-4 text-muted-foreground" />
-            <span>{fecha.toLocaleString()}</span>
+            {formatearFechaHora(row.original.fechaInicioAsignacionDiagnostico)}
           </div>
         );
       },

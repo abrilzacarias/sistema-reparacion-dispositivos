@@ -54,7 +54,7 @@ const RepuestosPage = () => {
           subTitle="Listado, registro y modificación de los repuestos."
         >
           <div className="flex items-center gap-2">
-            <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
+            <ButtonRefetch isRefetching={isRefetching} refetch={refetch} loading={isLoading} />
 
             {/* Exportar */}
             {tienePermiso("Repuestos", "Ver Reporte Repuesto") && (
@@ -68,7 +68,6 @@ const RepuestosPage = () => {
                 }
                 buttonProps={{
                   variant: "outline",
-                  size: "sm",
                   className: "gap-2",
                   label: "Exportar",
                   icon: <Download className="h-4 w-4" />,

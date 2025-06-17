@@ -146,7 +146,6 @@ const ClientePage = () => {
                 title="Clientes"
                 buttonProps={{
                   variant: "outline",
-                  size: "sm",
                   className: "gap-2",
                   label: "Exportar",
                   icon: <Download className="h-4 w-4" />,
@@ -159,6 +158,7 @@ const ClientePage = () => {
                 icon={Plus}
                 title="Agregar Cliente"
                 description="Complete los campos para agregar un nuevo cliente."
+                contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
               >
                 <SearchPersonas
                   setSelectedPersona={setSelectedPersona}
@@ -183,7 +183,7 @@ const ClientePage = () => {
                     icon={PlusCircle}
                     label="Crear Persona"
                     variant="default"
-                    className="border w-[40%] lg:w-[30%] mt-6 rounded-md justify-center flex mx-auto"
+                    contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
                   >
                     <PersonaCreateEdit
                       refreshPersonas={refetchPersonas}

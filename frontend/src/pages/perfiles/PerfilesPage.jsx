@@ -211,10 +211,7 @@ const PerfilesPage = () => {
       <div className="bg-secondary dark:bg-background p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 overflow-x-auto">
         <CrudHeader title={tabConfig.title} subTitle={tabConfig.subtitle}>
           <div className="flex items-center gap-2">
-            <ButtonRefetch
-              isFetching={currentData.isRefetching}
-              refetch={currentData.refetch}
-            />
+            <ButtonRefetch isRefetching={currentData.isRefetching} refetch={currentData.refetch} loading={currentData.isLoading} />
 
 {tienePermiso("Perfiles", "Agregar Perfiles") && (
   <>
