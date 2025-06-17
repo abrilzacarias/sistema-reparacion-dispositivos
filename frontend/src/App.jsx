@@ -13,7 +13,12 @@ import PerfilFormPage from "./pages/perfiles/PerfilFormPage";
 //import MarcasPage from "./pages/marcas/MarcasPage"
 import ResetPassword from "./pages/login/ResetPassword";
 import DiagnosticoFormPage from "./pages/diagnostico/DiagnosticoFormPage";
-import ConfigPage from "./pages/configuracion/ConfigPage";
+import ConfigPage from "./pages/configuracion/TipoDispositivoPreguntaPage";
+import ConfigLayout from "./pages/configuracion/components/ConfigLayout";
+import SettingsProfilePage from "./pages/configuracion/components/SettingsProfilePage";
+import MarcasPage from "./pages/configuracion/MarcasPage";
+import ModelosPage from "./pages/configuracion/ModelosPage";
+import TipoDispositivoPreguntaPage from "./pages/configuracion/TipoDispositivoPreguntaPage";
 
 function App() {
   return (
@@ -97,7 +102,17 @@ function App() {
             }
           />
 
-          <Route path="/configuracion" element={<ConfigPage />} />
+          <Route path="/configuracion" element={<ConfigLayout />}>
+            <Route index element={<Navigate to="perfil" replace />} />
+
+            <Route path="perfil" element={<SettingsProfilePage />} />
+
+            <Route path="negocio">
+              <Route path="dispositivos-pregunta" element={<TipoDispositivoPreguntaPage />} />
+              <Route path="marcas" element={<MarcasPage />} />
+              <Route path="modelos" element={<ModelosPage />} />
+            </Route>
+          </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" />} />
