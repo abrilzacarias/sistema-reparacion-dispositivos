@@ -9,13 +9,14 @@ import { loginUser } from "@/auth/auth"
 import { useAppContext } from "@/hooks/useAppContext"
 import { PasswordChangeModal } from "@/components/molecules/PasswordChangeModal"
 import RecuperarPassModal from "./RecuperarPassModal"
-
 // Constantes para el manejo de intentos
 const MAX_ATTEMPTS = 3
 const LOCKOUT_DURATION = 1 // minutos
 const STORAGE_KEY = 'login_attempts'
 
 export default function LoginPage() {
+  const API_URL = import.meta.env.VITE_API_URL
+  console.log("API_URL desde .env:", API_URL) // Debería mostrar: http://localhost:8000
   const navigate = useNavigate()
   const { darkMode, toggleDarkMode, setIsAuthenticated } = useAppContext()
   const [modalOpen, setModalOpen] = useState(false)

@@ -9,6 +9,9 @@ from ..database import get_db
 from ..schemas.usuario import Token, UsuarioCreate, UserResponse, LoginResponse, PasswordChangeRequest
 from ..models.usuario import Usuario as User
 from collections import defaultdict
+import os
+
+API_URL = os.getenv("VITE_API_URL")
 
 router = APIRouter(
     prefix="/auth",
