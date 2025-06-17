@@ -13,3 +13,12 @@ class Usuario(Base):
 
     empleados = relationship("Empleado", back_populates="usuario")
     asignacionUsuarioPermisos = relationship('AsignacionUsuarioPermisos', back_populates='usuario')
+
+    @property
+    def perfiles(self):
+        perfiles = set()
+        for asignacion in self.asignacionUsuarioPermisos:
+            permiso = asignacion.permisoPerfil
+            if permiso and permiso.perfil:
+                perfiles.add(permiso.perfil)
+        return list(perfiles)

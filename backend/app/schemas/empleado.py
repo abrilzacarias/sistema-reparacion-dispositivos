@@ -24,6 +24,7 @@ class EmpleadoUpdate(BaseModel):
     idPersona: Optional[int] = None
     idUsuario: Optional[int] = None
     idpuestoLaboral: Optional[int] = None
+    perfiles: Optional[List[int]] = None 
 
 class EmpleadoOut(EmpleadoBase):
     idEmpleado: int

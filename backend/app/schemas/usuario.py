@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, validator
 from typing import Optional, List
 from .permisoPerfil import PermisoAgrupado
+from .perfil import PerfilOutReduced
 
 class UsuarioBase(BaseModel):
     username: str = Field(..., example="juanperez")
@@ -33,6 +34,7 @@ class PasswordChangeRequest(BaseModel):
 class UsuarioOut(UsuarioBase):
     idUsuario: int
     needs_password_change: bool
+    perfiles: List[PerfilOutReduced] = []
 
     class Config:
         orm_mode = True
