@@ -57,7 +57,7 @@ const DiagnosticoCard = ({ diagnostico }) => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
               <div>
                 <p className="text-muted-foreground">Descripción</p>
-                <p>{diagnostico.dispositivo?.descripcionDispositivo || "N/A"}</p>
+                <p>{diagnostico.descripcionDiagnostico || "N/A"}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Modelo</p>
