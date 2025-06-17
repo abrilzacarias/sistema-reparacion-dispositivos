@@ -5,13 +5,18 @@ from app.schemas import modeloDispositivo as schemas
 def get_modelos_dispositivo(db: Session):
     return db.query(models.ModeloDispositivo).filter(
         models.ModeloDispositivo.estadoModeloDispositivo == True
+    ).options(
+        selectinload(models.ModeloDispositivo.marcaDispositivo),
+        selectinload(models.ModeloDispositivo.tipoDispositivo),
     )
+
 
 def get_modelo_dispositivo(db: Session, id_modelo: int):
     return db.query(models.ModeloDispositivo).filter(
         models.ModeloDispositivo.idModeloDispositivo == id_modelo
     ).options(
-        selectinload(models.ModeloDispositivo.marcaDispositivo)
+        selectinload(models.ModeloDispositivo.marcaDispositivo),
+        selectinload(models.ModeloDispositivo.tipoDispositivo),  # <- agregado
     ).first()
 
 def create_modelo_dispositivo(db: Session, modelo: schemas.ModeloDispositivoCreate):

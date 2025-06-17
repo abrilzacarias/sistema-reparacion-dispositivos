@@ -39,7 +39,7 @@ const ReparacionesCreateEdit = ({ reparacion, refreshReparaciones, idDiagnostico
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      fechaIngreso: reparacion?.fechaIngreso || new Date().toISOString().split("T")[0],
+      fechaIngreso: reparacion?.fechaIngreso || new Date().toISOString(),
       fechaEgreso: reparacion?.fechaEgreso || "",
       // Si viene idDiagnostico como prop, lo usa; si no, usa el de la reparación
       idDiagnostico: idDiagnostico || reparacion?.idDiagnostico || "",

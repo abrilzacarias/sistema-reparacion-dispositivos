@@ -10,6 +10,8 @@ class Repuesto(Base):
     precio = Column(DECIMAL, nullable=False)
     cantidadRepuesto = Column(Integer, nullable=False)
     estadoRepuesto = Column(Boolean, default=True, nullable=False)
+    stockMinimo = Column(Integer, nullable=True)
+
 
     idMarcaDispositivo = Column(Integer, ForeignKey("marcaDispositivo.idMarcaDispositivo"), nullable=False)
     idTipoRepuesto = Column(Integer, ForeignKey("tipoRepuesto.idTipoRepuesto"), nullable=False)

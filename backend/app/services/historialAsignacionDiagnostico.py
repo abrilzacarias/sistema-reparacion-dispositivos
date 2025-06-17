@@ -32,3 +32,8 @@ def delete_historial(db: Session, id_historial: int):
         db.commit()
         return True
     return False
+
+def get_historial_asignaciones_por_diagnostivo(db: Session, id_diagnostico: int):
+    return db.query(HistorialAsignacionDiagnostico)\
+        .filter(HistorialAsignacionDiagnostico.idDiagnostico == id_diagnostico)\
+        .order_by(HistorialAsignacionDiagnostico.fechaInicioAsignacionDiagnostico.desc())

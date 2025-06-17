@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class TipoDispositivoBase(BaseModel):
+    idTipoDispositivo: int
     nombreTipoDispositivo: str
 
 class PreguntaCreate(BaseModel):

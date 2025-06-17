@@ -6,12 +6,14 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import ErrorMessage from "@/components/atoms/ErrorMessage"
-import { Plus, Trash2, Settings, HelpCircle, Type, ToggleLeft, List, MoreHorizontal } from "lucide-react"
+import { Plus, Trash2, Settings, HelpCircle, Type, ToggleLeft, List, MoreHorizontal, Hash  } from "lucide-react"
 import axios from "axios"
 import { ToastMessageCreate } from "@/components/atoms/ToastMessage"
 import { toast } from "sonner"
 import { OpenContext } from "@/components/organisms/ModalFormTemplate"
-
+import TipoDatoCreateEdit from "./TipoDatoCreateEdit"
+import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
+import TipoDatosSection from "./TipoDatosSection";
 const API_URL = import.meta.env.VITE_API_URL
 
 export default function DispositivoCreateEdit({ editData = null, isEdit = false }) {
@@ -38,13 +40,23 @@ export default function DispositivoCreateEdit({ editData = null, isEdit = false 
   const [tiposDato, setTiposDato] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { setOpen } = useContext(OpenContext)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTipoDato, setSelectedTipoDato] = useState(null);
+
+  // Function to fetch tipos de dato
+  const fetchTiposDato = async () => {
+    try {
+      const response = await fetch(`${API_URL}/tipoDatoPreguntaDiagnostico`)
+      const data = await response.json()
+      setTiposDato(data.items)
+    } catch (err) {
+      console.error("Error cargando tipos de dato", err)
+    }
+  }
 
   // Cargar tipos de dato
   useEffect(() => {
-    fetch(`${API_URL}/tipoDatoPreguntaDiagnostico`)
-      .then((res) => res.json())
-      .then((data) => setTiposDato(data.items))
-      .catch((err) => console.error("Error cargando tipos de dato", err))
+    fetchTiposDato()
   }, [])
 
   // Cargar datos para edición
@@ -129,18 +141,21 @@ export default function DispositivoCreateEdit({ editData = null, isEdit = false 
     })
   }
 
-  const getTipoIcon = (descripcion) => {
-    switch (descripcion?.toLowerCase()) {
-      case "booleano":
-        return <ToggleLeft className="w-4 h-4" />
-      case "texto":
-        return <Type className="w-4 h-4" />
-      case "opcion":
-        return <List className="w-4 h-4" />
-      default:
-        return <HelpCircle className="w-4 h-4" />
-    }
+const getTipoIcon = (descripcion) => {
+  switch (descripcion?.toLowerCase()) {
+    case "booleano":
+      return <ToggleLeft className="w-4 h-4" />
+    case "texto":
+      return <Type className="w-4 h-4" />
+    case "opcion":
+      return <List className="w-4 h-4" />
+    case "número":
+    case "numero": // por si viene sin tilde
+      return <Hash className="w-4 h-4" />
+    default:
+      return <HelpCircle className="w-4 h-4" />
   }
+}
 
   const getTipoColor = (descripcion) => {
     switch (descripcion?.toLowerCase()) {
@@ -150,6 +165,9 @@ export default function DispositivoCreateEdit({ editData = null, isEdit = false 
         return "bg-green-50 border-green-200 text-green-800"
       case "opcion":
         return "bg-orange-50 border-orange-200 text-orange-800"
+      case "número":
+      case "numero": // por si viene sin tilde
+        return "bg-purple-50 border-purple-200 text-purple-800" // Color específico para número
       default:
         return "bg-gray-50 border-gray-200 text-gray-800"
     }
@@ -292,45 +310,57 @@ export default function DispositivoCreateEdit({ editData = null, isEdit = false 
                               <ErrorMessage message={errors.preguntas[index].pregunta.message} />
                             )}
                           </div>
-
                           {/* Selector de tipo */}
                           <div className="space-y-2">
                             <label className="block text-sm font-medium text-slate-700">Tipo de respuesta *</label>
-                            <Select
-                              value={watch(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`)?.toString() || ""}
-                              onValueChange={(value) => {
-                                const intVal = Number.parseInt(value)
-                                setValue(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`, intVal)
-                                setValue(`preguntas.${index}.opciones`, [])
-                                if (
-                                  tiposDato.find(
-                                    (t) =>
-                                      t.idTipoDatoPreguntaDiagnostico === intVal &&
-                                      t.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() === "opcion",
-                                  )
-                                ) {
-                                  setValue(`preguntas.${index}.opciones`, [{ valor: "" }, { valor: "" }])
-                                }
-                              }}
-                            >
-                              <SelectTrigger className="border-slate-300 focus:border-slate-500 focus:ring-slate-500">
-                                <SelectValue placeholder="Seleccione el tipo de respuesta" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {tiposDato.map((tipo) => (
-                                  <SelectItem
-                                    key={tipo.idTipoDatoPreguntaDiagnostico}
-                                    value={tipo.idTipoDatoPreguntaDiagnostico.toString()}
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      {getTipoIcon(tipo.descripcionTipoDatoPreguntaDiagnostico)}
-                                      {tipo.descripcionTipoDatoPreguntaDiagnostico}
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            <div className="flex items-center gap-2">
+                              <Select
+                                value={watch(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`)?.toString() || ""}
+                                onValueChange={(value) => {
+                                  const intVal = Number.parseInt(value)
+                                  setValue(`preguntas.${index}.idTipoDatoPreguntaDiagnostico`, intVal)
+                                  setValue(`preguntas.${index}.opciones`, [])
+                                  if (
+                                    tiposDato.find(
+                                      (t) =>
+                                        t.idTipoDatoPreguntaDiagnostico === intVal &&
+                                        t.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() === "opcion",
+                                    )
+                                  ) {
+                                    setValue(`preguntas.${index}.opciones`, [{ valor: "" }, { valor: "" }])
+                                  }
+                                }}
+                              >
+                                <SelectTrigger className="border-slate-300 focus:border-slate-500 focus:ring-slate-500">
+                                  <SelectValue placeholder="Seleccione el tipo de respuesta" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {tiposDato.map((tipo) => (
+                                    <SelectItem
+                                      key={tipo.idTipoDatoPreguntaDiagnostico}
+                                      value={tipo.idTipoDatoPreguntaDiagnostico.toString()}
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        {getTipoIcon(tipo.descripcionTipoDatoPreguntaDiagnostico)}
+                                        {tipo.descripcionTipoDatoPreguntaDiagnostico}
+                                      </div>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                          <ModalFormTemplate
+                            icon={Plus}
+                            title="Agregar Tipo de Dato"
+                            label="Agregar tipo de dato"
+                            variant="default"
+                            contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
+                            className="p-2 m-0 cursor-pointer justify-start"
+                          >
+                                <TipoDatosSection />
+                              </ModalFormTemplate>
+                            </div>
                           </div>
+
 
                           {/* Información del tipo seleccionado */}
                           {tipoSeleccionado && (
@@ -352,6 +382,8 @@ export default function DispositivoCreateEdit({ editData = null, isEdit = false 
                                   "texto" && "El técnico podrá escribir una respuesta libre"}
                                 {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
                                   "opcion" && "El técnico podrá seleccionar entre las opciones que configure"}
+                                {["numero", "número"].includes(tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase()) &&
+                                  "El técnico podrá escribir una respuesta numérica"}
                               </p>
                             </div>
                           )}

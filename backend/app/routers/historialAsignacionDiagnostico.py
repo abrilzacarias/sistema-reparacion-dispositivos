@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
-
 from app.database import get_db
 from app.schemas import historialAsignacionDiagnostico as schemas
 from app.services import historialAsignacionDiagnostico as services
@@ -37,3 +36,11 @@ def delete_historial(id: int, db: Session = Depends(get_db)):
     success = services.delete_historial(db, id)
     if not success:
         raise HTTPException(status_code=404, detail="Historial no encontrado")
+
+@router.get("/por-diagnostico/{idDiagnostico}", response_model=Page[schemas.HistorialAsignacionDiagnosticoOut], summary="Historial de asignación filtrado por idDiagnostico")
+def read_historiales_por_diagnostico(
+    idDiagnostico: int,
+    db: Session = Depends(get_db)
+):
+    historiales = services.get_historial_asignaciones_por_diagnostivo(db, idDiagnostico)
+    return paginate(historiales)

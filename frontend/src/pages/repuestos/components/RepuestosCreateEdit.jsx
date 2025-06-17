@@ -26,6 +26,7 @@ const RepuestosCreateEdit = ({
       nombreRepuesto: repuesto?.nombreRepuesto || "",
       precio: repuesto?.precio || "",
       cantidadRepuesto: repuesto?.cantidadRepuesto || "",
+      stockMinimo: repuesto?.stockMinimo ?? null,
       idMarcaDispositivo: repuesto?.marca.idMarcaDispositivo || "",
       idTipoRepuesto: repuesto?.tipo.idTipoRepuesto || "",
     },
@@ -50,17 +51,11 @@ const RepuestosCreateEdit = ({
 
       await method(endpoint, data)
 
-      if (repuesto) {
-        ToastMessageEdit()
-      } else {
-        ToastMessageCreate()
-      }
-
+      repuesto ? ToastMessageEdit() : ToastMessageCreate()
       refreshRepuestos()
       setOpen(false)
     } catch (err) {
       console.error("Error al guardar repuesto:", err)
-      //TODO MANEJAR ERRORES DE MEJOR MANERA EN EL BACKEND
       if (err.status === 500) {
         setError('Error del servidor, por favor intente más tarde.')
         return
@@ -83,7 +78,8 @@ const RepuestosCreateEdit = ({
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-2 gap-4"
     >
-      <div className="col-span-2 space-y-2">
+      {/* Nombre y precio en una fila */}
+      <div className="space-y-2">
         <Label>Nombre del repuesto</Label>
         <Input
           {...register("nombreRepuesto", {
@@ -110,6 +106,7 @@ const RepuestosCreateEdit = ({
         <ErrorMessage message={errors.precio?.message || apiErrors?.precio} />
       </div>
 
+      {/* Cantidad y stock mínimo en otra fila */}
       <div className="space-y-2">
         <Label>Cantidad</Label>
         <Input
@@ -124,6 +121,21 @@ const RepuestosCreateEdit = ({
         />
       </div>
 
+      <div className="space-y-2">
+        <Label>Stock mínimo</Label>
+        <Input
+          type="number"
+          {...register("stockMinimo", {
+            min: { value: 0, message: "Debe ser 0 o más" },
+            setValueAs: (value) => value === "" ? null : Number(value),
+          })}
+        />
+        <ErrorMessage
+          message={errors.stockMinimo?.message || apiErrors?.stockMinimo}
+        />
+      </div>
+
+      {/* Marca del dispositivo */}
       <div className="col-span-2 space-y-2">
         <Controller
           name="idMarcaDispositivo"
@@ -144,6 +156,7 @@ const RepuestosCreateEdit = ({
         <ErrorMessage message={errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo} />
       </div>
 
+      {/* Tipo de repuesto */}
       <div className="col-span-2 space-y-2">
         <Controller
           name="idTipoRepuesto"
@@ -164,10 +177,12 @@ const RepuestosCreateEdit = ({
         <ErrorMessage message={errors.idTipoRepuesto?.message || apiErrors?.idTipoRepuesto} />
       </div>
 
+      {/* Botón guardar */}
       <div className="col-span-2 flex justify-end mt-3">
         <ButtonDinamicForms initialData={repuesto} isLoading={isLoading} register />
       </div>
 
+      {/* Errores generales */}
       <div className="col-span-2 flex justify-end">
         <ErrorMessage message={apiErrors?.detail || error} />
       </div>
@@ -176,3 +191,4 @@ const RepuestosCreateEdit = ({
 }
 
 export default RepuestosCreateEdit
+

@@ -13,6 +13,7 @@ from app.services.diagnostico import (
 )
 
 from app.database import get_db
+from app.schemas.diagnostico import DiagnosticoSchema, DiagnosticoUpdate
 
 router = APIRouter(prefix="/diagnostico", tags=["Diagnostico"])
 
@@ -34,17 +35,21 @@ def obtener_diagnostico(idDiagnostico: int, db: Session = Depends(get_db)):
 def crear_diagnostico(diagnostico: schemas.DiagnosticoCreate, db: Session = Depends(get_db)):
     return create_diagnostico(db, diagnostico)
 
-# PUT: Actualizar diagnóstico
-@router.put("/{idDiagnostico}", response_model=schemas.DiagnosticoSchema)
+@router.put("/{idDiagnostico}", response_model=DiagnosticoSchema)
 def actualizar_diagnostico(
-    idDiagnostico: int, 
-    diagnostico: schemas.DiagnosticoUpdate, 
+    idDiagnostico: int,
+    diagnostico: DiagnosticoUpdate,
     db: Session = Depends(get_db)
 ):
-    db_diagnostico = update_diagnostico(db, idDiagnostico, diagnostico)
+    if not diagnostico.idEmpleado:
+        raise HTTPException(status_code=400, detail="idEmpleado es requerido para el historial")
+
+    db_diagnostico = update_diagnostico(db, idDiagnostico, diagnostico, diagnostico.idEmpleado)
     if not db_diagnostico:
         raise HTTPException(status_code=404, detail="Diagnóstico no encontrado")
     return db_diagnostico
+
+
 
 # DELETE: Eliminar diagnóstico
 @router.delete("/{idDiagnostico}", status_code=204)

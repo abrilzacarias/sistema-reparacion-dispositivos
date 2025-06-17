@@ -1,4 +1,5 @@
-import { Edit, Ellipsis, List, Wrench } from "lucide-react";
+import ModalDeactivateItem from "@/components/molecules/DeleteConfirmButton";
+import { Edit, Ellipsis, List, Wrench, Trash2, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,15 +10,65 @@ import {
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import ClienteCard from "@/components/organisms/ClienteCard";
 import { Button } from "@/components/ui/button";
-import ClienteDeleteConfirmModal from "@/components/organisms/ClienteDeleteConfirmModal";
 import ClienteCreateEdit from "@/pages/cliente/components/ClienteCreateEdit";
 import HistorialReparacionClienteModal from "@/pages/cliente/components/HistorialReparacionClienteModal";
 
 // 👇 NUEVA IMPORTACIÓN
 import EditarClienteConTabs from "@/pages/cliente/components/EditarClienteConTabs";
 import { tienePermiso } from "@/utils/permisos";
+import { toast } from "sonner";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getColumnsCliente = ({ refetch, onEdit }) => {
+  
+  const handleDelete = async (cliente) => {
+    toast("¿Seguro que querés eliminar este cliente?", {
+      description: `${cliente.persona?.nombre} ${cliente.persona?.apellido}`,
+      duration: 10000, // 10 segundos para dar tiempo a decidir
+      action: {
+        label: "Eliminar",
+        onClick: async () => {
+          try {
+            // Toast de loading mientras se elimina
+            const loadingToast = toast.loading("Eliminando cliente...");
+            
+            await axios.delete(`${API_URL}/clientes/${cliente.idCliente}`);
+            
+            // Dismiss del loading toast
+            toast.dismiss(loadingToast);
+            
+            // Toast de éxito
+            toast.success("Cliente eliminado con éxito", {
+              description: `${cliente.persona?.nombre} ${cliente.persona?.apellido} ha sido eliminado`
+            });
+            
+            refetch?.();
+          } catch (error) {
+            console.error("Error eliminando cliente:", error);
+            
+            // Toast de error con más detalles
+            toast.error("Error al eliminar cliente", {
+              description: error.response?.data?.message || "Intente nuevamente más tarde",
+              duration: 5000
+            });
+          }
+        },
+        style: {
+          backgroundColor: '#ef4444',
+          color: 'white'
+        }
+      },
+      cancel: {
+        label: "Cancelar",
+        onClick: () => {
+          toast.info("Eliminación cancelada");
+        }
+      },
+    });
+  };
+
   return [
     {
       header: "Nombre",
@@ -116,6 +167,7 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
     {
       id: "actions",
       cell: function Cell({ row }) {
+        const cliente = row.original
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -186,12 +238,22 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
 
               <DropdownMenuSeparator />
               {tienePermiso("Clientes", "Eliminar Cliente") && (
-                <DropdownMenuItem asChild>
-                  <ClienteDeleteConfirmModal
-                    cliente={row.original}
+              <DropdownMenuItem asChild>
+                <ModalFormTemplate
+                  title="¿Estás completamente seguro?"
+                  description=" Esta acción no se puede deshacer."
+                  label="Eliminar"
+                  variant="ghost"
+                  icon={Trash}
+                  className="m-0 text-red-900 dark:text-red-500 cursor-pointer w-full p-2 justify-start"
+                >
+                  <ModalDeactivateItem
+                    endpoint="clientes"
+                    id={cliente.idCliente}
                     refetch={refetch}
                   />
-                </DropdownMenuItem>
+                </ModalFormTemplate>
+            </DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

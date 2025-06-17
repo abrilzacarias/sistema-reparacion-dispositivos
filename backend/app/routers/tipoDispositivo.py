@@ -29,9 +29,12 @@ def crear_tipo(tipo_data: TipoDispositivoCreate, db: Session = Depends(get_db)):
 
 @router.delete("/{id}", status_code=204)
 def eliminar_tipo(id: int, db: Session = Depends(get_db)):
-    success = tipo_service.delete(db, id)
-    if not success:
+    tipo = tipo_service.get_by_id(db, id)
+    if not tipo:
         raise HTTPException(status_code=404, detail="Tipo de dispositivo no encontrado")
+    
+    tipo.estadoDispositivo = False  # Cambiar estado a inactivo o eliminado
+    db.commit()
 
 @router.put("/tipo-dispositivo/{id}", response_model=TipoDispositivoOut)
 def actualizar_tipo_dispositivo(id: int, tipo_dispositivo: TipoDispositivoUpdate, db: Session = Depends(get_db)):

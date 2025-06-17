@@ -8,7 +8,9 @@ class ModeloDispositivo(Base):
     descripcionModeloDispositivo = Column(String)
     estadoModeloDispositivo = Column(Boolean, default=True, nullable=False)
     idMarcaDispositivo = Column(Integer, ForeignKey("marcaDispositivo.idMarcaDispositivo"))
-    
-    marcaDispositivo = relationship("MarcaDispositivo", back_populates="modeloDispositivo")
+    idTipoDispositivo = Column(Integer, ForeignKey('tipoDispositivo.idTipoDispositivo'), nullable=False)
 
+    marcaDispositivo = relationship("MarcaDispositivo", back_populates="modeloDispositivo")
     dispositivos = relationship("Dispositivo", back_populates="modeloDispositivo")
+    # Relaciones inversas
+    tipoDispositivo = relationship("TipoDispositivo", back_populates="modeloDispositivo")

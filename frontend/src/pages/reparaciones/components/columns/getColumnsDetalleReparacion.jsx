@@ -92,7 +92,7 @@ export const getColumnsDetalleReparacion = ({ refetch }) => {
       cell: ({ row }) => {
         const value = row.original.repuesto?.nombreRepuesto || "Sin repuesto";
         return (
-          <div className="max-w-[100px] truncate text-sm" title={value}>
+          <div className="text-sm" title={value}>
             {value}
           </div>
         );
@@ -106,7 +106,7 @@ export const getColumnsDetalleReparacion = ({ refetch }) => {
       cell: ({ row }) => {
         const value = row.original.tipoReparacion?.descripcionTipoReparacion || "Sin tipo";
         return (
-          <div className="max-w-[90px] truncate text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-md" title={value}>
+          <div className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-md" title={value}>
             {value}
           </div>
         );

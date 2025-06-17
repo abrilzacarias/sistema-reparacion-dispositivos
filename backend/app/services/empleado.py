@@ -3,9 +3,13 @@ from sqlalchemy import or_, func
 from app.models.empleado import Empleado
 from app.models import Persona, Perfil, PermisoPerfil, AsignacionUsuarioPermisos
 from app.schemas.empleado import EmpleadoCreate, EmpleadoUpdate
+from fastapi import Depends, HTTPException, status
+
+from sqlalchemy import or_, func
 
 def get_empleados(db: Session, search: str = None):
-    query = db.query(Empleado)
+    query = db.query(Empleado).filter(Empleado.fechaFinalizacion == None)
+
     if search:
         search = f"%{search.lower()}%"
         query = query.filter(
@@ -14,6 +18,7 @@ def get_empleados(db: Session, search: str = None):
                 func.lower(Empleado.apellido).like(search)
             )
         )
+
     return query
 
 def get_empleado(db: Session, idEmpleado: int):

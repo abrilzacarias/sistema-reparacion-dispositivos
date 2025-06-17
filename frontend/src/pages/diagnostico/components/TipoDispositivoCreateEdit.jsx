@@ -98,6 +98,8 @@ export default function TipoDispositivoCreateEdit() {
     }
   }
 
+  
+
   const getTipoColor = (descripcion) => {
     switch (descripcion?.toLowerCase()) {
       case "booleano":
@@ -295,6 +297,8 @@ export default function TipoDispositivoCreateEdit() {
                                       "texto" && "El técnico podrá escribir una respuesta libre"}
                                     {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
                                       "opcion" && "El técnico podrá seleccionar entre las opciones que configure"}
+                                    {tipoSeleccionado.descripcionTipoDatoPreguntaDiagnostico.toLowerCase() ===
+                                      "opcion" && "El técnico podrá escribir una respuesta númerica"}
                                   </p>
                                 </div>
                               )}

@@ -11,6 +11,7 @@ class RepuestoBase(BaseModel):
     idMarcaDispositivo: int = Field(..., example=1)
     idTipoRepuesto: int = Field(..., example=2)
     estadoRepuesto: Optional[bool] = Field(default=True)
+    stockMinimo: Optional[int] = Field(None, example=5)  # 👈 agregado
 
 class RepuestoCreate(RepuestoBase):
     pass

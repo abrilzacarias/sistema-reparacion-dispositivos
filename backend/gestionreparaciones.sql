@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
 --
 -- Host: localhost    Database: gestionreparaciones
 -- ------------------------------------------------------
@@ -140,7 +140,7 @@ CREATE TABLE `detalleDiagnostico` (
   PRIMARY KEY (`idDetalleDiagnostico`),
   KEY `fk_detalleDiagnostico_diagnostico1_idx` (`idDiagnostico`),
   CONSTRAINT `fk_detalleDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE `detalleDiagnostico` (
 
 LOCK TABLES `detalleDiagnostico` WRITE;
 /*!40000 ALTER TABLE `detalleDiagnostico` DISABLE KEYS */;
-INSERT INTO `detalleDiagnostico` VALUES (1,'1',9,1),(2,'false',11,1),(3,'true',11,2),(4,'23532532',11,3),(5,'Pantalla',11,4),(6,'false',12,1),(7,'true',12,2),(8,'44923092',12,3),(9,'Software',12,4),(10,'false',13,1),(11,'true',13,2),(12,'44923092',13,3),(13,'Software',13,4),(14,'false',14,1),(15,'true',14,2),(16,'44923092',14,3),(17,'Software',14,4),(18,'false',15,1),(19,'true',15,2),(20,'29706151',15,3),(21,'Otro',15,4),(22,'false',16,1),(23,'true',16,2),(24,'35346346346',16,3),(25,'Batería',16,4),(26,'true',17,1),(27,'false',17,2),(28,'523523532',17,3),(29,'Pantalla',17,4),(30,'0-3-6-7-8',17,5),(31,'false',18,1),(32,'true',18,2),(33,'5235235',18,3),(34,'Pantalla',18,4),(35,'{\"tipo\":\"PIN\",\"valor\":\"1234\"}',18,5);
+INSERT INTO `detalleDiagnostico` VALUES (36,'true',19,20),(37,'false',20,22),(38,'No prende',20,24),(39,'false',21,22),(40,'no prende',21,24),(41,'false',22,22),(42,'apagado',22,24),(43,'false',23,22),(44,'gewgwgew',23,24),(45,'false',24,22),(46,'no prende',24,24),(47,'No enciende al presionar el botón de encendido',26,22),(48,'true',27,22),(49,'gwegwgew',27,24),(50,'false',28,25),(51,'false',29,25),(52,'false',30,22),(53,'no prende',30,24),(54,'false',31,22),(55,'no prende',31,24);
 /*!40000 ALTER TABLE `detalleDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,14 +199,15 @@ CREATE TABLE `diagnostico` (
   `idDiagnostico` int NOT NULL AUTO_INCREMENT,
   `fechaDiagnostico` date NOT NULL,
   `idDispositivo` int NOT NULL,
-  `idEmpleado` int NOT NULL,
+  `idEmpleado` int DEFAULT NULL,
   `descripcionDiagnostico` varchar(100) DEFAULT NULL,
+  `estadoDiagnostico` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`idDiagnostico`),
   KEY `fk_diagnostico_dispositivo1_idx` (`idDispositivo`),
   KEY `fk_diagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_diagnostico_dispositivo1` FOREIGN KEY (`idDispositivo`) REFERENCES `dispositivo` (`idDispositivo`),
   CONSTRAINT `fk_diagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +216,7 @@ CREATE TABLE `diagnostico` (
 
 LOCK TABLES `diagnostico` WRITE;
 /*!40000 ALTER TABLE `diagnostico` DISABLE KEYS */;
-INSERT INTO `diagnostico` VALUES (3,'2025-06-10',3,29,NULL),(4,'2025-06-10',3,29,NULL),(5,'2025-06-10',3,29,NULL),(6,'2025-06-10',3,29,NULL),(7,'2025-06-10',3,29,NULL),(8,'2025-06-10',3,29,NULL),(9,'2025-06-10',3,29,NULL),(10,'2025-06-12',25,29,NULL),(11,'2025-06-12',26,29,NULL),(12,'2025-06-12',27,29,NULL),(13,'2025-06-12',28,29,NULL),(14,'2025-06-12',29,29,NULL),(15,'2025-06-12',30,29,NULL),(16,'2025-06-12',31,29,NULL),(17,'2025-06-12',32,29,NULL),(18,'2025-06-12',33,29,NULL);
+INSERT INTO `diagnostico` VALUES (19,'2025-06-15',34,32,NULL,0),(20,'2025-06-16',35,32,NULL,1),(21,'2025-06-16',36,31,NULL,0),(22,'2025-06-16',37,31,NULL,1),(23,'2025-06-16',38,31,NULL,1),(24,'2025-06-16',39,33,NULL,1),(26,'2025-06-16',34,33,'no prende',0),(27,'2025-06-16',40,32,'si prende pero no arranca!!',0),(28,'2025-06-17',41,31,'umhuguugughy',1),(29,'2025-06-17',42,33,'LG NO PRENDE!!',1),(30,'2025-06-17',43,31,'puede ser cambio de pin',1),(31,'2025-06-17',44,33,'no prende 2.0',1);
 /*!40000 ALTER TABLE `diagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +240,7 @@ CREATE TABLE `dispositivo` (
   CONSTRAINT `fk_dispositivo_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`),
   CONSTRAINT `fk_dispositivo_modeloDispositivo1` FOREIGN KEY (`idModeloDispositivo`) REFERENCES `modeloDispositivo` (`idModeloDispositivo`),
   CONSTRAINT `fk_dispositivo_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,7 +249,7 @@ CREATE TABLE `dispositivo` (
 
 LOCK TABLES `dispositivo` WRITE;
 /*!40000 ALTER TABLE `dispositivo` DISABLE KEYS */;
-INSERT INTO `dispositivo` VALUES (3,3,2,17,1),(4,5,2,17,1),(5,5,2,17,1),(6,5,2,17,1),(7,5,2,17,1),(8,5,2,17,1),(9,5,2,17,1),(10,5,2,17,1),(11,5,2,17,1),(12,3,2,17,1),(13,3,2,17,1),(14,3,2,17,1),(15,3,2,17,1),(16,3,2,17,1),(17,3,2,17,1),(18,3,2,17,1),(19,3,2,17,1),(20,5,2,17,1),(21,3,2,17,1),(22,3,2,17,1),(23,3,2,17,1),(24,3,2,17,1),(25,3,2,17,1),(26,3,2,17,1),(27,5,2,17,1),(28,5,2,17,1),(29,5,2,17,1),(30,5,2,17,1),(31,5,2,17,1),(32,3,2,17,1),(33,5,2,17,1);
+INSERT INTO `dispositivo` VALUES (34,3,4,17,0),(35,5,3,18,1),(36,5,3,17,0),(37,3,3,18,1),(38,3,3,18,1),(39,5,3,18,1),(40,5,3,17,0),(41,5,8,18,1),(42,6,8,18,1),(43,12,3,18,1),(44,11,3,18,1);
 /*!40000 ALTER TABLE `dispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +320,7 @@ CREATE TABLE `empleado` (
 
 LOCK TABLES `empleado` WRITE;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
-INSERT INTO `empleado` VALUES (29,'2025-06-10',NULL,7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13',NULL,7,74,29),(33,'2025-06-13',NULL,7,77,30),(34,'2025-06-13',NULL,8,78,31);
+INSERT INTO `empleado` VALUES (29,'2025-06-10','2025-06-16',7,61,23),(31,'2025-06-13',NULL,7,72,28),(32,'2025-06-13',NULL,7,74,29),(33,'2025-06-13',NULL,7,77,30),(34,'2025-06-13','2025-06-16',8,78,31);
 /*!40000 ALTER TABLE `empleado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,8 +382,8 @@ DROP TABLE IF EXISTS `historialAsignacionDiagnostico`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `historialAsignacionDiagnostico` (
   `idHistorialAsignacionDiagnostico` int NOT NULL AUTO_INCREMENT,
-  `fechaInicioAsignacionDiagnostico` date NOT NULL,
-  `fechaFinAsignacionDiagnostico` date DEFAULT NULL,
+  `fechaInicioAsignacionDiagnostico` datetime NOT NULL,
+  `fechaFinAsignacionDiagnostico` datetime DEFAULT NULL,
   `idDiagnostico` int NOT NULL,
   `idEmpleado` int NOT NULL,
   PRIMARY KEY (`idHistorialAsignacionDiagnostico`),
@@ -390,7 +391,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
   KEY `fk_historialAsignacionDiagnostico_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_historialAsignacionDiagnostico_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,6 +400,7 @@ CREATE TABLE `historialAsignacionDiagnostico` (
 
 LOCK TABLES `historialAsignacionDiagnostico` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` DISABLE KEYS */;
+INSERT INTO `historialAsignacionDiagnostico` VALUES (3,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,32),(4,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,33),(5,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,32),(6,'2025-06-15 00:00:00','2025-06-15 00:00:00',19,31),(7,'2025-06-15 00:00:00',NULL,19,33),(8,'2025-06-15 00:00:00',NULL,19,34),(9,'2025-06-16 00:00:00',NULL,19,31),(10,'2025-06-16 00:00:00',NULL,19,34),(11,'2025-06-16 00:00:00',NULL,19,31),(12,'2025-06-16 00:00:00',NULL,19,32),(13,'2025-06-16 00:00:00',NULL,20,32),(14,'2025-06-16 01:45:35',NULL,20,31),(15,'2025-06-16 01:45:40',NULL,20,32),(16,'2025-06-16 01:49:31',NULL,20,33),(17,'2025-06-16 01:57:57',NULL,20,32),(18,'2025-06-15 22:57:38',NULL,21,31),(19,'2025-06-16 02:32:55',NULL,22,31),(20,'2025-06-16 02:39:23',NULL,19,32),(21,'2025-06-16 02:40:01',NULL,23,31),(22,'2025-06-16 14:19:17',NULL,24,33),(23,'2025-06-16 14:26:36',NULL,26,33),(24,'2025-06-16 14:40:33',NULL,27,32),(25,'2025-06-16 14:40:52',NULL,27,32),(26,'2025-06-16 23:47:31',NULL,28,31),(27,'2025-06-16 23:48:22',NULL,29,33),(28,'2025-06-16 23:48:34',NULL,29,33),(29,'2025-06-17 00:36:32',NULL,30,31),(30,'2025-06-17 00:42:11',NULL,31,33);
 /*!40000 ALTER TABLE `historialAsignacionDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,7 +422,7 @@ CREATE TABLE `historialAsignacionReparacion` (
   KEY `fk_historialAsignacionReparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionReparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
   CONSTRAINT `fk_historialAsignacionReparacion_reparacion1` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -429,7 +431,7 @@ CREATE TABLE `historialAsignacionReparacion` (
 
 LOCK TABLES `historialAsignacionReparacion` WRITE;
 /*!40000 ALTER TABLE `historialAsignacionReparacion` DISABLE KEYS */;
-INSERT INTO `historialAsignacionReparacion` VALUES (1,'2025-06-13',NULL,5,31);
+INSERT INTO `historialAsignacionReparacion` VALUES (2,'2025-06-15',NULL,6,31);
 /*!40000 ALTER TABLE `historialAsignacionReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -445,7 +447,7 @@ CREATE TABLE `marcaDispositivo` (
   `descripcionMarcaDispositivo` varchar(45) NOT NULL,
   `estadoMarcaDispositivo` tinyint NOT NULL DEFAULT '1' COMMENT 'ACTIVO O INACTIVO',
   PRIMARY KEY (`idMarcaDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +456,7 @@ CREATE TABLE `marcaDispositivo` (
 
 LOCK TABLES `marcaDispositivo` WRITE;
 /*!40000 ALTER TABLE `marcaDispositivo` DISABLE KEYS */;
-INSERT INTO `marcaDispositivo` VALUES (10,'Samsung',1);
+INSERT INTO `marcaDispositivo` VALUES (10,'Samsung',1),(11,'LG',1),(12,'HP',1);
 /*!40000 ALTER TABLE `marcaDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -470,10 +472,13 @@ CREATE TABLE `modeloDispositivo` (
   `descripcionModeloDispositivo` varchar(100) NOT NULL,
   `estadoModeloDispositivo` tinyint(1) NOT NULL DEFAULT '1',
   `idMarcaDispositivo` int NOT NULL,
+  `idTipoDispositivo` int DEFAULT NULL,
   PRIMARY KEY (`idModeloDispositivo`),
   KEY `fk_dispositivo_marcaDispositivo1_idx` (`idMarcaDispositivo`),
-  CONSTRAINT `fk_dispositivo_marcaDispositivo1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `fk_modelo_tipo` (`idTipoDispositivo`),
+  CONSTRAINT `fk_dispositivo_marcaDispositivo1` FOREIGN KEY (`idMarcaDispositivo`) REFERENCES `marcaDispositivo` (`idMarcaDispositivo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_modelo_tipo` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,7 +487,7 @@ CREATE TABLE `modeloDispositivo` (
 
 LOCK TABLES `modeloDispositivo` WRITE;
 /*!40000 ALTER TABLE `modeloDispositivo` DISABLE KEYS */;
-INSERT INTO `modeloDispositivo` VALUES (3,'Galaxy A15',1,10),(5,'Galaxy S22',1,10);
+INSERT INTO `modeloDispositivo` VALUES (3,'Galaxy A15',1,10,8),(5,'Galaxy S22',1,10,8),(6,'LG 04',1,11,8),(7,'Notebook HP 15 fc0008la',1,12,3),(8,'Notebook HP 15 fc0008la',1,12,8),(9,'Notebook HP 15 fc0008la',1,12,8),(10,'Notebook HP 15 ',1,12,8),(11,'Notebook HP R6',1,12,3),(12,'Not Hp Book',1,12,3);
 /*!40000 ALTER TABLE `modeloDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -621,9 +626,108 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',1),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',1),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',1),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
+INSERT INTO `persona` VALUES (61,'20-12345678-9','brenda','cano','1990-05-21',0),(62,'20-41013872-9','Miguel Dario','Coronel','1995-08-07',0),(63,'205891452360','Martina','Cano','2025-03-26',1),(64,'26003268859','Abril','Zacaria','2004-04-15',1),(65,'37104155812','Abril','Zacaria','2004-04-15',1),(66,'21412242','Lali','Esposito','2000-02-15',1),(67,'214122421','Lali','Esposito','2000-02-15',1),(68,'11111111111','Karina','Milei','2004-04-15',1),(69,'111111111113','Victoria','Villaruel','2004-04-15',1),(70,'12421421412','Agustin','Zeballos','2004-04-15',1),(71,'124214214','Agustin','Zeballos','2004-04-15',1),(72,'141211','Mauro','Lopez','2000-03-12',1),(73,'12424','Walter','Ruiz','2007-06-15',1),(74,'21412412','Cristina','Sosa','2003-02-15',1),(75,'12412412412','Nazareno','Bareiro','2025-06-13',1),(76,'124222232','Mauro','Lopez','2025-06-13',1),(77,'45878799455','Luciana','Zacaria','2025-06-13',1),(78,'74520389124','Victoria','Maidana','2002-02-18',0),(79,'27258894990','Marcelo editado','Acosta ','2023-05-25',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `baja_logica_dispositivos_por_baja_persona` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
+  IF NEW.estadoPersona = 0 THEN
+
+    BEGIN
+      DECLARE var_idCliente INT;
+
+      -- Obtener el cliente vinculado a la persona
+      SELECT idCliente INTO var_idCliente
+      FROM cliente
+      WHERE idPersona = NEW.idPersona
+      LIMIT 1;
+
+      -- Si existe un cliente asociado
+      IF var_idCliente IS NOT NULL THEN
+
+        -- Baja lógica de dispositivos
+        UPDATE dispositivo
+        SET estadoDispositivo = 0
+        WHERE idCliente = var_idCliente;
+
+        -- Baja lógica de diagnósticos
+        UPDATE diagnostico
+        SET estadoDiagnostico = 0
+        WHERE idDispositivo IN (
+            SELECT idDispositivo FROM dispositivo WHERE idCliente = var_idCliente
+        );
+
+        -- Baja lógica de reparaciones
+        UPDATE reparacion
+        SET estadoReparacion = 0
+        WHERE idDiagnostico IN (
+            SELECT d.idDiagnostico
+            FROM diagnostico d
+            JOIN dispositivo dp ON dp.idDispositivo = d.idDispositivo
+            WHERE dp.idCliente = var_idCliente
+        );
+
+      END IF;
+    END;
+
+  END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_fecha_finalizacion` AFTER UPDATE ON `persona` FOR EACH ROW BEGIN
+    DECLARE v_idEmpleado INT;
+
+    -- Solo ejecutar si la persona fue desactivada
+    IF OLD.estadoPersona = 1 AND NEW.estadoPersona = 0 THEN
+
+        -- Obtener el idEmpleado correspondiente a la persona
+        SELECT idEmpleado INTO v_idEmpleado
+        FROM empleado
+        WHERE idPersona = NEW.idPersona
+        LIMIT 1;
+
+        -- Actualizar la fecha de finalización del empleado
+        UPDATE empleado
+        SET fechaFinalizacion = CURRENT_DATE
+        WHERE idEmpleado = v_idEmpleado;
+
+        -- Establecer idEmpleado en NULL en los diagnósticos
+        UPDATE diagnostico
+        SET idEmpleado = NULL
+        WHERE idEmpleado = v_idEmpleado;
+
+        -- Establecer idEmpleado en NULL en las reparaciones
+        UPDATE reparacion
+        SET idEmpleado = NULL
+        WHERE idEmpleado = v_idEmpleado;
+
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `preguntaDiagnostico`
@@ -637,10 +741,11 @@ CREATE TABLE `preguntaDiagnostico` (
   `descripcionPreguntaDiagnostico` varchar(90) NOT NULL,
   `idTipoDatoPreguntaDiagnostico` int NOT NULL,
   `opcionesPregunta` json DEFAULT NULL COMMENT '4	Â¿QuÃ© tan sucio estÃ¡?	opcion	["Limpio", "Sucio", "Muy sucio"]',
+  `estadoPreguntaDiagnostico` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idPreguntaDiagnostico`),
   KEY `fk_preguntaDiagnostico_tipoDatoPreguntaDiagnostico1_idx` (`idTipoDatoPreguntaDiagnostico`),
   CONSTRAINT `fk_preguntaDiagnostico_tipoDatoPreguntaDiagnostico1` FOREIGN KEY (`idTipoDatoPreguntaDiagnostico`) REFERENCES `tipoDatoPreguntaDiagnostico` (`idTipoDatoPreguntaDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -649,9 +754,30 @@ CREATE TABLE `preguntaDiagnostico` (
 
 LOCK TABLES `preguntaDiagnostico` WRITE;
 /*!40000 ALTER TABLE `preguntaDiagnostico` DISABLE KEYS */;
-INSERT INTO `preguntaDiagnostico` VALUES (1,'¿Enciende?',1,'null'),(2,'¿Carga?',1,'null'),(3,'IMEI',2,NULL),(4,'¿Qué tipo de problema tiene el dispositivo?',3,'[\"Pantalla\", \"Batería\", \"Software\", \"Otro\"]'),(5,'¿Tiene bloqueo?',3,'[\"PIN\", \"Contraseña\", \"Patron\", \"Ninguno\"]');
+INSERT INTO `preguntaDiagnostico` VALUES (19,'¿Enciende?',2,'null',0),(20,'¿Enciende?',2,'null',1),(21,'¿Carga?',2,'null',0),(22,'¿Enciende?',1,'null',1),(23,'¿Qué tipo de problema tiene el dispositivo?',2,'null',0),(24,'¿Qué tipo de problema tiene el dispositivo?',2,'null',0),(25,'¿Enciende?',1,'null',1);
 /*!40000 ALTER TABLE `preguntaDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `tr_baja_preguntaDiagnostico` AFTER UPDATE ON `preguntaDiagnostico` FOR EACH ROW BEGIN
+  IF OLD.estadoPreguntaDiagnostico = TRUE AND NEW.estadoPreguntaDiagnostico = FALSE THEN
+    UPDATE tipoDispositivoSegunPregunta
+    SET estadoTipoDispositivoSegunPregunta = FALSE
+    WHERE idPreguntaDiagnostico = NEW.idPreguntaDiagnostico;
+  END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `puestoLaboral`
@@ -698,7 +824,7 @@ CREATE TABLE `registroEstadoReparacion` (
   CONSTRAINT `fk_registro_empleado` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`),
   CONSTRAINT `fk_registro_estado_reparacion` FOREIGN KEY (`idEstadoReparacion`) REFERENCES `estadoReparacion` (`idEstadoReparacion`),
   CONSTRAINT `fk_registro_reparacion` FOREIGN KEY (`idReparacion`) REFERENCES `reparacion` (`idReparacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -707,7 +833,7 @@ CREATE TABLE `registroEstadoReparacion` (
 
 LOCK TABLES `registroEstadoReparacion` WRITE;
 /*!40000 ALTER TABLE `registroEstadoReparacion` DISABLE KEYS */;
-INSERT INTO `registroEstadoReparacion` VALUES (3,4,2,'2025-06-11 12:20:01',29),(4,4,2,'2025-06-11 12:20:01',29),(5,4,3,'2025-06-11 12:20:01',29),(6,4,4,'2025-06-11 12:20:01',29),(7,4,4,'2025-06-11 12:20:01',29),(8,4,4,'2025-06-11 12:20:01',29),(9,4,4,'2025-06-11 12:20:01',29),(10,4,4,'2025-06-11 12:20:01',29),(11,4,3,'2025-06-11 12:20:01',29),(12,4,4,'2025-06-11 12:20:01',29),(13,4,4,'2025-06-11 12:20:01',29),(14,4,4,'2025-06-11 12:20:01',29),(15,4,4,'2025-06-11 12:20:01',29),(17,4,2,'2025-06-11 12:20:01',29),(21,4,4,'2025-06-11 17:50:19',29),(22,5,3,'2025-06-13 16:34:05',31),(23,5,5,'2025-06-13 16:34:23',31);
+INSERT INTO `registroEstadoReparacion` VALUES (24,6,2,'2025-06-15 06:08:35',31);
 /*!40000 ALTER TABLE `registroEstadoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -726,12 +852,13 @@ CREATE TABLE `reparacion` (
   `idDiagnostico` int NOT NULL,
   `idEmpleado` int NOT NULL COMMENT 'puede ser que un empleado haga el diagnostico y otro la reparacion',
   `fechaEstimadaEntrega` datetime DEFAULT NULL,
+  `estadoReparacion` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`idReparacion`),
   KEY `fk_reparacion_diagnostico1_idx` (`idDiagnostico`),
   KEY `fk_reparacion_empleado1_idx` (`idEmpleado`),
   CONSTRAINT `fk_reparacion_diagnostico1` FOREIGN KEY (`idDiagnostico`) REFERENCES `diagnostico` (`idDiagnostico`),
   CONSTRAINT `fk_reparacion_empleado1` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -740,7 +867,7 @@ CREATE TABLE `reparacion` (
 
 LOCK TABLES `reparacion` WRITE;
 /*!40000 ALTER TABLE `reparacion` DISABLE KEYS */;
-INSERT INTO `reparacion` VALUES (4,'2025-06-11 00:00:00',NULL,8900,3,29,NULL),(5,'2025-06-13 00:00:00','2025-06-13 00:00:00',NULL,3,31,NULL);
+INSERT INTO `reparacion` VALUES (6,'2025-06-15 00:00:00',NULL,NULL,19,31,NULL,0);
 /*!40000 ALTER TABLE `reparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -813,7 +940,7 @@ CREATE TABLE `tipoDatoPreguntaDiagnostico` (
   `idTipoDatoPreguntaDiagnostico` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoDatoPreguntaDiagnostico` varchar(45) NOT NULL COMMENT '(ej: "texto", "nÃºmero", "opciÃ³n", etc.)',
   PRIMARY KEY (`idTipoDatoPreguntaDiagnostico`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -822,7 +949,7 @@ CREATE TABLE `tipoDatoPreguntaDiagnostico` (
 
 LOCK TABLES `tipoDatoPreguntaDiagnostico` WRITE;
 /*!40000 ALTER TABLE `tipoDatoPreguntaDiagnostico` DISABLE KEYS */;
-INSERT INTO `tipoDatoPreguntaDiagnostico` VALUES (1,'booleano'),(2,'texto'),(3,'opcion'),(4,'patron');
+INSERT INTO `tipoDatoPreguntaDiagnostico` VALUES (1,'Booleano'),(2,'Texto'),(3,'Opcion'),(5,'Número');
 /*!40000 ALTER TABLE `tipoDatoPreguntaDiagnostico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -836,8 +963,9 @@ DROP TABLE IF EXISTS `tipoDispositivo`;
 CREATE TABLE `tipoDispositivo` (
   `idTipoDispositivo` int NOT NULL AUTO_INCREMENT,
   `nombreTipoDispositivo` varchar(80) NOT NULL,
+  `estadoDispositivo` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -846,9 +974,30 @@ CREATE TABLE `tipoDispositivo` (
 
 LOCK TABLES `tipoDispositivo` WRITE;
 /*!40000 ALTER TABLE `tipoDispositivo` DISABLE KEYS */;
-INSERT INTO `tipoDispositivo` VALUES (2,'Telefono');
+INSERT INTO `tipoDispositivo` VALUES (3,'Laptop',1),(4,'Telefono',0),(5,'Televisor',0),(8,'Telefono',1);
 /*!40000 ALTER TABLE `tipoDispositivo` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `tr_baja_tipoDispositivo` AFTER UPDATE ON `tipoDispositivo` FOR EACH ROW BEGIN
+  IF OLD.estadoDispositivo = TRUE AND NEW.estadoDispositivo = FALSE THEN
+    UPDATE tipoDispositivoSegunPregunta
+    SET estadoTipoDispositivoSegunPregunta = FALSE
+    WHERE idTipoDispositivo = NEW.idTipoDispositivo;
+  END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `tipoDispositivoSegunPregunta`
@@ -861,12 +1010,13 @@ CREATE TABLE `tipoDispositivoSegunPregunta` (
   `idTipoDispositivoSegunPregunta` int NOT NULL AUTO_INCREMENT,
   `idTipoDispositivo` int NOT NULL COMMENT 'idTipoDispositivo (FK): Especifica a quÃ© tipo de dispositivo se le asigna un campo de diagnÃ³stico.\n\nidCampoDiagnostico (FK): Define quÃ© campo de diagnÃ³stico estÃ¡ disponible para ese tipo de dispositivo.\n\nPor ejemplo:\n\nSi idTipoDispositivo = 1 (TelÃ©fono), y idCampoDiagnostico = 1 (Â¿Prende?), entonces para los telÃ©fonos, el campo "Â¿Prende?" se muestra en el formulario de diagnÃ³stico.\n\nSi idTipoDispositivo = 2 (Horno), y idCampoDiagnostico = 2 (Â¿Funciona el termostato?), ese campo estarÃ¡ disponible solo para hornos.',
   `idPreguntaDiagnostico` int NOT NULL,
+  `estadoTipoDispositivoSegunPregunta` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idTipoDispositivoSegunPregunta`),
   KEY `fk_tipoDispositivo_has_preguntasDiagnostico_preguntasDiagno_idx` (`idPreguntaDiagnostico`),
   KEY `fk_tipoDispositivo_has_preguntasDiagnostico_tipoDispositivo_idx` (`idTipoDispositivo`),
   CONSTRAINT `fk_tipoDispositivo_has_preguntasDiagnostico_preguntasDiagnost1` FOREIGN KEY (`idPreguntaDiagnostico`) REFERENCES `preguntaDiagnostico` (`idPreguntaDiagnostico`),
   CONSTRAINT `fk_tipoDispositivo_has_preguntasDiagnostico_tipoDispositivo1` FOREIGN KEY (`idTipoDispositivo`) REFERENCES `tipoDispositivo` (`idTipoDispositivo`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -875,7 +1025,7 @@ CREATE TABLE `tipoDispositivoSegunPregunta` (
 
 LOCK TABLES `tipoDispositivoSegunPregunta` WRITE;
 /*!40000 ALTER TABLE `tipoDispositivoSegunPregunta` DISABLE KEYS */;
-INSERT INTO `tipoDispositivoSegunPregunta` VALUES (1,2,1),(2,2,2),(3,2,3),(4,2,4),(5,2,5);
+INSERT INTO `tipoDispositivoSegunPregunta` VALUES (20,4,20,0),(22,3,22,1),(24,3,24,0),(25,8,25,1);
 /*!40000 ALTER TABLE `tipoDispositivoSegunPregunta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -914,7 +1064,7 @@ CREATE TABLE `tipoReparacion` (
   `idTipoReparacion` int NOT NULL AUTO_INCREMENT,
   `descripcionTipoReparacion` varchar(80) NOT NULL,
   PRIMARY KEY (`idTipoReparacion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -923,6 +1073,7 @@ CREATE TABLE `tipoReparacion` (
 
 LOCK TABLES `tipoReparacion` WRITE;
 /*!40000 ALTER TABLE `tipoReparacion` DISABLE KEYS */;
+INSERT INTO `tipoReparacion` VALUES (1,'Reparacion de Pantalla');
 /*!40000 ALTER TABLE `tipoReparacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -994,6 +1145,10 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping routines for database 'gestionreparaciones'
+--
+
+--
 -- Final view structure for view `vista_notificaciones`
 --
 
@@ -1020,4 +1175,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-14 15:54:51
+-- Dump completed on 2025-06-17  0:45:05

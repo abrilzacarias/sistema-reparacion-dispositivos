@@ -3,9 +3,17 @@ from app.models import Diagnostico as Diagnostico
 from app.schemas import diagnostico as schemas
 from app.models.detalleDiagnostico import DetalleDiagnostico
 from app.schemas.diagnostico import DiagnosticoCreate
+from app.services.historialAsignacionDiagnostico import create_historial
+from app.schemas.historialAsignacionDiagnostico import HistorialAsignacionDiagnosticoCreate
+#Formato Argentina PAPA!! Aguanteeee messi, y el vino sin soda asi pega más
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def obtener_diagnosticos(db: Session):
-    return db.query(Diagnostico) 
+    return (
+        db.query(Diagnostico)
+        .filter(Diagnostico.estadoDiagnostico == 1)
+    )
     # return db.query(Diagnostico).options(
     #     selectinload(Diagnostico.dispositivo),
     #     selectinload(Diagnostico.dispositivo.marcaDispositivo),
@@ -17,14 +25,20 @@ def obtener_diagnosticos(db: Session):
     # ).order_by(Diagnostico.fechaDiagnostico.desc())
 
 def get_diagnostico(db: Session, idDiagnostico: int):
-    return obtener_diagnosticos(db).filter(Diagnostico.idDiagnostico == idDiagnostico).first()
+    return db.query(Diagnostico)\
+        .filter(
+            Diagnostico.idDiagnostico == idDiagnostico,
+            Diagnostico.estadoDiagnostico == 1
+        )\
+        .first()
 
 def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
     # 1. Crear el objeto Diagnostico
     nuevo_diagnostico = Diagnostico(
         fechaDiagnostico=diagnostico.fechaDiagnostico,
         idDispositivo=diagnostico.idDispositivo,
-        idEmpleado=diagnostico.idEmpleado
+        idEmpleado=diagnostico.idEmpleado,
+        descripcionDiagnostico=diagnostico.descripcionDiagnostico  # 👈 NUEVO
     )
     db.add(nuevo_diagnostico)
     db.commit()
@@ -41,16 +55,43 @@ def create_diagnostico(db: Session, diagnostico: DiagnosticoCreate):
 
     db.commit()
 
+    # 3. Crear historial de asignación con fecha y hora actual
+    
+    historial_data = HistorialAsignacionDiagnosticoCreate(
+        fechaInicioAsignacionDiagnostico=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),        
+        fechaFinAsignacionDiagnostico=None,
+        idDiagnostico=nuevo_diagnostico.idDiagnostico,
+        idEmpleado=nuevo_diagnostico.idEmpleado
+    )
+    create_historial(db, historial_data)  # asegurate que esta función exista y haga el insert
+    
     return nuevo_diagnostico
 
-def update_diagnostico(db: Session, idDiagnostico: int, diagnostico: schemas.DiagnosticoUpdate):
+
+def update_diagnostico(
+    db: Session,
+    idDiagnostico: int,
+    diagnostico: schemas.DiagnosticoUpdate,
+    idEmpleado: int  # 👈 importante para el historial
+):
     db_diagnostico = get_diagnostico(db, idDiagnostico)
     if db_diagnostico:
         update_data = diagnostico.dict(exclude_unset=True)
         for field, value in update_data.items():
             setattr(db_diagnostico, field, value)
+
         db.commit()
         db.refresh(db_diagnostico)
+
+        # 👉 Crear historial de asignación
+        historial_data = HistorialAsignacionDiagnosticoCreate(
+            fechaInicioAsignacionDiagnostico=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
+            fechaFinAsignacionDiagnostico=None,
+            idDiagnostico=idDiagnostico,
+            idEmpleado=idEmpleado
+        )
+        create_historial(db, historial_data)
+
     return db_diagnostico
 
 def delete_diagnostico(db: Session, idDiagnostico: int):
