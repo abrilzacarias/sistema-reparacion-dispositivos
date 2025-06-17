@@ -31,14 +31,14 @@ const Index = () => {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-4">
-              <a href="#servicios" className="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 relative group">
-                Servicios
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-300 transition-all duration-300 group-hover:w-full"></span>
-              </a>
-              <a href="#nosotros" className="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 relative group">
-                Nosotros
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-300 transition-all duration-300 group-hover:w-full"></span>
-              </a>
+            <a href="#servicios" className="text-blue-900 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 px-6 py-4 text-lg font-medium transition-all duration-300 hover:scale-105 relative group">
+              Servicios
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-300 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a href="#nosotros" className="text-blue-900 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 px-6 py-4 text-lg font-medium transition-all duration-300 hover:scale-105 relative group">
+              Nosotros
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-300 transition-all duration-300 group-hover:w-full"></span>
+            </a>
               
               {/* Botón modo oscuro/ligero */}
               <button 
