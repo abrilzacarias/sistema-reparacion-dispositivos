@@ -18,3 +18,10 @@ class PerfilOut(PerfilBase):
 
     class Config:
         orm_mode = True
+
+class PerfilOutReduced(BaseModel):
+    idPerfil: int
+    nombrePerfil: str
+
+    class Config:
+        orm_mode = True

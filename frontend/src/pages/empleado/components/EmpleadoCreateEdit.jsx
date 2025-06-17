@@ -6,7 +6,7 @@ import { OpenContext } from "@/components/organisms/ModalFormTemplate"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axios from "axios"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import MultiSelectSearch from "./MultiSelectSearch"
 
@@ -26,6 +26,14 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
       idpuestoLaboral: empleado?.puesto?.idpuestoLaboral || "",
     },
   })
+
+  useEffect(() => {
+  if (empleado?.usuario?.perfiles) {
+    const ids = empleado.usuario.perfiles.map((p) => p.idPerfil)
+    setPerfilesSeleccionados(ids)
+  }
+}, [empleado])
+
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -74,9 +82,7 @@ const EmpleadoCreateEdit = ({ empleado, refreshEmpleados, idPersona, personaEmai
         perfiles: perfilesSeleccionados
       }
 
-      console.log("Payload del empleado:", empleadoPayload)
-
-      const endpoint = empleado ? `${API_URL}/empleados/${empleado.idEmpleado}/` : `${API_URL}/empleados/`
+      const endpoint = empleado ? `${API_URL}/empleados/${empleado.idEmpleado}` : `${API_URL}/empleados`
       console.log(endpoint)
       const method = empleado ? axios.put : axios.post
 

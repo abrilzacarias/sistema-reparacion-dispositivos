@@ -31,7 +31,6 @@ export const getColEmpleados = ({ refetch }) => {
         label: "Eliminar",
         onClick: async () => {
           try {
-            // Toast de loading mientras se elimina
             const loadingToast = toast.loading("Eliminando empleado...");
             
             await axios.delete(`${API_URL}/empleados/${empleado.idEmpleado}`);
@@ -94,6 +93,38 @@ export const getColEmpleados = ({ refetch }) => {
       cell: ({ row }) => <div>{new Date(row.original?.fechaContratacion).toLocaleDateString()}</div>,
     },
     {
+      header: "Perfiles asignados",
+      accessorKey: "usuario.perfiles.nombrePerfil",
+      cell: ({ row }) => {
+        const perfiles = row.original.usuario.perfiles || []
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center w-auto justify-center gap-2 m-auto text-xs"
+              >
+                Perfiles
+                <span className="bg-blue-700 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                  {perfiles.length}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {perfiles.map((perfil, index) => (
+                <DropdownMenuItem key={index} className="text-xs">
+                  {perfil.nombrePerfil}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+
+    {
       header: "Finalización",
       accessorKey: "fechaFinalizacion",
       cell: ({ row }) =>
@@ -142,6 +173,7 @@ export const getColEmpleados = ({ refetch }) => {
                   variant="ghost"
                   icon={Edit}
                   className="p-2 m-0 cursor-pointer w-full justify-start"
+                  contentClassName="max-w-2xl max-h-[90vh] overflow-y-auto" 
                 >
                   <Tabs
                     defaultValue="persona"
