@@ -12,4 +12,4 @@ class TipoDispositivo(Base):
     # Relación con dispositivos
     dispositivos = relationship("Dispositivo", back_populates="tipoDispositivo")
     tipoDispositivoSegunPregunta = relationship('TipoDispositivoSegunPregunta', back_populates='tipoDispositivo')
-
+    modeloDispositivo = relationship("ModeloDispositivo", back_populates="tipoDispositivo")

@@ -1,6 +1,8 @@
+import { useEffect } from "react"; // asegurate de importar esto si no lo tenés
 import { useForm } from "react-hook-form";
 import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";   // <--- Importar axios aquí
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
 import ErrorMessage from "@/components/atoms/ErrorMessage";
@@ -25,7 +27,6 @@ const fetchMarcas = async () => {
   return response.json();
 };
 
-// Función para obtener modelos
 const fetchModelos = async () => {
   const response = await fetch("http://localhost:8000/modelos");
   if (!response.ok) {
@@ -37,26 +38,6 @@ const fetchModelos = async () => {
 const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   const isEditMode = !!diagnostico;
   const navigate = useNavigate();
-
-  // TanStack Query para marcas
-  const {
-    data: marcas,
-    refetch: refetchMarcas,
-    isLoading: isLoadingMarcas,
-  } = useQuery({
-    queryKey: ["marcas"],
-    queryFn: fetchMarcas,
-  });
-
-  // Query para modelos
-  const {
-    data: modelos,
-    refetch: refetchModelos,
-    isLoading: isLoadingModelos,
-  } = useQuery({
-    queryKey: ["modelos"],
-    queryFn: fetchModelos,
-  });
 
   const {
     register,
@@ -75,20 +56,109 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       idEmpleado: isEditMode ? diagnostico.empleado?.idEmpleado : "",
       idCliente: isEditMode ? diagnostico.dispositivo?.cliente?.idCliente : "",
       idTipoDispositivo: isEditMode ? diagnostico.dispositivo?.tipoDispositivo?.idTipoDispositivo : "",
-      idMarcaDispositivo: isEditMode ? diagnostico.dispositivo?.marca?.idMarca : "",
-      idModeloDispositivo: isEditMode ? diagnostico.dispositivo?.modelo?.idModelo : "",
+      idMarcaDispositivo: isEditMode ? diagnostico.dispositivo?.marca?.idMarcaDispositivo : "",
+      idModeloDispositivo: isEditMode ? diagnostico.dispositivo?.modelo?.idModeloDispositivo : "",
       deviceQuestions: [],
     },
   });
 
+  // Primero declaramos idTipoDispositivo y demás para usarlos abajo
+  const idTipoDispositivo = watch("idTipoDispositivo");
+  const [idMarcaDispositivo, setIdMarcaDispositivo] = useState("");
+  const watchDeviceQuestions = watch("deviceQuestions");
+
+  const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [apiErrors, setApiErrors] = useState({});
 
-  const watchTipoDispositivo = watch("idTipoDispositivo");
-  const watchDeviceQuestions = watch("deviceQuestions");
+  const {
+    data: marcas,
+    isLoading: isLoadingMarcas,
+    error: errorMarcas,
+    refetch: refetchMarcas,
+  } = useQuery({
+    queryKey: ["marcas"],
+    queryFn: fetchMarcas,
+    enabled: true,
+  });
+
+// Query para marcas según tipo de dispositivo
+const {
+  data: marcasPorTipo,
+  isLoading: isLoadingMarcasPorTipo,
+  error: errorMarcasPorTipo,
+} = useQuery({
+  queryKey: ["marcasPorTipo", idTipoDispositivo],
+  queryFn: () =>
+    axios
+      .get(`http://localhost:8000/marcas/marcas-por-tipo/${idTipoDispositivo}`)
+      .then((res) => {
+        console.log("📦 Marcas por tipo recibidas (idTipoDispositivo:", idTipoDispositivo, "):", res.data);
+        return res.data;
+      }),
+  enabled: !!idTipoDispositivo,
+});
+
+
+  const fetchModelosPorMarca = async (idMarcaDispositivo) => {
+    try {
+      const res = await axios.get(`/modelos/modelos-por-marca/${idMarcaDispositivo}`);
+      console.log("fetchModelosPorMarca - datos recibidos:", res.data);
+      return res.data;
+    } catch (error) {
+      console.error("fetchModelosPorMarca - error:", error);
+      throw error;
+    }
+  };
+
+  // Query para modelos según marca seleccionada
+  const {
+    data: modelosPorTipoYMarca,
+    isLoading: isLoadingModelos,
+    error: errorModelos,
+    refetch: refetchModelos,
+  } = useQuery({
+    queryKey: ["modelosPorTipoyMarca", idTipoDispositivo, idMarcaDispositivo],
+    queryFn: () =>
+      axios
+        .get(`http://localhost:8000/modelos/modelos-por-tipo-y-marca/`, {
+          params: {
+            id_tipo: idTipoDispositivo,
+            id_marca: idMarcaDispositivo,
+          },
+        })
+        .then((res) => {
+          console.log("📦 Modelos recibidos:", res.data);
+          return res.data;
+        }),
+    enabled: !!idTipoDispositivo && !!idMarcaDispositivo,
+  });
+
+
   
-  const [questions, setQuestions] = useState([]);
+    // 🔍 Logs para depuración
+  useEffect(() => {
+    if (marcas) {
+      console.log("📦 Todas las marcas recibidas:", marcas);
+    }
+  }, [marcas]);
+useEffect(() => {
+  if (idMarcaDispositivo) {
+    setValue("idMarcaDispositivo", idMarcaDispositivo);
+  }
+}, [idMarcaDispositivo, setValue]);
+  useEffect(() => {
+    if (marcasPorTipo) {
+      console.log("📦 Marcas por tipo recibidas (idTipoDispositivo:", idTipoDispositivo, "):", marcasPorTipo);
+    }
+  }, [marcasPorTipo, idTipoDispositivo]);
+  console.log(marcasPorTipo)
+  useEffect(() => {
+    if (modelosPorTipoYMarca) {
+      console.log("📦 Modelos por marca recibidos (idMarcaDispositivo:", idMarcaDispositivo, "):", modelosPorTipoYMarca);
+    }
+  }, [modelosPorTipoYMarca, idMarcaDispositivo]);
 
   const handleQuestionsLoaded = (loadedQuestions) => {
     console.log("🔄 Preguntas recibidas en padre:", loadedQuestions);
@@ -104,7 +174,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
       if (!data.descripcionDiagnostico.trim()) validationErrors.descripcionDiagnostico = "Descripción es requerida";
-      
+      console.log("🔍 Datos recibidos para validación:", data);
       // En modo edición, validamos técnico y descripción
       if (!isEditMode) {
         if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
@@ -397,12 +467,11 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                   <div className="flex-1">
                     <FormSelectSearch
                       label="Marca *"
-                      endpoint="marcas"
+                      data={marcasPorTipo}
                       valueKey="idMarcaDispositivo"
-                      displayKey={(d) => d.descripcionMarcaDispositivo || ""}
-                      value={watch("idMarcaDispositivo")}
-                      setValue={(value) => setValue("idMarcaDispositivo", value)}
-                      {...register("idMarcaDispositivo", { required: "Seleccione una marca" })}
+                      displayKey={(d) => d.descripcionMarcaDispositivo}
+                      value={idMarcaDispositivo}
+                      setValue={setIdMarcaDispositivo}
                     />
                     <ErrorMessage message={errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo} />
                   </div>
@@ -423,12 +492,11 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                   <div className="flex-1">
                     <FormSelectSearch
                       label="Modelo *"
-                      endpoint="modelos"
+                      data={modelosPorTipoYMarca} // 👈 en vez de endpoint
                       valueKey="idModeloDispositivo"
                       displayKey={(d) => d.descripcionModeloDispositivo || ""}
                       value={watch("idModeloDispositivo")}
                       setValue={(value) => setValue("idModeloDispositivo", value)}
-                      {...register("idModeloDispositivo", { required: "Seleccione un modelo" })}
                     />
                     <ErrorMessage message={errors.idModeloDispositivo?.message || apiErrors?.idModeloDispositivo} />
                   </div>
@@ -445,10 +513,10 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
               </div>
             </div>
 
-            {watchTipoDispositivo && (
+            {idTipoDispositivo && (
               <div className="border rounded-lg p-4 mt-4">
                 <DeviceQuestionsDynamic
-                  tipoDispositivo={watchTipoDispositivo}
+                  tipoDispositivo={idTipoDispositivo}
                   value={watchDeviceQuestions}
                   onChange={handleDeviceQuestionsChange}
                   diagnosticoId={diagnostico?.idDiagnostico}

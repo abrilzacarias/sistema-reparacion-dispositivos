@@ -16,10 +16,18 @@ export const getColModelos = ({ refetch }) => [
   },
   {
     header: "Marca",
-    accessorKey: "marcaDispositivo.descripcionMarcaDispositivo", // para acceder a marcaDispositivo.descripcionMarcaDispositivo
+    accessorKey: "marcaDispositivo.descripcionMarcaDispositivo",
     cell: ({ row }) => {
       const marca = row.original.marcaDispositivo?.descripcionMarcaDispositivo || "-";
       return <div>{marca}</div>;
+    },
+  },
+    {
+    header: "Tipo de Dispositivo",  // NUEVA COLUMNA
+    accessorKey: "tipoDispositivo.nombreTipoDispositivo",
+    cell: ({ row }) => {
+      const tipo = row.original.tipoDispositivo?.nombreTipoDispositivo || "-";
+      return <div>{tipo}</div>;
     },
   },
   {

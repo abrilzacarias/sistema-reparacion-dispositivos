@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/atoms/ErrorMessage";
@@ -23,27 +23,33 @@ import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
-    const {
+  const {
     register,
     handleSubmit,
     setValue,
     control,
     formState: { errors },
-    } = useForm({
+  } = useForm({
     mode: "onChange",
     defaultValues: {
-        descripcionModeloDispositivo: modelo?.descripcionModeloDispositivo || "",
-        idMarcaDispositivo: modelo?.idMarcaDispositivo?.toString() || 
-                           modelo?.marcaDispositivo?.idMarcaDispositivo?.toString() || "",
+      descripcionModeloDispositivo: modelo?.descripcionModeloDispositivo || "",
+      idMarcaDispositivo:
+        modelo?.idMarcaDispositivo?.toString() ||
+        modelo?.marcaDispositivo?.idMarcaDispositivo?.toString() ||
+        "",
+      idTipoDispositivo:
+        modelo?.idTipoDispositivo?.toString() ||
+        modelo?.tipoDispositivo?.idTipoDispositivo?.toString() ||
+        "",
     },
-    });
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [apiErrors, setApiErrors] = useState({});
   const { setOpen } = useContext(OpenContext);
 
-  // ✅ Usar usePaginatedQuery con paginación deshabilitada
+  // Traer marcas
   const {
     data: marcas = [],
     isLoading: marcasLoading,
@@ -51,17 +57,18 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
   } = usePaginatedQuery({
     key: "marcas",
     endpoint: "marcas",
-    enablePagination: false, // ← Clave: deshabilitar paginación
+    enablePagination: false,
   });
 
-  // 🔍 Debug: Ver qué datos estamos recibiendo
-  console.log("🔍 Debug marcas:", {
-    marcas,
-    isArray: Array.isArray(marcas),
-    length: marcas?.length,
-    firstItem: marcas?.[0],
-    marcasLoading,
-    marcasError
+  // Traer tipos de dispositivo
+  const {
+    data: tiposDispositivo = [],
+    isLoading: tiposLoading,
+    isError: tiposError,
+  } = usePaginatedQuery({
+    key: "tiposDispositivo",
+    endpoint: "tipo-dispositivo",
+    enablePagination: false,
   });
 
   const onSubmit = async (data) => {
@@ -80,8 +87,7 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
 
       modelo ? ToastMessageEdit() : ToastMessageCreate();
 
-        console.log("refreshModelos en onSubmit es:", refreshModelos, typeof refreshModelos);
-        refreshModelos();
+      refreshModelos();
 
       setOpen(false);
     } catch (err) {
@@ -105,6 +111,7 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+      {/* Descripción */}
       <div className="col-span-2 space-y-2">
         <Label>Descripción del Modelo</Label>
         <Input
@@ -122,49 +129,86 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
         />
       </div>
 
-      <div className="col-span-2 space-y-2">
+      {/* Marca */}
+      <div className="col-span-1 space-y-2">
         <Label>Marca</Label>
-            <Controller
-            control={control}
-            name="idMarcaDispositivo"
-            rules={{ required: "Campo requerido" }}
-            defaultValue={modelo?.idMarcaDispositivo?.toString() || 
-                         modelo?.marcaDispositivo?.idMarcaDispositivo?.toString() || ""}
-            render={({ field }) => (
-                <Select
-                value={field.value || ""} // ← Agregar value explícito
-                onValueChange={(value) => field.onChange(value)}
-                >
-                <SelectTrigger>
-                    <SelectValue placeholder="Seleccione una marca" />
-                </SelectTrigger>
-                <SelectContent>
-                    {Array.isArray(marcas) &&
-                    marcas.map((marca) => (
-                        <SelectItem
-                        key={marca.idMarcaDispositivo}
-                        value={marca.idMarcaDispositivo.toString()}
-                        >
-                        {marca.descripcionMarcaDispositivo}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-                </Select>
-            )}
-            />
-        <ErrorMessage
-          message={
-            errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo
+        <Controller
+          control={control}
+          name="idMarcaDispositivo"
+          rules={{ required: "Campo requerido" }}
+          defaultValue={
+            modelo?.idMarcaDispositivo?.toString() ||
+            modelo?.marcaDispositivo?.idMarcaDispositivo?.toString() ||
+            ""
           }
+          render={({ field }) => (
+            <Select
+              value={field.value || ""}
+              onValueChange={(value) => field.onChange(value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccione una marca" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.isArray(marcas) &&
+                  marcas.map((marca) => (
+                    <SelectItem
+                      key={marca.idMarcaDispositivo}
+                      value={marca.idMarcaDispositivo.toString()}
+                    >
+                      {marca.descripcionMarcaDispositivo}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        <ErrorMessage
+          message={errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo}
+        />
+      </div>
+      {/* Tipo de dispositivo */}
+      <div className="col-span-1 space-y-2">
+        <Label>Tipo de Dispositivo</Label>
+        <Controller
+          control={control}
+          name="idTipoDispositivo"
+          rules={{ required: "Campo requerido" }}
+          defaultValue={
+            modelo?.idTipoDispositivo?.toString() ||
+            modelo?.tipoDispositivo?.idTipoDispositivo?.toString() ||
+            ""
+          }
+          render={({ field }) => (
+            <Select
+              value={field.value || ""}
+              onValueChange={(value) => field.onChange(value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccione un tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.isArray(tiposDispositivo) &&
+                  tiposDispositivo.map((tipo) => (
+                    <SelectItem
+                      key={tipo.idTipoDispositivo}
+                      value={tipo.idTipoDispositivo.toString()}
+                    >
+                      {tipo.nombreTipoDispositivo}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        <ErrorMessage
+          message={errors.idTipoDispositivo?.message || apiErrors?.idTipoDispositivo}
         />
       </div>
 
+      {/* Botones y errores */}
       <div className="col-span-2 flex justify-end mt-3">
-        <ButtonDinamicForms
-          initialData={modelo}
-          isLoading={isLoading}
-          register
-        />
+        <ButtonDinamicForms initialData={modelo} isLoading={isLoading} register />
       </div>
 
       <div className="col-span-2 flex justify-end">

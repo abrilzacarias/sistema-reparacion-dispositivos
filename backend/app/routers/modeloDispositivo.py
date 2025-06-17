@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
-
+from app import models
 from app.schemas import modeloDispositivo as schemas
 from app.services import modeloDispositivo as services
 from app.database import get_db
@@ -52,3 +52,22 @@ def delete_modelo(idModeloDispositivo: int, db: Session = Depends(get_db)):
     if not modelo:
         raise HTTPException(status_code=404, detail="Modelo no encontrado")
     return {"mensaje": "Modelo dado de baja correctamente"}
+
+@router.get("/modelos-por-marca/{id_marca}", response_model=List[schemas.ModeloDispositivoOut])
+def get_modelos_por_marca(id_marca: int, db: Session = Depends(get_db)):
+    modelos = (
+        db.query(models.ModeloDispositivo)
+        .filter(models.ModeloDispositivo.idMarcaDispositivo == id_marca)
+        .filter(models.ModeloDispositivo.estadoModeloDispositivo == 1)
+        .all()
+    )
+    return modelos
+
+@router.get("/modelos-por-tipo-y-marca/")
+def get_modelos_por_tipo_y_marca(id_tipo: int, id_marca: int, db: Session = Depends(get_db)):
+    modelos = db.query(models.ModeloDispositivo).filter_by(
+        idTipoDispositivo=id_tipo,
+        idMarcaDispositivo=id_marca
+    ).all()
+
+    return modelos

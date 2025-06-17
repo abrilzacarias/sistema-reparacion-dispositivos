@@ -21,7 +21,7 @@ export default function ModelosSection() {
 
   const {
     data: modelos,
-    refetch,
+    refetch: refetchModelos,
     isLoading,
     isError,
   } = usePaginatedQuery({
@@ -32,14 +32,25 @@ export default function ModelosSection() {
     data: marcas,
     isLoading: isLoadingMarcas,
     isError: isErrorMarcas,
-    } = usePaginatedQuery({
+  } = usePaginatedQuery({
     key: "marcas",
     endpoint: "marcas",
-    })
+  })
+
+  const {
+    data: tiposDispositivo,
+    isLoading: isLoadingTipos,
+    isError: isErrorTipos,
+  } = usePaginatedQuery({
+    key: "tiposDispositivo",
+    endpoint: "tipo-dispositivo",
+  })
 
   const filteredModelos = Array.isArray(modelos)
     ? modelos.filter((modelo) =>
-        modelo?.descripcionModeloDispositivo?.toLowerCase().includes(searchTerm.toLowerCase())
+        modelo?.descripcionModeloDispositivo
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())
       )
     : []
 
@@ -57,7 +68,6 @@ export default function ModelosSection() {
     if (
       confirm(`¿Está seguro de eliminar el modelo "${modelo.descripcionModeloDispositivo}"?`)
     ) {
-      // Lógica real de eliminación
       console.log("Eliminar modelo:", modelo)
     }
   }
@@ -85,6 +95,7 @@ export default function ModelosSection() {
           <TableHeader>
             <TableRow>
               <TableHead>Nombre del Modelo</TableHead>
+              <TableHead>Tipo de dispositivo</TableHead> {/* Agregado */}
               <TableHead>Marca</TableHead>
               <TableHead className="text-right">Acciones</TableHead>
             </TableRow>
@@ -92,19 +103,19 @@ export default function ModelosSection() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center py-8">
+                <TableCell colSpan={4} className="text-center py-8">
                   Cargando modelos...
                 </TableCell>
               </TableRow>
             ) : isError ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center py-8 text-red-500">
+                <TableCell colSpan={4} className="text-center py-8 text-red-500">
                   Error al cargar modelos
                 </TableCell>
               </TableRow>
             ) : filteredModelos.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center py-8">
+                <TableCell colSpan={4} className="text-center py-8">
                   No se encontraron modelos
                 </TableCell>
               </TableRow>
@@ -116,6 +127,9 @@ export default function ModelosSection() {
                   </TableCell>
                   <TableCell>
                     {modelo?.marca?.descripcionMarcaDispositivo || "Sin marca"}
+                  </TableCell>
+                  <TableCell>
+                    {modelo?.tipoDispositivo?.nombreTipoDispositivo || "Sin tipo"}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -143,23 +157,24 @@ export default function ModelosSection() {
         </Table>
       </div>
 
-        // En el ModalFormTemplate
-        <ModalFormTemplate
+      {/* En el ModalFormTemplate */}
+      <ModalFormTemplate
         open={isModalOpen}
         setOpen={setIsModalOpen}
         title={selectedModelo ? "Editar Modelo" : "Crear Modelo"}
         description={
-            selectedModelo
+          selectedModelo
             ? "Modifica los datos del modelo"
             : "Completa los datos del nuevo modelo"
         }
-        >
+      >
         <ModelosCreateEdit
-            modelo={selectedModelo}
-            refreshModelos={refetchModelos} 
-            marcas={marcas}
+          modelo={selectedModelo}
+          refreshModelos={refetchModelos}
+          marcas={marcas}
+          tiposDispositivo={tiposDispositivo}
         />
-        </ModalFormTemplate>
+      </ModalFormTemplate>
     </div>
   )
 }
