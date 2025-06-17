@@ -29,52 +29,59 @@ def create_persona(db: Session, persona_data: PersonaCreate):
     if persona_existente:
         raise HTTPException(status_code=400, detail="Ya existe una persona con ese CUIT.")
 
-    persona = Persona(
-        cuit=persona_data.cuit,
-        nombre=persona_data.nombre,
-        apellido=persona_data.apellido,
-        fechaNacimiento=persona_data.fechaNacimiento,
-        estadoPersona=1,
-    )
-    db.add(persona)
-    db.commit()
-    db.refresh(persona)
-
-    for contacto_data in persona_data.contactos:
-        print(contacto_data)
-        contacto_existente = db.query(Contacto).filter(
-            func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
-        ).first()
-
-        if contacto_existente:
-            raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
-
-        contacto = Contacto(
-            descripcionContacto=contacto_data.descripcionContacto,
-            idtipoContacto=contacto_data.idtipoContacto,
-            esPrimario=contacto_data.esPrimario,
-            idPersona=persona.idPersona
+    try:
+        persona = Persona(
+            cuit=persona_data.cuit,
+            nombre=persona_data.nombre,
+            apellido=persona_data.apellido,
+            fechaNacimiento=persona_data.fechaNacimiento,
+            estadoPersona=1,
         )
-        db.add(contacto)
+        db.add(persona)
+        db.flush()
 
-    for domicilio_data in persona_data.domicilios:
-        domicilio = Domicilio(
-            codigoPostal=domicilio_data.codigoPostal,
-            pais=domicilio_data.pais,
-            provincia=domicilio_data.provincia,
-            ciudad=domicilio_data.ciudad,
-            barrio=domicilio_data.barrio,
-            calle=domicilio_data.calle,
-            numero=domicilio_data.numero,
-            departamento=domicilio_data.departamento,
-            idtipoDomicilio=domicilio_data.idtipoDomicilio,
-            idPersona=persona.idPersona
-        )
-        db.add(domicilio)
+        for contacto_data in persona_data.contactos:
+            contacto_existente = db.query(Contacto).filter(
+                func.lower(Contacto.descripcionContacto) == contacto_data.descripcionContacto.lower()
+            ).first()
 
-    db.commit()
-    return persona
+            if contacto_existente:
+                raise HTTPException(status_code=400, detail=f"El contacto '{contacto_data.descripcionContacto}' ya está en uso por otra persona.")
 
+            contacto = Contacto(
+                descripcionContacto=contacto_data.descripcionContacto,
+                idtipoContacto=contacto_data.idtipoContacto,
+                esPrimario=contacto_data.esPrimario,
+                idPersona=persona.idPersona
+            )
+            db.add(contacto)
+
+        for domicilio_data in persona_data.domicilios:
+            domicilio = Domicilio(
+                codigoPostal=domicilio_data.codigoPostal,
+                pais=domicilio_data.pais,
+                provincia=domicilio_data.provincia,
+                ciudad=domicilio_data.ciudad,
+                barrio=domicilio_data.barrio,
+                calle=domicilio_data.calle,
+                numero=domicilio_data.numero,
+                departamento=domicilio_data.departamento,
+                idtipoDomicilio=domicilio_data.idtipoDomicilio,
+                idPersona=persona.idPersona
+            )
+            db.add(domicilio)
+
+        db.commit()
+        db.refresh(persona)
+        return persona
+
+    except HTTPException as e:
+        db.rollback()
+        raise e
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error al crear persona")
 
 def update_persona(db: Session, idPersona: int, persona_data: PersonaUpdate):
     print('updateando')
