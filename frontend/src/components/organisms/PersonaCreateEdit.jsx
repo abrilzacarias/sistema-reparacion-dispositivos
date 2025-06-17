@@ -232,6 +232,9 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       }
 
       goToEmpleadoTab()
+      setTimeout(() => {
+    setOpen(false)
+  }) 
     } catch (err) {
       console.error("Error al guardar persona:", err)
       console.error("Response data:", err.response?.data)
