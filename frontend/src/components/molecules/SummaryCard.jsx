@@ -1,9 +1,9 @@
 import React from 'react';
 
 const SummaryCard = ({ title, count, icon: Icon, variant = 'default', children }) => {
-  let cardClasses = "bg-card text-card-foreground"; // Default card background and text
-  let iconContainerClasses = "bg-muted dark:bg-slate-700"; // Default icon container background
-  let iconClasses = "text-muted-foreground dark:text-slate-300"; // Default icon color
+  let cardClasses = "bg-card text-card-foreground"; 
+  let iconContainerClasses = "bg-muted dark:bg-slate-700";
+  let iconClasses = "text-muted-foreground dark:text-slate-300"; 
   const titleTextClasses = "text-muted-foreground dark:text-slate-400";
   const countTextClasses = "text-card-foreground dark:text-white";
 
@@ -24,14 +24,14 @@ const SummaryCard = ({ title, count, icon: Icon, variant = 'default', children }
       iconClasses = "text-red-600 dark:text-red-400";
       break;
     default:
-      // Default uses bg-card, text-card-foreground from the initial values
-      // Ensure default text colors are also theme-aware if not covered by cardClasses
-      // titleTextClasses and countTextClasses handle this.
       break;
   }
 
   return (
-    <div className={`p-4 rounded-lg shadow-md ${cardClasses}`}>
+    <div className={`p-4 rounded-lg shadow-md ${cardClasses}`}
+         role="region"
+         aria-label={title}
+    >
       <div className="flex justify-between items-start">
         <div>
           <p className={`text-sm font-medium ${titleTextClasses}`}>{title}</p>
