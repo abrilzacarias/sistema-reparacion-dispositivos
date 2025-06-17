@@ -9,7 +9,10 @@ from app.services import reparacion as reparacion_service
 
 router = APIRouter(prefix="/reparaciones", tags=["reparaciones"])
 
-# ✅ PAGINADO
+@router.get("/summary-status", summary="Conteo de reparaciones por estado actual")
+def reparaciones_summary_status(db: Session = Depends(get_db)):
+    return reparacion_service.get_reparaciones_status_summary(db)
+
 @router.get("/", response_model=Page[ReparacionOut])
 def read_reparaciones(db: Session = Depends(get_db)):
     return paginate(reparacion_service.get_reparaciones(db))
@@ -40,7 +43,7 @@ def delete_reparacion(id: int, db: Session = Depends(get_db)):
             raise HTTPException(status_code=404, detail="Reparación no encontrada")
         return deleted
     except HTTPException as e:
-        raise e  # ← Esto conserva el mensaje y código original
+        raise e
     except Exception as e:
         print(f"Error inesperado al eliminar reparación: {e}")
         raise HTTPException(status_code=500, detail="Error inesperado al eliminar la reparación.")

@@ -49,7 +49,6 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
   const [apiErrors, setApiErrors] = useState({});
   const { setOpen } = useContext(OpenContext);
 
-  // Traer marcas
   const {
     data: marcas = [],
     isLoading: marcasLoading,
@@ -60,7 +59,6 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
     enablePagination: false,
   });
 
-  // Traer tipos de dispositivo
   const {
     data: tiposDispositivo = [],
     isLoading: tiposLoading,
@@ -111,7 +109,6 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
-      {/* Descripción */}
       <div className="col-span-2 space-y-2">
         <Label>Descripción del Modelo</Label>
         <Input
@@ -129,7 +126,6 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
         />
       </div>
 
-      {/* Marca */}
       <div className="col-span-1 space-y-2">
         <Label>Marca</Label>
         <Controller
@@ -167,7 +163,6 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
           message={errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo}
         />
       </div>
-      {/* Tipo de dispositivo */}
       <div className="col-span-1 space-y-2">
         <Label>Tipo de Dispositivo</Label>
         <Controller
@@ -205,8 +200,7 @@ const ModelosCreateEdit = ({ modelo, refreshModelos }) => {
           message={errors.idTipoDispositivo?.message || apiErrors?.idTipoDispositivo}
         />
       </div>
-
-      {/* Botones y errores */}
+      
       <div className="col-span-2 flex justify-end mt-3">
         <ButtonDinamicForms initialData={modelo} isLoading={isLoading} register />
       </div>

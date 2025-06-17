@@ -4,6 +4,7 @@ import { usePaginatedQuery } from "@/hooks/usePaginatedQuery";
 import { StatusBadge } from "@/components/molecules/StatusBadge"
 import SummaryCard from "@/components/molecules/SummaryCard"
 import { Wrench, Check, AlertCircle } from "lucide-react"
+import { useRepairStatusSummary } from "@/hooks/useRepairStatusSummary"
 
 export function Dashboard() {
   const {
@@ -20,6 +21,57 @@ export function Dashboard() {
     endpoint: "notificaciones/notificaciones",
     pageSize: 5,          
   });
+
+  const {
+    data: statusSummary,
+    isLoading: isLoadingSummary,
+    isError: isErrorSummary,
+    refetch: refetchSummary
+  } = useRepairStatusSummary();
+
+  const estadoMap = {
+    "En Curso": "En curso",
+    "Listas para entrega": "Listas para entrega",
+    "Pendiente": "Pendiente",
+    "Presupuestado": "Pendiente",
+    "Finalizado": "Listas para entrega" 
+  };
+
+  function getFrontendSummary(statusSummary) {
+    const summary = {};
+    for (const [key, value] of Object.entries(statusSummary || {})) {
+      const mappedKey = estadoMap[key] || key;
+      summary[mappedKey] = (summary[mappedKey] || 0) + value;
+    }
+    return summary;
+  }
+
+  const estados = {
+    "En curso": {
+      title: "Reparaciones en curso",
+      icon: Wrench,
+      variant: "info",
+    },
+    "Listas para entrega": {
+      title: "Reparaciones listas para entrega",
+      icon: Check,
+      variant: "success",
+    },
+    "Pendiente": {
+      title: "Reparaciones pendientes",
+      icon: AlertCircle,
+      variant: "destructive",
+    },
+  };
+
+  function getCardProps(estado) {
+    return estados[estado] || {
+      title: estado,
+      icon: AlertCircle,
+      variant: "default",
+    };
+  }
+
   return (
     <div className="space-y-6 bg-back">
       <h2 className="text-2xl font-semibold flex items-center gap-2">
@@ -44,33 +96,30 @@ export function Dashboard() {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <SummaryCard
-          title="Reparaciones en curso"
-          count={10} //REVISAR
-          icon={Wrench}
-          variant="info"
-        />
-
-        <SummaryCard
-          title="Reparaciones listas para entrega"
-          count={2} //REVISAR
-          icon={Check}
-          variant="success"
-        >
-          <StatusBadge status="success">Listas para entrega</StatusBadge>
-        </SummaryCard>
-
-        <SummaryCard
-          title="Reparaciones demoradas"
-          count={1} //REVISAR
-          icon={AlertCircle}
-          variant="destructive"
-        >
-          <StatusBadge status="error">Demoradas</StatusBadge>
-        </SummaryCard>
+        {isLoadingSummary ? (
+          <>
+            <SummaryCard title="Reparaciones en curso" count={"..."} icon={Wrench} variant="info" />
+            <SummaryCard title="Reparaciones listas para entrega" count={"..."} icon={Check} variant="success" />
+            <SummaryCard title="Reparaciones pendientes" count={"..."} icon={AlertCircle} variant="destructive" />
+          </>
+        ) : (
+           Object.entries(estados).map(([estadoKey, props]) => {
+            const summary = getFrontendSummary(statusSummary);
+            return (
+              <SummaryCard
+                key={estadoKey}
+                title={props.title}
+                count={summary[estadoKey] ?? 0}
+                icon={props.icon}
+                variant={props.variant}
+              >
+                {estadoKey === "Listas para entrega" && <StatusBadge status="success">Listas para entrega</StatusBadge>}
+              </SummaryCard>
+            );
+          })
+        )}
       </div>
 
-      {/* Styled Notifications Section Start */}
       <div className="bg-sky-50 dark:bg-slate-900 p-4 sm:p-6 rounded-lg shadow-md mt-8">
         <div className="mb-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-sky-800 dark:text-slate-100">
@@ -94,17 +143,17 @@ export function Dashboard() {
           <p className="text-sm text-sky-600 dark:text-slate-300 mt-1 ml-8">Un vistazo rápido a las alertas y eventos más recientes del sistema.</p>
         </div>
         <DataTable
-          columns={getColumnsNotifications()} // Columns definition for notifications
-          data={notifications ?? []} // Data from usePaginatedQuery
+          columns={getColumnsNotifications()}
+          data={notifications ?? []}
           isLoading={isLoadingNotifications}
           isError={isErrorNotifications}
           isFetching={isFetchingNotifications}
-          fetchNextPage={fetchNextNotificationsPage} // For pagination (load more)
-          hasNextPage={hasNextNotificationsPage}     // To enable/disable load more
-          refetch={refetchNotifications}           // To allow manual refetch if needed
-          totalUsers={totalNotifications}      // Pass total for header and pagination logic
-          searchTarget="mensaje"               // Enable search by notification message
-          placeholder="Buscar notificaciones..." // Custom placeholder for the search input
+          fetchNextPage={fetchNextNotificationsPage} 
+          hasNextPage={hasNextNotificationsPage} 
+          refetch={refetchNotifications}   
+          totalUsers={totalNotifications} 
+          searchTarget="mensaje"  
+          placeholder="Buscar notificaciones..."
         />
       </div>
       {/* Styled Notifications Section End */}

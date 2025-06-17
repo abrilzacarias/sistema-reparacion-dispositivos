@@ -9,7 +9,6 @@ from fastapi import HTTPException
 from app.services.detalleReparacion import actualizar_monto_total_reparacion
 from sqlalchemy import desc
 from app.models.historialAsignacionReparacion import HistorialAsignacionReparacion
-#Formato Argentina PAPA!! Aguanteeee messi, y el vino sin soda asi pega más
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -22,7 +21,6 @@ def get_reparacion(db: Session, id: int):
         )\
         .filter(Reparacion.idReparacion == id).first()
 
-
 def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Reparacion)\
         .options(
@@ -34,24 +32,57 @@ def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
         .offset(skip)\
         .limit(limit)\
 
+def get_reparaciones_status_summary(db: Session):
+    from sqlalchemy import func
+    from app.models.registroEstadoReparacion import RegistroEstadoReparacion
+    from app.models.estadoReparacion import EstadoReparacion
+    subq = (
+        db.query(
+            RegistroEstadoReparacion.idReparacion,
+            func.max(RegistroEstadoReparacion.fechaHoraRegistroEstadoReparacion).label("max_fecha")
+        )
+        .group_by(RegistroEstadoReparacion.idReparacion)
+        .subquery()
+    )
+
+    print("[DEBUG] Subconsulta (último estado por reparación):")
+    subq_rows = db.query(subq).all()
+    for row in subq_rows:
+        print(row)
+    q = (
+        db.query(
+            EstadoReparacion.descripcionEstadoReparacion,
+            func.count().label("cantidad")
+        )
+        .join(RegistroEstadoReparacion, RegistroEstadoReparacion.idEstadoReparacion == EstadoReparacion.idEstadoReparacion)
+        .join(subq, (subq.c.idReparacion == RegistroEstadoReparacion.idReparacion) & (subq.c.max_fecha == RegistroEstadoReparacion.fechaHoraRegistroEstadoReparacion))
+        .group_by(EstadoReparacion.descripcionEstadoReparacion)
+    )
+
+    print("[DEBUG] Resultado de la consulta principal (conteo por estado):")
+    for row in q.all():
+        print(f"Estado: {row.descripcionEstadoReparacion}, Cantidad: {row.cantidad}")
+
+    resultado = {row.descripcionEstadoReparacion: row.cantidad for row in q.all()}
+    print("[DEBUG] Diccionario final de resultado:", resultado)
+    return resultado
+
 def create_reparacion(db: Session, reparacion: ReparacionCreate):
     db_reparacion = Reparacion(**reparacion.dict())
     db.add(db_reparacion)
     db.commit()
     db.refresh(db_reparacion)
-     # Registrar asignación inicial si tiene empleado
     if db_reparacion.idEmpleado:
         historial = HistorialAsignacionReparacion(
             idReparacion=db_reparacion.idReparacion,
             idEmpleado=db_reparacion.idEmpleado,
             fechaInicioAsignacionReparacion=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
-            fechaFinAsignacionReparacion=None  # Hasta que termine la asignación
+            fechaFinAsignacionReparacion=None
         )
         db.add(historial)
         db.commit()
 
     return db_reparacion
-
 
 def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     db_reparacion = db.query(Reparacion).filter(Reparacion.idReparacion == id).first()
@@ -64,17 +95,13 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     id_estado = update_data.pop("idEstadoReparacion", None)
     id_empleado_estado = update_data.pop("idEmpleadoEstado", None)
 
-    # Guardar idEmpleado anterior para detectar cambio
     id_empleado_anterior = db_reparacion.idEmpleado
     id_empleado_nuevo = update_data.get("idEmpleado")
 
-    # Actualizar campos de la reparación
     for key, value in update_data.items():
         setattr(db_reparacion, key, value)
 
-    # Registrar cambio de asignación de empleado si hubo un cambio
     if id_empleado_nuevo and id_empleado_nuevo != id_empleado_anterior:
-        # Cerrar la asignación anterior (fechaFinAsignacion)
         historial_anterior = db.query(HistorialAsignacionReparacion)\
             .filter(
                 HistorialAsignacionReparacion.idReparacion == id,
@@ -85,8 +112,6 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
         if historial_anterior:
             historial_anterior.fechaFinAsignacionReparacion = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
             db.add(historial_anterior)
-
-        # Crear nuevo registro de asignación con fechaInicioAsignacion
         nuevo_historial = HistorialAsignacionReparacion(
             idReparacion=id,
             idEmpleado=id_empleado_nuevo,
@@ -94,8 +119,6 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
             fechaFinAsignacionReparacion=None
         )
         db.add(nuevo_historial)
-
-    # Crear un nuevo registro de estado si se proporcionan los datos
     nuevo_estado_registro = None
     if id_estado and id_empleado_estado:
         nuevo_estado_registro = RegistroEstadoReparacion(
@@ -109,13 +132,11 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     db.commit()
     db.refresh(db_reparacion)
 
-    # Determinar el estado más reciente
     if nuevo_estado_registro:
         db.refresh(nuevo_estado_registro)
         estado_actual = nuevo_estado_registro.estadoReparacion
         descripcion_estado = estado_actual.descripcionEstadoReparacion
     else:
-        # Buscar último estado registrado si no se creó uno nuevo
         ultimo_estado = db.query(RegistroEstadoReparacion)\
             .options(selectinload(RegistroEstadoReparacion.estadoReparacion))\
             .filter(RegistroEstadoReparacion.idReparacion == id)\
@@ -126,8 +147,6 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
             descripcion_estado = estado_actual.descripcionEstadoReparacion
         else:
             descripcion_estado = None
-
-    # Lógica de fechaEgreso
     if descripcion_estado == "Entregado":
         db_reparacion.fechaEgreso = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
     else:
@@ -138,15 +157,10 @@ def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
 
     return db_reparacion
 
-
-
-
 def delete_reparacion(db: Session, id: int):
     db_reparacion = get_reparacion(db, id)
     if not db_reparacion:
         return None
-
-    # Verificar si hay detalles asociados a la reparación
     detalles = db.query(DetalleReparacion).filter_by(idReparacion=id).first()
     if detalles:
         raise HTTPException(
@@ -157,7 +171,3 @@ def delete_reparacion(db: Session, id: int):
     db.delete(db_reparacion)
     db.commit()
     return db_reparacion
-
-
-
-

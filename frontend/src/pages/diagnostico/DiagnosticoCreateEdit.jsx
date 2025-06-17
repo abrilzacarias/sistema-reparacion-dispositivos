@@ -1,8 +1,8 @@
-import { useEffect } from "react"; // asegurate de importar esto si no lo tenés
+import { useEffect } from "react"; 
 import { useForm } from "react-hook-form";
 import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";   // <--- Importar axios aquí
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
 import ErrorMessage from "@/components/atoms/ErrorMessage";
@@ -18,7 +18,6 @@ import { Plus } from "lucide-react";
 import { ToastMessageCreate } from "@/components/atoms/ToastMessage";
 import { useNavigate } from "react-router-dom";
 
-// Función para obtener marcas
 const fetchMarcas = async () => {
   const response = await fetch("http://localhost:8000/marcas");
   if (!response.ok) {
@@ -62,12 +61,9 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     },
   });
 
-  // Primero declaramos idTipoDispositivo y demás para usarlos abajo
   const idTipoDispositivo = watch("idTipoDispositivo");
   const [idMarcaDispositivo, setIdMarcaDispositivo] = useState("");
-  //const watchDeviceQuestions = watch("deviceQuestions");
 
-  //const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [apiErrors, setApiErrors] = useState({});
@@ -173,17 +169,14 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
       console.log("🧪 Enviando:", JSON.stringify(diagnosticoData, null, 2));
 
-      // Set the correct URL based on API documentation
       let url;
       let method;
       
       if (isEditMode) {
-        // Use the exact endpoint from API documentation: PUT /diagnostico/{idDiagnostico}
         url = `http://localhost:8000/diagnostico/${diagnostico.idDiagnostico}`;
         method = "PUT";
         console.log(`📝 Edit mode: Using API documented endpoint: ${url}`);
       } else {
-        // For creation, keep the original endpoint
         url = "http://localhost:8000/diagnostico/diagnostico";
         method = "POST";
         console.log(`🆕 Create mode: Using endpoint: ${url}`);
@@ -210,19 +203,16 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
           const errorData = await response.text();
           console.log("🔍 Error response body:", errorData);
           
-          // Try to parse as JSON first
           try {
             const jsonError = JSON.parse(errorData);
             errorMessage = jsonError.detail || jsonError.message || errorMessage;
           } catch {
-            // If not JSON, use the text as is
             errorMessage = errorData || errorMessage;
           }
         } catch (e) {
           console.error("Error reading response:", e);
         }
-        
-        // Provide specific error messages for common HTTP status codes
+
         if (response.status === 404) {
           if (isEditMode) {
             errorMessage = `El diagnóstico con ID ${diagnostico.idDiagnostico} no fue encontrado. Posiblemente fue eliminado o el endpoint de actualización no existe.`;
@@ -238,7 +228,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         throw new Error(errorMessage);
       }
 
-      // Success handling
       if (refreshDiagnosticos) refreshDiagnosticos();
       if (!isEditMode) {
         reset();
@@ -322,7 +311,6 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                 </div>
               </div>
 
-              {/* ← MODIFICAR ESTA SECCIÓN PARA MARCA */}
               <div className="col-span-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
@@ -344,12 +332,11 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     variant="default"
                     className="p-2 m-0 cursor-pointer"
                   >
-                    <MarcasCreateEdit refreshMarcas={refetchMarcas} />
+                    <MarcasCreateEdit refreshMarcas={fetchMarcas} />
                   </ModalFormTemplate>
                 </div>
               </div>
 
-              {/* ← MODIFICAR ESTA SECCIÓN PARA MODELO */}
               <div className="col-span-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
@@ -371,7 +358,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     variant="default"
                     className="p-2 m-0 cursor-pointer"
                   >
-                    <ModelosCreateEdit refreshModelos={refetchModelos} />
+                    <ModelosCreateEdit refreshModelos={fetchModelos} />
                   </ModalFormTemplate>
                 </div>
               </div>
