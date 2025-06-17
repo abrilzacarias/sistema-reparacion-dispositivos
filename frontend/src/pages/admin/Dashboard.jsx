@@ -74,53 +74,103 @@ export function Dashboard() {
 
   return (
     <div className="space-y-6 bg-back">
-      <h2 className="text-2xl font-semibold flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-layout-dashboard"
-        >
-          <rect width="7" height="9" x="3" y="3" rx="1" />
-          <rect width="7" height="5" x="14" y="3" rx="1" />
-          <rect width="7" height="9" x="14" y="12" rx="1" />
-          <rect width="7" height="5" x="3" y="16" rx="1" />
-        </svg>
-        Resumen general
-      </h2>
+      <section
+        className="w-full"
+        aria-label="Resumen de reparaciones"
+        role="region"
+      >
+        <h2 className="text-2xl font-semibold flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-layout-dashboard"
+          >
+            <rect width="7" height="9" x="3" y="3" rx="1" />
+            <rect width="7" height="5" x="14" y="3" rx="1" />
+            <rect width="7" height="9" x="14" y="12" rx="1" />
+            <rect width="7" height="5" x="3" y="16" rx="1" />
+          </svg>
+          Resumen general
+        </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {isLoadingSummary ? (
-          <>
-            <SummaryCard title="Reparaciones en curso" count={"..."} icon={Wrench} variant="info" />
-            <SummaryCard title="Reparaciones listas para entrega" count={"..."} icon={Check} variant="success" />
-            <SummaryCard title="Reparaciones pendientes" count={"..."} icon={AlertCircle} variant="destructive" />
-          </>
-        ) : (
-           Object.entries(estados).map(([estadoKey, props]) => {
-            const summary = getFrontendSummary(statusSummary);
-            return (
-              <SummaryCard
-                key={estadoKey}
-                title={props.title}
-                count={summary[estadoKey] ?? 0}
-                icon={props.icon}
-                variant={props.variant}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {isLoadingSummary ? (
+            <>
+              <SummaryCard 
+                title="Reparaciones en curso" 
+                count={"..."} 
+                icon={Wrench} 
+                variant="info"
+                tabIndex={0}
+                className={`p-4 rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                role="region"
+                aria-label="Reparaciones en curso"
               >
-                {estadoKey === "Listas para entrega" && <StatusBadge status="success">Listas para entrega</StatusBadge>}
-              </SummaryCard>
-            );
-          })
-        )}
-      </div>
+                <StatusBadge status="success">En curso</StatusBadge>
+              </SummaryCard>  
+              <SummaryCard 
+                title="Reparaciones listas para entrega" 
+                count={"..."} 
+                icon={Check} 
+                variant="success"
+                tabIndex={0}
+                className={`p-4 rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                role="region"
+                aria-label="Reparaciones listas para entrega"
+              >
+                <StatusBadge status="success">Listas para entrega</StatusBadge>
+              </SummaryCard>  
+              <SummaryCard 
+                title="Reparaciones pendientes" 
+                count={"..."} 
+                icon={AlertCircle} 
+                variant="destructive"
+                tabIndex={0}
+                className={`p-4 rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                role="region"
+                aria-label="Reparaciones pendientes"
+              >
+                <StatusBadge status="success">Pendientes</StatusBadge>
+              </SummaryCard>  
+            </>
+          ) : (
+             Object.entries(estados).map(([estadoKey, props]) => {
+              const summary = getFrontendSummary(statusSummary);
+              return (
+                <SummaryCard
+                  key={estadoKey}
+                  title={props.title}
+                  count={summary[estadoKey] ?? 0}
+                  icon={props.icon}
+                  variant={props.variant}
+                  tabIndex={0}
+                  className={`p-4 rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                  role="region"
+                  aria-label={props.title}
+                >
+                  {estadoKey === "En curso" && <StatusBadge status="info">En curso</StatusBadge>}
+                  {estadoKey === "Listas para entrega" && <StatusBadge status="success">Listas para entrega</StatusBadge>}
+                  {estadoKey === "Pendiente" && <StatusBadge status="destructive">Pendientes</StatusBadge>}
+                </SummaryCard>
+              );
+            })
+          )}
+        </div>
+      </section>
 
-      <div className="bg-sky-50 dark:bg-slate-900 p-4 sm:p-6 rounded-lg shadow-md mt-8">
+      <section
+         className="bg-sky-50 dark:bg-slate-900 p-4 sm:p-6 rounded-lg shadow-md mt-8"
+         aria-label="Últimas notificaciones"
+         role="region"
+       >
         <div className="mb-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2 text-sky-800 dark:text-slate-100">
             <svg
@@ -155,8 +205,7 @@ export function Dashboard() {
           searchTarget="mensaje"  
           placeholder="Buscar notificaciones..."
         />
-      </div>
-      {/* Styled Notifications Section End */}
+      </section>
     </div>
   )
 }
