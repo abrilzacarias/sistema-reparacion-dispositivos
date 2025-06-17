@@ -47,7 +47,7 @@ const ReparacionesPage = () => {
           title="Gestión de Reparaciones"
           subTitle="Listado, registro y modificación de las reparaciones."
         >
-          <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
+          <ButtonRefetch isRefetching={isRefetching} refetch={refetch} loading={isLoading} />
 
 {tienePermiso("Reparaciones", "Agregar Reparación") && (
           <DropdownMenu>

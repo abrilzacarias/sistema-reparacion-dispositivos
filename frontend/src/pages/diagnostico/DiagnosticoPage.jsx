@@ -55,7 +55,7 @@ const DiagnosticosPage = () => {
           subTitle="Listado, registro y modificación de diagnósticos."
         >
           <div className="flex items-center gap-2">
-            <ButtonRefetch isFetching={isRefetching} refetch={refetch} />
+            <ButtonRefetch isRefetching={isRefetching} refetch={refetch} loading={isLoading} />
 
             {/* Exportar */}
             {tienePermiso("Diagnóstico", "Ver Reporte Diagnóstico") && (
@@ -69,7 +69,6 @@ const DiagnosticosPage = () => {
                 }
                 buttonProps={{
                   variant: "outline",
-                  size: "sm",
                   className: "gap-2",
                   label: "Exportar",
                   icon: <Download className="h-4 w-4" />,

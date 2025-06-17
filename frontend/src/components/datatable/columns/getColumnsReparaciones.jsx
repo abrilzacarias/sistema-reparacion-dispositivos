@@ -327,7 +327,7 @@ export const getColumnsReparaciones = ({ refetch }) => {
                 <Ellipsis className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuContent align="end" className="w-46">
               <DropdownMenuItem asChild>
                 <ModalFormTemplate
                   title="Detalles de Reparación"

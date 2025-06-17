@@ -146,7 +146,6 @@ const ClientePage = () => {
                 title="Clientes"
                 buttonProps={{
                   variant: "outline",
-                  size: "sm",
                   className: "gap-2",
                   label: "Exportar",
                   icon: <Download className="h-4 w-4" />,

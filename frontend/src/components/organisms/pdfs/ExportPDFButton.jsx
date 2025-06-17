@@ -50,7 +50,7 @@ const ExportPDFButton = ({ data, columns, title = "Reporte", buttonLabel = "Desc
       fileName={`${title.replace(/\s+/g, '_').toLowerCase()}.pdf`}
     >
       {({ loading }) => (
-        <Button variant="ghost" size="sm" {...buttonProps}>
+        <Button variant="ghost" {...buttonProps}>
           {loading ? "Generando PDF..." : buttonLabel}
         </Button>
       )}

@@ -10,9 +10,8 @@ export const usePaginatedQuery = ({
 }) => {
   const API_URL = import.meta.env.VITE_API_URL;
   
-  // ✅ Query simple (sin paginación)
   const simpleQuery = useQuery({
-    queryKey: [key, 'simple'], // ← Diferente key para evitar conflictos
+    queryKey: [key, 'simple'], 
     queryFn: async () => {
       const response = await fetch(`${API_URL}/${endpoint}`);
       if (!response.ok) {
@@ -25,9 +24,8 @@ export const usePaginatedQuery = ({
     enabled: !enablePagination,
   });
 
-  // ✅ Query paginado
   const paginatedQuery = useInfiniteQuery({
-    queryKey: [key, 'paginated'], // ← Diferente key para evitar conflictos
+    queryKey: [key, 'paginated'],
     queryFn: ({ pageParam = 1 }) =>
       fetchPaginated({ endpoint, pageParam, pageSize }),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -36,23 +34,18 @@ export const usePaginatedQuery = ({
     enabled: enablePagination,
   });
 
-  // ✅ Retornar datos según el tipo de query con validaciones extra
   if (!enablePagination) {
-    // ✅ Manejo flexible de la estructura de respuesta
     let processedData = [];
     if (simpleQuery.data) {
-      // Si la respuesta es directamente un array
       if (Array.isArray(simpleQuery.data)) {
         processedData = simpleQuery.data;
       }
-      // Si la respuesta tiene una propiedad 'data' o 'results'
       else if (simpleQuery.data.data && Array.isArray(simpleQuery.data.data)) {
         processedData = simpleQuery.data.data;
       }
       else if (simpleQuery.data.results && Array.isArray(simpleQuery.data.results)) {
         processedData = simpleQuery.data.results;
       }
-      // Si la respuesta tiene una propiedad 'items'
       else if (simpleQuery.data.items && Array.isArray(simpleQuery.data.items)) {
         processedData = simpleQuery.data.items;
       }
@@ -70,7 +63,6 @@ export const usePaginatedQuery = ({
     };
   }
 
-  // ✅ Retornar datos paginados con validaciones extra
   const paginatedData = paginatedQuery.data?.pages 
     ? paginatedQuery.data.pages.flatMap((page) => page?.items ?? [])
     : [];
@@ -81,6 +73,7 @@ export const usePaginatedQuery = ({
     isLoading: paginatedQuery.isLoading,
     isError: paginatedQuery.isError,
     isFetching: paginatedQuery.isFetching,
+    isRefetching: paginatedQuery.isRefetching,
     data: paginatedData,
     hasNextPage: paginatedQuery.hasNextPage,
     total: paginatedQuery.data?.pages?.[0]?.total ?? 0,
