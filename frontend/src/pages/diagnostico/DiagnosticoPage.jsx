@@ -38,34 +38,7 @@ const DiagnosticosPage = () => {
     pageSize: 10,
   });
 
-  // Debug en consola
-  useEffect(() => {
-    if (diagnosticos) {
-      console.group("Datos de diagnósticos");
-      console.log("Total de registros:", diagnosticos.length);
-      console.log("Primer diagnóstico:", diagnosticos[0]);
-      console.log("Estructura completa:", {
-        id: diagnosticos[0]?.idDiagnostico,
-        fecha: diagnosticos[0]?.fechaDiagnostico,
-        dispositivo: {
-          id: diagnosticos[0]?.dispositivo?.idDispositivo,
-          modelo: diagnosticos[0]?.dispositivo?.modeloDispositivo,
-          marca:
-            diagnosticos[0]?.dispositivo?.marcaDispositivo
-              ?.descripcionMarcaDispositivo,
-        },
-        empleado: {
-          id: diagnosticos[0]?.empleado?.idEmpleado,
-          nombre: `${diagnosticos[0]?.empleado?.persona?.nombre} ${diagnosticos[0]?.empleado?.persona?.apellido}`,
-        },
-      });
-      console.groupEnd();
-    }
-
-    if (isError) {
-      console.error("Error al cargar diagnósticos");
-    }
-  }, [diagnosticos, isError]);
+  console.log(diagnosticos)
 
   const handleAddDiagnostico = () => {
     navigate("/diagnosticos/nuevo");

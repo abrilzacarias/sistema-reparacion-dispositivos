@@ -263,29 +263,33 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
 
   return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
-          <div className="grid grid-cols-2 w-full gap-4">
-              <FormSelectSearch
-                label="Técnico *"
-                endpoint="empleados"
-                valueKey="idEmpleado"
-                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-                value={watch("idEmpleado")}
-                setValue={(value) => setValue("idEmpleado", value)}
-                {...register("idEmpleado", { required: "Seleccione un técnico" })}
-              />
-              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+          <div className="grid grid-cols-2 gap-4 w-full">
+    <div className="w-full">
+      <FormSelectSearch
+        label="Técnico *"
+        endpoint="empleados"
+        valueKey="idEmpleado"
+        displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+        value={watch("idEmpleado")}
+        setValue={(value) => setValue("idEmpleado", value)}
+        {...register("idEmpleado", { required: "Seleccione un técnico" })}
+      />
+      <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+    </div>
 
-              <FormSelectSearch
-                label="Cliente *"
-                endpoint="clientes"
-                valueKey="idCliente"
-                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-                value={watch("idCliente")}
-                setValue={(value) => setValue("idCliente", value)}
-                {...register("idCliente", { required: "Seleccione un cliente" })}
-              />
-              <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
-          </div>          
+    <div className="w-full">
+      <FormSelectSearch
+        label="Cliente *"
+        endpoint="clientes"
+        valueKey="idCliente"
+        displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+        value={watch("idCliente")}
+        setValue={(value) => setValue("idCliente", value)}
+        {...register("idCliente", { required: "Seleccione un cliente" })}
+      />
+      <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
+    </div>
+  </div>       
 
       <div className="border rounded-lg p-4 bg-gray-50/50">
         <h3 className="font-medium text-sm text-muted-foreground mb-3 border-b pb-2">
@@ -344,7 +348,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     variant="default"
                     className="p-2 m-0 cursor-pointer"
                   >
-                    <MarcasCreateEdit refreshMarcas={refetchMarcas} />
+                    <MarcasCreateEdit refreshMarcas={fetchMarcas} />
                   </ModalFormTemplate>
                 </div>
               </div>
@@ -371,7 +375,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     variant="default"
                     className="p-2 m-0 cursor-pointer"
                   >
-                    <ModelosCreateEdit refreshModelos={refetchModelos} />
+                    <ModelosCreateEdit refreshModelos={fetchModelos} />
                   </ModalFormTemplate>
                 </div>
               </div>
