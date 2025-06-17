@@ -330,15 +330,6 @@ const DeviceQuestionsDynamic = ({ tipoDispositivo, value = [], onChange, diagnos
           </div>
         );
 
-      case 'ninguno':
-        return (
-          <div className="mt-3 pl-4 border-l-2 border-gray-200 bg-gray-50 p-3 rounded-r">
-            <p className="text-gray-600 text-sm italic">
-              ✓ No se requiere configuración adicional para esta opción.
-            </p>
-          </div>
-        );
-
       case 'numero':
       case 'número':
         return (
