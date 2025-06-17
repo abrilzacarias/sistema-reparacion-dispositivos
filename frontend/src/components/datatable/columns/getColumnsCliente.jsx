@@ -69,6 +69,18 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
     });
   };
 
+  // Función para manejar la actualización exitosa
+  const handleClienteUpdated = (clienteActualizado) => {
+    // Actualizar la tabla inmediatamente
+    refetch?.();
+    
+    // Mostrar toast de éxito
+    toast.success("Cliente actualizado con éxito", {
+      description: `${clienteActualizado?.persona?.nombre} ${clienteActualizado?.persona?.apellido} ha sido actualizado`,
+      duration: 4000
+    });
+  };
+
   return [
     {
       header: "Nombre",
@@ -231,6 +243,7 @@ export const getColumnsCliente = ({ refetch, onEdit }) => {
                     <EditarClienteConTabs
                       cliente={row.original}
                       refreshClientes={refetch}
+                      onClienteUpdated={handleClienteUpdated}
                     />
                   </ModalFormTemplate>
                 </DropdownMenuItem>

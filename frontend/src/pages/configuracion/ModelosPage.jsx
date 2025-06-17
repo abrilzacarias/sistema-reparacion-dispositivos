@@ -10,6 +10,7 @@ import { Plus } from "lucide-react";
 import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import MarcasCreateEdit from "./components/MarcasCreateEdit";
 import { getColModelos } from "./components/columns/getColumnsModelos";
+import ModelosCreateEdit from "./components/ModelosCreateEdit";
 
 
 const ModelosPage = () => {
@@ -50,7 +51,7 @@ const ModelosPage = () => {
         <CrudHeader title="Gestión de Modelos" subTitle="Administra los modelos de los dispositivos.">
           <div className="flex items-center gap-2">
             <ButtonRefetch
-              isFetching={currentData.isRefetching}
+              isRefetching={currentData.isRefetching}
               refetch={currentData.refetch}
             />
 
@@ -61,7 +62,7 @@ const ModelosPage = () => {
                 label="Agregar Modelo"
                 contentClassName="max-w-3xl max-h-[90vh] overflow-y-auto"
               >
-                <MarcasCreateEdit refreshMarcas={refetchModelos} />
+                <ModelosCreateEdit refreshModelos={refetchModelos} />
               </ModalFormTemplate>
 
           </div>

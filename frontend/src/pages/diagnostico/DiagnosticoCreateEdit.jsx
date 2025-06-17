@@ -1,8 +1,8 @@
-import { useEffect } from "react"; 
+import { useEffect } from "react"; // asegurate de importar esto si no lo tenés
 import { useForm } from "react-hook-form";
 import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "axios";   // <--- Importar axios aquí
 import { Button } from "@/components/ui/button";
 import ButtonDinamicForms from "@/components/atoms/ButtonDinamicForms";
 import ErrorMessage from "@/components/atoms/ErrorMessage";
@@ -13,11 +13,12 @@ import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import TipoDispositivoCreateEdit from "./components/TipoDispositivoCreateEdit";
 import DispositivoCreateEdit from "../configuracion/components/DispositivoCreateEdit";
 import MarcasCreateEdit from "../configuracion/components/MarcasCreateEdit";
-import ModelosCreateEdit from "../configuracion/components/ModelosCreateEdit";
+import ModelosCreateEdit from "../configuracion/components/ModelosCreateEdit"
 import { Plus } from "lucide-react";
 import { ToastMessageCreate } from "@/components/atoms/ToastMessage";
 import { useNavigate } from "react-router-dom";
 
+// Función para obtener marcas
 const fetchMarcas = async () => {
   const response = await fetch("http://localhost:8000/marcas");
   if (!response.ok) {
@@ -50,28 +51,114 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     mode: "onChange",
     defaultValues: {
       fechaDiagnostico: isEditMode ? diagnostico.fechaDiagnostico : new Date().toISOString().split("T")[0],
-      descripcion: isEditMode ? diagnostico.descripcion : "",
+      descripcionDiagnostico: isEditMode ? diagnostico.descripcionDiagnostico : "",
       idDispositivo: isEditMode ? diagnostico.dispositivo?.idDispositivo : "",
       idEmpleado: isEditMode ? diagnostico.empleado?.idEmpleado : "",
       idCliente: isEditMode ? diagnostico.dispositivo?.cliente?.idCliente : "",
       idTipoDispositivo: isEditMode ? diagnostico.dispositivo?.tipoDispositivo?.idTipoDispositivo : "",
-      idMarcaDispositivo: isEditMode ? diagnostico.dispositivo?.marca?.idMarca : "",
-      idModeloDispositivo: isEditMode ? diagnostico.dispositivo?.modelo?.idModelo : "",
+      idMarcaDispositivo: isEditMode ? diagnostico.dispositivo?.marca?.idMarcaDispositivo : "",
+      idModeloDispositivo: isEditMode ? diagnostico.dispositivo?.modelo?.idModeloDispositivo : "",
       deviceQuestions: [],
     },
   });
 
+  // Primero declaramos idTipoDispositivo y demás para usarlos abajo
   const idTipoDispositivo = watch("idTipoDispositivo");
   const [idMarcaDispositivo, setIdMarcaDispositivo] = useState("");
+  const watchDeviceQuestions = watch("deviceQuestions");
 
+  const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [apiErrors, setApiErrors] = useState({});
 
-  const watchTipoDispositivo = watch("idTipoDispositivo");
-  const watchDeviceQuestions = watch("deviceQuestions");
+  const {
+    data: marcas,
+    isLoading: isLoadingMarcas,
+    error: errorMarcas,
+    refetch: refetchMarcas,
+  } = useQuery({
+    queryKey: ["marcas"],
+    queryFn: fetchMarcas,
+    enabled: true,
+  });
+
+// Query para marcas según tipo de dispositivo
+const {
+  data: marcasPorTipo,
+  isLoading: isLoadingMarcasPorTipo,
+  error: errorMarcasPorTipo,
+} = useQuery({
+  queryKey: ["marcasPorTipo", idTipoDispositivo],
+  queryFn: () =>
+    axios
+      .get(`http://localhost:8000/marcas/marcas-por-tipo/${idTipoDispositivo}`)
+      .then((res) => {
+        console.log("📦 Marcas por tipo recibidas (idTipoDispositivo:", idTipoDispositivo, "):", res.data);
+        return res.data;
+      }),
+  enabled: !!idTipoDispositivo,
+});
+
+
+  const fetchModelosPorMarca = async (idMarcaDispositivo) => {
+    try {
+      const res = await axios.get(`/modelos/modelos-por-marca/${idMarcaDispositivo}`);
+      console.log("fetchModelosPorMarca - datos recibidos:", res.data);
+      return res.data;
+    } catch (error) {
+      console.error("fetchModelosPorMarca - error:", error);
+      throw error;
+    }
+  };
+
+  // Query para modelos según marca seleccionada
+  const {
+    data: modelosPorTipoYMarca,
+    isLoading: isLoadingModelos,
+    error: errorModelos,
+    refetch: refetchModelos,
+  } = useQuery({
+    queryKey: ["modelosPorTipoyMarca", idTipoDispositivo, idMarcaDispositivo],
+    queryFn: () =>
+      axios
+        .get(`http://localhost:8000/modelos/modelos-por-tipo-y-marca/`, {
+          params: {
+            id_tipo: idTipoDispositivo,
+            id_marca: idMarcaDispositivo,
+          },
+        })
+        .then((res) => {
+          console.log("📦 Modelos recibidos:", res.data);
+          return res.data;
+        }),
+    enabled: !!idTipoDispositivo && !!idMarcaDispositivo,
+  });
+
+
   
-  const [questions, setQuestions] = useState([]);
+    // 🔍 Logs para depuración
+  useEffect(() => {
+    if (marcas) {
+      console.log("📦 Todas las marcas recibidas:", marcas);
+    }
+  }, [marcas]);
+useEffect(() => {
+  if (idMarcaDispositivo) {
+    setValue("idMarcaDispositivo", idMarcaDispositivo);
+  }
+}, [idMarcaDispositivo, setValue]);
+  useEffect(() => {
+    if (marcasPorTipo) {
+      console.log("📦 Marcas por tipo recibidas (idTipoDispositivo:", idTipoDispositivo, "):", marcasPorTipo);
+    }
+  }, [marcasPorTipo, idTipoDispositivo]);
+  console.log(marcasPorTipo)
+  useEffect(() => {
+    if (modelosPorTipoYMarca) {
+      console.log("📦 Modelos por marca recibidos (idMarcaDispositivo:", idMarcaDispositivo, "):", modelosPorTipoYMarca);
+    }
+  }, [modelosPorTipoYMarca, idMarcaDispositivo]);
 
   const handleQuestionsLoaded = (loadedQuestions) => {
     console.log("🔄 Preguntas recibidas en padre:", loadedQuestions);
@@ -82,21 +169,26 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
     setIsLoading(true);
     setError("");
     setApiErrors({});
-
+    
     try {
       const validationErrors = {};
       if (!data.idEmpleado) validationErrors.idEmpleado = "Técnico es requerido";
-      if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
-      if (!data.idMarcaDispositivo) validationErrors.idMarcaDispositivo = "Marca es requerida";
-      if (!data.idModeloDispositivo) validationErrors.idModeloDispositivo = "Modelo es requerido";
-      if (!data.idCliente) validationErrors.idCliente = "Cliente es requerido";
-      if (!data.fechaDiagnostico) validationErrors.fechaDiagnostico = "Fecha es requerida";
+      if (!data.descripcionDiagnostico.trim()) validationErrors.descripcionDiagnostico = "Descripción es requerida";
+      console.log("🔍 Datos recibidos para validación:", data);
+      // En modo edición, validamos técnico y descripción
+      if (!isEditMode) {
+        if (!data.idTipoDispositivo) validationErrors.idTipoDispositivo = "Tipo de dispositivo es requerido";
+        if (!data.idMarcaDispositivo) validationErrors.idMarcaDispositivo = "Marca es requerida";
+        if (!data.idModeloDispositivo) validationErrors.idModeloDispositivo = "Modelo es requerido";
+        if (!data.idCliente) validationErrors.idCliente = "Cliente es requerido";
+        if (!data.fechaDiagnostico) validationErrors.fechaDiagnostico = "Fecha es requerida";
 
-      if (questions.length > 0) {
-        if (!data.deviceQuestions || !Array.isArray(data.deviceQuestions)) {
-          validationErrors.deviceQuestions = "No hay respuestas válidas para procesar";
-        } else if (data.deviceQuestions.length !== questions.length) {
-          validationErrors.deviceQuestions = `Se esperaban ${questions.length} respuestas, pero se recibieron ${data.deviceQuestions.length}`;
+        if (questions.length > 0) {
+          if (!data.deviceQuestions || !Array.isArray(data.deviceQuestions)) {
+            validationErrors.deviceQuestions = "No hay respuestas válidas para procesar";
+          } else if (data.deviceQuestions.length !== questions.length) {
+            validationErrors.deviceQuestions = `Se esperaban ${questions.length} respuestas, pero se recibieron ${data.deviceQuestions.length}`;
+          }
         }
       }
 
@@ -116,14 +208,11 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         };
 
         console.log("🛠️ Creando dispositivo:", dispositivoData);
-        const dispositivoRes = await fetch(
-          "http://localhost:8000/dispositivo",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dispositivoData),
-          }
-        );
+        const dispositivoRes = await fetch("http://localhost:8000/dispositivo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dispositivoData),
+        });
 
         if (!dispositivoRes.ok) {
           const resText = await dispositivoRes.text();
@@ -135,48 +224,81 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         console.log("✅ Dispositivo creado con ID:", dispositivoId);
       }
 
-      const idDiagnostico = isEditMode ? diagnostico.idDiagnostico : 0;
-
-      const detalles = data.deviceQuestions.map((respuesta, index) => {
-        const pregunta = questions[index];
-        if (!pregunta || !respuesta) return null;
-        return {
-          idDiagnostico: idDiagnostico, 
-          idDetalleDiagnostico: 0,
-          valorDiagnostico: String(respuesta.valorDiagnostico || ""),
-          idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+      // Preparar datos del diagnóstico
+      let diagnosticoData;
+      
+      if (isEditMode) {
+        // En modo edición incluimos la descripción
+        diagnosticoData = {
+          fechaDiagnostico: diagnostico.fechaDiagnostico,
+          descripcionDiagnostico: data.descripcionDiagnostico,
+          idDispositivo: diagnostico.dispositivo?.idDispositivo,
+          idEmpleado: data.idEmpleado,
         };
-      }).filter(Boolean);
+      } else {
+        // Lógica completa para creación
+        const idDiagnostico = 0;
+        const detalles = data.deviceQuestions.map((respuesta, index) => {
+          const pregunta = questions[index];
+          if (!pregunta || !respuesta) return null;
+          
+          return {
+            idDiagnostico: idDiagnostico, 
+            idDetalleDiagnostico: 0,
+            valorDiagnostico: String(respuesta.valorDiagnostico || ""),
+            idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+            tipoDispositivoSegunPregunta: {
+              idTipoDispositivoSegunPregunta: pregunta.idTipoDispositivoSegunPregunta,
+              idPreguntaDiagnostico: pregunta.idPreguntaDiagnostico,
+              idTipoDispositivo: idTipoDispositivo, // ✅ AGREGAR ESTE CAMPO QUE FALTA
+              preguntaDiagnostico: {
+                idPreguntaDiagnostico: pregunta.preguntaDiagnostico.idPreguntaDiagnostico,
+                textoPregunta: pregunta.preguntaDiagnostico.textoPregunta,
+                tipoPregunta: pregunta.preguntaDiagnostico.tipoPregunta,
+                opcionesPregunta: pregunta.preguntaDiagnostico.opcionesPregunta || [],
+                esObligatoria: pregunta.preguntaDiagnostico.esObligatoria,
+                descripcionPreguntaDiagnostico: pregunta.preguntaDiagnostico.textoPregunta, // ✅ AGREGAR ESTE CAMPO
+                idTipoDatoPreguntaDiagnostico: pregunta.preguntaDiagnostico.tipoPregunta === "BOOLEANO" ? 1 : 2 // ✅ AGREGAR ESTE CAMPO
+              }
+            }
+          };
+        }).filter(Boolean);
 
-      const diagnosticoData = {
-        fechaDiagnostico: data.fechaDiagnostico,
-        descripcion: data.descripcion,
-        idDispositivo: dispositivoId,
-        idEmpleado: data.idEmpleado,
-        detalleDiagnostico: detalles.map(d => ({
-          idDiagnostico: d.idDiagnostico || 0,
-          idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
-          valorDiagnostico: d.valorDiagnostico,
-          idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
-        })),
-        detalles: detalles.map(d => ({
-          idDiagnostico: d.idDiagnostico || 0,
-          idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
-          valorDiagnostico: d.valorDiagnostico,
-          idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
-        })),
-      };
+        diagnosticoData = {
+          fechaDiagnostico: data.fechaDiagnostico,
+          descripcionDiagnostico: data.descripcionDiagnostico,
+          idDispositivo: dispositivoId,
+          idEmpleado: data.idEmpleado,
+          detalleDiagnostico: detalles.map(d => ({
+            idDiagnostico: d.idDiagnostico || 0,
+            idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
+            valorDiagnostico: d.valorDiagnostico,
+            idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
+            tipoDispositivoSegunPregunta: d.tipoDispositivoSegunPregunta,
+          })),
+          detalles: detalles.map(d => ({
+            idDiagnostico: d.idDiagnostico || 0,
+            idDetalleDiagnostico: d.idDetalleDiagnostico || 0,
+            valorDiagnostico: d.valorDiagnostico,
+            idTipoDispositivoSegunPregunta: d.idTipoDispositivoSegunPregunta,
+            tipoDispositivoSegunPregunta: d.tipoDispositivoSegunPregunta,
+          })),
+        };
+      }
 
       console.log("🧪 Enviando:", JSON.stringify(diagnosticoData, null, 2));
 
+      // Set the correct URL based on API documentation
       let url;
       let method;
       
       if (isEditMode) {
+        // Use the exact endpoint from API documentation: PUT /diagnostico/{idDiagnostico}
         url = `http://localhost:8000/diagnostico/${diagnostico.idDiagnostico}`;
         method = "PUT";
         console.log(`📝 Edit mode: Using API documented endpoint: ${url}`);
       } else {
+        // For creation, keep the original endpoint
         url = "http://localhost:8000/diagnostico/diagnostico";
         method = "POST";
         console.log(`🆕 Create mode: Using endpoint: ${url}`);
@@ -203,16 +325,19 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
           const errorData = await response.text();
           console.log("🔍 Error response body:", errorData);
           
+          // Try to parse as JSON first
           try {
             const jsonError = JSON.parse(errorData);
             errorMessage = jsonError.detail || jsonError.message || errorMessage;
           } catch {
+            // If not JSON, use the text as is
             errorMessage = errorData || errorMessage;
           }
         } catch (e) {
           console.error("Error reading response:", e);
         }
-
+        
+        // Provide specific error messages for common HTTP status codes
         if (response.status === 404) {
           if (isEditMode) {
             errorMessage = `El diagnóstico con ID ${diagnostico.idDiagnostico} no fue encontrado. Posiblemente fue eliminado o el endpoint de actualización no existe.`;
@@ -228,6 +353,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
         throw new Error(errorMessage);
       }
 
+      // Success handling
       if (refreshDiagnosticos) refreshDiagnosticos();
       if (!isEditMode) {
         reset();
@@ -235,8 +361,9 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
       }
       setError("");
 
-      ToastMessageCreate()
-      navigate("/diagnosticos")
+      ToastMessageCreate();
+      navigate("/diagnosticos");
+      
     } catch (err) {
       console.error("❌ Error general:", err);
       setError(err.message || "Ocurrió un error al guardar el diagnóstico");
@@ -251,39 +378,76 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   };
 
   return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
-          <div className="grid grid-cols-2 gap-4 w-full">
-    <div className="w-full">
-      <FormSelectSearch
-        label="Técnico *"
-        endpoint="empleados"
-        valueKey="idEmpleado"
-        displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-        value={watch("idEmpleado")}
-        setValue={(value) => setValue("idEmpleado", value)}
-        {...register("idEmpleado", { required: "Seleccione un técnico" })}
-      />
-      <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
+      {/* En modo edición: mostrar técnico y descripción */}
+      {isEditMode ? (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <FormSelectSearch
+                label="Técnico *"
+                endpoint="empleados"
+                valueKey="idEmpleado"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idEmpleado")}
+                setValue={(value) => setValue("idEmpleado", value)}
+                {...register("idEmpleado", { required: "Seleccione un técnico" })}
+              />
+              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Descripción del Diagnóstico *
+              </label>
+              <textarea
+                {...register("descripcionDiagnostico", { 
+                  required: "La descripción es requerida",
+                  minLength: { value: 10, message: "La descripción debe tener al menos 10 caracteres" }
+                })}
+                className="w-full p-3 border border-gray-300 rounded-md resize-vertical min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ingrese una descripción detallada del diagnóstico realizado..."
+                rows={4}
+              />
+              <ErrorMessage message={errors.descripcionDiagnostico?.message || apiErrors?.descripcionDiagnostico} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* En modo creación: mostrar todos los campos */
+        <>
+          <div className="grid grid-cols-2 w-full gap-4">
+            <div>
+              <FormSelectSearch
+                label="Técnico *"
+                endpoint="empleados"
+                valueKey="idEmpleado"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idEmpleado")}
+                setValue={(value) => setValue("idEmpleado", value)}
+                {...register("idEmpleado", { required: "Seleccione un técnico" })}
+              />
+              <ErrorMessage message={errors.idEmpleado?.message || apiErrors?.idEmpleado} />
+            </div>
 
-    <div className="w-full">
-      <FormSelectSearch
-        label="Cliente *"
-        endpoint="clientes"
-        valueKey="idCliente"
-        displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
-        value={watch("idCliente")}
-        setValue={(value) => setValue("idCliente", value)}
-        {...register("idCliente", { required: "Seleccione un cliente" })}
-      />
-      <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
-    </div>
-  </div>       
+            <div>
+              <FormSelectSearch
+                label="Cliente *"
+                endpoint="clientes"
+                valueKey="idCliente"
+                displayKey={(e) => `${e.persona?.nombre || ""} ${e.persona?.apellido || ""}`}
+                value={watch("idCliente")}
+                setValue={(value) => setValue("idCliente", value)}
+                {...register("idCliente", { required: "Seleccione un cliente" })}
+              />
+              <ErrorMessage message={errors.idCliente?.message || apiErrors?.idCliente} />
+            </div>
+          </div>
 
-      <div className="border rounded-lg p-4 bg-gray-50/50">
-        <h3 className="font-medium text-sm text-muted-foreground mb-3 border-b pb-2">
-          Información del Dispositivo
-        </h3>
+          <div className="border rounded-lg p-4 bg-gray-50/50">
+            <h3 className="font-medium text-sm text-muted-foreground mb-3 border-b pb-2">
+              Información del Dispositivo
+            </h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2">
@@ -310,7 +474,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     className="p-2 m-0 cursor-pointer"
                     contentClassName="max-w-8xl h-auto max-w-4xl max-h-[90vh] overflow-y-auto"
                   >
-                    <TipoDispositivoCreateEdit />
+                    <DispositivoCreateEdit />
                   </ModalFormTemplate>
                 </div>
               </div>
@@ -320,12 +484,11 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                   <div className="flex-1">
                     <FormSelectSearch
                       label="Marca *"
-                      endpoint="marcas"
+                      data={marcasPorTipo}
                       valueKey="idMarcaDispositivo"
-                      displayKey={(d) => d.descripcionMarcaDispositivo || ""}
-                      value={watch("idMarcaDispositivo")}
-                      setValue={(value) => setValue("idMarcaDispositivo", value)}
-                      {...register("idMarcaDispositivo", { required: "Seleccione una marca" })}
+                      displayKey={(d) => d.descripcionMarcaDispositivo}
+                      value={idMarcaDispositivo}
+                      setValue={setIdMarcaDispositivo}
                     />
                     <ErrorMessage message={errors.idMarcaDispositivo?.message || apiErrors?.idMarcaDispositivo} />
                   </div>
@@ -336,7 +499,7 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     variant="default"
                     className="p-2 m-0 cursor-pointer"
                   >
-                    <MarcasCreateEdit refreshMarcas={fetchMarcas} />
+                    <MarcasCreateEdit refreshMarcas={refetchMarcas} />
                   </ModalFormTemplate>
                 </div>
               </div>
@@ -346,12 +509,11 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                   <div className="flex-1">
                     <FormSelectSearch
                       label="Modelo *"
-                      endpoint="modelos"
+                      data={modelosPorTipoYMarca} // 👈 en vez de endpoint
                       valueKey="idModeloDispositivo"
                       displayKey={(d) => d.descripcionModeloDispositivo || ""}
                       value={watch("idModeloDispositivo")}
                       setValue={(value) => setValue("idModeloDispositivo", value)}
-                      {...register("idModeloDispositivo", { required: "Seleccione un modelo" })}
                     />
                     <ErrorMessage message={errors.idModeloDispositivo?.message || apiErrors?.idModeloDispositivo} />
                   </div>
@@ -362,16 +524,16 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
                     variant="default"
                     className="p-2 m-0 cursor-pointer"
                   >
-                    <ModelosCreateEdit refreshModelos={fetchModelos} />
+                    <ModelosCreateEdit refreshModelos={refetchModelos} />
                   </ModalFormTemplate>
                 </div>
               </div>
             </div>
 
-            {watchTipoDispositivo && (
+            {idTipoDispositivo && (
               <div className="border rounded-lg p-4 mt-4">
                 <DeviceQuestionsDynamic
-                  tipoDispositivo={watchTipoDispositivo}
+                  tipoDispositivo={idTipoDispositivo}
                   value={watchDeviceQuestions}
                   onChange={handleDeviceQuestionsChange}
                   diagnosticoId={diagnostico?.idDiagnostico}
@@ -381,28 +543,47 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
             )}
           </div>
 
+          {/* Campo de descripción para modo creación - Al final después de toda la información del dispositivo */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción del Diagnóstico *
+            </label>
+            <textarea
+              {...register("descripcionDiagnostico", { 
+                required: "La descripción es requerida",
+                minLength: { value: 10, message: "La descripción debe tener al menos 10 caracteres" }
+              })}
+              className="w-full p-3 border border-gray-300 rounded-md resize-vertical min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Ingrese una descripción detallada del diagnóstico realizado..."
+              rows={4}
+            />
+            <ErrorMessage message={errors.descripcionDiagnostico?.message || apiErrors?.descripcionDiagnostico} />
+          </div>
+        </>
+      )}
+
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-3">
           <ErrorMessage message={error} />
         </div>
       )}
 
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => reset()}
-              disabled={isLoading}
-            >
-              Limpiar
-            </Button>
-            <ButtonDinamicForms 
-              initialData={diagnostico} 
-              isLoading={isLoading} 
-              register 
-            />
-          </div>
-        </form>
+      <div className="flex justify-end gap-3 pt-4 border-t">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => reset()}
+          disabled={isLoading}
+        >
+          {isEditMode ? "Cancelar" : "Limpiar"}
+        </Button>
+        <ButtonDinamicForms 
+          initialData={diagnostico} 
+          isLoading={isLoading} 
+          register 
+        />
+      </div>
+    </form>
   );
 };
 

@@ -227,11 +227,11 @@ const PersonaCreateEdit = ({ persona, refreshPersonas, setActiveTab, setPersonaI
       if (refreshPersonas) {
         setTimeout(() => {
           persona ? ToastMessageEdit() : ToastMessageCreate()
-          refreshPersonas()
         }, 300)
       }
 
       goToEmpleadoTab()
+
     } catch (err) {
       console.error("Error al guardar persona:", err)
       console.error("Response data:", err.response?.data)

@@ -1,14 +1,21 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, func
 from app.models.empleado import Empleado
-from app.models import Persona, Perfil, PermisoPerfil, AsignacionUsuarioPermisos
+from app.models import Persona, Perfil, PermisoPerfil, AsignacionUsuarioPermisos, Usuario
 from app.schemas.empleado import EmpleadoCreate, EmpleadoUpdate
 from fastapi import Depends, HTTPException, status
 
 from sqlalchemy import or_, func
 
 def get_empleados(db: Session, search: str = None):
-    query = db.query(Empleado).filter(Empleado.fechaFinalizacion == None)
+    query = db.query(Empleado).options(
+        joinedload(Empleado.usuario)
+        .joinedload(Usuario.asignacionUsuarioPermisos)
+        .joinedload(AsignacionUsuarioPermisos.permisoPerfil)
+        .joinedload(PermisoPerfil.perfil),
+        joinedload(Empleado.persona),
+        joinedload(Empleado.puesto)
+    ).filter(Empleado.fechaFinalizacion == None)
 
     if search:
         search = f"%{search.lower()}%"

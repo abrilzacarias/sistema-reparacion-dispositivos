@@ -6,7 +6,7 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from app.database import get_db
 from app.schemas import empleado as schemas
 from app.services import empleado as services
-from app.models import Empleado, Perfil
+from app.models import Empleado, Perfil, AsignacionUsuarioPermisos, PermisoPerfil
 
 router = APIRouter(prefix="/empleados", tags=["Empleados"])
 
@@ -34,11 +34,47 @@ def create_empleado(
 
 
 @router.put("/{idEmpleado}", response_model=schemas.EmpleadoOut, summary="Actualizar empleado existente")
-def update_empleado(idEmpleado: int, empleado: schemas.EmpleadoUpdate, db: Session = Depends(get_db)):
-    updated = services.update_empleado(db, idEmpleado, empleado)
-    if not updated:
+def update_empleado(
+    idEmpleado: int,
+    empleado_data: schemas.EmpleadoUpdate,
+    db: Session = Depends(get_db)
+):
+    db_empleado = db.query(Empleado).filter(Empleado.idEmpleado == idEmpleado).first()
+    if not db_empleado:
         raise HTTPException(status_code=404, detail="Empleado no encontrado")
-    return updated
+
+    if empleado_data.fechaContratacion is not None:
+        db_empleado.fechaContratacion = empleado_data.fechaContratacion
+    if empleado_data.idpuestoLaboral is not None:
+        db_empleado.idpuestoLaboral = empleado_data.idpuestoLaboral
+
+    if empleado_data.perfiles is not None:
+        usuario = db_empleado.usuario
+        if not usuario:
+            raise HTTPException(status_code=400, detail="El empleado no tiene usuario asociado")
+
+        # Borrar asignaciones actuales para ese usuario
+        db.query(AsignacionUsuarioPermisos).filter(
+            AsignacionUsuarioPermisos.idUsuario == usuario.idUsuario
+        ).delete()
+
+        # Para cada perfil, obtener los permisos asociados (PermisoPerfil)
+        permisos_perfil = db.query(PermisoPerfil).filter(
+            PermisoPerfil.idPerfil.in_(empleado_data.perfiles)
+        ).all()
+
+        # Crear asignaciones por cada permisoPerfil encontrado
+        for permiso_perfil in permisos_perfil:
+            asignacion = AsignacionUsuarioPermisos(
+                idUsuario=usuario.idUsuario,
+                idpermisoPerfil=permiso_perfil.idpermisoPerfil
+            )
+            db.add(asignacion)
+
+    db.commit()
+    db.refresh(db_empleado)
+    return db_empleado
+
 
 @router.delete("/{idEmpleado}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar empleado (borrado lógico)")
 def delete_empleado(idEmpleado: int, db: Session = Depends(get_db)):

@@ -53,7 +53,7 @@ const MarcasPage = () => {
         <CrudHeader title="Gestión de Marcas" subTitle="Administra las Marcas de los dispositivos.">
           <div className="flex items-center gap-2">
             <ButtonRefetch
-              isFetching={currentData.isRefetching}
+              isRefetching={currentData.isRefetching}
               refetch={currentData.refetch}
             />
 
