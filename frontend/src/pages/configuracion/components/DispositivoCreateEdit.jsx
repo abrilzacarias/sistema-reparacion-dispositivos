@@ -16,7 +16,7 @@ import ModalFormTemplate from "@/components/organisms/ModalFormTemplate";
 import TipoDatosSection from "./TipoDatosSection";
 const API_URL = import.meta.env.VITE_API_URL
 
-export default function DispositivoCreateEdit({ editData = null, isEdit = false }) {
+export default function DispositivoCreateEdit({ editData = null, isEdit = false, refreshDispositivos }) {
   const {
     register,
     control,
@@ -127,6 +127,7 @@ export default function DispositivoCreateEdit({ editData = null, isEdit = false 
       }
 
       setOpen(false)
+      refreshDispositivos()
     } catch (error) {
       console.error("Error al guardar tipo de dispositivo:", error)
       toast.error("Ocurrió un error al guardar")

@@ -81,7 +81,7 @@ const TipoDispositivoPreguntaPage = () => {
         <CrudHeader title="Gestión de Dispositivos" subTitle="Administra los dispositivos y sus preguntas.">
           <div className="flex items-center gap-2">
             <ButtonRefetch
-              isFetching={currentData.isRefetching}
+              isRefetching={currentData.isRefetching}
               refetch={currentData.refetch}
             />
 
