@@ -65,9 +65,9 @@ const DiagnosticoCreateEdit = ({ diagnostico, refreshDiagnosticos }) => {
   // Primero declaramos idTipoDispositivo y demás para usarlos abajo
   const idTipoDispositivo = watch("idTipoDispositivo");
   const [idMarcaDispositivo, setIdMarcaDispositivo] = useState("");
-  const watchDeviceQuestions = watch("deviceQuestions");
+  //const watchDeviceQuestions = watch("deviceQuestions");
 
-  const [questions, setQuestions] = useState([]);
+  //const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [apiErrors, setApiErrors] = useState({});
