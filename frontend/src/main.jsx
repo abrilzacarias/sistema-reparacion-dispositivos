@@ -24,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <BrowserRouter future={router}>
             <App />
           </BrowserRouter>
-        </React.StrictMode>,
+        </React.StrictMode>
       </ToastProvider>
     </AppContextProvider>
   </QueryClientProvider>

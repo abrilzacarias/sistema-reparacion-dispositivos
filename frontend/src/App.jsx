@@ -19,12 +19,15 @@ import SettingsProfilePage from "./pages/configuracion/components/SettingsProfil
 import MarcasPage from "./pages/configuracion/MarcasPage";
 import ModelosPage from "./pages/configuracion/ModelosPage";
 import TipoDispositivoPreguntaPage from "./pages/configuracion/TipoDispositivoPreguntaPage";
+import Index from "./pages/index/Index";
+
 
 function App() {
   return (
     <div className="min-h-screen dark:bg-gray-900">
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/usuarios/reset-password" element={<ResetPassword />} />
 
         <Route
