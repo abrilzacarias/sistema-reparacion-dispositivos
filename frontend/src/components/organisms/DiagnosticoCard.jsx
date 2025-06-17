@@ -4,6 +4,35 @@ import { Separator } from "@/components/ui/separator"
 import { Calendar, HardDrive, User, Wrench, HelpCircle } from "lucide-react"
 import { motion } from "framer-motion"
 
+// Componente para mostrar el patrón de bloqueo
+const PatternDisplay = ({ pattern }) => {
+  if (!pattern) return null
+
+  const points = pattern.split('-').map(Number)
+  
+  return (
+    <div className="mt-2">
+      <div className="grid grid-cols-3 gap-1 w-24 h-24 mx-auto bg-gray-100 p-2 rounded">
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((point) => (
+          <div
+            key={point}
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
+              points.includes(point)
+                ? 'bg-purple-500 border-purple-600 text-white'
+                : 'bg-white border-gray-300'
+            }`}
+          >
+            {points.includes(point) ? points.indexOf(point) + 1 : ''}
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-center mt-1 text-gray-600">
+        Secuencia: {pattern}
+      </p>
+    </div>
+  )
+}
+
 const DiagnosticoCard = ({ diagnostico }) => {
   if (!diagnostico) {
     return (
@@ -27,7 +56,35 @@ const DiagnosticoCard = ({ diagnostico }) => {
   const formatearRespuesta = (valor) => {
     if (valor === "true") return "Sí"
     if (valor === "false") return "No"
+    
+    // Detectar si es un patrón
+    try {
+      const parsed = JSON.parse(valor)
+      if (parsed.tipo === "Patron" && parsed.valor) {
+        return parsed
+      }
+    } catch (e) {
+      // No es JSON válido, devolver el valor tal como está
+    }
+    
     return valor
+  }
+
+  const renderRespuesta = (respuesta) => {
+    const respuestaFormateada = formatearRespuesta(respuesta)
+    
+    // Si es un objeto patrón, renderizar el componente especial
+    if (typeof respuestaFormateada === 'object' && respuestaFormateada.tipo === 'Patron') {
+      return (
+        <div>
+          <Badge variant="outline" className="mb-2">Patrón de bloqueo</Badge>
+          <PatternDisplay pattern={respuestaFormateada.valor} />
+        </div>
+      )
+    }
+    
+    // Para respuestas normales
+    return <Badge variant="outline">{respuestaFormateada}</Badge>
   }
 
   return (
@@ -133,9 +190,10 @@ const DiagnosticoCard = ({ diagnostico }) => {
                     <p className="text-muted-foreground">
                       {detalle.tipoDispositivoSegunPregunta?.preguntaDiagnostico?.descripcionPreguntaDiagnostico || "Pregunta desconocida"}
                     </p>
-                    <p className="font-medium mt-1">
-                      Respuesta: <Badge variant="outline">{formatearRespuesta(detalle.valorDiagnostico)}</Badge>
-                    </p>
+                    <div className="mt-2">
+                      <span className="text-sm text-muted-foreground">Respuesta: </span>
+                      {renderRespuesta(detalle.valorDiagnostico)}
+                    </div>
                   </div>
                 ))}
               </div>
