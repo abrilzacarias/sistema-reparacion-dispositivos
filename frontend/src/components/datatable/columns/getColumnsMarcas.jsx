@@ -1,4 +1,5 @@
-import { Edit, Ellipsis } from "lucide-react";
+import ModalDeactivateItem from "@/components/molecules/DeleteConfirmButton";
+import { Edit, Ellipsis, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,10 +39,22 @@ export const getColumnsMarcas = ({ refetch }) => [
               <MarcasCreateEdit marca={row.original} refreshMarcas={refetch} />
             </ModalFormTemplate>
           </DropdownMenuItem>
-
-          <DropdownMenuItem asChild>
-            <MarcasDeleteConfirmModal marca={row.original} refetch={refetch} />
-          </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <ModalFormTemplate
+                title="¿Estás completamente seguro?"
+                description="Esta acción no se puede deshacer."
+                label="Eliminar"
+                variant="ghost"
+                icon={Trash}
+                className="m-0 text-red-900 dark:text-red-500 cursor-pointer w-full p-2 justify-start"
+              >
+                <ModalDeactivateItem
+                  endpoint="marca" // Corregido el endpoint
+                  id={row.original.idMarca?.idMarca || row.original.idMarca}
+                  refetch={refetch}
+                />
+              </ModalFormTemplate>
+            </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
