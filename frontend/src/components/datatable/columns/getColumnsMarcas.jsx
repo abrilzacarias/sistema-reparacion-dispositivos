@@ -12,11 +12,6 @@ import MarcasCreateEdit from "@/pages/configuracion/components/MarcasCreateEdit"
 
 export const getColumnsMarcas = ({ refetch }) => [
   {
-    header: "ID",
-    accessorKey: "idMarcaDispositivo",
-    cell: ({ row }) => <div className="ml-4">{row.original.idMarcaDispositivo}</div>,
-  },
-  {
     header: "Marca",
     accessorKey: "descripcionMarcaDispositivo",
     cell: ({ row }) => <div>{row.original.descripcionMarcaDispositivo}</div>,
