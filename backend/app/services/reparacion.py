@@ -9,6 +9,9 @@ from fastapi import HTTPException
 from app.services.detalleReparacion import actualizar_monto_total_reparacion
 from sqlalchemy import desc
 from app.models.historialAsignacionReparacion import HistorialAsignacionReparacion
+from sqlalchemy import func
+from app.models.registroEstadoReparacion import RegistroEstadoReparacion
+from app.models.estadoReparacion import EstadoReparacion
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -33,9 +36,6 @@ def get_reparaciones(db: Session, skip: int = 0, limit: int = 100):
         .limit(limit)\
 
 def get_reparaciones_status_summary(db: Session):
-    from sqlalchemy import func
-    from app.models.registroEstadoReparacion import RegistroEstadoReparacion
-    from app.models.estadoReparacion import EstadoReparacion
     subq = (
         db.query(
             RegistroEstadoReparacion.idReparacion,
@@ -72,6 +72,8 @@ def create_reparacion(db: Session, reparacion: ReparacionCreate):
     db.add(db_reparacion)
     db.commit()
     db.refresh(db_reparacion)
+
+    # Registrar asignación de empleado si hay empleado asignado
     if db_reparacion.idEmpleado:
         historial = HistorialAsignacionReparacion(
             idReparacion=db_reparacion.idReparacion,
@@ -80,9 +82,51 @@ def create_reparacion(db: Session, reparacion: ReparacionCreate):
             fechaFinAsignacionReparacion=None
         )
         db.add(historial)
-        db.commit()
+
+    # Lógica para registrar estado inicial y actualizar fechaEgreso
+    nuevo_estado_registro = None
+    # Usamos el idEstadoReparacion y idEmpleado desde el Pydantic (reparacion), no del modelo que no lo tiene
+    id_estado = getattr(reparacion, "idEstadoReparacion", None)
+    id_empleado_estado = db_reparacion.idEmpleado
+
+    if id_estado and id_empleado_estado:
+        nuevo_estado_registro = RegistroEstadoReparacion(
+            idReparacion=db_reparacion.idReparacion,
+            idEstadoReparacion=id_estado,
+            idEmpleado=id_empleado_estado,
+            fechaHoraRegistroEstadoReparacion=datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")),
+        )
+        db.add(nuevo_estado_registro)
+
+    db.commit()
+    db.refresh(db_reparacion)
+
+    if nuevo_estado_registro:
+        db.refresh(nuevo_estado_registro)
+        estado_actual = nuevo_estado_registro.estadoReparacion
+        descripcion_estado = estado_actual.descripcionEstadoReparacion
+    else:
+        ultimo_estado = db.query(RegistroEstadoReparacion)\
+            .options(selectinload(RegistroEstadoReparacion.estadoReparacion))\
+            .filter(RegistroEstadoReparacion.idReparacion == db_reparacion.idReparacion)\
+            .order_by(RegistroEstadoReparacion.fechaHoraRegistroEstadoReparacion.desc())\
+            .first()
+        if ultimo_estado:
+            estado_actual = ultimo_estado.estadoReparacion
+            descripcion_estado = estado_actual.descripcionEstadoReparacion
+        else:
+            descripcion_estado = None
+
+    if descripcion_estado == "Entregado":
+        db_reparacion.fechaEgreso = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires"))
+    else:
+        db_reparacion.fechaEgreso = None
+
+    db.commit()
+    db.refresh(db_reparacion)
 
     return db_reparacion
+
 
 def update_reparacion(db: Session, id: int, reparacion: ReparacionUpdate):
     db_reparacion = db.query(Reparacion).filter(Reparacion.idReparacion == id).first()
