@@ -1,8 +1,8 @@
-// Función para formatear fecha y hora (sin conversión de zona horaria)
+// Función para formatear fecha y hora (usando la hora tal como viene de la BD)
 export const formatearFechaHora = (fechaSQL) => {
   if (!fechaSQL) return "-";
 
-  const fecha = new Date(fechaSQL + "Z");
+  const fecha = new Date(fechaSQL); // no agregar "Z"
 
   if (isNaN(fecha.getTime())) return "-";
 

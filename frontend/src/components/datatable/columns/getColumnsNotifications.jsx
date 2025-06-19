@@ -60,15 +60,12 @@ export const getColumnsNotifications = () => [
     id: "fecha",
     header: "Fecha",
     accessorKey: "fecha",
-    cell: ({ row }) => {
-      const rawDate = row.original.fecha;
-      const date = new Date(rawDate).toLocaleDateString("es-AR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-      return <div className="flex justify-center">{date}</div>;
-    },
+      cell: ({ row }) => {
+        const rawDate = row.original.fecha; // por ejemplo: "2025-06-19"
+        const [year, month, day] = rawDate.split("-");
+        const formattedDate = `${day}/${month}/${year}`;
+        return <div className="flex justify-center">{formattedDate}</div>;
+      },
     meta: {
       className: "text-center w-[180px]",
     },

@@ -20,9 +20,11 @@ export const getColumnsDiagnosticos = ({ refetch }) => {
     {
       header: "Fecha",
       accessorKey: "fechaDiagnostico",
-      cell: ({ row }) => (
-        <div>{new Date(row.original.fechaDiagnostico).toLocaleDateString()}</div>
-      ),
+        cell: ({ row }) => {
+          const fecha = row.original.fechaDiagnostico; // "2025-06-19"
+          const [a, m, d] = fecha.split("-");
+          return <div>{`${d}/${m}/${a}`}</div>;
+        }
     },
     {
       header: "Tipo de Dispositivo",
