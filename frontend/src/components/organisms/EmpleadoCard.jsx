@@ -59,7 +59,11 @@ const EmpleadoCard = ({ empleado }) => {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Estado laboral:</span>
             <Badge variant={estadoColor}>
-              {empleado?.persona?.estadoPersona || "No especificado"}
+              {empleado?.persona?.estadoPersona === 1
+                ? "Activo"
+                : empleado?.persona?.estadoPersona === 0
+                ? "Inactivo"
+                : "No especificado"}
             </Badge>
           </div>
 

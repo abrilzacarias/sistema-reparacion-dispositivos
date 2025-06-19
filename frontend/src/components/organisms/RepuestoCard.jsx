@@ -75,13 +75,6 @@ const RepuestoCard = ({ repuesto }) => {
           </div>
 
           {/* Código interno o ID */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Layers className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm text-muted-foreground">ID Repuesto</span>
-            </div>
-            <p className="text-sm">{repuesto.idRepuesto}</p>
-          </div>
         </CardContent>
       </Card>
     </motion.div>
