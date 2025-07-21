@@ -14,3 +14,8 @@ Faker
 requests
 pydantic-settings
 twilio
+scikit-learn
+pandas
+mysql-connector-python
+joblib
+scipy
